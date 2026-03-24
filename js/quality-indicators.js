@@ -4773,7 +4773,8 @@ async function showDetailModal(indicatorId) {
                                 ${generateQuarterRow('2025', 'Q1', null, currentQuarter === '2025-Q1')}
                                 ${generateQuarterRow('2025', 'Q2', null, currentQuarter === '2025-Q2')}
                                 ${generateQuarterRow('2025', 'Q3', null, currentQuarter === '2025-Q3')}
-                                ${generateQuarterRow('2025', 'Q4', currentData, currentQuarter === '2025-Q4')}
+                                ${generateQuarterRow('2025', 'Q4', null, currentQuarter === '2025-Q4')}
+                                ${generateQuarterRow('2026', 'Q1', currentData, currentQuarter === '2026-Q1')}
                             </tbody>
                         </table>
                     </div>
@@ -4810,6 +4811,7 @@ async function showDetailModal(indicatorId) {
                                 ${generateQuarterRow('2025', 'Q2', updatedResults.quarterlyDetails['2025-Q2'], currentQuarter === '2025-Q2')}
                                 ${generateQuarterRow('2025', 'Q3', updatedResults.quarterlyDetails['2025-Q3'], currentQuarter === '2025-Q3')}
                                 ${generateQuarterRow('2025', 'Q4', updatedResults.quarterlyDetails['2025-Q4'], currentQuarter === '2025-Q4')}
+                                ${generateQuarterRow('2026', 'Q1', updatedResults.quarterlyDetails['2026-Q1'], currentQuarter === '2026-Q1')}
                             </tbody>
                         </table>
                     </div>
@@ -4837,8 +4839,8 @@ async function progressiveLoadQuarters(indicatorId, currentResults) {
     const currentQuarter = getCurrentQuarter();
     console.log(`當前季度: ${currentQuarter}`);
     
-    // 從最新往前載入：2025-Q4 → 2025-Q3 → 2025-Q2 → 2025-Q1 → 2024-Q4 → 2024-Q3 → 2024-Q2 → 2024-Q1
-    const quarters = ['2025-Q4', '2025-Q3', '2025-Q2', '2025-Q1', '2024-Q4', '2024-Q3', '2024-Q2', '2024-Q1'];
+    // 從最新往前載入：2026-Q1 → 2025-Q4 → 2025-Q3 → 2025-Q2 → 2025-Q1 → 2024-Q4 → 2024-Q3 → 2024-Q2 → 2024-Q1
+    const quarters = ['2026-Q1', '2025-Q4', '2025-Q3', '2025-Q2', '2025-Q1', '2024-Q4', '2024-Q3', '2024-Q2', '2024-Q1'];
     console.log(`需要載入的季度:`, quarters.filter(q => q !== currentQuarter));
     
     for (let i = 0; i < quarters.length; i++) {

@@ -1,0 +1,528 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cesarean-with-indication-001",
+        "gender": "female",
+        "birthDate": "1988-03-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/cesarean-with-indication-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "cesarean-indication-enc-001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-001"
+        },
+        "period": {
+          "start": "2026-01-02T09:00:00Z",
+          "end": "2026-01-02T16:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/cesarean-indication-enc-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cesarean-indication-cond-001",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.1",
+              "display": "Breech presentation"
+            }
+          ],
+          "text": "臀位"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-001"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/cesarean-indication-cond-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "cesarean-indication-proc-001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "80402C",
+              "display": "剖腹生产"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-001"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-001"
+        },
+        "performedDateTime": "2026-01-02T12:30:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/cesarean-indication-proc-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cesarean-with-indication-002",
+        "gender": "female",
+        "birthDate": "1988-03-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/cesarean-with-indication-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "cesarean-indication-enc-002",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-002"
+        },
+        "period": {
+          "start": "2026-01-03T09:00:00Z",
+          "end": "2026-01-03T16:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/cesarean-indication-enc-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cesarean-indication-cond-002",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.2",
+              "display": "Previous cesarean delivery"
+            }
+          ],
+          "text": "前次剖腹产"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-002"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-002"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/cesarean-indication-cond-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "cesarean-indication-proc-002",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "80402C",
+              "display": "剖腹生产"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-002"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-002"
+        },
+        "performedDateTime": "2026-01-03T12:30:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/cesarean-indication-proc-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cesarean-with-indication-003",
+        "gender": "female",
+        "birthDate": "1988-03-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/cesarean-with-indication-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "cesarean-indication-enc-003",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-003"
+        },
+        "period": {
+          "start": "2026-01-04T09:00:00Z",
+          "end": "2026-01-04T16:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/cesarean-indication-enc-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cesarean-indication-cond-003",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.3",
+              "display": "Fetal distress"
+            }
+          ],
+          "text": "胎儿窘迫"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-003"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-003"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/cesarean-indication-cond-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "cesarean-indication-proc-003",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "80402C",
+              "display": "剖腹生产"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-003"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-003"
+        },
+        "performedDateTime": "2026-01-04T12:30:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/cesarean-indication-proc-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cesarean-with-indication-004",
+        "gender": "female",
+        "birthDate": "1988-03-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/cesarean-with-indication-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "cesarean-indication-enc-004",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-004"
+        },
+        "period": {
+          "start": "2026-01-05T09:00:00Z",
+          "end": "2026-01-05T16:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/cesarean-indication-enc-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cesarean-indication-cond-004",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.4",
+              "display": "Cephalopelvic disproportion"
+            }
+          ],
+          "text": "头盆不称"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-004"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-004"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/cesarean-indication-cond-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "cesarean-indication-proc-004",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "80402C",
+              "display": "剖腹生产"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-004"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-004"
+        },
+        "performedDateTime": "2026-01-05T12:30:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/cesarean-indication-proc-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cesarean-with-indication-005",
+        "gender": "female",
+        "birthDate": "1988-03-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/cesarean-with-indication-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "cesarean-indication-enc-005",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-005"
+        },
+        "period": {
+          "start": "2026-01-06T09:00:00Z",
+          "end": "2026-01-06T16:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/cesarean-indication-enc-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cesarean-indication-cond-005",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O32.1",
+              "display": "Breech presentation"
+            }
+          ],
+          "text": "臀位"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-005"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-005"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/cesarean-indication-cond-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "cesarean-indication-proc-005",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "80402C",
+              "display": "剖腹生产"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-005"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-005"
+        },
+        "performedDateTime": "2026-01-06T12:30:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/cesarean-indication-proc-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "cesarean-with-indication-006",
+        "gender": "female",
+        "birthDate": "1988-03-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/cesarean-with-indication-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "cesarean-indication-enc-006",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-006"
+        },
+        "period": {
+          "start": "2026-01-07T09:00:00Z",
+          "end": "2026-01-07T16:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/cesarean-indication-enc-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "cesarean-indication-cond-006",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O64.1",
+              "display": "Obstructed labor due to breech presentation"
+            }
+          ],
+          "text": "臀位难产"
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-006"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-006"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/cesarean-indication-cond-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "cesarean-indication-proc-006",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "80402C",
+              "display": "剖腹生产"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/cesarean-with-indication-006"
+        },
+        "encounter": {
+          "reference": "Encounter/cesarean-indication-enc-006"
+        },
+        "performedDateTime": "2026-01-07T12:30:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/cesarean-indication-proc-006"
+      }
+    }
+  ]
+}

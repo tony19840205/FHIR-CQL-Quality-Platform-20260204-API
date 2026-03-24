@@ -1,0 +1,2242 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-001",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-001"
+        },
+        "period": {
+          "start": "2026-01-02T08:00:00Z",
+          "end": "2026-01-02T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-001",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-001"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-001"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-001"
+        },
+        "performedDateTime": "2026-01-02T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-002",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-002",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-002"
+        },
+        "period": {
+          "start": "2026-01-03T08:00:00Z",
+          "end": "2026-01-03T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-002",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-002"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-002"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-002",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-002"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-002"
+        },
+        "performedDateTime": "2026-01-03T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-003",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-003",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-003"
+        },
+        "period": {
+          "start": "2026-01-04T08:00:00Z",
+          "end": "2026-01-04T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-003",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-003"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-003"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-003",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-003"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-003"
+        },
+        "performedDateTime": "2026-01-04T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-004",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-004",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-004"
+        },
+        "period": {
+          "start": "2026-01-05T08:00:00Z",
+          "end": "2026-01-05T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-004",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-004"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-004"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-004",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-004"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-004"
+        },
+        "performedDateTime": "2026-01-05T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-005",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-005",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-005"
+        },
+        "period": {
+          "start": "2026-01-06T08:00:00Z",
+          "end": "2026-01-06T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-005",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-005"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-005"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-005",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-005"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-005"
+        },
+        "performedDateTime": "2026-01-06T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-006",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-006",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-006"
+        },
+        "period": {
+          "start": "2026-01-07T08:00:00Z",
+          "end": "2026-01-07T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-006",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-006"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-006"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-006",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-006"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-006"
+        },
+        "performedDateTime": "2026-01-07T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-007",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-007"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-007",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-007"
+        },
+        "period": {
+          "start": "2026-01-08T08:00:00Z",
+          "end": "2026-01-08T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-007"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-007",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-007"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-007"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-007"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-007",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-007"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-007"
+        },
+        "performedDateTime": "2026-01-08T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-007"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-008",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-008"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-008",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-008"
+        },
+        "period": {
+          "start": "2026-01-09T08:00:00Z",
+          "end": "2026-01-09T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-008"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-008",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-008"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-008"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-008"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-008",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-008"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-008"
+        },
+        "performedDateTime": "2026-01-09T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-008"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-009",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-009"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-009",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-009"
+        },
+        "period": {
+          "start": "2026-01-01T08:00:00Z",
+          "end": "2026-01-01T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-009"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-009",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-009"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-009"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-009"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-009",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-009"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-009"
+        },
+        "performedDateTime": "2026-01-01T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-009"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-010",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-010"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-010",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-010"
+        },
+        "period": {
+          "start": "2026-01-02T08:00:00Z",
+          "end": "2026-01-02T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-010"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-010",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-010"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-010"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-010"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-010",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-010"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-010"
+        },
+        "performedDateTime": "2026-01-02T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-010"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-011",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-011"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-011",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-011"
+        },
+        "period": {
+          "start": "2026-01-03T08:00:00Z",
+          "end": "2026-01-03T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-011"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-011",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-011"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-011"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-011"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-011",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-011"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-011"
+        },
+        "performedDateTime": "2026-01-03T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-011"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-012",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-012"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-012",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-012"
+        },
+        "period": {
+          "start": "2026-01-04T08:00:00Z",
+          "end": "2026-01-04T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-012"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-012",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-012"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-012"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-012"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-012",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-012"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-012"
+        },
+        "performedDateTime": "2026-01-04T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-012"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-013",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-013"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-013",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-013"
+        },
+        "period": {
+          "start": "2026-01-05T08:00:00Z",
+          "end": "2026-01-05T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-013"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-013",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-013"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-013"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-013"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-013",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-013"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-013"
+        },
+        "performedDateTime": "2026-01-05T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-013"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-014",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-014"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-014",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-014"
+        },
+        "period": {
+          "start": "2026-01-06T08:00:00Z",
+          "end": "2026-01-06T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-014"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-014",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-014"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-014"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-014"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-014",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-014"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-014"
+        },
+        "performedDateTime": "2026-01-06T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-014"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-015",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-015"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-015",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-015"
+        },
+        "period": {
+          "start": "2026-01-07T08:00:00Z",
+          "end": "2026-01-07T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-015"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-015",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-015"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-015"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-015"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-015",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-015"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-015"
+        },
+        "performedDateTime": "2026-01-07T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-015"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-016",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-016"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-016",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-016"
+        },
+        "period": {
+          "start": "2026-01-08T08:00:00Z",
+          "end": "2026-01-08T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-016"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-016",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-016"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-016"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-016"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-016",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-016"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-016"
+        },
+        "performedDateTime": "2026-01-08T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-016"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-017",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-017"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-017",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-017"
+        },
+        "period": {
+          "start": "2026-01-09T08:00:00Z",
+          "end": "2026-01-09T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-017"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-017",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-017"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-017"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-017"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-017",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-017"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-017"
+        },
+        "performedDateTime": "2026-01-09T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-017"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-018",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-018"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-018",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-018"
+        },
+        "period": {
+          "start": "2026-01-01T08:00:00Z",
+          "end": "2026-01-01T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-018"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-018",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-018"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-018"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-018"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-018",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-018"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-018"
+        },
+        "performedDateTime": "2026-01-01T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-018"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-019",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-019"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-019",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-019"
+        },
+        "period": {
+          "start": "2026-01-02T08:00:00Z",
+          "end": "2026-01-02T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-019"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-019",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-019"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-019"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-019"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-019",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-019"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-019"
+        },
+        "performedDateTime": "2026-01-02T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-019"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-020",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-020"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-020",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-020"
+        },
+        "period": {
+          "start": "2026-01-03T08:00:00Z",
+          "end": "2026-01-03T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-020"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-020",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-020"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-020"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-020"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-020",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-020"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-020"
+        },
+        "performedDateTime": "2026-01-03T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-020"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-021",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-021"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-021",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-021"
+        },
+        "period": {
+          "start": "2026-01-04T08:00:00Z",
+          "end": "2026-01-04T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-021"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-021",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-021"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-021"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-021"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-021",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-021"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-021"
+        },
+        "performedDateTime": "2026-01-04T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-021"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-022",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-022"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-022",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-022"
+        },
+        "period": {
+          "start": "2026-01-05T08:00:00Z",
+          "end": "2026-01-05T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-022"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-022",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-022"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-022"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-022"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-022",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-022"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-022"
+        },
+        "performedDateTime": "2026-01-05T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-022"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-023",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-023"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-023",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-023"
+        },
+        "period": {
+          "start": "2026-01-06T08:00:00Z",
+          "end": "2026-01-06T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-023"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-023",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-023"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-023"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-023"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-023",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-023"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-023"
+        },
+        "performedDateTime": "2026-01-06T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-023"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-024",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-024"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-024",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-024"
+        },
+        "period": {
+          "start": "2026-01-07T08:00:00Z",
+          "end": "2026-01-07T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-024"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-024",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-024"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-024"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-024"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-024",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-024"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-024"
+        },
+        "performedDateTime": "2026-01-07T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-024"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-025",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-025"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-025",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-025"
+        },
+        "period": {
+          "start": "2026-01-08T08:00:00Z",
+          "end": "2026-01-08T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-025"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-025",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-025"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-025"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-025"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-025",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-025"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-025"
+        },
+        "performedDateTime": "2026-01-08T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-025"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "normal-delivery-026",
+        "gender": "female",
+        "birthDate": "1992-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/normal-delivery-026"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "normal-delivery-enc-026",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-026"
+        },
+        "period": {
+          "start": "2026-01-09T08:00:00Z",
+          "end": "2026-01-09T15:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/normal-delivery-enc-026"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "normal-delivery-cond-026",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-026"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-026"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/normal-delivery-cond-026"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "normal-delivery-proc-026",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177184002",
+              "display": "Normal delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/normal-delivery-026"
+        },
+        "encounter": {
+          "reference": "Encounter/normal-delivery-enc-026"
+        },
+        "performedDateTime": "2026-01-09T12:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/normal-delivery-proc-026"
+      }
+    }
+  ]
+}

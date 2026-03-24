@@ -1,0 +1,1180 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "translatorVersion": "3.10.0",
+        "translatorOptions": "DisableListDemotion,DisableListPromotion",
+        "signatureLevel": "Overloads",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "Waste",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localId": "1",
+          "locator": "11:1-11:26",
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "includes": {
+      "def": [
+        {
+          "localId": "2",
+          "locator": "13:1-13:56",
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "codeSystems": {
+      "def": [
+        {
+          "localId": "3",
+          "locator": "17:1-17:37",
+          "name": "LOINC",
+          "id": "http://loinc.org",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "4",
+          "locator": "18:1-18:43",
+          "name": "SNOMED",
+          "id": "http://snomed.info/sct",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "5",
+          "locator": "19:1-19:47",
+          "name": "UCUM",
+          "id": "http://unitsofmeasure.org",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "6",
+          "locator": "20:1-20:95",
+          "name": "ObservationCategory",
+          "id": "http://terminology.hl7.org/CodeSystem/observation-category",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "7",
+          "locator": "21:1-21:75",
+          "name": "ActCode",
+          "id": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "localId": "8",
+          "locator": "35:1-35:82",
+          "name": "Hazardous Waste Types",
+          "id": "http://esg.fhir.org/ValueSet/hazardous-waste",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "9",
+          "locator": "36:1-36:92",
+          "name": "Non-hazardous Waste Types",
+          "id": "http://esg.fhir.org/ValueSet/non-hazardous-waste",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "10",
+          "locator": "37:1-37:86",
+          "name": "Incineration Methods",
+          "id": "http://esg.fhir.org/ValueSet/waste-incineration",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "11",
+          "locator": "38:1-38:80",
+          "name": "Recycling Methods",
+          "id": "http://esg.fhir.org/ValueSet/waste-recycling",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "12",
+          "locator": "39:1-39:78",
+          "name": "Landfill Methods",
+          "id": "http://esg.fhir.org/ValueSet/waste-landfill",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "13",
+          "locator": "40:1-40:72",
+          "name": "Reuse Methods",
+          "id": "http://esg.fhir.org/ValueSet/waste-reuse",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "14",
+          "locator": "41:1-41:84",
+          "name": "Composting Methods",
+          "id": "http://esg.fhir.org/ValueSet/waste-composting",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "15",
+          "locator": "42:1-42:90",
+          "name": "Energy Recovery Methods",
+          "id": "http://esg.fhir.org/ValueSet/waste-energy-recovery",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "16",
+          "locator": "43:1-43:86",
+          "name": "Other Disposal Methods",
+          "id": "http://esg.fhir.org/ValueSet/waste-other-disposal",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "localId": "17",
+          "locator": "25:1-25:63",
+          "name": "Waste Mass",
+          "id": "80353-5",
+          "display": "Waste mass",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          }
+        },
+        {
+          "localId": "18",
+          "locator": "26:1-26:82",
+          "name": "Waste Management",
+          "id": "706877002",
+          "display": "Waste management",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          }
+        },
+        {
+          "localId": "19",
+          "locator": "27:1-27:73",
+          "name": "Incineration",
+          "id": "76938001",
+          "display": "Incineration",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          }
+        },
+        {
+          "localId": "20",
+          "locator": "28:1-28:69",
+          "name": "Recycling",
+          "id": "257641006",
+          "display": "Recycling",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          }
+        },
+        {
+          "localId": "21",
+          "locator": "29:1-29:66",
+          "name": "Landfill",
+          "id": "257656000",
+          "display": "Landfill",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          }
+        },
+        {
+          "localId": "22",
+          "locator": "30:1-30:81",
+          "name": "Hazardous Waste",
+          "id": "710252007",
+          "display": "Hazardous waste",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          }
+        },
+        {
+          "localId": "23",
+          "locator": "31:1-31:91",
+          "name": "Non-hazardous Waste",
+          "id": "710253002",
+          "display": "Non-hazardous waste",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          }
+        },
+        {
+          "localId": "24",
+          "locator": "32:1-32:72",
+          "name": "Composting",
+          "id": "257642004",
+          "display": "Composting",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          }
+        },
+        {
+          "localId": "25",
+          "locator": "33:1-33:81",
+          "name": "Energy Recovery",
+          "id": "257643009",
+          "display": "Energy recovery",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          }
+        },
+        {
+          "localId": "26",
+          "locator": "34:1-34:62",
+          "name": "Ambulatory",
+          "id": "AMB",
+          "display": "Ambulatory",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ActCode"
+          }
+        },
+        {
+          "localId": "27",
+          "locator": "35:1-35:77",
+          "name": "Inpatient",
+          "id": "IMP",
+          "display": "Inpatient encounter",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ActCode"
+          }
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "localId": "28",
+          "locator": "47:1-47:102",
+          "name": "MeasurementPeriod",
+          "accessLevel": "Public",
+          "default": {
+            "localId": "29",
+            "locator": "47:45-47:102",
+            "lowClosed": true,
+            "highClosed": true,
+            "type": "Interval",
+            "low": {
+              "localId": "30",
+              "locator": "47:54-47:79",
+              "type": "DateTime",
+              "year": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "1900",
+                "type": "Literal"
+              },
+              "month": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "1",
+                "type": "Literal"
+              },
+              "day": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "1",
+                "type": "Literal"
+              },
+              "hour": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "0",
+                "type": "Literal"
+              },
+              "minute": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "0",
+                "type": "Literal"
+              },
+              "second": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "0",
+                "type": "Literal"
+              },
+              "millisecond": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "0",
+                "type": "Literal"
+              }
+            },
+            "high": {
+              "localId": "31",
+              "locator": "47:82-47:102",
+              "type": "DateTime",
+              "year": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "2100",
+                "type": "Literal"
+              },
+              "month": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "12",
+                "type": "Literal"
+              },
+              "day": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "31",
+                "type": "Literal"
+              },
+              "hour": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "23",
+                "type": "Literal"
+              },
+              "minute": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "59",
+                "type": "Literal"
+              },
+              "second": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "59",
+                "type": "Literal"
+              },
+              "millisecond": {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "0",
+                "type": "Literal"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "statements": {
+      "def": [
+        {
+          "name": "Patient",
+          "context": "Patient",
+          "expression": {
+            "type": "SingletonFrom",
+            "operand": {
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "type": "Retrieve"
+            }
+          }
+        },
+        {
+          "localId": "40",
+          "locator": "56:1-58:51",
+          "name": "IsHazardousWaste",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "expression": {
+            "localId": "45",
+            "locator": "58:3-58:51",
+            "type": "InValueSet",
+            "code": {
+              "localId": "42",
+              "locator": "58:3-58:19",
+              "path": "code",
+              "scope": "observation",
+              "type": "Property"
+            },
+            "valueset": {
+              "localId": "43",
+              "locator": "58:24-58:51",
+              "name": "Hazardous Waste Types"
+            }
+          },
+          "operand": [
+            {
+              "localId": "41",
+              "locator": "56:32-56:54",
+              "name": "observation",
+              "operandTypeSpecifier": {
+                "localId": "44",
+                "locator": "56:45-56:54",
+                "name": "{http://hl7.org/fhir}Observation",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ]
+        },
+        {
+          "localId": "46",
+          "locator": "63:1-65:54",
+          "name": "IsNonHazardousWaste",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "expression": {
+            "localId": "51",
+            "locator": "65:3-65:54",
+            "type": "InValueSet",
+            "code": {
+              "localId": "48",
+              "locator": "65:3-65:19",
+              "path": "code",
+              "scope": "observation",
+              "type": "Property"
+            },
+            "valueset": {
+              "localId": "49",
+              "locator": "65:24-65:54",
+              "name": "Non-hazardous Waste Types"
+            }
+          },
+          "operand": [
+            {
+              "localId": "47",
+              "locator": "63:36-63:58",
+              "name": "observation",
+              "operandTypeSpecifier": {
+                "localId": "50",
+                "locator": "63:49-63:58",
+                "name": "{http://hl7.org/fhir}Observation",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ]
+        },
+        {
+          "localId": "52",
+          "locator": "70:1-75:9",
+          "name": "GetWasteWeight",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "expression": {
+            "localId": "60",
+            "locator": "71:3-75:9",
+            "type": "If",
+            "condition": {
+              "localId": "56",
+              "locator": "71:6-71:48",
+              "type": "Is",
+              "operand": {
+                "localId": "54",
+                "locator": "71:6-71:22",
+                "path": "value",
+                "scope": "observation",
+                "type": "Property"
+              },
+              "isTypeSpecifier": {
+                "localId": "55",
+                "locator": "71:27-71:48",
+                "name": "{http://hl7.org/fhir}Quantity",
+                "type": "NamedTypeSpecifier"
+              }
+            },
+            "then": {
+              "localId": "62",
+              "locator": "72:5-72:48",
+              "path": "value",
+              "type": "Property",
+              "source": {
+                "localId": "58",
+                "locator": "72:5-72:42",
+                "path": "value",
+                "type": "Property",
+                "source": {
+                  "localId": "57",
+                  "locator": "72:6-72:34",
+                  "strict": false,
+                  "type": "As",
+                  "operand": {
+                    "localId": "56",
+                    "locator": "72:6-72:22",
+                    "path": "value",
+                    "scope": "observation",
+                    "type": "Property"
+                  },
+                  "asTypeSpecifier": {
+                    "localId": "57",
+                    "locator": "72:27-72:34",
+                    "name": "FHIR.Quantity",
+                    "type": "NamedTypeSpecifier"
+                  }
+                }
+              }
+            },
+            "else": {
+              "localId": "61",
+              "locator": "74:5-74:8",
+              "asType": "{urn:hl7-org:elm-types:r1}Decimal",
+              "type": "As",
+              "operand": {
+                "type": "Null"
+              }
+            }
+          },
+          "operand": [
+            {
+              "localId": "53",
+              "locator": "70:31-70:53",
+              "name": "observation",
+              "operandTypeSpecifier": {
+                "localId": "59",
+                "locator": "70:44-70:53",
+                "name": "{http://hl7.org/fhir}Observation",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ]
+        },
+        {
+          "localId": "63",
+          "locator": "80:1-85:9",
+          "name": "GetProcedureWeight",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "expression": {
+            "localId": "71",
+            "locator": "81:3-85:9",
+            "type": "If",
+            "condition": {
+              "localId": "68",
+              "locator": "81:6-81:70",
+              "type": "And",
+              "operand": [
+                {
+                  "localId": "66",
+                  "locator": "81:6-81:34",
+                  "type": "Not",
+                  "operand": {
+                    "localId": "65",
+                    "locator": "81:6-81:34",
+                    "type": "IsNull",
+                    "operand": {
+                      "localId": "64",
+                      "locator": "81:6-81:25",
+                      "path": "outcome",
+                      "scope": "procedure",
+                      "type": "Property"
+                    }
+                  }
+                },
+                {
+                  "localId": "67",
+                  "locator": "81:40-81:70",
+                  "type": "Not",
+                  "operand": {
+                    "type": "IsNull",
+                    "operand": {
+                      "path": "text",
+                      "type": "Property",
+                      "source": {
+                        "localId": "64",
+                        "locator": "81:40-81:59",
+                        "path": "outcome",
+                        "scope": "procedure",
+                        "type": "Property"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "localId": "70",
+              "locator": "82:5-82:43",
+              "type": "ToDecimal",
+              "operand": {
+                "localId": "69",
+                "locator": "82:15-82:43",
+                "path": "value",
+                "type": "Property",
+                "source": {
+                  "path": "text",
+                  "type": "Property",
+                  "source": {
+                    "path": "outcome",
+                    "scope": "procedure",
+                    "type": "Property"
+                  }
+                }
+              }
+            },
+            "else": {
+              "localId": "72",
+              "locator": "84:5-84:7",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal",
+              "value": "0.0",
+              "type": "Literal"
+            }
+          },
+          "operand": [
+            {
+              "localId": "73",
+              "locator": "80:35-80:55",
+              "name": "procedure",
+              "operandTypeSpecifier": {
+                "localId": "74",
+                "locator": "80:46-80:55",
+                "name": "{http://hl7.org/fhir}Procedure",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ]
+        },
+        {
+          "localId": "75",
+          "locator": "90:1-95:7",
+          "name": "CalculateInpatientDays",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "expression": {
+            "localId": "91",
+            "locator": "91:3-95:7",
+            "type": "If",
+            "condition": {
+              "localId": "85",
+              "locator": "91:6-91:96",
+              "type": "And",
+              "operand": [
+                {
+                  "localId": "82",
+                  "locator": "91:6-91:96",
+                  "type": "And",
+                  "operand": [
+                    {
+                      "localId": "78",
+                      "locator": "91:6-91:34",
+                      "type": "Not",
+                      "operand": {
+                        "localId": "77",
+                        "locator": "91:6-91:34",
+                        "type": "IsNull",
+                        "operand": {
+                          "localId": "76",
+                          "locator": "91:6-91:25",
+                          "path": "period",
+                          "scope": "encounter",
+                          "type": "Property"
+                        }
+                      }
+                    },
+                    {
+                      "localId": "81",
+                      "locator": "91:40-91:96",
+                      "type": "Not",
+                      "operand": {
+                        "localId": "80",
+                        "locator": "91:40-91:96",
+                        "type": "IsNull",
+                        "operand": {
+                          "localId": "79",
+                          "locator": "91:40-91:64",
+                          "path": "start",
+                          "type": "Property",
+                          "source": {
+                            "path": "period",
+                            "scope": "encounter",
+                            "type": "Property"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "localId": "84",
+                  "locator": "91:70-91:96",
+                  "type": "Not",
+                  "operand": {
+                    "localId": "83",
+                    "locator": "91:70-91:96",
+                    "type": "IsNull",
+                    "operand": {
+                      "path": "end",
+                      "type": "Property",
+                      "source": {
+                        "path": "period",
+                        "scope": "encounter",
+                        "type": "Property"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "localId": "90",
+              "locator": "92:5-92:71",
+              "precision": "Day",
+              "type": "DurationBetween",
+              "operand": [
+                {
+                  "localId": "88",
+                  "locator": "92:19-92:48",
+                  "type": "Start",
+                  "operand": {
+                    "localId": "87",
+                    "locator": "92:28-92:48",
+                    "path": "period",
+                    "scope": "encounter",
+                    "type": "Property"
+                  }
+                },
+                {
+                  "localId": "89",
+                  "locator": "92:54-92:71",
+                  "type": "End",
+                  "operand": {
+                    "path": "period",
+                    "scope": "encounter",
+                    "type": "Property"
+                  }
+                }
+              ]
+            },
+            "else": {
+              "localId": "92",
+              "locator": "94:5-94:5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "0",
+              "type": "Literal"
+            }
+          },
+          "operand": [
+            {
+              "localId": "93",
+              "locator": "90:39-90:59",
+              "name": "encounter",
+              "operandTypeSpecifier": {
+                "localId": "94",
+                "locator": "90:50-90:59",
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ]
+        },
+        {
+          "localId": "100",
+          "locator": "127:1-133:46",
+          "name": "All Waste Observations",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "110",
+            "locator": "128:3-133:46",
+            "type": "Query",
+            "source": [
+              {
+                "localId": "101",
+                "locator": "128:3-128:29",
+                "alias": "O",
+                "expression": {
+                  "localId": "102",
+                  "locator": "128:3-128:27",
+                  "dataType": "{http://hl7.org/fhir}Observation",
+                  "codeProperty": "code",
+                  "codeComparator": "~",
+                  "type": "Retrieve",
+                  "codes": {
+                    "localId": "103",
+                    "locator": "128:17-128:26",
+                    "name": "Waste Mass",
+                    "type": "CodeRef"
+                  }
+                }
+              }
+            ],
+            "relationship": [],
+            "where": {
+              "localId": "109",
+              "locator": "129:5-133:46",
+              "type": "And",
+              "operand": [
+                {
+                  "localId": "107",
+                  "locator": "129:5-133:46",
+                  "type": "And",
+                  "operand": [
+                    {
+                      "localId": "105",
+                      "locator": "129:11-129:55",
+                      "type": "In",
+                      "operand": [
+                        {
+                          "localId": "104",
+                          "locator": "129:11-129:18",
+                          "path": "status",
+                          "scope": "O",
+                          "type": "Property"
+                        },
+                        {
+                          "localId": "106",
+                          "locator": "129:23-129:55",
+                          "type": "List",
+                          "element": [
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "final",
+                              "type": "Literal"
+                            },
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "amended",
+                              "type": "Literal"
+                            },
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "corrected",
+                              "type": "Literal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "localId": "108",
+                      "locator": "130:11-130:51",
+                      "type": "IncludedIn",
+                      "operand": [
+                        {
+                          "path": "effective",
+                          "scope": "O",
+                          "type": "Property"
+                        },
+                        {
+                          "name": "MeasurementPeriod",
+                          "type": "ParameterRef"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "localId": "111",
+                  "locator": "133:11-133:46",
+                  "type": "Not",
+                  "operand": {
+                    "type": "IsNull",
+                    "operand": {
+                      "localId": "112",
+                      "locator": "133:11-133:35",
+                      "name": "GetWasteWeight",
+                      "type": "FunctionRef",
+                      "operand": [
+                        {
+                          "name": "O",
+                          "type": "AliasRef"
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "localId": "120",
+          "locator": "138:1-140:34",
+          "name": "Hazardous Waste Observations",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "125",
+            "locator": "139:3-140:34",
+            "type": "Query",
+            "source": [
+              {
+                "localId": "121",
+                "locator": "139:3-139:29",
+                "alias": "O",
+                "expression": {
+                  "localId": "122",
+                  "locator": "139:3-139:27",
+                  "name": "All Waste Observations",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "relationship": [],
+            "where": {
+              "localId": "124",
+              "locator": "140:11-140:34",
+              "name": "IsHazardousWaste",
+              "type": "FunctionRef",
+              "operand": [
+                {
+                  "localId": "123",
+                  "locator": "140:29-140:29",
+                  "name": "O",
+                  "type": "AliasRef"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "localId": "130",
+          "locator": "145:1-147:37",
+          "name": "Non-hazardous Waste Observations",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "135",
+            "locator": "146:3-147:37",
+            "type": "Query",
+            "source": [
+              {
+                "localId": "131",
+                "locator": "146:3-146:29",
+                "alias": "O",
+                "expression": {
+                  "localId": "132",
+                  "locator": "146:3-146:27",
+                  "name": "All Waste Observations",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "relationship": [],
+            "where": {
+              "localId": "134",
+              "locator": "147:11-147:37",
+              "name": "IsNonHazardousWaste",
+              "type": "FunctionRef",
+              "operand": [
+                {
+                  "localId": "133",
+                  "locator": "147:32-147:32",
+                  "name": "O",
+                  "type": "AliasRef"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "localId": "150",
+          "locator": "176:1-183:7",
+          "name": "Total Waste Generated",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "160",
+            "locator": "177:3-183:7",
+            "type": "If",
+            "condition": {
+              "localId": "152",
+              "locator": "177:6-177:41",
+              "type": "Exists",
+              "operand": {
+                "localId": "151",
+                "locator": "177:13-177:41",
+                "name": "All Waste Observations",
+                "type": "ExpressionRef"
+              }
+            },
+            "then": {
+              "localId": "158",
+              "locator": "178:5-181:6",
+              "type": "Sum",
+              "source": {
+                "localId": "156",
+                "locator": "179:7-180:35",
+                "type": "Query",
+                "source": [
+                  {
+                    "localId": "154",
+                    "locator": "179:7-179:33",
+                    "alias": "O",
+                    "expression": {
+                      "localId": "153",
+                      "locator": "179:7-179:31",
+                      "name": "All Waste Observations",
+                      "type": "ExpressionRef"
+                    }
+                  }
+                ],
+                "relationship": [],
+                "return": {
+                  "localId": "157",
+                  "locator": "180:9-180:35",
+                  "expression": {
+                    "localId": "155",
+                    "locator": "180:16-180:35",
+                    "name": "GetWasteWeight",
+                    "type": "FunctionRef",
+                    "operand": [
+                      {
+                        "name": "O",
+                        "type": "AliasRef"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "else": {
+              "localId": "159",
+              "locator": "183:5-183:7",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal",
+              "value": "0.0",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "localId": "200",
+          "locator": "380:1-450:5",
+          "name": "ESG Waste Management Report",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "250",
+            "locator": "381:3-450:5",
+            "type": "If",
+            "condition": {
+              "localId": "202",
+              "locator": "381:6-381:44",
+              "type": "Not",
+              "operand": {
+                "localId": "201",
+                "locator": "381:10-381:44",
+                "type": "Exists",
+                "operand": {
+                  "name": "All Waste Observations",
+                  "type": "ExpressionRef"
+                }
+              }
+            },
+            "then": {
+              "localId": "210",
+              "locator": "382:5-386:6",
+              "type": "Tuple",
+              "element": [
+                {
+                  "name": "status",
+                  "value": {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "NO_FHIR_DATA",
+                    "type": "Literal"
+                  }
+                },
+                {
+                  "name": "message",
+                  "value": {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "【FHIR 無廢棄物資料記載】",
+                    "type": "Literal"
+                  }
+                },
+                {
+                  "name": "data_completeness",
+                  "value": {
+                    "name": "Data Completeness",
+                    "type": "ExpressionRef"
+                  }
+                }
+              ]
+            },
+            "else": {
+              "localId": "240",
+              "locator": "388:5-450:5",
+              "type": "Tuple",
+              "element": [
+                {
+                  "name": "report_metadata",
+                  "value": {
+                    "type": "Tuple",
+                    "element": [
+                      {
+                        "name": "report_title",
+                        "value": {
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "ESG Waste Management Report",
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "name": "standard",
+                        "value": {
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "GRI 306: Waste 2020",
+                          "type": "Literal"
+                        }
+                      },
+                      {
+                        "name": "fhir_version",
+                        "value": {
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "FHIR R4 (4.0.1)",
+                          "type": "Literal"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "summary",
+                  "value": {
+                    "type": "Tuple",
+                    "element": [
+                      {
+                        "name": "total_waste_kg",
+                        "value": {
+                          "name": "Total Waste Generated",
+                          "type": "ExpressionRef"
+                        }
+                      },
+                      {
+                        "name": "hazardous_waste_percent",
+                        "value": {
+                          "name": "Hazardous Waste Percentage",
+                          "type": "ExpressionRef"
+                        }
+                      },
+                      {
+                        "name": "diversion_rate_percent",
+                        "value": {
+                          "name": "Diversion Rate",
+                          "type": "ExpressionRef"
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,29 +1,113 @@
-﻿library Indicator_03_3_Same_Hospital_Antidiabetic_Overlap_1712 version '1.0.0'
+library Indicator_03_3_Same_Hospital_Antidiabetic_Overlap_1712 version '1.0.0'
 
 using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
-// 指標名稱: 同醫院門診同藥理用藥日數重疊率-降血糖(口服及注射)
-// 指標代碼: 1712
-// 計算期間: 季度
+// 來源：醫療給付檔案分析系統 指標代碼: 1712
+// 條件依據：同醫院門診同藥理用藥日數重疊率-降血糖(不分口服及注射)
 // 製作日期：2025-11-20
-// 資料來源: 醫療給付檔案分析系統
 
+// 【公式說明】
+// 分子: 同院ID不同處方之間給用藥日期與結束用藥日期有重覆之給藥日數
+// 分母: 各案件之「給藥日數」總和
+// 降血糖藥(不分口服及注射): ATC前5碼=A10AB、A10AC、A10AD、A10AE、A10BA、A10BB、A10BF、A10BG、A10BX、A10BH、A10BJ、A10BK
+
+codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
 codesystem "ATC": 'http://www.whocc.no/atc'
 codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes'
 
-// 降血糖藥物 ATC 代碼 A10 (口服及注射)
-code "Antidiabetic Drugs ATC Code": 'A10' from "ATC"
+// 就醫類型代碼
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory - 門診'
 
-// 門診就醫類型
-code "Ambulatory": 'AMB' from "ActCode"
+// Helper function: 檢查是否為降血糖藥(不分口服及注射)
+define function IsAntidiabeticDrug(atcCode String):
+  // ATC前5碼為指定代碼（包含口服及注射）
+  Substring(atcCode, 0, 5) in {
+    'A10AB', 'A10AC', 'A10AD', 'A10AE', 
+    'A10BA', 'A10BB', 'A10BF', 'A10BG', 'A10BX',
+    'A10BH', 'A10BJ', 'A10BK'
+  }
 
-// TODO: 完整 CQL 邏輯將根據原始 SQL 轉換
-// WITH quarters AS (
-    SELECT '2024Q1' as quarter, '2024-01-01' as start_date, '2024-03-31' as end_date
-    UNION ALL SELECT '2024Q2', '2024-04-01', '2024-06-30'
-    UNION ALL SELECT '2024Q3', '2024-07-01', '2024-09-30'
+// Helper function: 計算兩個日期區間的重疊天數
+define function CalculateOverlapDays(start1 Date, end1 Date, start2 Date, end2 Date):
+  if start1 is null or end1 is null or start2 is null or end2 is null then
+    0
+  else
+    let overlapStart: if start1 > start2 then start1 else start2,
+        overlapEnd: if end1 < end2 then end1 else end2,
+        overlapDays: days between overlapStart and overlapEnd + 1
+    in
+      if overlapStart <= overlapEnd then overlapDays else 0
+
+// 1. 同醫院門診降血糖藥品處方
+define "Antidiabetic Prescriptions":
+  [MedicationRequest] MR
+    where MR.status.value = 'completed'
+    and exists (
+      MR.medicationCodeableConcept.coding MC
+        where MC.system.value = 'http://www.whocc.no/atc'
+        and exists (
+          MR.contained C
+            where C is FHIR.Medication
+            and IsAntidiabeticDrug(MC.code.value)
+        )
+    )
+    and exists (
+      [Encounter] E
+        where E.id.value = Last(Split(MR.encounter.reference.value, '/'))
+        and E.class.code.value = 'AMB'
+        and E.status.value = 'finished'
+        // 排除代辦案件
+        and not exists (E.type T where exists (T.coding C where C.code.value = 'AGENCY'))
+    )
+
+// 2. 計算同院同病人的藥品重疊日數
+define "Drug Overlap Days":
+  flatten (
+    "Antidiabetic Prescriptions" P1
+      let 
+        patientRef: P1.subject.reference.value,
+        organizationRef: P1.requester.reference.value,
+        start1: P1.dispenseRequest.validityPeriod.start.value,
+        end1: P1.dispenseRequest.validityPeriod.end.value
+      return
+        "Antidiabetic Prescriptions" P2
+          where P2.subject.reference.value = patientRef
+          and P2.requester.reference.value = organizationRef
+          and P2.id.value != P1.id.value
+          let
+            start2: P2.dispenseRequest.validityPeriod.start.value,
+            end2: P2.dispenseRequest.validityPeriod.end.value,
+            overlap: CalculateOverlapDays(start1, end1, start2, end2)
+          where overlap > 0
+          return {
+            prescription1: P1.id.value,
+            prescription2: P2.id.value,
+            overlapDays: overlap
+          }
+  )
+
+// 3. 分母：降血糖藥品總給藥日數
+define "Total Drug Days":
+  Sum(
+    "Antidiabetic Prescriptions" P
+      return days between P.dispenseRequest.validityPeriod.start.value 
+                     and P.dispenseRequest.validityPeriod.end.value + 1
+  )
+
+// 4. 分子：重疊給藥日數
+define "Overlap Drug Days":
+  Sum("Drug Overlap Days" D return D.overlapDays) / 2  // 除以2避免重複計算
+
+// 5. 指標計算結果：用藥日數重疊率
+define "Drug Overlap Rate":
+  if "Total Drug Days" > 0 then
+    ("Overlap Drug Days" / "Total Drug Days") * 100
+  else
+    null
     UNION ALL SELECT '2024Q4', '2024-10-01', '2024-12-31'
     UNION ALL SELECT '2025Q1', '2025-01-01', '2025-03-31'
     UNION ALL SELECT '2025Q2', '2025-04-01', '2025-06-30'

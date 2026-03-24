@@ -1,0 +1,1246 @@
+{
+  "library": {
+    "identifier": {
+      "id": "Indicator_04_Chronic_Continuous_Prescription_Rate_1318",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "codeSystems": {
+      "def": [
+        {
+          "name": "NHI_PROCEDURE",
+          "id": "http://www.nhi.gov.tw/codes/procedure",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "SNOMEDCT",
+          "id": "http://snomed.info/sct",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ActCode",
+          "id": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "EncounterStatus",
+          "id": "http://hl7.org/fhir/encounter-status",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "MedicationRequestStatus",
+          "id": "http://hl7.org/fhir/CodeSystem/medicationrequest-status",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "MedicationRequestIntent",
+          "id": "http://hl7.org/fhir/CodeSystem/medicationrequest-intent",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "name": "Chronic Consultation Codes",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/chronic-consultation-codes",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "name": "Ambulatory",
+          "id": "AMB",
+          "display": "Ambulatory",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ActCode"
+          }
+        },
+        {
+          "name": "Outpatient",
+          "id": "O",
+          "display": "Outpatient",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ActCode"
+          }
+        },
+        {
+          "name": "Finished",
+          "id": "finished",
+          "display": "Finished",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "EncounterStatus"
+          }
+        },
+        {
+          "name": "Active",
+          "id": "active",
+          "display": "Active",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "MedicationRequestStatus"
+          }
+        },
+        {
+          "name": "Completed",
+          "id": "completed",
+          "display": "Completed",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "MedicationRequestStatus"
+          }
+        },
+        {
+          "name": "00155A",
+          "id": "00155A",
+          "display": "慢性病診察費155A",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00157A",
+          "id": "00157A",
+          "display": "慢性病診察費157A",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00170A",
+          "id": "00170A",
+          "display": "慢性病診察費170A",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00171A",
+          "id": "00171A",
+          "display": "慢性病診察費171A",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00131B",
+          "id": "00131B",
+          "display": "慢性病診察費131B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00132B",
+          "id": "00132B",
+          "display": "慢性病診察費132B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00172B",
+          "id": "00172B",
+          "display": "慢性病診察費172B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00173B",
+          "id": "00173B",
+          "display": "慢性病診察費173B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00135B",
+          "id": "00135B",
+          "display": "慢性病診察費135B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00136B",
+          "id": "00136B",
+          "display": "慢性病診察費136B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00174B",
+          "id": "00174B",
+          "display": "慢性病診察費174B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00175B",
+          "id": "00175B",
+          "display": "慢性病診察費175B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00137B",
+          "id": "00137B",
+          "display": "慢性病診察費137B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00138B",
+          "id": "00138B",
+          "display": "慢性病診察費138B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00176B",
+          "id": "00176B",
+          "display": "慢性病診察費176B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00177B",
+          "id": "00177B",
+          "display": "慢性病診察費177B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00139C",
+          "id": "00139C",
+          "display": "慢性病診察費139C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00140C",
+          "id": "00140C",
+          "display": "慢性病診察費140C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00158C",
+          "id": "00158C",
+          "display": "慢性病診察費158C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00159C",
+          "id": "00159C",
+          "display": "慢性病診察費159C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00141C",
+          "id": "00141C",
+          "display": "慢性病診察費141C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00142C",
+          "id": "00142C",
+          "display": "慢性病診察費142C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00160C",
+          "id": "00160C",
+          "display": "慢性病診察費160C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00161C",
+          "id": "00161C",
+          "display": "慢性病診察費161C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00143C",
+          "id": "00143C",
+          "display": "慢性病診察費143C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00144C",
+          "id": "00144C",
+          "display": "慢性病診察費144C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00162C",
+          "id": "00162C",
+          "display": "慢性病診察費162C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00163C",
+          "id": "00163C",
+          "display": "慢性病診察費163C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00145C",
+          "id": "00145C",
+          "display": "慢性病診察費145C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00146C",
+          "id": "00146C",
+          "display": "慢性病診察費146C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00164C",
+          "id": "00164C",
+          "display": "慢性病診察費164C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00165C",
+          "id": "00165C",
+          "display": "慢性病診察費165C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00147C",
+          "id": "00147C",
+          "display": "慢性病診察費147C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00148C",
+          "id": "00148C",
+          "display": "慢性病診察費148C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00166C",
+          "id": "00166C",
+          "display": "慢性病診察費166C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00167C",
+          "id": "00167C",
+          "display": "慢性病診察費167C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00149C",
+          "id": "00149C",
+          "display": "慢性病診察費149C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00150C",
+          "id": "00150C",
+          "display": "慢性病診察費150C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00168C",
+          "id": "00168C",
+          "display": "慢性病診察費168C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00169C",
+          "id": "00169C",
+          "display": "慢性病診察費169C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00178B",
+          "id": "00178B",
+          "display": "慢性病診察費178B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00179B",
+          "id": "00179B",
+          "display": "慢性病診察費179B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00180B",
+          "id": "00180B",
+          "display": "慢性病診察費180B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00181B",
+          "id": "00181B",
+          "display": "慢性病診察費181B",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00182C",
+          "id": "00182C",
+          "display": "慢性病診察費182C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00183C",
+          "id": "00183C",
+          "display": "慢性病診察費183C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00184C",
+          "id": "00184C",
+          "display": "慢性病診察費184C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00185C",
+          "id": "00185C",
+          "display": "慢性病診察費185C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00187C",
+          "id": "00187C",
+          "display": "慢性病診察費187C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00189C",
+          "id": "00189C",
+          "display": "慢性病診察費189C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00190C",
+          "id": "00190C",
+          "display": "慢性病診察費190C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "00191C",
+          "id": "00191C",
+          "display": "慢性病診察費191C",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Chronic Prescription",
+          "id": "04",
+          "display": "Chronic Disease Prescription - 慢性病處方",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Chronic Continuous Prescription",
+          "id": "E1",
+          "display": "Chronic Disease Continuous Prescription - 慢性病連續處方",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Pediatrics",
+          "id": "04",
+          "display": "Pediatrics - 小兒科",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Obstetrics and Gynecology",
+          "id": "05",
+          "display": "Obstetrics and Gynecology - 婦產科",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Respiratory Care Ward 1",
+          "id": "P1011C",
+          "display": "Respiratory Care Ward - 呼吸照護病房(P1011C)",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Respiratory Care Ward 2",
+          "id": "P1012C",
+          "display": "Respiratory Care Ward - 呼吸照護病房(P1012C)",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        }
+      ]
+    },
+    "statements": {
+      "def": [
+        {
+          "name": "Patient",
+          "context": "Patient",
+          "expression": {
+            "type": "SingletonFrom",
+            "operand": {
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "type": "Retrieve"
+            }
+          }
+        },
+        {
+          "name": "2024Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2024Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "3",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2024Q2 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "4",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2024Q2 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "6",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "30",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2024Q3 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "7",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2024Q3 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "9",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "30",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2024Q4 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "10",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2024Q4 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "12",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2025Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2025",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2025Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2025",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "3",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2025Q2 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2025",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "4",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2025Q2 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2025",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "6",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "30",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2025Q3 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2025",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "7",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2025Q3 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2025",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "9",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "30",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2025Q4 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2025",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "10",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2025Q4 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2025",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "12",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2026Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2026",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "2026Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2026",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "3",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "Measurement Period Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "Measurement Period End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2099",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "12",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "Measurement Period",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Interval",
+            "low": {
+              "name": "Measurement Period Start",
+              "type": "ExpressionRef"
+            },
+            "high": {
+              "name": "Measurement Period End",
+              "type": "ExpressionRef"
+            }
+          }
+        },
+        {
+          "name": "Indicator Result",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Tuple",
+            "element": [
+              {
+                "name": "indicatorCode",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1318",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorName",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "慢性病連續處方箋開立率",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorNameEn",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "Chronic Disease Continuous Prescription Rate",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "measurementPeriodStart",
+                "value": {
+                  "name": "Measurement Period Start",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "measurementPeriodEnd",
+                "value": {
+                  "name": "Measurement Period End",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "dataSource",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "醫療給付檔案分析系統",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "compiledBy",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "衛生福利部 中央健康保險署",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "compiledDate",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "114/11/06",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "version",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1.0.0",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "chronicConsultationCodes",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "value": "51",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "keyFeature",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "慢性病連續處方箋開立率分析 (51個診察費代碼, 案件分類04/E1)",
+                  "type": "Literal"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "translatorVersion": "3.10.0",
+  "translatorOptions": "DisableListDemotion,DisableListPromotion",
+  "signatureLevel": "Overloads",
+  "annotations": [
+    {
+      "type": "CqlToElmInfo",
+      "translatorVersion": "3.10.0",
+      "translatorOptions": "DisableListDemotion,DisableListPromotion",
+      "signatureLevel": "Overloads"
+    }
+  ]
+}

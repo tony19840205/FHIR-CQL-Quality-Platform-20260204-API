@@ -4,406 +4,507 @@ using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
-// 來源：醫療給付檔案分析系統 指標代碼: 3128
-// 條件依據：門診每張處方箋開藥品項數大於等於十項之案件比率
-// 製作日期：2025-11-20
-
+// 指標名稱: 門診每張處方箋開藥品項數大於等於十項之案件比率
+// 指標代碼: 3128
+// 製作日期：2026-01-09
+// 製表日期: 114/11/06
+// 製表單位: 衛生福利部 中央健康保險署
+//
+// 【資料時間範圍】
+// 查詢期間: 2024-01-01 ~ 2099-12-31 (無限制)
+// 統計單位: 每季 (2024Q1-Q4, 2025Q1-Q4, 2026Q1)
+// ============================================
+//
 // 【公式說明】
-// 分子: 分母案件中藥品品項數≧10項之案件數
-// 分母: 給藥案件數（藥費不為0，或給藥天數不為0，或處方調劑方式為1、0、6）
-// 藥品品項數: 醫令檔別1或4且醫令代碼為10碼且醫令數量>0，同處方下同醫令代碼計數
-// 排除: 代辦案件、插報原因註記為2之案件
+// 分子: 分母案件中藥品品項數≥10項之案件數
+// 分母: 給藥案件數
+//
+// 給藥案件條件:
+// (1)藥費不為0，或給藥天數不為0，或處方調劑方式為1、0、6
+//
+// 藥品品項數計算:
+// (2)醫令檔別1或4且醫令代碼為10碼且醫令令數量>0，取同處方下同醫令代碼户數
+//
+// 排除條件:
+// (1)排除代辦案件
+// (2)排除「插報原因註記」為2之案件
+//
+// 備註:
+// ※分子排除下列條件:
+// - 重大傷病(部分自擔代碼為001)
+// - 居家醫療照護整合計畫(正一特定治療項目代碼為EC)
+// - 醫院以病人為中心門診整合照護計畫(整合式照護模式註記:111年7月1日起為Q,R,S;108年起為X,Q,R,S;107年以前為A,B,D,E,F)
+// - 急診案件(案件分類為02)
+// - 門診手術案件(案件分類為03)
+// - 立刻使用處方箋(藥品使用處方箋(SN)使用時機為STAT、PRN)
+// ============================================
 
-codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes/procedure'
+codesystem "NHI_CLAIM": 'http://www.nhi.gov.tw/codes/claim'
 codesystem "SNOMEDCT": 'http://snomed.info/sct'
 codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
-codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes'
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
+codesystem "MedicationRequestStatus": 'http://hl7.org/fhir/CodeSystem/medicationrequest-status'
 
-// 就醫類型代碼
-code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory - 門診'
+valueset "Drug Order Types": 'http://nhi.gov.tw/fhir/ValueSet/drug-order-types'
+valueset "Dispense Methods": 'http://nhi.gov.tw/fhir/ValueSet/dispense-methods'
 
-// Helper function: 檢查醫令代碼是否為10碼
-define function Is10DigitDrugCode(drugCode String):
-  Length(drugCode) = 10
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory'
+code "Outpatient": 'O' from "ActCode" display 'Outpatient'
+code "Finished": 'finished' from "EncounterStatus" display 'Finished'
+code "Completed": 'completed' from "MedicationRequestStatus" display 'Completed'
 
-// 1. 門診給藥案件（分母）
-define "Outpatient Medication Cases":
-  [Encounter] E
-    where E.status.value = 'finished'
-    and E.class.code.value = 'AMB'
-    and exists (
-      [MedicationRequest] MR
-        where MR.encounter.reference.value = 'Encounter/' + E.id.value
-        and MR.status.value = 'completed'
-        and MR.dispenseRequest is not null
-    )
-    // 排除代辦案件
-    and not exists (
-      E.type T where exists (T.coding C where C.code.value = 'AGENCY')
-    )
-    // 排除插報原因註記為2之案件
-    and not exists (
-      E.type T where exists (T.coding C where C.code.value = 'REPORT_REASON_2')
-    )
+// 醫令檔別代碼
+code "Drug Order Type 1": '1' from "NHI_PROCEDURE" display 'Medication Order - 藥品醫令'
+code "Drug Order Type 4": '4' from "NHI_PROCEDURE" display 'Medication Supply - 藥品供應'
 
-// 2. 計算每個案件的藥品品項數
+// 處方調劑方式代碼
+code "Dispense Method 0": '0' from "NHI_CLAIM" display 'General Dispense - 一般調劑'
+code "Dispense Method 1": '1' from "NHI_CLAIM" display 'Chronic Continuous Dispense - 慢性病連續調劑'
+code "Dispense Method 6": '6' from "NHI_CLAIM" display 'Special Dispense - 特殊調劑'
+
+// 重大傷病代碼
+code "Catastrophic Illness 001": '001' from "NHI_CLAIM" display 'Catastrophic Illness - 重大傷病(部分自擔代碼001)'
+
+// 居家醫療代碼
+code "Home Care EC": 'EC' from "NHI_PROCEDURE" display 'Home Care - 居家醫療照護整合計畫'
+
+// 整合照護模式代碼
+code "Integrated Care Q": 'Q' from "NHI_CLAIM" display 'Integrated Care Q - 整合照護Q'
+code "Integrated Care R": 'R' from "NHI_CLAIM" display 'Integrated Care R - 整合照護R'
+code "Integrated Care S": 'S' from "NHI_CLAIM" display 'Integrated Care S - 整合照護S'
+code "Integrated Care X": 'X' from "NHI_CLAIM" display 'Integrated Care X - 整合照護X'
+code "Integrated Care A": 'A' from "NHI_CLAIM" display 'Integrated Care A - 整合照護A'
+code "Integrated Care B": 'B' from "NHI_CLAIM" display 'Integrated Care B - 整合照護B'
+code "Integrated Care D": 'D' from "NHI_CLAIM" display 'Integrated Care D - 整合照護D'
+code "Integrated Care E": 'E' from "NHI_CLAIM" display 'Integrated Care E - 整合照護E'
+code "Integrated Care F": 'F' from "NHI_CLAIM" display 'Integrated Care F - 整合照護F'
+
+// 案件分類代碼
+code "Claim Type 02": '02' from "NHI_CLAIM" display 'Emergency - 急診'
+code "Claim Type 03": '03' from "NHI_CLAIM" display 'Outpatient Surgery - 門診手術'
+
+// 使用時機代碼
+code "STAT": 'STAT' from "NHI_CLAIM" display 'Immediately - 立即使用'
+code "PRN": 'PRN' from "NHI_CLAIM" display 'As Needed - 需要時使用'
+
+// 插報原因代碼
+code "Report Reason 2": '2' from "NHI_CLAIM" display 'Supplementary Report - 插報原因2'
+
+// ============================================
+// Quarter Definitions (2024-2026)
+// ============================================
+
+define "2024Q1 Start": @2024-01-01
+define "2024Q1 End": @2024-03-31
+define "2024Q2 Start": @2024-04-01
+define "2024Q2 End": @2024-06-30
+define "2024Q3 Start": @2024-07-01
+define "2024Q3 End": @2024-09-30
+define "2024Q4 Start": @2024-10-01
+define "2024Q4 End": @2024-12-31
+
+define "2025Q1 Start": @2025-01-01
+define "2025Q1 End": @2025-03-31
+define "2025Q2 Start": @2025-04-01
+define "2025Q2 End": @2025-06-30
+define "2025Q3 Start": @2025-07-01
+define "2025Q3 End": @2025-09-30
+define "2025Q4 Start": @2025-10-01
+define "2025Q4 End": @2025-12-31
+
+define "2026Q1 Start": @2026-01-01
+define "2026Q1 End": @2026-03-31
+
+// Measurement Period (無限制 - Unlimited)
+define "Measurement Period Start": @2024-01-01
+define "Measurement Period End": @2099-12-31
+define "Measurement Period": Interval["Measurement Period Start", "Measurement Period End"]
+
+// ============================================
+// Helper Functions
+// ============================================
+
+define function GetId(resource FHIR.Resource):
+  Last(Split(resource.id, '/'))
+
+define function Is10DigitDrugCode(code String):
+  Length(code) = 10
+
+define function IsDrugOrderType(orderType String):
+  orderType in {'1', '4'}
+
+define function IsValidDispenseMethod(method String):
+  method in {'0', '1', '6'}
+
+define function GetClaimType(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.type T
+        return First(T.coding C where C.system = 'http://www.nhi.gov.tw/codes/claim').code.value
+    ),
+    ''
+  )
+
+define function GetReportReason(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.extension E
+        where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/report-reason'
+        return (E.value as FHIR.Coding).code.value
+    ),
+    ''
+  )
+
+define function IsAgencyCase(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/agency-case'
+        and E.value = true
+  )
+
+define function HasCatastrophicIllness(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/catastrophic-illness'
+        and (E.value as FHIR.Coding).code.value = '001'
+  )
+
+define function HasHomeCare(encounter FHIR.Encounter):
+  exists (
+    [Procedure] P
+      where GetId(P.encounter.reference) = GetId(encounter)
+        and exists (
+          P.code.coding C
+            where C.system.value = 'http://www.nhi.gov.tw/codes/procedure'
+              and C.code.value = 'EC'
+        )
+  )
+
+define function HasIntegratedCare(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/integrated-care'
+        and (E.value as FHIR.Coding).code.value in {'Q', 'R', 'S', 'X', 'A', 'B', 'D', 'E', 'F'}
+  )
+
+define function IsEmergencyOrSurgery(encounter FHIR.Encounter):
+  GetClaimType(encounter) in {'02', '03'}
+
+define function HasStatOrPrnMedication(encounter FHIR.Encounter):
+  exists (
+    [MedicationRequest] MR
+      where GetId(MR.encounter.reference) = GetId(encounter)
+        and exists (
+          MR.dosageInstruction DI
+            where DI.timing.code.coding C
+              where C.code.value in {'STAT', 'PRN'}
+        )
+  )
+
+define function ShouldExcludeFromNumerator(encounter FHIR.Encounter):
+  HasCatastrophicIllness(encounter)
+    or HasHomeCare(encounter)
+    or HasIntegratedCare(encounter)
+    or IsEmergencyOrSurgery(encounter)
+    or HasStatOrPrnMedication(encounter)
+
+define function GetDrugCost(encounter FHIR.Encounter):
+  Sum(
+    [Claim] C
+      where GetId(C.encounter.reference) = GetId(encounter)
+      return Coalesce((C.total.value as FHIR.Money).value.value, 0)
+  )
+
+define function GetDrugDays(encounter FHIR.Encounter):
+  Max(
+    [MedicationRequest] MR
+      where GetId(MR.encounter.reference) = GetId(encounter)
+      return Coalesce(MR.dispenseRequest.expectedSupplyDuration.value.value, 0)
+  )
+
+define function GetDispenseMethod(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.extension E
+        where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/dispense-method'
+        return (E.value as FHIR.Coding).code.value
+    ),
+    ''
+  )
+
+define function IsMedicationCase(encounter FHIR.Encounter):
+  GetDrugCost(encounter) != 0
+    or GetDrugDays(encounter) != 0
+    or IsValidDispenseMethod(GetDispenseMethod(encounter))
+
 define function GetDrugItemCount(encounter FHIR.Encounter):
   Count(
     distinct (
       [MedicationRequest] MR
-        where MR.encounter.reference.value = 'Encounter/' + encounter.id.value
-        and MR.status.value = 'completed'
-        and exists (
-          MR.medicationCodeableConcept.coding MC
-            where Is10DigitDrugCode(MC.code.value)
-        )
-        and MR.dispenseRequest.quantity.value > 0
-      return MR.medicationCodeableConcept.coding[0].code.value
+        where GetId(MR.encounter.reference) = GetId(encounter)
+          and MR.status.value = 'completed'
+          and exists (
+            MR.extension E
+              where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/order-type'
+                and (E.value as FHIR.Coding).code.value in {'1', '4'}
+          )
+          and exists (
+            MR.medicationCodeableConcept.coding MC
+              where Is10DigitDrugCode(MC.code.value)
+          )
+          and Coalesce(
+            First(MR.dosageInstruction).doseAndRate[0].dose.value.value,
+            0
+          ) > 0
+      return First(MR.medicationCodeableConcept.coding).code.value
     )
   )
 
-// 3. 藥品品項數≧10項的案件（分子）
+// ============================================
+// Data Retrieval
+// ============================================
+
+context Patient
+
+define "Outpatient Encounters":
+  [Encounter] E
+    where E.status.value = 'finished'
+      and start of E.period in "Measurement Period"
+      and not IsAgencyCase(E)
+      and GetReportReason(E) != '2'
+
+define "Medication Cases":
+  "Outpatient Encounters" E
+    where IsMedicationCase(E)
+
 define "Cases With 10 Or More Drugs":
-  "Outpatient Medication Cases" E
+  "Medication Cases" E
     where GetDrugItemCount(E) >= 10
+      and not ShouldExcludeFromNumerator(E)
 
-// 4. 分母：給藥案件數
-define "Denominator":
-  Count(
-    distinct "Outpatient Medication Cases" E
-      return E.id.value
-  )
+// ============================================
+// 2024Q1 Statistics
+// ============================================
 
-// 5. 分子：藥品品項數≧10項之案件數
-define "Numerator":
-  Count(
-    distinct "Cases With 10 Or More Drugs" E
-      return E.id.value
-  )
+define "2024Q1 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2024Q1 Start", "2024Q1 End"]
 
-// 6. 指標計算結果：藥品品項數≧10項之案件占率
-define "Prescription With 10 Or More Drugs Rate":
-  if "Denominator" > 0 then
-    ("Numerator" / "Denominator") * 100
-  else
-    null
+define "2024Q1 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2024Q1 Start", "2024Q1 End"]
 
-    SELECT '2024Q1' as quarter, '2024-01-01' as start_date, '2024-03-31' as end_date
-    UNION ALL SELECT '2024Q2', '2024-04-01', '2024-06-30'
-    UNION ALL SELECT '2024Q3', '2024-07-01', '2024-09-30'
-    UNION ALL SELECT '2024Q4', '2024-10-01', '2024-12-31'
-    UNION ALL SELECT '2025Q1', '2025-01-01', '2025-03-31'
-    UNION ALL SELECT '2025Q2', '2025-04-01', '2025-06-30'
-    UNION ALL SELECT '2025Q3', '2025-07-01', '2025-09-30'
-    UNION ALL SELECT '2025Q4', '2025-10-01', '2025-11-08'  -- 計算到今天 2025-11-08
-),
+define "2024Q1 Denominator":
+  Count("2024Q1 Medication Cases")
 
--- 健保代碼與標準代碼系統對照表
--- 依據健保指標代碼 3128 (藥品品項數≧10項之案件占率) 規範
-nhi_code_mapping AS (
-    SELECT code_type, nhi_code, standard_code, code_system, description FROM (
-        VALUES
-        -- 健保指標代碼
-        ('INDICATOR', '3128', '3128', 'NHI_INDICATOR', 'Cases with ≧10 Drug Items Rate - 藥品品項數≧10項之案件占率'),
-        
-        -- 醫令檔別 (Order Type)
-        ('ORDER_TYPE', '1', 'medication-order', 'NHI_ORDER_TYPE', 'Medication Order - 藥品醫令(檔別1)'),
-        ('ORDER_TYPE', '4', 'medication-supply', 'NHI_ORDER_TYPE', 'Medication Supply - 藥品供應(檔別4)'),
-        
-        -- 處方調劑方式 (Dispense Method) - SNOMED CT對照
-        ('DISPENSE_METHOD', '0', '182836005', 'http://snomed.info/sct', 'Review of medication - 處方調劑方式0'),
-        ('DISPENSE_METHOD', '1', '182836005', 'http://snomed.info/sct', 'Review of medication - 處方調劑方式1'),
-        ('DISPENSE_METHOD', '6', '182836005', 'http://snomed.info/sct', 'Review of medication - 處方調劑方式6'),
-        
-        -- 插報原因註記 (Report Reason)
-        ('REPORT_REASON', '2', 'supplementary-report', 'NHI_REPORT_REASON', 'Supplementary Report - 插報原因註記2(應排除)'),
-        
-        -- 就醫類型代碼 (HL7 ActCode)
-        ('ENCOUNTER', 'O', 'AMB', 'http://terminology.hl7.org/CodeSystem/v3-ActCode', 'Outpatient - 門診'),
-        ('ENCOUNTER', 'AMB', 'AMB', 'http://terminology.hl7.org/CodeSystem/v3-ActCode', 'Ambulatory - 門診'),
-        
-        -- 代辦案件註記
-        ('AGENCY', 'Y', 'Y', 'NHI', 'Agency Case - 代辦案件(應排除)'),
-        ('AGENCY', 'N', 'N', 'NHI', 'Non-Agency Case - 非代辦案件')
-    ) AS t(code_type, nhi_code, standard_code, code_system, description)
-),
+define "2024Q1 Numerator":
+  Count("2024Q1 Cases With 10 Plus Drugs")
 
--- 篩選給藥案件
--- 條件: 
---   (1) 藥費不為0，或給藥天數不為0，或處方調劑方式為1、0、6
---   (2) 排除代辦案件
---   (3) 排除插報原因註記為2之案件
-medication_cases AS (
-    SELECT 
-        q.quarter,
-        o.hospital_id,
-        o.patient_id,
-        o.claim_id,
-        o.visit_date,
-        o.drug_cost,
-        o.drug_days,
-        o.dispense_method,
-        o.report_reason
-    FROM 
-        quarters q
-    CROSS JOIN 
-        outpatient_claims o
-    WHERE 
-        -- 1. 時間範圍: 在該季內
-        o.visit_date BETWEEN q.start_date AND q.end_date
-        
-        -- 2. 門診案件 (就醫類別 = O 或 AMB)
-        AND o.encounter_type IN ('O', 'AMB')
-        
-        -- 3. 醫院總額 (排除代辦案件)
-        AND (o.agency_flag IS NULL OR o.agency_flag != 'Y')
-        AND o.hospital_id IS NOT NULL
-        
-        -- 4. 排除插報原因註記為2之案件
-        AND (o.report_reason IS NULL OR o.report_reason != '2')
-        
-        -- 5. 給藥案件條件
-        AND (
-            -- 藥費不為0
-            (o.drug_cost IS NOT NULL AND o.drug_cost != 0)
-            -- 或 給藥天數不為0
-            OR (o.drug_days IS NOT NULL AND o.drug_days != 0)
-            -- 或 處方調劑方式為1、0、6
-            OR (o.dispense_method IN ('0', '1', '6'))
-        )
-),
+define "2024Q1 Rate":
+  if "2024Q1 Denominator" > 0 then
+    ("2024Q1 Numerator" / "2024Q1 Denominator") * 100
+  else null
 
--- 計算每個案件的藥品品項數
--- 條件:
---   (1) 醫令檔別 = 1 或 4
---   (2) 醫令代碼為10碼
---   (3) 醫令數量 > 0
---   (4) 取同處方下同醫令代碼戶數 (DISTINCT)
-drug_item_count AS (
-    SELECT 
-        mc.quarter,
-        mc.hospital_id,
-        mc.patient_id,
-        mc.claim_id,
-        mc.visit_date,
-        -- 計算藥品品項數 (DISTINCT drug_code)
-        COUNT(DISTINCT d.drug_code) as drug_item_count
-    FROM 
-        medication_cases mc
-    LEFT JOIN 
-        drug_details d ON mc.claim_id = d.claim_id
-    WHERE 
-        -- 1. 醫令檔別為1或4
-        d.order_type IN ('1', '4')
-        
-        -- 2. 醫令代碼為10碼
-        AND LENGTH(d.order_code) = 10
-        
-        -- 3. 醫令數量 > 0
-        AND (d.order_quantity IS NOT NULL AND d.order_quantity > 0)
-    GROUP BY 
-        mc.quarter,
-        mc.hospital_id,
-        mc.patient_id,
-        mc.claim_id,
-        mc.visit_date
-),
+// ============================================
+// 2024Q2 Statistics
+// ============================================
 
--- 判斷藥品品項數是否≧10項
-cases_with_10plus_items AS (
-    SELECT 
-        mc.quarter,
-        mc.hospital_id,
-        mc.patient_id,
-        mc.claim_id,
-        mc.visit_date,
-        COALESCE(dic.drug_item_count, 0) as drug_item_count,
-        -- 判斷是否≧10項
-        CASE 
-            WHEN COALESCE(dic.drug_item_count, 0) >= 10 THEN 1
-            ELSE 0
-        END as has_10plus_items
-    FROM 
-        medication_cases mc
-    LEFT JOIN 
-        drug_item_count dic 
-        ON mc.claim_id = dic.claim_id
-),
+define "2024Q2 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2024Q2 Start", "2024Q2 End"]
 
--- 計算每季的統計數據
-quarterly_summary AS (
-    SELECT 
-        q.quarter,
-        -- 分母: 給藥案件數
-        COUNT(DISTINCT c.claim_id) as total_medication_cases,
-        -- 分子: 藥品品項數≧10項之案件數
-        SUM(c.has_10plus_items) as cases_with_10plus_items,
-        -- 占率 (%)
-        CASE 
-            WHEN COUNT(DISTINCT c.claim_id) > 0 THEN 
-                ROUND(SUM(c.has_10plus_items) * 100.0 / COUNT(DISTINCT c.claim_id), 2)
-            ELSE 0
-        END as rate_10plus_items,
-        -- 統計數量
-        COUNT(DISTINCT c.patient_id) as total_patients,
-        COUNT(DISTINCT c.hospital_id) as total_hospitals,
-        -- 平均藥品品項數
-        AVG(c.drug_item_count) as avg_drug_items
-    FROM 
-        quarters q
-    LEFT JOIN 
-        cases_with_10plus_items c ON q.quarter = c.quarter
-    GROUP BY 
-        q.quarter
-)
+define "2024Q2 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2024Q2 Start", "2024Q2 End"]
 
--- 最終結果輸出
-SELECT 
-    quarter as '季度',
-    total_patients as '總病患數',
-    total_hospitals as '總醫院數',
-    cases_with_10plus_items as '藥品品項數≧10項之案件數',
-    total_medication_cases as '給藥案件數',
-    rate_10plus_items as '藥品品項數≧10項之案件占率(%)',
-    ROUND(avg_drug_items, 2) as '平均藥品品項數'
-FROM 
-    quarterly_summary
-ORDER BY 
-    quarter;
+define "2024Q2 Denominator":
+  Count("2024Q2 Medication Cases")
 
--- ============================================
--- 參考數據驗證 (待驗證)
--- ============================================
--- 待補充實際數據後進行驗證
---
--- 驗證狀態: ⏳ 待驗證 (2025-11-08)
--- 
--- 預期占率範圍: 依醫療行為而定，需實際數據驗證
--- ============================================
+define "2024Q2 Numerator":
+  Count("2024Q2 Cases With 10 Plus Drugs")
 
--- ============================================
--- 給藥案件判斷條件說明
--- ============================================
--- 給藥案件的定義 (三個條件滿足其一):
--- 
--- 1. 藥費不為0 (drug_cost != 0)
--- 2. 給藥天數不為0 (drug_days != 0)
--- 3. 處方調劑方式為1、0、6其中一種
---
--- 處方調劑方式代碼:
--- 0: 一般處方調劑
--- 1: 慢性病連續處方調劑
--- 6: 其他特殊調劑方式
---
--- SNOMED CT對照: 182836005 (Review of medication)
--- ============================================
+define "2024Q2 Rate":
+  if "2024Q2 Denominator" > 0 then
+    ("2024Q2 Numerator" / "2024Q2 Denominator") * 100
+  else null
 
--- ============================================
--- 藥品品項數計算說明
--- ============================================
--- 藥品品項數的計算條件:
--- 
--- 1. 醫令檔別 = 1 或 4
---    - 檔別1: 藥品醫令 (Medication Order)
---    - 檔別4: 藥品供應 (Medication Supply)
---
--- 2. 醫令代碼為10碼
---    - 確保為有效的藥品代碼
---    - 格式: 10位數字代碼
---
--- 3. 醫令數量 > 0
---    - 確保實際有給藥
---    - 排除數量為0的無效醫令
---
--- 4. 取同處方下同醫令代碼戶數
---    - 使用 COUNT(DISTINCT drug_code)
---    - 同一藥品代碼只計算一次
---    - 避免重複計算
---
--- 範例:
--- 案件A: 5種不同藥品 → 藥品品項數 = 5
--- 案件B: 12種不同藥品 → 藥品品項數 = 12 (≧10項)
--- ============================================
+// ============================================
+// 2024Q3 Statistics
+// ============================================
 
--- ============================================
--- 排除條件說明
--- ============================================
--- 1. 排除代辦案件
---    - agency_flag = 'Y' 的案件應排除
---    - 代辦案件不計入統計
---
--- 2. 排除插報原因註記為2之案件
---    - report_reason = '2' 的案件應排除
---    - 插報案件可能有特殊情況，不納入常規統計
---
--- 原因:
--- - 確保統計數據的準確性
--- - 避免特殊案件影響指標
--- - 符合健保署統計規範
--- ============================================
+define "2024Q3 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2024Q3 Start", "2024Q3 End"]
 
--- ============================================
--- 代碼系統對照
--- ============================================
--- NHI_INDICATOR: 健保指標代碼 (3128)
--- SNOMEDCT: http://snomed.info/sct (藥品代碼、調劑方式)
--- RxNorm: http://www.nlm.nih.gov/research/umls/rxnorm (藥品標準代碼)
--- ATC: http://www.whocc.no/atc (藥品分類)
--- ActCode: http://terminology.hl7.org/CodeSystem/v3-ActCode (就醫類型)
--- NHI: 健保專用代碼 (代辦案件標記等)
--- NHI_ORDER_TYPE: 健保醫令檔別代碼 (1, 4)
--- NHI_DISPENSE_METHOD: 健保處方調劑方式代碼 (0, 1, 6)
--- NHI_REPORT_REASON: 健保插報原因註記代碼 (2)
--- ============================================
+define "2024Q3 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2024Q3 Start", "2024Q3 End"]
 
--- ============================================
--- 臨床意義
--- ============================================
--- 本指標用於監測多重用藥情況:
--- 
--- 1. 多重用藥風險:
---    - 藥品品項數≧10項可能增加藥物交互作用風險
---    - 影響病患用藥依從性
---    - 增加不良反應發生機率
---
--- 2. 用藥安全:
---    - 監測過度用藥情況
---    - 促進合理用藥
---    - 提升處方品質
---
--- 3. 醫療品質:
---    - 評估醫師處方習慣
---    - 改善用藥管理
---    - 降低醫療風險
---
--- 建議:
--- - 占率過高需檢討處方合理性
--- - 加強多重用藥管理
--- - 定期檢視用藥必要性
--- ============================================
+define "2024Q3 Denominator":
+  Count("2024Q3 Medication Cases")
 
--- ============================================
--- FHIR Resource 對照
--- ============================================
--- MedicationRequest:
---   - 藥品處方資訊
---   - 醫令代碼 (medication.code)
---   - 醫令數量 (dosageInstruction.doseAndRate)
---   - 給藥天數 (dispenseRequest.expectedSupplyDuration)
---
--- Claim:
---   - 案件資料
---   - 藥費 (total)
---   - 插報原因 (supportingInfo)
---   - 代辦標記 (extension)
---
--- Encounter:
---   - 就醫記錄
---   - 就醫類型 (class)
---   - 就醫日期 (period)
---
--- Medication:
---   - 藥品主檔
---   - 藥品代碼 (code)
---   - ATC分類 (code.coding)
--- ============================================
+define "2024Q3 Numerator":
+  Count("2024Q3 Cases With 10 Plus Drugs")
+
+define "2024Q3 Rate":
+  if "2024Q3 Denominator" > 0 then
+    ("2024Q3 Numerator" / "2024Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q4 Statistics
+// ============================================
+
+define "2024Q4 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2024Q4 Start", "2024Q4 End"]
+
+define "2024Q4 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2024Q4 Start", "2024Q4 End"]
+
+define "2024Q4 Denominator":
+  Count("2024Q4 Medication Cases")
+
+define "2024Q4 Numerator":
+  Count("2024Q4 Cases With 10 Plus Drugs")
+
+define "2024Q4 Rate":
+  if "2024Q4 Denominator" > 0 then
+    ("2024Q4 Numerator" / "2024Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q1 Statistics
+// ============================================
+
+define "2025Q1 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2025Q1 Start", "2025Q1 End"]
+
+define "2025Q1 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2025Q1 Start", "2025Q1 End"]
+
+define "2025Q1 Denominator":
+  Count("2025Q1 Medication Cases")
+
+define "2025Q1 Numerator":
+  Count("2025Q1 Cases With 10 Plus Drugs")
+
+define "2025Q1 Rate":
+  if "2025Q1 Denominator" > 0 then
+    ("2025Q1 Numerator" / "2025Q1 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q2 Statistics
+// ============================================
+
+define "2025Q2 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2025Q2 Start", "2025Q2 End"]
+
+define "2025Q2 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2025Q2 Start", "2025Q2 End"]
+
+define "2025Q2 Denominator":
+  Count("2025Q2 Medication Cases")
+
+define "2025Q2 Numerator":
+  Count("2025Q2 Cases With 10 Plus Drugs")
+
+define "2025Q2 Rate":
+  if "2025Q2 Denominator" > 0 then
+    ("2025Q2 Numerator" / "2025Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q3 Statistics
+// ============================================
+
+define "2025Q3 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2025Q3 Start", "2025Q3 End"]
+
+define "2025Q3 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2025Q3 Start", "2025Q3 End"]
+
+define "2025Q3 Denominator":
+  Count("2025Q3 Medication Cases")
+
+define "2025Q3 Numerator":
+  Count("2025Q3 Cases With 10 Plus Drugs")
+
+define "2025Q3 Rate":
+  if "2025Q3 Denominator" > 0 then
+    ("2025Q3 Numerator" / "2025Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q4 Statistics
+// ============================================
+
+define "2025Q4 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2025Q4 Start", "2025Q4 End"]
+
+define "2025Q4 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2025Q4 Start", "2025Q4 End"]
+
+define "2025Q4 Denominator":
+  Count("2025Q4 Medication Cases")
+
+define "2025Q4 Numerator":
+  Count("2025Q4 Cases With 10 Plus Drugs")
+
+define "2025Q4 Rate":
+  if "2025Q4 Denominator" > 0 then
+    ("2025Q4 Numerator" / "2025Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2026Q1 Statistics
+// ============================================
+
+define "2026Q1 Medication Cases":
+  "Medication Cases" E
+    where start of E.period in Interval["2026Q1 Start", "2026Q1 End"]
+
+define "2026Q1 Cases With 10 Plus Drugs":
+  "Cases With 10 Or More Drugs" E
+    where start of E.period in Interval["2026Q1 Start", "2026Q1 End"]
+
+define "2026Q1 Denominator":
+  Count("2026Q1 Medication Cases")
+
+define "2026Q1 Numerator":
+  Count("2026Q1 Cases With 10 Plus Drugs")
+
+define "2026Q1 Rate":
+  if "2026Q1 Denominator" > 0 then
+    ("2026Q1 Numerator" / "2026Q1 Denominator") * 100
+  else null
+
+// ============================================
+// Indicator Result
+// ============================================
+
+define "Indicator Result":
+  {
+    indicatorCode: '3128',
+    indicatorName: '門診每張處方箋開藥品項數大於等於十項之案件比率',
+    indicatorNameEn: 'Outpatient Prescription Cases with 10 or More Drug Items Rate',
+    measurementPeriodStart: "Measurement Period Start",
+    measurementPeriodEnd: "Measurement Period End",
+    dataSource: '醫療給付檔案分析系統',
+    compiledBy: '衛生福利部 中央健康保險署',
+    compiledDate: '114/11/06',
+    version: '1.0.0',
+    keyFeature: '多重用藥監測 (≥10品項, 排除重大傷病/居家醫療/整合照護/急診/門診手術/立即使用處方)',
+    exclusionCriteria: '重大傷病001, 居家醫療EC, 整合照護Q/R/S/X/A/B/D/E/F, 案件分類02/03, STAT/PRN'
+  }

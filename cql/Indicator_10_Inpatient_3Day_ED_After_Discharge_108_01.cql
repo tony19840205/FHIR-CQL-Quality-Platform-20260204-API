@@ -4,16 +4,18 @@ using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
-// 來源：醫療給付檔案分析系統 指標代碼: 108.01
-// 條件依據：住院案件出院後三日以內急診率
-// 製作日期：2025-11-20
+/*
+ * 來源：醫療給付檔案分析系統
+ * 指標代碼：108.01
+ * 指標名稱：住院案件出院後三日以內急診率
+ * 製作日期：114/11/06
+ * 製作單位：衛生福利部 中央健康保險署
  * 
  * 公式說明:
- * 住院案件出院後三日以內急診率 = 
- *     分子: 3日內再急診案件數
- *     分母: 出院案件數
+ * 分子：3日內再急診案件數
+ * 分母：出院案件數
  * 
- * 排除下列案件:
+ * 排除條件(10項):
  * (1)腫瘤科個案(就醫科別=13)
  * (2)乳癌試辦案件(案件分類4+疾患來源N或R或C)
  * (3)化學治療及放射線治療、安寧接受抗腫瘤免疫療法(主、次診斷ICD-10-CM Z510、Z5111、Z51.12)
@@ -22,654 +24,445 @@ include FHIRHelpers version '4.0.1' called FHIRHelpers
  * (6)轉院案件(轉歸代碼5、6或7)
  * (7)新生兒床號(部分負擔計費903)
  * (8)血友病(主診斷D66、D67、D681、D682)
- * (9)器官移植(骨髓移植、肺臟移植、肝臟移植：68035肺臟移植：68037（雙肺）、68047（雙肺）肝臟移植：75020腎臟移植：76020)
+ * (9)器官移植(68035、68037、68047、75020、76020)
  * (10)病患死亡或病危自動出院案件(轉歸代碼4或A)
- * 
- * 臨床意義:
- * - 評估出院計畫的適當性
- * - 監測出院後病患狀況穩定性
- * - 辨識可能過早出院的案件
- * - 提升醫療照護連續性
- * 
- * FHIR Resource對照:
- * - Patient: 病患基本資料
- * - Encounter: 住院紀錄、急診紀錄
- * - Condition: 診斷資料 (主診斷、次診斷)
- * - Procedure: 手術處置資料
- * - Claim: 醫療費用申報
  */
 
--- ==================== 代碼系統定義 ====================
-
-codesystem "NHI_INDICATOR": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-indicator'
-    -- 健保指標代碼系統
-    -- 108.01 (指標代碼)
-
+codesystem "NHI_CLAIM": 'http://www.nhi.gov.tw/codes/claim'
 codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
-    -- ICD-10-CM 國際疾病分類代碼系統
-    -- Z510, Z5111, Z51.12: 化學治療及放射線治療、抗腫瘤免疫療法
-    -- O4291, O4410-O4413, O4690-O4693, O4702-O4703, O6002, O6003: 早產安胎
-    -- E760-E763: 罕見疾病(點多醣症)
-    -- D66, D67, D681, D682: 血友病
-
 codesystem "SNOMEDCT": 'http://snomed.info/sct'
-    -- SNOMED CT 臨床術語系統
-    -- 32485007: Hospital admission (住院)
-    -- 58000006: Patient discharge (病患出院)
-    -- 50849002: Emergency room admission (急診就醫)
-    -- 183452005: Emergency hospital admission (緊急住院)
-    -- 304561000: Chemotherapy (化學治療)
-    -- 33195004: Radiotherapy (放射線治療)
-    -- 76334006: Immunotherapy (免疫療法)
-    -- 82433008: Organ transplantation (器官移植)
-    -- 23719005: Bone marrow transplantation (骨髓移植)
-    -- 52213001: Transplantation of lung (肺臟移植)
-    -- 32413006: Transplantation of liver (肝臟移植)
-    -- 18027006: Transplantation of kidney (腎臟移植)
-    -- 309884000: Oncology specialty (腫瘤科)
-    -- 419099009: Dead (死亡)
-    -- 271594007: Patient died in hospital (病患死於醫院)
-
 codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
-    -- HL7 ActCode 代碼系統
-    -- IMP: 住院 (Inpatient)
-    -- EMER: 急診 (Emergency)
-    -- AMB: 門診 (Ambulatory)
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes/procedure'
 
-codesystem "NHI": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-code'
-    -- 台灣健保局專用代碼系統
-    -- 醫事機構代碼
-    -- 醫療服務代碼
-    -- 案件類別代碼
+valueset "Inpatient Encounters": 'http://nhi.gov.tw/fhir/ValueSet/inpatient-encounters'
+valueset "Emergency Encounters": 'http://nhi.gov.tw/fhir/ValueSet/emergency-encounters'
 
-codesystem "NHI_ENCOUNTER_TYPE": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-encounter-type'
-    -- 健保就醫類別代碼系統
-    -- I: 住院
-    -- E: 急診
-    -- O: 門診
+// Encounter Type Codes
+code "Inpatient": 'IMP' from "ActCode" display 'Inpatient'
+code "Emergency": 'EMER' from "ActCode" display 'Emergency'
+code "Finished": 'finished' from "EncounterStatus" display 'Finished'
 
-codesystem "NHI_DEPARTMENT": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-department'
-    -- 健保科別代碼系統
-    -- 13: 腫瘤科
+// Department Codes
+code "Oncology Department": '13' from "NHI_CLAIM" display '腫瘤科'
 
-codesystem "NHI_CASE_TYPE": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-case-type'
-    -- 健保案件分類代碼系統
-    -- 案件分類4: 特殊案件
+// Case Type Codes
+code "Special Case Type": '4' from "NHI_CLAIM" display '特殊案件分類'
 
-codesystem "NHI_DISEASE_SOURCE": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-disease-source'
-    -- 健保疾患來源代碼系統
-    -- N: 新生兒
-    -- R: 再住院
-    -- C: 慢性病
+// Disease Source Codes
+code "Disease Source N": 'N' from "NHI_CLAIM" display '疾患來源-新生兒'
+code "Disease Source R": 'R' from "NHI_CLAIM" display '疾患來源-再住院'
+code "Disease Source C": 'C' from "NHI_CLAIM" display '疾患來源-慢性病'
 
-codesystem "NHI_DISCHARGE_STATUS": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-discharge-status'
-    -- 健保出院轉歸代碼系統
-    -- 4: 死亡
-    -- 5: 轉院(計畫性)
-    -- 6: 轉院(緊急)
-    -- 7: 轉院(其他)
-    -- A: 病危自動出院
+// Discharge Status Codes
+code "Transfer Code 5": '5' from "NHI_CLAIM" display '轉院(計畫性)'
+code "Transfer Code 6": '6' from "NHI_CLAIM" display '轉院(緊急)'
+code "Transfer Code 7": '7' from "NHI_CLAIM" display '轉院(其他)'
+code "Death Status": '4' from "NHI_CLAIM" display '死亡'
+code "Critical Discharge": 'A' from "NHI_CLAIM" display '病危自動出院'
 
-codesystem "NHI_COPAYMENT": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-copayment'
-    -- 健保部分負擔計費代碼系統
-    -- 903: 新生兒床號
+// Copayment Codes
+code "Newborn Bed": '903' from "NHI_CLAIM" display '新生兒床號'
 
-codesystem "NHI_PROCEDURE": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure'
-    -- 健保手術處置代碼系統
-    -- 68035: 肺臟移植
-    -- 68037: 雙肺移植
-    -- 68047: 雙肺移植
-    -- 75020: 肝臟移植
-    -- 76020: 腎臟移植
-    -- 骨髓移植相關代碼
+// Cancer Treatment Codes (ICD-10-CM)
+code "Radiotherapy Z510": 'Z510' from "ICD10CM" display 'Encounter for antineoplastic radiation therapy'
+code "Chemotherapy Z5111": 'Z5111' from "ICD10CM" display 'Encounter for antineoplastic chemotherapy'
+code "Immunotherapy Z5112": 'Z51.12' from "ICD10CM" display 'Encounter for antineoplastic immunotherapy'
 
--- ==================== 值集定義 ====================
+// Preterm Labor Codes (ICD-10-CM)
+code "Preterm O4291": 'O4291' from "ICD10CM" display '早產安胎(前五碼)'
+code "Preterm O4410": 'O4410' from "ICD10CM" display 'Placenta previa without hemorrhage, unspecified trimester'
+code "Preterm O4411": 'O4411' from "ICD10CM" display 'Placenta previa without hemorrhage, first trimester'
+code "Preterm O4412": 'O4412' from "ICD10CM" display 'Placenta previa without hemorrhage, second trimester'
+code "Preterm O4413": 'O4413' from "ICD10CM" display 'Placenta previa without hemorrhage, third trimester'
+code "Preterm O4690": 'O4690' from "ICD10CM" display 'Unspecified antepartum hemorrhage, unspecified trimester'
+code "Preterm O4691": 'O4691' from "ICD10CM" display 'Unspecified antepartum hemorrhage, first trimester'
+code "Preterm O4692": 'O4692' from "ICD10CM" display 'Unspecified antepartum hemorrhage, second trimester'
+code "Preterm O4693": 'O4693' from "ICD10CM" display 'Unspecified antepartum hemorrhage, third trimester'
+code "Preterm O4702": 'O4702' from "ICD10CM" display 'False labor before 37 weeks, second trimester'
+code "Preterm O4703": 'O4703' from "ICD10CM" display 'False labor before 37 weeks, third trimester'
+code "Preterm O6002": 'O6002' from "ICD10CM" display 'Preterm labor without delivery, second trimester'
+code "Preterm O6003": 'O6003' from "ICD10CM" display 'Preterm labor without delivery, third trimester'
 
-valueset "Inpatient Encounter Types": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/inpatient-encounter-types'
-    -- 住院就醫類別值集
-    -- ActCode: IMP (住院)
-    -- NHI: I (住院)
+// Rare Disease Codes (ICD-10-CM)
+code "Rare E760": 'E760' from "ICD10CM" display 'Mucopolysaccharidosis, type I'
+code "Rare E761": 'E761' from "ICD10CM" display 'Mucopolysaccharidosis, type II'
+code "Rare E762": 'E762' from "ICD10CM" display 'Other mucopolysaccharidoses'
+code "Rare E763": 'E763' from "ICD10CM" display 'Mucopolysaccharidosis, unspecified'
 
-valueset "Emergency Encounter Types": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/emergency-encounter-types'
-    -- 急診就醫類別值集
-    -- ActCode: EMER (急診)
-    -- NHI: E (急診)
+// Hemophilia Codes (ICD-10-CM)
+code "Hemophilia D66": 'D66' from "ICD10CM" display 'Hereditary factor VIII deficiency'
+code "Hemophilia D67": 'D67' from "ICD10CM" display 'Hereditary factor IX deficiency'
+code "Hemophilia D681": 'D681' from "ICD10CM" display "Von Willebrand's disease"
+code "Hemophilia D682": 'D682' from "ICD10CM" display 'Hereditary deficiency of other clotting factors'
 
-valueset "Cancer Treatment Codes": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/cancer-treatment-codes'
-    -- 腫瘤治療代碼值集
-    -- ICD-10-CM: Z510 (化學治療), Z5111 (化學治療), Z51.12 (免疫療法)
+// Organ Transplant Procedure Codes
+code "Transplant 68035": '68035' from "NHI_PROCEDURE" display '肺臟移植'
+code "Transplant 68037": '68037' from "NHI_PROCEDURE" display '雙肺移植'
+code "Transplant 68047": '68047' from "NHI_PROCEDURE" display '雙肺移植'
+code "Transplant 75020": '75020' from "NHI_PROCEDURE" display '肝臟移植'
+code "Transplant 76020": '76020' from "NHI_PROCEDURE" display '腎臟移植'
 
-valueset "Preterm Labor Codes": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/preterm-labor-codes'
-    -- 早產安胎代碼值集
-    -- ICD-10-CM: O4291, O4410-O4413, O4690-O4693, O4702-O4703, O6002, O6003
+// Helper Functions
+define function GetId(encounter Encounter):
+  encounter.id.value
 
-valueset "Rare Disease Codes": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/rare-disease-codes'
-    -- 罕見疾病代碼值集
-    -- ICD-10-CM: E760-E763 (點多醣症)
+define function GetDischargeDate(encounter Encounter):
+  encounter.period.end.value
 
-valueset "Hemophilia Codes": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/hemophilia-codes'
-    -- 血友病代碼值集
-    -- ICD-10-CM: D66, D67, D681, D682
+define function GetAdmissionDate(encounter Encounter):
+  encounter.period.start.value
 
-valueset "Organ Transplant Procedures": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/organ-transplant-procedures'
-    -- 器官移植手術代碼值集
-    -- NHI_PROCEDURE: 68035, 68037, 68047, 75020, 76020, 骨髓移植
+define function GetPrimaryDiagnosis(encounter Encounter):
+  First(
+    encounter.diagnosis D
+      where exists(D.use.coding C where C.code.value = 'AD')
+      return D.condition.reference.value
+  )
 
-valueset "Death Discharge Status": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/death-discharge-status'
-    -- 死亡/病危出院轉歸值集
-    -- NHI_DISCHARGE_STATUS: 4 (死亡), A (病危自動出院)
+define function GetDiagnosisPrefix5(diagnosisCode String):
+  if Length(diagnosisCode) >= 5 then Substring(diagnosisCode, 0, 5)
+  else diagnosisCode
 
-valueset "Transfer Discharge Status": 'https://twcore.mohw.gov.tw/ig/twcore/ValueSet/transfer-discharge-status'
-    -- 轉院出院轉歸值集
-    -- NHI_DISCHARGE_STATUS: 5, 6, 7
+define function GetDepartment(encounter Encounter):
+  First(
+    encounter.extension E
+      where E.url.value = 'http://www.nhi.gov.tw/extensions/department'
+      return E.value as String
+  )
 
--- ==================== NHI指標代碼對照 ====================
+define function GetCaseType(encounter Encounter):
+  First(
+    encounter.extension E
+      where E.url.value = 'http://www.nhi.gov.tw/extensions/case-type'
+      return E.value as String
+  )
 
-/*
- * 指標代碼定義
- * 108.01: 住院案件出院後三日以內急診率
- */
-code "Indicator_108_01": '108.01' from "NHI_INDICATOR" display '住院案件出院後三日以內急診率'
+define function GetDiseaseSource(encounter Encounter):
+  First(
+    encounter.extension E
+      where E.url.value = 'http://www.nhi.gov.tw/extensions/disease-source'
+      return E.value as String
+  )
 
--- ==================== ICD-10-CM診斷代碼對照 ====================
+define function GetDischargeStatus(encounter Encounter):
+  First(
+    encounter.hospitalization.dischargeDisposition.coding C
+      return C.code.value
+  )
 
-/*
- * 腫瘤治療代碼 (Z510, Z5111, Z51.12)
- * 早產安胎代碼 (O4291, O4410-O4413, O4690-O4693, O4702-O4703, O6002, O6003)
- * 罕見疾病代碼 (E760-E763)
- * 血友病代碼 (D66, D67, D681, D682)
- */
+define function GetCopayment(encounter Encounter):
+  First(
+    encounter.extension E
+      where E.url.value = 'http://www.nhi.gov.tw/extensions/copayment'
+      return E.value as String
+  )
 
--- ==================== 健保科別代碼對照 ====================
+define function DaysBetween(date1 DateTime, date2 DateTime):
+  days between date1 and date2
 
-code "Oncology_Department": '13' from "NHI_DEPARTMENT" display '腫瘤科'
+// Exclusion Criteria Functions
+define function IsOncologyCase(encounter Encounter):
+  GetDepartment(encounter) = '13'
 
--- ==================== 健保案件分類代碼對照 ====================
+define function IsBreastCancerPilot(encounter Encounter):
+  GetCaseType(encounter) = '4'
+    and GetDiseaseSource(encounter) in {'N', 'R', 'C'}
 
-code "Special_Case_Type": '4' from "NHI_CASE_TYPE" display '特殊案件'
+define function IsCancerTreatment(encounter Encounter):
+  exists(
+    encounter.diagnosis D
+      let condition: D.condition.reference.value,
+          conditionCode: Last(Split(condition, '/'))
+      where conditionCode in {'Z510', 'Z5111', 'Z51.12'}
+  )
 
--- ==================== 健保疾患來源代碼對照 ====================
+define function IsPretermLabor(encounter Encounter):
+  exists(
+    encounter.diagnosis D
+      let condition: D.condition.reference.value,
+          conditionCode: Last(Split(condition, '/')),
+          prefix5: GetDiagnosisPrefix5(conditionCode)
+      where prefix5 = 'O4291'
+        or conditionCode in {
+          'O4410', 'O4411', 'O4412', 'O4413',
+          'O4690', 'O4691', 'O4692', 'O4693',
+          'O4702', 'O4703', 'O6002', 'O6003'
+        }
+  )
 
-code "Disease_Source_N": 'N' from "NHI_DISEASE_SOURCE" display '新生兒'
-code "Disease_Source_R": 'R' from "NHI_DISEASE_SOURCE" display '再住院'
-code "Disease_Source_C": 'C' from "NHI_DISEASE_SOURCE" display '慢性病'
+define function IsRareDisease(encounter Encounter):
+  exists(
+    encounter.diagnosis D
+      let condition: D.condition.reference.value,
+          conditionCode: Last(Split(condition, '/'))
+      where conditionCode in {'E760', 'E761', 'E762', 'E763'}
+  )
 
--- ==================== 健保出院轉歸代碼對照 ====================
+define function IsTransferCase(encounter Encounter):
+  GetDischargeStatus(encounter) in {'5', '6', '7'}
 
-code "Death_Status": '4' from "NHI_DISCHARGE_STATUS" display '死亡'
-code "Critical_Discharge_Status": 'A' from "NHI_DISCHARGE_STATUS" display '病危自動出院'
-code "Transfer_Status_5": '5' from "NHI_DISCHARGE_STATUS" display '轉院(計畫性)'
-code "Transfer_Status_6": '6' from "NHI_DISCHARGE_STATUS" display '轉院(緊急)'
-code "Transfer_Status_7": '7' from "NHI_DISCHARGE_STATUS" display '轉院(其他)'
+define function IsNewbornBed(encounter Encounter):
+  GetCopayment(encounter) = '903'
 
--- ==================== 健保部分負擔計費代碼對照 ====================
+define function IsHemophilia(encounter Encounter):
+  exists(
+    encounter.diagnosis D
+      let condition: D.condition.reference.value,
+          conditionCode: Last(Split(condition, '/'))
+      where conditionCode in {'D66', 'D67', 'D681', 'D682'}
+  )
 
-code "Newborn_Copayment": '903' from "NHI_COPAYMENT" display '新生兒床號'
-
--- ==================== 參數定義 ====================
-
-parameter "Measurement Period" Interval<DateTime>
-    -- 統計期間（季度或年度）
-
-parameter "Emergency Visit Days" Integer default 3
-    -- 急診觀察天數（預設3天）
-
--- ==================== 統計期間定義 ====================
-
-define quarters AS (
-    List<Tuple {
-        id: Integer,
-        label: String,
-        start_date: DateTime,
-        end_date: DateTime
-    }> {
-        { id: 1, label: '113年第1季', start_date: @2024-01-01T00:00:00, end_date: @2024-03-31T23:59:59 },
-        { id: 2, label: '113年第2季', start_date: @2024-04-01T00:00:00, end_date: @2024-06-30T23:59:59 },
-        { id: 3, label: '113年第3季', start_date: @2024-07-01T00:00:00, end_date: @2024-09-30T23:59:59 },
-        { id: 4, label: '113年第4季', start_date: @2024-10-01T00:00:00, end_date: @2024-12-31T23:59:59 }
-    }
-)
-
-define annual_period AS (
-    Tuple {
-        id: 5,
-        label: '113年',
-        start_date: @2024-01-01T00:00:00,
-        end_date: @2024-12-31T23:59:59
-    }
-)
-
--- ==================== FHIR資源查詢 ====================
-
--- 1. 所有住院出院案件（未過濾）
--- 按「院所、ID、生日、住院日」歸戶，以最晚之出院日為準
-define all_inpatient_discharges AS (
-    [Encounter: type in "Inpatient Encounter Types"] E
-    where E.status = 'finished'
-        and E.period.end during "Measurement Period"
-        and E.hospitalization.dischargeDisposition is not null
-)
-
--- 按病患、醫院、住院日歸戶，取最晚出院日
-define grouped_discharges AS (
-    all_inpatient_discharges E
-    return {
-        patient_id: E.subject.reference,
-        organization_id: E.serviceProvider.reference,
-        admission_date: E.period.start,
-        discharge_date: E.period.end,
-        encounter_id: E.id,
-        discharge_status: E.hospitalization.dischargeDisposition.coding[0].code,
-        diagnoses: E.diagnosis
-    }
-    group by patient_id, organization_id, ToDate(admission_date)
-    return Max(discharge_date) as latest_discharge_date
-)
-
--- 2. 排除條件1：腫瘤科個案（就醫科別=13）
-define oncology_cases AS (
-    all_inpatient_discharges E
-    where exists (
-        E.participant P
-        where P.individual.resolve().specialty.coding contains Code { code: '13', system: "NHI_DEPARTMENT" }
-    )
-)
-
--- 3. 排除條件2：乳癌試辦案件（案件分類4+疾患來源N或R或C）
-define breast_cancer_pilot_cases AS (
-    all_inpatient_discharges E
-    where E.class = "IMP"
-        and exists (
-            E.type T
-            where T.coding contains Code { code: '4', system: "NHI_CASE_TYPE" }
+define function HasOrganTransplant(encounter Encounter):
+  exists(
+    [Procedure] P
+      where P.encounter.reference.value = 'Encounter/' + GetId(encounter)
+        and exists(
+          P.code.coding C
+            where C.code.value in {'68035', '68037', '68047', '75020', '76020'}
         )
-        and exists (
-            E.diagnosis D
-            where D.condition.resolve().code.coding C
-                where C.code in { 'N', 'R', 'C' }
-                    and C.system = "NHI_DISEASE_SOURCE"
-        )
-)
+  )
 
--- 4. 排除條件3：化學治療及放射線治療、抗腫瘤免疫療法
-define cancer_treatment_cases AS (
-    all_inpatient_discharges E
-    where exists (
-        E.diagnosis D
-        where D.use.coding contains Code { code: 'AD', system: "http://terminology.hl7.org/CodeSystem/diagnosis-role" }
-            and (
-                D.condition.resolve().code.coding C where C.system = "ICD10CM" 
-                    and C.code in { 'Z510', 'Z5111', 'Z51.12' }
-            )
-    )
-)
+define function IsDeathOrCriticalDischarge(encounter Encounter):
+  GetDischargeStatus(encounter) in {'4', 'A'}
 
--- 5. 排除條件4：早產安胎個案
-define preterm_labor_cases AS (
-    all_inpatient_discharges E
-    where exists (
-        E.diagnosis D
-        where D.use.coding contains Code { code: 'AD', system: "http://terminology.hl7.org/CodeSystem/diagnosis-role" }
-            and (
-                D.condition.resolve().code.coding C where C.system = "ICD10CM" 
-                    and (
-                        C.code = 'O4291'
-                        or (C.code >= 'O4410' and C.code <= 'O4413')
-                        or (C.code >= 'O4690' and C.code <= 'O4693')
-                        or (C.code >= 'O4702' and C.code <= 'O4703')
-                        or C.code in { 'O6002', 'O6003' }
-                    )
-            )
-    )
-)
+define function IsExcluded(encounter Encounter):
+  IsOncologyCase(encounter)
+    or IsBreastCancerPilot(encounter)
+    or IsCancerTreatment(encounter)
+    or IsPretermLabor(encounter)
+    or IsRareDisease(encounter)
+    or IsTransferCase(encounter)
+    or IsNewbornBed(encounter)
+    or IsHemophilia(encounter)
+    or HasOrganTransplant(encounter)
+    or IsDeathOrCriticalDischarge(encounter)
 
--- 6. 排除條件5：罕見疾病（點多醣症）
-define rare_disease_cases AS (
-    all_inpatient_discharges E
-    where exists (
-        E.diagnosis D
-        where D.use.coding contains Code { code: 'AD', system: "http://terminology.hl7.org/CodeSystem/diagnosis-role" }
-            and (
-                D.condition.resolve().code.coding C where C.system = "ICD10CM" 
-                    and (C.code >= 'E760' and C.code <= 'E763')
-            )
-    )
-)
+// Data Retrieval
+define "All Inpatient Discharges":
+  [Encounter] E
+    where E.class.code.value = 'IMP'
+      and E.status.value = 'finished'
+      and E.hospitalization is not null
 
--- 7. 排除條件6：轉院案件（轉歸代碼5、6或7）
-define transfer_cases AS (
-    all_inpatient_discharges E
-    where E.hospitalization.dischargeDisposition.coding C
-        where C.system = "NHI_DISCHARGE_STATUS"
-            and C.code in { '5', '6', '7' }
-)
+define "Valid Discharges":
+  "All Inpatient Discharges" E
+    where not IsExcluded(E)
 
--- 8. 排除條件7：新生兒床號（部分負擔計費903）
-define newborn_bed_cases AS (
-    all_inpatient_discharges E
-    where exists (
-        [Claim] Cl
-        where Cl.encounter.reference = ('Encounter/' + E.id)
-            and exists (
-                Cl.item I
-                where I.revenue.coding contains Code { code: '903', system: "NHI_COPAYMENT" }
-            )
-    )
-)
+define function Has3DayEmergency(discharge Encounter):
+  exists(
+    [Encounter] ER
+      where ER.class.code.value = 'EMER'
+        and ER.subject.reference.value = discharge.subject.reference.value
+        and GetAdmissionDate(ER) > GetDischargeDate(discharge)
+        and DaysBetween(GetDischargeDate(discharge), GetAdmissionDate(ER)) <= 3
+  )
 
--- 9. 排除條件8：血友病
-define hemophilia_cases AS (
-    all_inpatient_discharges E
-    where exists (
-        E.diagnosis D
-        where D.use.coding contains Code { code: 'AD', system: "http://terminology.hl7.org/CodeSystem/diagnosis-role" }
-            and (
-                D.condition.resolve().code.coding C where C.system = "ICD10CM" 
-                    and C.code in { 'D66', 'D67', 'D681', 'D682' }
-            )
-    )
-)
+// Quarter Definitions
+define "2024Q1 Start": Date(2024, 1, 1)
+define "2024Q1 End": Date(2024, 3, 31)
+define "2024Q2 Start": Date(2024, 4, 1)
+define "2024Q2 End": Date(2024, 6, 30)
+define "2024Q3 Start": Date(2024, 7, 1)
+define "2024Q3 End": Date(2024, 9, 30)
+define "2024Q4 Start": Date(2024, 10, 1)
+define "2024Q4 End": Date(2024, 12, 31)
+define "2025Q1 Start": Date(2025, 1, 1)
+define "2025Q1 End": Date(2025, 3, 31)
+define "2025Q2 Start": Date(2025, 4, 1)
+define "2025Q2 End": Date(2025, 6, 30)
+define "2025Q3 Start": Date(2025, 7, 1)
+define "2025Q3 End": Date(2025, 9, 30)
+define "2025Q4 Start": Date(2025, 10, 1)
+define "2025Q4 End": Date(2025, 12, 31)
+define "2026Q1 Start": Date(2026, 1, 1)
+define "2026Q1 End": Date(2026, 3, 31)
 
--- 10. 排除條件9：器官移植案件
-define organ_transplant_cases AS (
-    all_inpatient_discharges E
-    where exists (
-        [Procedure] P
-        where P.encounter.reference = ('Encounter/' + E.id)
-            and P.status = 'completed'
-            and (
-                P.code.coding C where C.system = "NHI_PROCEDURE"
-                    and C.code in { 
-                        '68035',  -- 肺臟移植
-                        '68037',  -- 雙肺移植
-                        '68047',  -- 雙肺移植
-                        '75020',  -- 肝臟移植
-                        '76020'   -- 腎臟移植
-                        -- 骨髓移植相關代碼
-                    }
-            )
-    )
-)
+define "Measurement Period Start": Date(2024, 1, 1)
+define "Measurement Period End": Date(2099, 12, 31)
+define "Measurement Period": 
+  Interval["Measurement Period Start", "Measurement Period End"]
 
--- 11. 排除條件10：病患死亡或病危自動出院（轉歸代碼4或A）
-define death_or_critical_discharge_cases AS (
-    all_inpatient_discharges E
-    where E.hospitalization.dischargeDisposition.coding C
-        where C.system = "NHI_DISCHARGE_STATUS"
-            and C.code in { '4', 'A' }
-)
+// Denominator - Valid Discharges by Quarter
+define "2024Q1 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2024Q1 Start", "2024Q1 End"])
 
--- ==================== 非排除案件（有效出院案件） ====================
+define "2024Q2 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2024Q2 Start", "2024Q2 End"])
 
--- 排除所有條件後的有效出院案件
-define valid_discharges AS (
-    all_inpatient_discharges E
-    where E not in oncology_cases
-        and E not in breast_cancer_pilot_cases
-        and E not in cancer_treatment_cases
-        and E not in preterm_labor_cases
-        and E not in rare_disease_cases
-        and E not in transfer_cases
-        and E not in newborn_bed_cases
-        and E not in hemophilia_cases
-        and E not in organ_transplant_cases
-        and E not in death_or_critical_discharge_cases
-)
+define "2024Q3 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2024Q3 Start", "2024Q3 End"])
 
--- ==================== 3日內急診案件 ====================
+define "2024Q4 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2024Q4 Start", "2024Q4 End"])
 
--- 查詢出院後3日內的急診案件
-define emergency_visits_within_3_days AS (
-    valid_discharges D
-    let discharge_date := D.period.end,
-        patient_id := D.subject.reference
-    return {
-        discharge_encounter_id: D.id,
-        patient_id: patient_id,
-        discharge_date: discharge_date,
-        organization_id: D.serviceProvider.reference,
-        -- 查詢此病患在出院後3日內的急診就醫
-        emergency_visits: (
-            [Encounter: type in "Emergency Encounter Types"] ER
-            where ER.subject.reference = patient_id
-                and ER.status in { 'finished', 'in-progress' }
-                and ER.period.start > discharge_date
-                and days between discharge_date and ER.period.start <= 3
-        )
-    }
-)
+define "2025Q1 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2025Q1 Start", "2025Q1 End"])
 
--- 有3日內急診的出院案件
-define discharges_with_3day_emergency AS (
-    emergency_visits_within_3_days EV
-    where exists(EV.emergency_visits)
-    return {
-        discharge_encounter_id: EV.discharge_encounter_id,
-        patient_id: EV.patient_id,
-        organization_id: EV.organization_id,
-        discharge_date: EV.discharge_date,
-        emergency_count: Count(EV.emergency_visits),
-        first_emergency_date: First(EV.emergency_visits).period.start,
-        days_to_emergency: days between EV.discharge_date and First(EV.emergency_visits).period.start
-    }
-)
+define "2025Q2 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2025Q2 Start", "2025Q2 End"])
 
--- ==================== 分母計算 (Denominator) ====================
+define "2025Q3 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2025Q3 Start", "2025Q3 End"])
 
--- 分母：出院案件數（排除條件後）
-define denominator_total_discharges AS (
-    SELECT 
-        COUNT(*) as total_discharge_count,
-        COUNT(DISTINCT patient_id) as unique_patient_count,
-        COUNT(DISTINCT organization_id) as unique_hospital_count
-    FROM 
-        valid_discharges
-)
+define "2025Q4 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2025Q4 Start", "2025Q4 End"])
 
--- 按季度統計分母
-define denominator_by_quarter AS (
-    quarters Q
-    return {
-        quarter_id: Q.id,
-        quarter_label: Q.label,
-        start_date: Q.start_date,
-        end_date: Q.end_date,
-        discharge_count: Count(
-            valid_discharges D
-            where D.period.end >= Q.start_date and D.period.end <= Q.end_date
-        ),
-        unique_patient_count: Count(
-            valid_discharges D
-            where D.period.end >= Q.start_date and D.period.end <= Q.end_date
-            return distinct D.subject.reference
-        )
-    }
-)
+define "2026Q1 Denominator":
+  Count("Valid Discharges" D where GetDischargeDate(D) during Interval["2026Q1 Start", "2026Q1 End"])
 
--- 年度統計分母
-define denominator_annual AS (
-    {
-        period_id: annual_period.id,
-        period_label: annual_period.label,
-        start_date: annual_period.start_date,
-        end_date: annual_period.end_date,
-        discharge_count: Count(
-            valid_discharges D
-            where D.period.end >= annual_period.start_date 
-                and D.period.end <= annual_period.end_date
-        ),
-        unique_patient_count: Count(
-            valid_discharges D
-            where D.period.end >= annual_period.start_date 
-                and D.period.end <= annual_period.end_date
-            return distinct D.subject.reference
-        )
-    }
-)
+// Numerator - 3-Day Emergency by Quarter
+define "2024Q1 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2024Q1 Start", "2024Q1 End"]
+        and Has3DayEmergency(D)
+  )
 
--- ==================== 分子計算 (Numerator) ====================
+define "2024Q2 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2024Q2 Start", "2024Q2 End"]
+        and Has3DayEmergency(D)
+  )
 
--- 分子：3日內再急診案件數
-define numerator_3day_emergency_visits AS (
-    SELECT 
-        COUNT(*) as emergency_visit_count,
-        COUNT(DISTINCT patient_id) as unique_patient_count
-    FROM 
-        discharges_with_3day_emergency
-)
+define "2024Q3 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2024Q3 Start", "2024Q3 End"]
+        and Has3DayEmergency(D)
+  )
 
--- 按季度統計分子
-define numerator_by_quarter AS (
-    quarters Q
-    return {
-        quarter_id: Q.id,
-        quarter_label: Q.label,
-        emergency_visit_count: Count(
-            discharges_with_3day_emergency D
-            where D.discharge_date >= Q.start_date and D.discharge_date <= Q.end_date
-        ),
-        unique_patient_count: Count(
-            discharges_with_3day_emergency D
-            where D.discharge_date >= Q.start_date and D.discharge_date <= Q.end_date
-            return distinct D.patient_id
-        )
-    }
-)
+define "2024Q4 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2024Q4 Start", "2024Q4 End"]
+        and Has3DayEmergency(D)
+  )
 
--- 年度統計分子
-define numerator_annual AS (
-    {
-        period_id: annual_period.id,
-        period_label: annual_period.label,
-        emergency_visit_count: Count(
-            discharges_with_3day_emergency D
-            where D.discharge_date >= annual_period.start_date 
-                and D.discharge_date <= annual_period.end_date
-        ),
-        unique_patient_count: Count(
-            discharges_with_3day_emergency D
-            where D.discharge_date >= annual_period.start_date 
-                and D.discharge_date <= annual_period.end_date
-            return distinct D.patient_id
-        )
-    }
-)
+define "2025Q1 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2025Q1 Start", "2025Q1 End"]
+        and Has3DayEmergency(D)
+  )
 
--- ==================== 指標計算 (Indicator Calculation) ====================
+define "2025Q2 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2025Q2 Start", "2025Q2 End"]
+        and Has3DayEmergency(D)
+  )
 
--- 按季度計算3日內急診率
-define indicator_by_quarter AS (
-    (numerator_by_quarter N join denominator_by_quarter D on N.quarter_id = D.quarter_id)
-    return {
-        indicator_code: "Indicator_108_01",
-        quarter_id: N.quarter_id,
-        quarter_label: N.quarter_label,
-        numerator: N.emergency_visit_count,
-        denominator: D.discharge_count,
-        rate: if D.discharge_count > 0 
-              then Round((N.emergency_visit_count / D.discharge_count) * 100, 2)
-              else 0,
-        rate_display: ToString(Round((N.emergency_visit_count / D.discharge_count) * 100, 2)) + '%'
-    }
-)
+define "2025Q3 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2025Q3 Start", "2025Q3 End"]
+        and Has3DayEmergency(D)
+  )
 
--- 年度計算3日內急診率
-define indicator_annual AS (
-    {
-        indicator_code: "Indicator_108_01",
-        period_label: numerator_annual.period_label,
-        numerator: numerator_annual.emergency_visit_count,
-        denominator: denominator_annual.discharge_count,
-        rate: if denominator_annual.discharge_count > 0 
-              then Round((numerator_annual.emergency_visit_count / denominator_annual.discharge_count) * 100, 2)
-              else 0,
-        rate_display: ToString(Round((numerator_annual.emergency_visit_count / denominator_annual.discharge_count) * 100, 2)) + '%'
-    }
-)
+define "2025Q4 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2025Q4 Start", "2025Q4 End"]
+        and Has3DayEmergency(D)
+  )
 
--- ==================== 綜合結果 ====================
+define "2026Q1 Numerator":
+  Count(
+    "Valid Discharges" D
+      where GetDischargeDate(D) during Interval["2026Q1 Start", "2026Q1 End"]
+        and Has3DayEmergency(D)
+  )
 
--- 所有期間的指標結果
-define all_periods_results AS (
-    indicator_by_quarter 
-    union 
-    { indicator_annual }
-)
+// Indicator Rate by Quarter
+define "2024Q1 Rate":
+  if "2024Q1 Denominator" > 0 
+  then "2024Q1 Numerator" / "2024Q1 Denominator" 
+  else 0
 
--- ==================== 進階分析 ====================
+define "2024Q2 Rate":
+  if "2024Q2 Denominator" > 0 
+  then "2024Q2 Numerator" / "2024Q2 Denominator" 
+  else 0
 
--- 高風險案件分析（出院後1日內急診）
-define high_risk_early_emergency AS (
-    discharges_with_3day_emergency D
-    where D.days_to_emergency <= 1
-    return {
-        discharge_encounter_id: D.discharge_encounter_id,
-        patient_id: D.patient_id,
-        organization_id: D.organization_id,
-        discharge_date: D.discharge_date,
-        first_emergency_date: D.first_emergency_date,
-        days_to_emergency: D.days_to_emergency,
-        risk_level: if D.days_to_emergency = 0 then '極高風險(當日)'
-                    else '高風險(次日)'
-    }
-)
+define "2024Q3 Rate":
+  if "2024Q3 Denominator" > 0 
+  then "2024Q3 Numerator" / "2024Q3 Denominator" 
+  else 0
 
--- 急診天數分布分析
-define emergency_days_distribution AS (
-    discharges_with_3day_emergency D
-    return {
-        days_category: if D.days_to_emergency = 0 then '出院當日'
-                      else if D.days_to_emergency = 1 then '出院後1日'
-                      else if D.days_to_emergency = 2 then '出院後2日'
-                      else '出院後3日',
-        case_count: Count(D)
-    }
-    group by days_category
-)
+define "2024Q4 Rate":
+  if "2024Q4 Denominator" > 0 
+  then "2024Q4 Numerator" / "2024Q4 Denominator" 
+  else 0
 
--- 醫院3日內急診率排名
-define hospital_emergency_rate_ranking AS (
-    discharges_with_3day_emergency D
-    return {
-        organization_id: D.organization_id,
-        emergency_count: Count(D),
-        discharge_count: Count(valid_discharges VD where VD.serviceProvider.reference = D.organization_id),
-        emergency_rate: Round((Count(D) / Count(valid_discharges VD where VD.serviceProvider.reference = D.organization_id)) * 100, 2)
-    }
-    group by organization_id
-    sort by emergency_rate desc
-)
+define "2025Q1 Rate":
+  if "2025Q1 Denominator" > 0 
+  then "2025Q1 Numerator" / "2025Q1 Denominator" 
+  else 0
 
--- ==================== 主要輸出 ====================
+define "2025Q2 Rate":
+  if "2025Q2 Denominator" > 0 
+  then "2025Q2 Numerator" / "2025Q2 Denominator" 
+  else 0
 
-/*
- * 主要指標結果
- * 包含季度和年度的3日內急診率
- */
-define "Main Output" AS (
-    all_periods_results
-)
+define "2025Q3 Rate":
+  if "2025Q3 Denominator" > 0 
+  then "2025Q3 Numerator" / "2025Q3 Denominator" 
+  else 0
 
-/*
- * 詳細出院案件清單
- * 3日內有急診的出院案件明細
- */
-define "Detailed Discharge List" AS (
-    discharges_with_3day_emergency
-)
+define "2025Q4 Rate":
+  if "2025Q4 Denominator" > 0 
+  then "2025Q4 Numerator" / "2025Q4 Denominator" 
+  else 0
 
-/*
- * 高風險案件清單
- * 出院後1日內急診的案件
- */
-define "High Risk Cases" AS (
-    high_risk_early_emergency
-)
+define "2026Q1 Rate":
+  if "2026Q1 Denominator" > 0 
+  then "2026Q1 Numerator" / "2026Q1 Denominator" 
+  else 0
 
-/*
- * 醫院急診率排名
- * 各醫院的3日內急診率比較
- */
-define "Hospital Ranking" AS (
-    hospital_emergency_rate_ranking
-)
+// Indicator Result
+define "Indicator Result":
+  Tuple {
+    indicatorCode: '108.01',
+    indicatorName: '住院案件出院後三日以內急診率',
+    indicatorNameEn: 'Inpatient 3-Day ED After Discharge Rate',
+    measurementPeriodStart: "Measurement Period Start",
+    measurementPeriodEnd: "Measurement Period End",
+    dataSource: '醫療給付檔案分析系統',
+    compiledBy: '衛生福利部 中央健康保險署',
+    compiledDate: '114/11/06',
+    version: '1.0.0',
+    emergencyDays: 3,
+    denominatorCriteria: '出院案件數(排除10項條件)',
+    numeratorCriteria: '3日內再急診案件數',
+    exclusionCount: 10,
+    exclusionCriteria: '腫瘤科、乳癌試辦、癌症治療、早產安胎、罕見疾病、轉院、新生兒床號、血友病、器官移植、死亡或病危出院',
+    q2024_1_denominator: "2024Q1 Denominator",
+    q2024_1_numerator: "2024Q1 Numerator",
+    q2024_1_rate: "2024Q1 Rate",
+    q2024_2_denominator: "2024Q2 Denominator",
+    q2024_2_numerator: "2024Q2 Numerator",
+    q2024_2_rate: "2024Q2 Rate",
+    q2024_3_denominator: "2024Q3 Denominator",
+    q2024_3_numerator: "2024Q3 Numerator",
+    q2024_3_rate: "2024Q3 Rate",
+    q2024_4_denominator: "2024Q4 Denominator",
+    q2024_4_numerator: "2024Q4 Numerator",
+    q2024_4_rate: "2024Q4 Rate",
+    q2025_1_denominator: "2025Q1 Denominator",
+    q2025_1_numerator: "2025Q1 Numerator",
+    q2025_1_rate: "2025Q1 Rate",
+    q2025_2_denominator: "2025Q2 Denominator",
+    q2025_2_numerator: "2025Q2 Numerator",
+    q2025_2_rate: "2025Q2 Rate",
+    q2025_3_denominator: "2025Q3 Denominator",
+    q2025_3_numerator: "2025Q3 Numerator",
+    q2025_3_rate: "2025Q3 Rate",
+    q2025_4_denominator: "2025Q4 Denominator",
+    q2025_4_numerator: "2025Q4 Numerator",
+    q2025_4_rate: "2025Q4 Rate",
+    q2026_1_denominator: "2026Q1 Denominator",
+    q2026_1_numerator: "2026Q1 Numerator",
+    q2026_1_rate: "2026Q1 Rate"
+  }

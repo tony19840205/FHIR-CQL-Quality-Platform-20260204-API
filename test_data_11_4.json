@@ -1,0 +1,264 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ftcs-2026-001",
+        "gender": "female",
+        "birthDate": "1995-03-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/ftcs-2026-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ftcs-enc-2026-001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-001"
+        },
+        "period": {
+          "start": "2026-01-05T08:00:00+08:00",
+          "end": "2026-01-05T18:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ftcs-enc-2026-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "ftcs-cond-2026-001",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.0",
+              "display": "Elective cesarean section"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-001"
+        },
+        "encounter": {
+          "reference": "Encounter/ftcs-enc-2026-001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/ftcs-cond-2026-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "ftcs-proc-2026-001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "81004C",
+              "display": "剖腹產術"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-001"
+        },
+        "encounter": {
+          "reference": "Encounter/ftcs-enc-2026-001"
+        },
+        "performedDateTime": "2026-01-05T12:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/ftcs-proc-2026-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ftcs-2026-002",
+        "gender": "female",
+        "birthDate": "1995-05-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/ftcs-2026-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ftcs-enc-2026-002",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-002"
+        },
+        "period": {
+          "start": "2026-01-05T08:00:00+08:00",
+          "end": "2026-01-05T16:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ftcs-enc-2026-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "ftcs-cond-2026-002",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-002"
+        },
+        "encounter": {
+          "reference": "Encounter/ftcs-enc-2026-002"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/ftcs-cond-2026-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "ftcs-proc-2026-002",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "80401C",
+              "display": "自然生產"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-002"
+        },
+        "encounter": {
+          "reference": "Encounter/ftcs-enc-2026-002"
+        },
+        "performedDateTime": "2026-01-05T12:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/ftcs-proc-2026-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ftcs-2026-003",
+        "gender": "female",
+        "birthDate": "1996-06-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/ftcs-2026-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ftcs-enc-2026-003",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP"
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-003"
+        },
+        "period": {
+          "start": "2026-01-06T08:00:00+08:00",
+          "end": "2026-01-06T16:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ftcs-enc-2026-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "ftcs-cond-2026-003",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O80",
+              "display": "Spontaneous vertex delivery"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-003"
+        },
+        "encounter": {
+          "reference": "Encounter/ftcs-enc-2026-003"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/ftcs-cond-2026-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "ftcs-proc-2026-003",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "urn:oid:2.16.886.101.20003.20014",
+              "code": "80401C",
+              "display": "自然生產"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/ftcs-2026-003"
+        },
+        "encounter": {
+          "reference": "Encounter/ftcs-enc-2026-003"
+        },
+        "performedDateTime": "2026-01-06T12:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/ftcs-proc-2026-003"
+      }
+    }
+  ]
+}

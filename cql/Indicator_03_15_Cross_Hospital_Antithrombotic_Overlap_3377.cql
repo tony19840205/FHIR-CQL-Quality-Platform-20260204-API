@@ -1,4 +1,4 @@
-﻿library Indicator_03_15_Cross_Hospital_Antithrombotic_Overlap_3377 version '1.0.0'
+library Indicator_03_15_Cross_Hospital_Antithrombotic_Overlap_3377 version '1.0.0'
 
 using FHIR version '4.0.1'
 
@@ -6,325 +6,394 @@ include FHIRHelpers version '4.0.1' called FHIRHelpers
 
 // 指標名稱: 跨醫院門診同藥理用藥日數重疊率-抗血栓(口服)
 // 指標代碼: 3377
-// 製作日期：2025-11-20
--- 製表日期: 114/05/13 (2025-11-07更新)
--- 製表單位: 衛生福利部 中央健康保險署
--- 
--- 【資料時間範圍】
--- 查詢期間: 2024-01-01 ~ 2025-11-07 (今天)
--- 統計單位: 每季 (2024Q1, 2024Q2, 2024Q3, 2024Q4, 2025Q1, 2025Q2, 2025Q3, 2025Q4)
--- ============================================
+// 製作日期：2026-01-09
+// 製表日期: 114/05/13
+// 製表單位: 衛生福利部 中央健康保險署
+// 
+// 【資料時間範圍】
+// 查詢期間: 2024-01-01 ~ 2099-12-31 (無限制)
+// 統計單位: 每季 (2024Q1-Q4, 2025Q1-Q4, 2026Q1)
+// ============================================
+//
+// 【資料範圍】
+// (1)醫院總額之門診處方抗血栓藥物(口服)案件
+// (2)排除代辦案件
+//
+// 【公式說明】(依健保指標代碼 3377)
+// 跨醫院門診同藥理用藥日數重疊率-抗血栓藥物(口服) = 
+//     分子: 全國跨院同ID不同處方之開始用藥日期與結束用藥日期間有重疊之給藥日數(允許遞延早拿藥)
+//     分母: 各案件之「給藥日數」總和
+// 
+// (1)「給藥日數」抓取醫令檔之醫令給藥日份(ORDER_DRUG_DAY)，若為空值則抓清單檔之給藥日份(DRUG_DAYS)
+// (2)抗血栓藥物(口服)：ATC前5碼為B01AA、B01AC(排除B01AC07)、B01AE、B01AF，且劑型代碼第8碼為1
+// 
+// 排除條件:
+//   1.排除代辦案件
+//   2.限制口服劑型 (劑型代碼第8碼為1)
+//   3.排除B01AC07
+//
+// 【重點差異】
+//   與指標9(同院門診)不同，本指標計算「跨醫院」的用藥重疊
+//   即：同一病患在不同醫院就診時的抗血栓藥物(口服)重疊情況
+// ============================================
 
--- 【資料範圍】
--- (1)醫院總額之門診處方抗血栓藥物(口服)案件
--- (2)排除代辦案件
+codesystem "ATC": 'http://www.whocc.no/atc'
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
+codesystem "MedicationRequestStatus": 'http://hl7.org/fhir/CodeSystem/medicationrequest-status'
+codesystem "MedicationRequestIntent": 'http://hl7.org/fhir/CodeSystem/medicationrequest-intent'
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
 
--- 【公式說明】(依健保指標代碼 3377)
--- 跨醫院門診同藥理用藥日數重疊率-抗血栓藥物(口服) = 
---     分子: 全國跨院同ID不同處方之開始用藥日期與結束用藥日期間有重疊之給藥日數(允許遞延早拿藥)
---     分母: 各案件之「給藥日數」總和
--- 
--- (1)「給藥日數」抓取醫令檔之醫令給藥日份(ORDER_DRUG_DAY)，若為空值則抓清單檔之給藥日份(DRUG_DAYS)
--- (2)抗血栓藥物(口服)：ATC前5碼為B01AA、B01AC(排除B01AC07)、B01AE、B01AF，且劑型代碼第8碼為1
--- 
--- 排除條件:
---   1.排除代辦案件
---   2.限制口服劑型 (劑型代碼第8碼為1)
---   3.排除B01AC07
---
--- 【重點差異】
---   與指標9(同院門診)不同，本指標計算「跨醫院」的用藥重疊
---   即：同一病患在不同醫院就診時的抗血栓藥物(口服)重疊情況
+valueset "Antithrombotic ATC Codes": 'http://nhi.gov.tw/fhir/ValueSet/antithrombotic-atc-codes'
 
--- ============================================
--- 備註:
--- 1.資料來源：醫療給付檔案分析系統，指標代碼：3377
--- 
--- 2.資料範圍：醫院總額之門診處方抗血栓藥物(口服)案件，排除代辦案件。
--- 
--- 3.公式說明：
---   分子：全國跨院同ID不同處方之開始用藥日期與結束用藥日期間有重疊之給藥日數(允許遞延早拿藥)。
---   分母：各案件之「給藥日數」總和。
---   (1)「給藥日數」抓取醫令檔之醫令給藥日份(ORDER_DRUG_DAY)，若為空值則抓清單檔之給藥日份(DRUG_DAYS)。
---   (2)抗血栓藥物(口服)：ATC前5碼為B01AA、B01AC(排除B01AC07)、B01AE、B01AF，且劑型代碼第8碼為1。
--- 
--- 4.製表日期：114/05/13
--- 
--- 5.製表單位：衛生福利部 中央健康保險署
--- ============================================
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory'
+code "Outpatient": 'O' from "ActCode" display 'Outpatient'
+code "Active": 'active' from "MedicationRequestStatus" display 'Active'
+code "Completed": 'completed' from "MedicationRequestStatus" display 'Completed'
+code "Finished": 'finished' from "EncounterStatus" display 'Finished'
 
--- CQL Code Systems Definition (依健保標準代碼對照國際標準)
-codesystem "NHI_INDICATOR": 'NHI_INDICATOR'  -- 健保指標代碼系統
-codesystem "SNOMEDCT": 'http://snomed.info/sct'  -- SNOMED CT 劑型代碼對照
-codesystem "ATC": 'http://www.whocc.no/atc'  -- ATC 藥品分類代碼
-codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'  -- HL7 就醫類型代碼
-codesystem "NHI": 'NHI'  -- 健保專用代碼系統
--- 
--- 註: 健保代碼與國際標準完全相容，支援 SMART on FHIR
+// ATC Codes for Antithrombotic Drugs (抗血栓藥物)
+code "B01AA": 'B01AA' from "ATC" display 'Vitamin K antagonists - 維生素K拮抗劑(華法林類)'
+code "B01AC": 'B01AC' from "ATC" display 'Platelet aggregation inhibitors - 抗血小板藥物'
+code "B01AC07": 'B01AC07' from "ATC" display 'Dipyridamole - 應排除'
+code "B01AE": 'B01AE' from "ATC" display 'Direct thrombin inhibitors - 直接凝血酶抑制劑'
+code "B01AF": 'B01AF' from "ATC" display 'Direct factor Xa inhibitors - 直接Xa因子抑制劑'
 
--- FHIR Resource Mapping
--- MedicationRequest → drug_details
--- Encounter → outpatient_claims  
--- Patient → patient_master
--- Organization → hospital_master
+code "Oral": '385268001' from "SNOMEDCT" display 'Oral dose form - 口服劑型'
 
--- 建立季度時間表
-WITH quarters AS (
-    SELECT '2024Q1' as quarter, '2024-01-01' as start_date, '2024-03-31' as end_date
-    UNION ALL SELECT '2024Q2', '2024-04-01', '2024-06-30'
-    UNION ALL SELECT '2024Q3', '2024-07-01', '2024-09-30'
-    UNION ALL SELECT '2024Q4', '2024-10-01', '2024-12-31'
-    UNION ALL SELECT '2025Q1', '2025-01-01', '2025-03-31'
-    UNION ALL SELECT '2025Q2', '2025-04-01', '2025-06-30'
-    UNION ALL SELECT '2025Q3', '2025-07-01', '2025-09-30'
-    UNION ALL SELECT '2025Q4', '2025-10-01', CURRENT_DATE()  -- 計算到當前日期
-),
+// ============================================
+// Quarter Definitions (2024-2026)
+// ============================================
 
--- 健保代碼與標準代碼系統對照表
--- 依據健保指標代碼 3377 (跨醫院門診同藥理用藥日數重疊率-抗血栓藥物(口服)) 規範
-nhi_code_mapping AS (
-    SELECT code_type, nhi_code, standard_code, code_system, description FROM (
-        VALUES
-        -- 健保指標代碼
-        ('INDICATOR', '3377', '3377', 'NHI', 'Cross-Hospital Antithrombotic Drug (Oral) Overlap Rate - 跨醫院門診同藥理用藥日數重疊率-抗血栓藥物(口服)'),
-        
-        -- 劑型代碼 (SNOMED CT) - 限制口服劑型
-        ('DOSAGE_FORM', '1', '385268001', 'http://snomed.info/sct', 'Oral dose form - 口服劑型'),
-        ('DOSAGE_FORM', 'ORAL', '385268001', 'http://snomed.info/sct', 'Oral dose form - 口服劑型'),
-        
-        -- 就醫類型代碼
-        ('ENCOUNTER', 'O', 'AMB', 'http://terminology.hl7.org/CodeSystem/v3-ActCode', 'Outpatient - 門診'),
-        ('ENCOUNTER', 'AMB', 'AMB', 'http://terminology.hl7.org/CodeSystem/v3-ActCode', 'Ambulatory - 門診'),
-        
-        -- 代辦案件註記
-        ('AGENCY', 'Y', 'Y', 'NHI', 'Agency Case - 代辦案件(應排除)')
-    ) AS t(code_type, nhi_code, standard_code, code_system, description)
-),
+define "2024Q1 Start": @2024-01-01
+define "2024Q1 End": @2024-03-31
+define "2024Q2 Start": @2024-04-01
+define "2024Q2 End": @2024-06-30
+define "2024Q3 Start": @2024-07-01
+define "2024Q3 End": @2024-09-30
+define "2024Q4 Start": @2024-10-01
+define "2024Q4 End": @2024-12-31
 
--- 篩選抗血栓藥物(口服)
--- 條件: 
---   (1) ATC前5碼為 B01AA、B01AC(排除B01AC07)、B01AE、B01AF
---   (2) 口服劑型 (劑型代碼第8碼 = 1 或 SUBSTRING(order_code, 8, 1) = '1')
-antithrombotic_drugs AS (
-    SELECT 
-        q.quarter,
-        o.hospital_id,
-        o.patient_id,
-        o.claim_id,
-        o.visit_date,
-        d.drug_code,
-        d.drug_name,
-        d.atc_code,
-        d.order_code,
-        d.dosage_form,
-        -- 給藥日數: 優先取 ORDER_DRUG_DAY，若為空則取 DRUG_DAYS
-        COALESCE(d.order_drug_day, d.drug_days, 0) as drug_days,
-        -- 給藥開始日期: 處方開始日期
-        d.prescription_date as start_date,
-        -- 給藥結束日期: 處方開始日期 + 給藥日數 - 1
-        DATE_ADD(d.prescription_date, INTERVAL (COALESCE(d.order_drug_day, d.drug_days, 0) - 1) DAY) as end_date,
-        -- 劑型代碼 (從醫令代碼第8位取得)
-        SUBSTRING(d.order_code, 8, 1) as dosage_form_code
-    FROM 
-        quarters q
-    CROSS JOIN 
-        outpatient_claims o
-    INNER JOIN 
-        drug_details d ON o.claim_id = d.claim_id
-    WHERE 
-        -- 1. 時間範圍: 在該季內
-        d.prescription_date BETWEEN q.start_date AND q.end_date
-        
-        -- 2. 門診案件 (就醫類別 = O 或 AMB)
-        AND o.encounter_type IN ('O', 'AMB')
-        
-        -- 3. 醫院總額 (排除代辦案件)
-        AND (o.agency_flag IS NULL OR o.agency_flag != 'Y')
-        AND o.hospital_id IS NOT NULL
-        
-        -- 4. 抗血栓藥物 (口服)
-        -- ATC前5碼為 B01AA、B01AC(排除B01AC07)、B01AE、B01AF
-        AND (
-            LEFT(d.atc_code, 5) = 'B01AA' OR  -- Vitamin K antagonists (華法林類)
-            (LEFT(d.atc_code, 5) = 'B01AC' AND d.atc_code != 'B01AC07') OR  -- Platelet aggregation inhibitors (排除B01AC07)
-            LEFT(d.atc_code, 5) = 'B01AE' OR  -- Direct thrombin inhibitors (直接凝血酶抑制劑)
-            LEFT(d.atc_code, 5) = 'B01AF'     -- Direct factor Xa inhibitors (直接Xa因子抑制劑)
-        )
-        
-        -- 5. 限制口服劑型
-        -- 劑型代碼第8碼: 1 = 口服 (SNOMED CT: 385268001)
-        AND (
-            d.dosage_form = '1' OR 
-            d.dosage_form = 'ORAL' OR
-            SUBSTRING(d.order_code, 8, 1) = '1'
-        )
-        
-        -- 6. 有效的給藥日數
-        AND COALESCE(d.order_drug_day, d.drug_days, 0) > 0
-),
+define "2025Q1 Start": @2025-01-01
+define "2025Q1 End": @2025-03-31
+define "2025Q2 Start": @2025-04-01
+define "2025Q2 End": @2025-06-30
+define "2025Q3 Start": @2025-07-01
+define "2025Q3 End": @2025-09-30
+define "2025Q4 Start": @2025-10-01
+define "2025Q4 End": @2025-12-31
 
--- 【跨醫院】配對分析 (不同於指標9的同醫院)
--- 找出同一病人在不同醫院的抗血栓藥物(口服)處方配對
-cross_hospital_pairs AS (
-    SELECT 
-        a.quarter,
-        a.patient_id,
-        a.hospital_id as hospital_id_a,
-        b.hospital_id as hospital_id_b,
-        a.claim_id as claim_id_a,
-        b.claim_id as claim_id_b,
-        a.drug_code as drug_code_a,
-        b.drug_code as drug_code_b,
-        a.drug_name as drug_name_a,
-        b.drug_name as drug_name_b,
-        a.atc_code as atc_code_a,
-        b.atc_code as atc_code_b,
-        a.start_date as start_date_a,
-        a.end_date as end_date_a,
-        a.drug_days as drug_days_a,
-        b.start_date as start_date_b,
-        b.end_date as end_date_b,
-        b.drug_days as drug_days_b
-    FROM 
-        antithrombotic_drugs a
-    INNER JOIN 
-        antithrombotic_drugs b
-        ON a.quarter = b.quarter
-        AND a.patient_id = b.patient_id
-        -- 【關鍵條件】跨醫院: 不同醫院ID
-        AND a.hospital_id != b.hospital_id
-        -- 避免重複配對: 只取 a < b
-        AND a.claim_id < b.claim_id
-),
+define "2026Q1 Start": @2026-01-01
+define "2026Q1 End": @2026-03-31
 
--- 計算【跨醫院】用藥重疊天數 (允許遞延早拿藥)
-cross_hospital_overlap AS (
-    SELECT 
-        quarter,
-        patient_id,
-        hospital_id_a,
-        hospital_id_b,
-        claim_id_a,
-        claim_id_b,
-        drug_name_a,
-        drug_name_b,
-        atc_code_a,
-        atc_code_b,
-        start_date_a,
-        end_date_a,
-        drug_days_a,
-        start_date_b,
-        end_date_b,
-        drug_days_b,
-        -- 重疊天數計算 (允許遞延早拿藥，一般為7天)
-        -- 公式: GREATEST(LEAST(end_date_a+7, end_date_b+7) - GREATEST(start_date_a, start_date_b) + 1, 0)
-        GREATEST(
-            DATEDIFF(
-                LEAST(DATE_ADD(end_date_a, INTERVAL 7 DAY), DATE_ADD(end_date_b, INTERVAL 7 DAY)),
-                GREATEST(start_date_a, start_date_b)
-            ) + 1,
-            0
-        ) as overlap_days
-    FROM 
-        cross_hospital_pairs
-),
+// Measurement Period (無限制 - Unlimited)
+define "Measurement Period Start": @2024-01-01
+define "Measurement Period End": @2099-12-31
+define "Measurement Period": Interval["Measurement Period Start", "Measurement Period End"]
 
--- 篩選實際有重疊的案件
-actual_cross_hospital_overlap AS (
-    SELECT *
-    FROM cross_hospital_overlap
-    WHERE overlap_days > 0
-),
+// ============================================
+// Helper Functions
+// ============================================
 
--- 計算每季的統計數據
-quarterly_summary AS (
-    SELECT 
-        q.quarter,
-        -- 分母: 各案件之「給藥日數」總和
-        SUM(d.drug_days) as total_drug_days,
-        -- 分子: 跨院同ID不同處方之重疊給藥日數總和
-        COALESCE(SUM(o.overlap_days), 0) as total_overlap_days,
-        -- 重疊率 (%)
-        CASE 
-            WHEN SUM(d.drug_days) > 0 THEN 
-                ROUND(COALESCE(SUM(o.overlap_days), 0) * 100.0 / SUM(d.drug_days), 2)
-            ELSE 0
-        END as overlap_rate,
-        -- 統計數量
-        COUNT(DISTINCT d.patient_id) as total_patients,
-        COUNT(DISTINCT d.claim_id) as total_prescriptions,
-        COUNT(DISTINCT o.patient_id) as patients_with_cross_hospital_overlap,
-        COUNT(DISTINCT CONCAT(o.claim_id_a, '-', o.claim_id_b)) as cross_hospital_overlap_pairs
-    FROM 
-        quarters q
-    LEFT JOIN 
-        antithrombotic_drugs d ON q.quarter = d.quarter
-    LEFT JOIN 
-        actual_cross_hospital_overlap o ON q.quarter = o.quarter
-    GROUP BY 
-        q.quarter
-)
+define function GetId(resource FHIR.Resource):
+  Last(Split(resource.id, '/'))
 
--- 最終結果輸出
-SELECT 
-    quarter as '季度',
-    total_patients as '總病人數',
-    total_prescriptions as '總處方數',
-    total_drug_days as '抗血栓藥物(口服)之給藥日數',
-    total_overlap_days as '抗血栓藥物(口服)不同處方用藥日數重疊',
-    overlap_rate as '抗血栓藥物(口服)不同處方用藥日數重疊率',
-    patients_with_cross_hospital_overlap as '有跨院重疊的病人數',
-    cross_hospital_overlap_pairs as '跨院重疊配對數'
-FROM 
-    quarterly_summary
-ORDER BY 
-    quarter;
+define function GetATCCodePrefix5(atcCode String):
+  if Length(atcCode) >= 5 then Substring(atcCode, 0, 5)
+  else atcCode
 
--- ============================================
--- 參考數據驗證 (已提供)
--- ============================================
--- 113年第4季 (2024 Q4):
---   資料集1: 86,184 / 22,182,417 = 0.39%
---   資料集2: 125,488 / 28,490,454 = 0.44%
---   資料集3: 63,296 / 14,694,493 = 0.43%
---   資料集4: 274,968 / 65,367,364 = 0.42%
---
--- 113年全年 (2024 Annual):
---   資料集1: 356,160 / 86,556,121 = 0.41%
---   資料集2: 511,193 / 113,631,533 = 0.45%
---   資料集3: 249,225 / 58,104,771 = 0.43%
---   資料集4: 1,116,578 / 258,292,425 = 0.43%
---
--- 驗證狀態: ✅ 已驗證 (2025-11-07)
--- 
--- 數據分析:
---   Q4 2024 重疊率範圍: 0.39% - 0.44%
---   Annual 2024 重疊率範圍: 0.41% - 0.45%
---   全國平均: 約 0.42-0.43%
---
--- 與同院指標對照:
---   指標9 (同院): 0.20% (Q4 2024)
---   指標17 (跨院): 0.39%-0.44% (Q4 2024)
---   差異: 跨院重疊率約為同院的 2-2.2倍
--- ============================================
+define function GetATCCode(medicationRequest FHIR.MedicationRequest):
+  if medicationRequest.medication is FHIR.CodeableConcept then
+    Coalesce(
+      First((medicationRequest.medication as FHIR.CodeableConcept).coding C 
+        where C.system = 'http://www.whocc.no/atc'
+      ).code.value,
+      ''
+    )
+  else ''
 
--- ============================================
--- 與其他指標的差異
--- ============================================
--- 指標9 (同醫院-抗血栓-口服): a.hospital_id = b.hospital_id
--- 指標17 (跨醫院-抗血栓-口服): a.hospital_id != b.hospital_id
--- 
--- 關鍵SQL條件差異:
--- 同院: AND a.hospital_id = b.hospital_id
--- 跨院: AND a.hospital_id != b.hospital_id
--- 
--- ATC代碼範圍:
--- B01AA: Vitamin K antagonists (華法林類)
--- B01AC: Platelet aggregation inhibitors (抗血小板藥物，排除B01AC07)
--- B01AE: Direct thrombin inhibitors (直接凝血酶抑制劑)
--- B01AF: Direct factor Xa inhibitors (直接Xa因子抑制劑)
--- 
--- 劑型限制:
--- 口服劑型: SUBSTRING(order_code, 8, 1) = '1'
--- SNOMED CT: 385268001 (Oral dose form)
--- ============================================
+define function IsAntithromboticATC(atcCode String):
+  GetATCCodePrefix5(atcCode) in {'B01AA', 'B01AC', 'B01AE', 'B01AF'}
+    and atcCode != 'B01AC07'
+
+define function GetATCClassName(atcCode String):
+  case GetATCCodePrefix5(atcCode)
+    when 'B01AA' then 'Vitamin K antagonists - 維生素K拮抗劑(華法林類)'
+    when 'B01AC' then 'Platelet aggregation inhibitors - 抗血小板藥物'
+    when 'B01AE' then 'Direct thrombin inhibitors - 直接凝血酶抑制劑'
+    when 'B01AF' then 'Direct factor Xa inhibitors - 直接Xa因子抑制劑'
+    else 'Unknown'
+  end
+
+define function GetDosageFormType(medicationRequest FHIR.MedicationRequest):
+  if medicationRequest.medication is FHIR.CodeableConcept then
+    Coalesce(
+      First((medicationRequest.medication as FHIR.CodeableConcept).coding C 
+        where C.system = 'http://snomed.info/sct'
+      ).code.value,
+      ''
+    )
+  else ''
+
+define function IsOralDosageForm(medicationRequest FHIR.MedicationRequest):
+  GetDosageFormType(medicationRequest) = '385268001'
+
+define function GetDrugDays(medicationRequest FHIR.MedicationRequest):
+  Coalesce(
+    medicationRequest.dispenseRequest.expectedSupplyDuration.value.value,
+    medicationRequest.dispenseRequest.quantity.value.value,
+    0
+  )
+
+define function GetOrganizationId(encounter FHIR.Encounter):
+  if encounter.serviceProvider is not null then
+    GetId(encounter.serviceProvider.reference)
+  else ''
+
+define function IsAgencyCase(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/agency-case'
+        and E.value = true
+  )
+
+// ============================================
+// Data Retrieval
+// ============================================
+
+context Patient
+
+define "Outpatient Encounters":
+  [Encounter] E
+    where E.status.value = 'finished'
+      and start of E.period in "Measurement Period"
+      and not IsAgencyCase(E)
+
+define "All Medication Requests":
+  [MedicationRequest] MR
+    where MR.status.value in {'active', 'completed'}
+      and MR.intent.value = 'order'
+      and MR.authoredOn in "Measurement Period"
+
+define "Antithrombotic Medication Requests":
+  "All Medication Requests" MR
+    where IsAntithromboticATC(GetATCCode(MR))
+      and IsOralDosageForm(MR)
+      and GetDrugDays(MR) > 0
+
+// ============================================
+// Cross-Hospital Overlap Analysis
+// ============================================
+
+define "Cross Hospital Antithrombotic Pairs":
+  from "Antithrombotic Medication Requests" MR1,
+       "Antithrombotic Medication Requests" MR2,
+       "Outpatient Encounters" E1,
+       "Outpatient Encounters" E2
+    where GetId(MR1.encounter.reference) = GetId(E1)
+      and GetId(MR2.encounter.reference) = GetId(E2)
+      and GetOrganizationId(E1) != GetOrganizationId(E2)
+      and GetId(MR1) < GetId(MR2)
+    return {
+      organizationId1: GetOrganizationId(E1),
+      organizationId2: GetOrganizationId(E2),
+      drugName1: (MR1.medication as FHIR.CodeableConcept).text.value,
+      drugName2: (MR2.medication as FHIR.CodeableConcept).text.value,
+      atcCode1: GetATCCode(MR1),
+      atcCode2: GetATCCode(MR2),
+      atcClass1: GetATCClassName(GetATCCode(MR1)),
+      atcClass2: GetATCClassName(GetATCCode(MR2)),
+      drugDays1: GetDrugDays(MR1),
+      drugDays2: GetDrugDays(MR2),
+      startDate1: MR1.authoredOn.value,
+      startDate2: MR2.authoredOn.value
+    }
+
+// ============================================
+// 2024Q1 Statistics
+// ============================================
+
+define "2024Q1 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2024Q1 Start", "2024Q1 End"]
+
+define "2024Q1 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2024Q1 Start", "2024Q1 End"]
+      or P.startDate2 in Interval["2024Q1 Start", "2024Q1 End"]
+
+define "2024Q1 Total Drug Days":
+  Sum("2024Q1 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2024Q1 Cross Hospital Overlap Count":
+  Count("2024Q1 Cross Hospital Pairs")
+
+// ============================================
+// 2024Q2 Statistics
+// ============================================
+
+define "2024Q2 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2024Q2 Start", "2024Q2 End"]
+
+define "2024Q2 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2024Q2 Start", "2024Q2 End"]
+      or P.startDate2 in Interval["2024Q2 Start", "2024Q2 End"]
+
+define "2024Q2 Total Drug Days":
+  Sum("2024Q2 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2024Q2 Cross Hospital Overlap Count":
+  Count("2024Q2 Cross Hospital Pairs")
+
+// ============================================
+// 2024Q3 Statistics
+// ============================================
+
+define "2024Q3 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2024Q3 Start", "2024Q3 End"]
+
+define "2024Q3 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2024Q3 Start", "2024Q3 End"]
+      or P.startDate2 in Interval["2024Q3 Start", "2024Q3 End"]
+
+define "2024Q3 Total Drug Days":
+  Sum("2024Q3 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2024Q3 Cross Hospital Overlap Count":
+  Count("2024Q3 Cross Hospital Pairs")
+
+// ============================================
+// 2024Q4 Statistics
+// ============================================
+
+define "2024Q4 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2024Q4 Start", "2024Q4 End"]
+
+define "2024Q4 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2024Q4 Start", "2024Q4 End"]
+      or P.startDate2 in Interval["2024Q4 Start", "2024Q4 End"]
+
+define "2024Q4 Total Drug Days":
+  Sum("2024Q4 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2024Q4 Cross Hospital Overlap Count":
+  Count("2024Q4 Cross Hospital Pairs")
+
+// ============================================
+// 2025Q1 Statistics
+// ============================================
+
+define "2025Q1 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2025Q1 Start", "2025Q1 End"]
+
+define "2025Q1 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2025Q1 Start", "2025Q1 End"]
+      or P.startDate2 in Interval["2025Q1 Start", "2025Q1 End"]
+
+define "2025Q1 Total Drug Days":
+  Sum("2025Q1 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2025Q1 Cross Hospital Overlap Count":
+  Count("2025Q1 Cross Hospital Pairs")
+
+// ============================================
+// 2025Q2 Statistics
+// ============================================
+
+define "2025Q2 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2025Q2 Start", "2025Q2 End"]
+
+define "2025Q2 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2025Q2 Start", "2025Q2 End"]
+      or P.startDate2 in Interval["2025Q2 Start", "2025Q2 End"]
+
+define "2025Q2 Total Drug Days":
+  Sum("2025Q2 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2025Q2 Cross Hospital Overlap Count":
+  Count("2025Q2 Cross Hospital Pairs")
+
+// ============================================
+// 2025Q3 Statistics
+// ============================================
+
+define "2025Q3 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2025Q3 Start", "2025Q3 End"]
+
+define "2025Q3 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2025Q3 Start", "2025Q3 End"]
+      or P.startDate2 in Interval["2025Q3 Start", "2025Q3 End"]
+
+define "2025Q3 Total Drug Days":
+  Sum("2025Q3 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2025Q3 Cross Hospital Overlap Count":
+  Count("2025Q3 Cross Hospital Pairs")
+
+// ============================================
+// 2025Q4 Statistics
+// ============================================
+
+define "2025Q4 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2025Q4 Start", "2025Q4 End"]
+
+define "2025Q4 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2025Q4 Start", "2025Q4 End"]
+      or P.startDate2 in Interval["2025Q4 Start", "2025Q4 End"]
+
+define "2025Q4 Total Drug Days":
+  Sum("2025Q4 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2025Q4 Cross Hospital Overlap Count":
+  Count("2025Q4 Cross Hospital Pairs")
+
+// ============================================
+// 2026Q1 Statistics
+// ============================================
+
+define "2026Q1 Antithrombotic Requests":
+  "Antithrombotic Medication Requests" MR
+    where MR.authoredOn.value in Interval["2026Q1 Start", "2026Q1 End"]
+
+define "2026Q1 Cross Hospital Pairs":
+  "Cross Hospital Antithrombotic Pairs" P
+    where P.startDate1 in Interval["2026Q1 Start", "2026Q1 End"]
+      or P.startDate2 in Interval["2026Q1 Start", "2026Q1 End"]
+
+define "2026Q1 Total Drug Days":
+  Sum("2026Q1 Antithrombotic Requests" MR return GetDrugDays(MR))
+
+define "2026Q1 Cross Hospital Overlap Count":
+  Count("2026Q1 Cross Hospital Pairs")
+
+// ============================================
+// Indicator Result
+// ============================================
+
+define "Indicator Result":
+  {
+    indicatorCode: '3377',
+    indicatorName: '跨醫院門診同藥理用藥日數重疊率-抗血栓藥物(口服)',
+    indicatorNameEn: 'Cross-Hospital Outpatient Antithrombotic Drug Overlap Rate (Oral)',
+    measurementPeriodStart: "Measurement Period Start",
+    measurementPeriodEnd: "Measurement Period End",
+    dataSource: '醫療給付檔案分析系統',
+    compiledBy: '衛生福利部 中央健康保險署',
+    compiledDate: '114/05/13',
+    version: '1.0.0',
+    keyFeature: '跨醫院用藥重疊分析 (P1.organizationId != P2.organizationId, 4類ATC: B01AA/B01AC/B01AE/B01AF, 排除B01AC07, 口服劑型)'
+  }

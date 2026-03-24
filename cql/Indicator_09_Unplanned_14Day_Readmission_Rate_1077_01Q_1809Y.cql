@@ -4,9 +4,637 @@ using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
-// 來源：醫療給付檔案分析系統 指標代碼: 1077.01(季)、1809(年)
-// 條件依據：非計畫性住院案件出院後十四日內再住院率
-// 製作日期：2025-11-20
+// 指標名稱: 非計畫性住院案件出院後十四日內再住院率
+// 指標代碼: 1077.01 (季度), 1809 (年度)
+// 製作日期：2026-01-09
+// 製表日期: 114/11/06
+// 製表單位: 衛生福利部 中央健康保險署
+//
+// 【資料時間範圍】
+// 查詢期間: 2024-01-01 ~ 2099-12-31 (無限制)
+// 統計單位: 每季 (2024Q1-Q4, 2025Q1-Q4, 2026Q1)
+// ============================================
+//
+// 【公式說明】
+// 分子: 病人14日再住院人數
+// 分母: 當季出院人數
+//
+// 【排除條件】分母分子均排除下列計畫性再住院案件:
+// (1)腫瘤科個案(就醫科別=13)
+// (2)乳癌試辦案件(案件分類4+疾患來源N或R或C)
+// (3)癌症、性態未明腫瘤治療(主次診斷ICD-10-CM前3碼為C00-C96(排除C94.4、C94.6)、D37-D48、全碼Z51.0、Z51.11、Z51.12、Z08)
+// (4)早產安胎個案(主診斷ICD-10-CM：前五碼O4291及全碼O4410~O4413、O4690~O4693、O4702~O4703、O6002、O6003)
+// (5)罕見疾病(主診斷E760~E763)一點多醣症
+// (6)轉院案件(轉歸代碼5、6或7)
+// (7)新生兒床號(部分負擔計費903)
+// (8)血友病(主診斷D66、D67、D681、D682)
+// (9)執行心導管(醫令代碼前5碼為18020、18021、97501、97502、97503、97506、97507、97508)
+// (10)心血管線道手術(主次處置代碼前5碼為68023或68024或68025)
+// (11)瓣膜置換術(醫令代碼前5碼為68016、68017、68018且主診斷碼前3碼為I00-I99)
+// (12)器官移植(手術代碼75010、68003~68037、68043、75020、76020、75418、85213)
+// (13)支架置放術(PTCA+血管支架)
+// (14)急性後期整合照護計畫案件(住院案件分類4+試辦計畫代碼1腦中風、2燒燙傷、3創傷性神經損傷、4腦弱性骨折、6衰弱高齡)
+// (15)安寧照護(給付類別A)
+// ============================================
+
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes/procedure'
+codesystem "NHI_CLAIM": 'http://www.nhi.gov.tw/codes/claim'
+codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
+codesystem "CPT": 'http://www.ama-assn.org/go/cpt'
+
+valueset "Inpatient Encounters": 'http://nhi.gov.tw/fhir/ValueSet/inpatient-encounters'
+valueset "Planned Readmissions": 'http://nhi.gov.tw/fhir/ValueSet/planned-readmissions'
+
+// 就醫類型代碼
+code "Inpatient": 'IMP' from "ActCode" display 'Inpatient'
+code "Finished": 'finished' from "EncounterStatus" display 'Finished'
+
+// 腫瘤科科別代碼
+code "Oncology Department": '13' from "NHI_CLAIM" display '腫瘤科'
+
+// 案件分類代碼
+code "Special Case Type": '4' from "NHI_CLAIM" display '特殊案件分類'
+
+// 疾患來源代碼
+code "Disease Source N": 'N' from "NHI_CLAIM" display '疾患來源-新生兒'
+code "Disease Source R": 'R' from "NHI_CLAIM" display '疾患來源-再住院'
+code "Disease Source C": 'C' from "NHI_CLAIM" display '疾患來源-慢性病'
+
+// 轉歸代碼
+code "Transfer Code 5": '5' from "NHI_CLAIM" display '轉院(計畫性)'
+code "Transfer Code 6": '6' from "NHI_CLAIM" display '轉院(緊急)'
+code "Transfer Code 7": '7' from "NHI_CLAIM" display '轉院(其他)'
+
+// 部分負擔計費代碼
+code "Newborn Bed": '903' from "NHI_CLAIM" display '新生兒床號'
+
+// 給付類別代碼
+code "Hospice Payment": 'A' from "NHI_CLAIM" display '安寧照護'
+
+// 試辦計畫代碼
+code "Pilot Stroke": '1' from "NHI_CLAIM" display '急性後期-腦中風'
+code "Pilot Burn": '2' from "NHI_CLAIM" display '急性後期-燒燙傷'
+code "Pilot Trauma": '3' from "NHI_CLAIM" display '急性後期-創傷性神經損傷'
+code "Pilot Fracture": '4' from "NHI_CLAIM" display '急性後期-腦弱性骨折'
+code "Pilot Frailty": '6' from "NHI_CLAIM" display '急性後期-衰弱高齡'
+
+// 癌症診斷代碼 (ICD-10-CM C00-C96, 排除C94.4、C94.6)
+code "Cancer C00": 'C00' from "ICD10CM" display 'Malignant neoplasm of lip'
+code "Cancer C01": 'C01' from "ICD10CM" display 'Malignant neoplasm of base of tongue'
+code "Cancer C02": 'C02' from "ICD10CM" display 'Malignant neoplasm of other and unspecified parts of tongue'
+code "Cancer C94": 'C94' from "ICD10CM" display 'Other leukemias of specified cell type'
+code "Cancer C944": 'C94.4' from "ICD10CM" display 'Acute panmyelosis with myelofibrosis - 排除'
+code "Cancer C946": 'C94.6' from "ICD10CM" display 'Myelodysplastic disease, not classified - 排除'
+
+// 性態未明腫瘤代碼 (D37-D48)
+code "Uncertain D37": 'D37' from "ICD10CM" display 'Neoplasm of uncertain behavior of oral cavity and digestive organs'
+code "Uncertain D48": 'D48' from "ICD10CM" display 'Neoplasm of uncertain behavior of other and unspecified sites'
+
+// 腫瘤治療代碼
+code "Radiotherapy Z510": 'Z51.0' from "ICD10CM" display 'Encounter for antineoplastic radiation therapy'
+code "Chemotherapy Z5111": 'Z51.11' from "ICD10CM" display 'Encounter for antineoplastic chemotherapy'
+code "Chemotherapy Z5112": 'Z51.12' from "ICD10CM" display 'Encounter for antineoplastic immunotherapy'
+code "Cancer Followup Z08": 'Z08' from "ICD10CM" display 'Encounter for follow-up examination after completed treatment for malignant neoplasm'
+
+// 早產安胎代碼
+code "Preterm O4291": 'O4291' from "ICD10CM" display 'Premature separation of placenta with coagulation defect - 早產安胎(前五碼)'
+code "Preterm O4410": 'O4410' from "ICD10CM" display 'Placenta previa specified as without hemorrhage, unspecified trimester'
+code "Preterm O4411": 'O4411' from "ICD10CM" display 'Placenta previa specified as without hemorrhage, first trimester'
+code "Preterm O4412": 'O4412' from "ICD10CM" display 'Placenta previa specified as without hemorrhage, second trimester'
+code "Preterm O4413": 'O4413' from "ICD10CM" display 'Placenta previa specified as without hemorrhage, third trimester'
+code "Preterm O4690": 'O4690' from "ICD10CM" display 'Unspecified antepartum hemorrhage, unspecified trimester'
+code "Preterm O4691": 'O4691' from "ICD10CM" display 'Unspecified antepartum hemorrhage, first trimester'
+code "Preterm O4692": 'O4692' from "ICD10CM" display 'Unspecified antepartum hemorrhage, second trimester'
+code "Preterm O4693": 'O4693' from "ICD10CM" display 'Unspecified antepartum hemorrhage, third trimester'
+code "Preterm O4702": 'O4702' from "ICD10CM" display 'False labor before 37 completed weeks of gestation, second trimester'
+code "Preterm O4703": 'O4703' from "ICD10CM" display 'False labor before 37 completed weeks of gestation, third trimester'
+code "Preterm O6002": 'O6002' from "ICD10CM" display 'Preterm labor without delivery, second trimester'
+code "Preterm O6003": 'O6003' from "ICD10CM" display 'Preterm labor without delivery, third trimester'
+
+// 罕見疾病代碼 (E760-E763 一點多醣症)
+code "Rare E760": 'E760' from "ICD10CM" display 'Mucopolysaccharidosis, type I'
+code "Rare E761": 'E761' from "ICD10CM" display 'Mucopolysaccharidosis, type II'
+code "Rare E762": 'E762' from "ICD10CM" display 'Other mucopolysaccharidoses'
+code "Rare E763": 'E763' from "ICD10CM" display 'Mucopolysaccharidosis, unspecified'
+
+// 血友病代碼
+code "Hemophilia D66": 'D66' from "ICD10CM" display 'Hereditary factor VIII deficiency'
+code "Hemophilia D67": 'D67' from "ICD10CM" display 'Hereditary factor IX deficiency'
+code "Hemophilia D681": 'D681' from "ICD10CM" display "Von Willebrand's disease"
+code "Hemophilia D682": 'D682' from "ICD10CM" display 'Hereditary deficiency of other clotting factors'
+
+// 心臟疾病代碼 (I00-I99, 配合瓣膜置換術)
+code "Heart I00": 'I00' from "ICD10CM" display 'Rheumatic fever without heart involvement'
+code "Heart I99": 'I99' from "ICD10CM" display 'Other and unspecified disorders of circulatory system'
+
+// 心導管醫令代碼
+code "Cardiac Cath 18020": '18020' from "NHI_PROCEDURE" display '心導管檢查-18020'
+code "Cardiac Cath 18021": '18021' from "NHI_PROCEDURE" display '心導管檢查-18021'
+code "Cardiac Cath 97501": '97501' from "NHI_PROCEDURE" display '心導管檢查-97501'
+code "Cardiac Cath 97502": '97502' from "NHI_PROCEDURE" display '心導管檢查-97502'
+code "Cardiac Cath 97503": '97503' from "NHI_PROCEDURE" display '心導管檢查-97503'
+code "Cardiac Cath 97506": '97506' from "NHI_PROCEDURE" display '心導管檢查-97506'
+code "Cardiac Cath 97507": '97507' from "NHI_PROCEDURE" display '心導管檢查-97507'
+code "Cardiac Cath 97508": '97508' from "NHI_PROCEDURE" display '心導管檢查-97508'
+
+// 冠狀動脈繞道手術代碼
+code "CABG 68023": '68023' from "NHI_PROCEDURE" display '冠狀動脈繞道手術-68023'
+code "CABG 68024": '68024' from "NHI_PROCEDURE" display '冠狀動脈繞道手術-68024'
+code "CABG 68025": '68025' from "NHI_PROCEDURE" display '冠狀動脈繞道手術-68025'
+
+// 瓣膜置換術代碼
+code "Valve 68016": '68016' from "NHI_PROCEDURE" display '瓣膜置換術-68016'
+code "Valve 68017": '68017' from "NHI_PROCEDURE" display '瓣膜置換術-68017'
+code "Valve 68018": '68018' from "NHI_PROCEDURE" display '瓣膜置換術-68018'
+
+// 器官移植代碼
+code "Transplant 75010": '75010' from "NHI_PROCEDURE" display '甲臟移植'
+code "Transplant 68003": '68003' from "NHI_PROCEDURE" display '腎臟移植-68003'
+code "Transplant 68037": '68037' from "NHI_PROCEDURE" display '腎臟移植-68037'
+code "Transplant 68043": '68043' from "NHI_PROCEDURE" display '骨髓移植後續追蹤'
+code "Transplant 75020": '75020' from "NHI_PROCEDURE" display '肺臟移植'
+code "Transplant 76020": '76020' from "NHI_PROCEDURE" display '腎臟移植'
+code "Transplant 75418": '75418' from "NHI_PROCEDURE" display '胰臟移植'
+code "Transplant 85213": '85213' from "NHI_PROCEDURE" display '骨髓移植'
+
+// PTCA經皮冠狀動脈擴張術代碼
+code "PTCA 02703ZZ": '02703ZZ' from "CPT" display 'Dilation of Coronary Artery, One Artery, Percutaneous Approach'
+code "PTCA 02704ZZ": '02704ZZ' from "CPT" display 'Dilation of Coronary Artery, Two Arteries, Percutaneous Approach'
+code "PTCA 3E07317": '3E07317' from "CPT" display 'Introduction of Other Thrombolytic into Coronary Artery'
+code "PTCA 02713ZZ": '02713ZZ' from "CPT" display 'Dilation of Coronary Artery, One Artery with Intraluminal Device'
+code "PTCA 02714ZZ": '02714ZZ' from "CPT" display 'Dilation of Coronary Artery, Two Arteries with Intraluminal Device'
+code "PTCA 02723ZZ": '02723ZZ' from "CPT" display 'Dilation of Coronary Artery, Three Arteries'
+code "PTCA 02733ZZ": '02733ZZ' from "CPT" display 'Dilation of Coronary Artery, Four or More Arteries'
+code "PTCA 02734ZZ": '02734ZZ' from "CPT" display 'Dilation of Coronary Artery, Four or More Arteries with Device'
+
+// PTCA醫令代碼
+code "PTCA Order 33076": '33076' from "NHI_PROCEDURE" display 'PTCA醫令-33076'
+code "PTCA Order 33077": '33077' from "NHI_PROCEDURE" display 'PTCA醫令-33077'
+code "PTCA Order 33078": '33078' from "NHI_PROCEDURE" display 'PTCA醫令-33078'
+
+// 血管支架特材代碼
+code "Stent CBP02A1": 'CBP02A1' from "NHI_CLAIM" display '血管支架-CBP02A1'
+code "Stent CBP06A1": 'CBP06A1' from "NHI_CLAIM" display '血管支架-CBP06A1'
+code "Stent CBP06A2": 'CBP06A2' from "NHI_CLAIM" display '血管支架-CBP06A2'
+code "Stent CBP06A3": 'CBP06A3' from "NHI_CLAIM" display '血管支架-CBP06A3'
+
+// ============================================
+// Quarter Definitions (2024-2026)
+// ============================================
+
+define "2024Q1 Start": @2024-01-01
+define "2024Q1 End": @2024-03-31
+define "2024Q2 Start": @2024-04-01
+define "2024Q2 End": @2024-06-30
+define "2024Q3 Start": @2024-07-01
+define "2024Q3 End": @2024-09-30
+define "2024Q4 Start": @2024-10-01
+define "2024Q4 End": @2024-12-31
+
+define "2025Q1 Start": @2025-01-01
+define "2025Q1 End": @2025-03-31
+define "2025Q2 Start": @2025-04-01
+define "2025Q2 End": @2025-06-30
+define "2025Q3 Start": @2025-07-01
+define "2025Q3 End": @2025-09-30
+define "2025Q4 Start": @2025-10-01
+define "2025Q4 End": @2025-12-31
+
+define "2026Q1 Start": @2026-01-01
+define "2026Q1 End": @2026-03-31
+
+// Measurement Period (無限制 - Unlimited)
+define "Measurement Period Start": @2024-01-01
+define "Measurement Period End": @2099-12-31
+define "Measurement Period": Interval["Measurement Period Start", "Measurement Period End"]
+
+// ============================================
+// Helper Functions
+// ============================================
+
+define function GetId(resource FHIR.Resource):
+  Last(Split(resource.id, '/'))
+
+define function GetDischargeDate(encounter FHIR.Encounter):
+  end of encounter.period
+
+define function GetAdmissionDate(encounter FHIR.Encounter):
+  start of encounter.period
+
+define function GetPrimaryDiagnosis(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.diagnosis D
+        where exists (D.use.coding C where C.code.value = 'primary')
+        return First(
+          [Condition: id in GetId(D.condition.reference)]
+        ).code.coding[0].code.value
+    ),
+    ''
+  )
+
+define function GetDiagnosisPrefix3(diagnosisCode String):
+  if Length(diagnosisCode) >= 3 then
+    Substring(diagnosisCode, 0, 3)
+  else
+    diagnosisCode
+
+define function GetDiagnosisPrefix5(diagnosisCode String):
+  if Length(diagnosisCode) >= 5 then
+    Substring(diagnosisCode, 0, 5)
+  else
+    diagnosisCode
+
+define function DaysBetween(date1 DateTime, date2 DateTime):
+  days between date1 and date2
+
+// ============================================
+// Data Retrieval
+// ============================================
+
+context Patient
+
+define "All Inpatient Discharges":
+  [Encounter] E
+    where E.status.value = 'finished'
+      and E.class.code.value = 'IMP'
+      and end of E.period in "Measurement Period"
+
+// ============================================
+// Exclusion Criteria (15 types of planned readmissions)
+// ============================================
+
+define function IsOncologyCase(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/department-code'
+        and (E.value as FHIR.code).value = '13'
+  )
+
+define function IsBreastCancerPilot(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/case-type'
+        and (E.value as FHIR.code).value = '4'
+  )
+  and exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/disease-source'
+        and (E.value as FHIR.code).value in {'N', 'R', 'C'}
+  )
+
+define function IsCancerTreatment(encounter FHIR.Encounter):
+  GetDiagnosisPrefix3(GetPrimaryDiagnosis(encounter)) in {
+    'C00', 'C01', 'C02', 'C03', 'C04', 'C05', 'C06', 'C07', 'C08', 'C09',
+    'C10', 'C11', 'C12', 'C13', 'C14', 'C15', 'C16', 'C17', 'C18', 'C19',
+    'C20', 'C21', 'C22', 'C23', 'C24', 'C25', 'C26', 'C30', 'C31', 'C32',
+    'C33', 'C34', 'C37', 'C38', 'C39', 'C40', 'C41', 'C43', 'C44', 'C45',
+    'C46', 'C47', 'C48', 'C49', 'C50', 'C51', 'C52', 'C53', 'C54', 'C55',
+    'C56', 'C57', 'C58', 'C60', 'C61', 'C62', 'C63', 'C64', 'C65', 'C66',
+    'C67', 'C68', 'C69', 'C70', 'C71', 'C72', 'C73', 'C74', 'C75', 'C76',
+    'C77', 'C78', 'C79', 'C80', 'C81', 'C82', 'C83', 'C84', 'C85', 'C86',
+    'C88', 'C90', 'C91', 'C92', 'C93', 'C95', 'C96',
+    'D37', 'D38', 'D39', 'D40', 'D41', 'D42', 'D43', 'D44', 'D45', 'D46',
+    'D47', 'D48'
+  }
+  and GetPrimaryDiagnosis(encounter) not in {'C94.4', 'C94.6'}
+  or GetPrimaryDiagnosis(encounter) in {'Z51.0', 'Z51.11', 'Z51.12', 'Z08'}
+
+define function IsPretermLabor(encounter FHIR.Encounter):
+  GetDiagnosisPrefix5(GetPrimaryDiagnosis(encounter)) = 'O4291'
+  or GetPrimaryDiagnosis(encounter) in {
+    'O4410', 'O4411', 'O4412', 'O4413',
+    'O4690', 'O4691', 'O4692', 'O4693',
+    'O4702', 'O4703', 'O6002', 'O6003'
+  }
+
+define function IsRareDisease(encounter FHIR.Encounter):
+  GetPrimaryDiagnosis(encounter) in {'E760', 'E761', 'E762', 'E763'}
+
+define function IsTransferCase(encounter FHIR.Encounter):
+  exists (
+    encounter.hospitalization.dischargeDisposition.coding C
+      where C.code.value in {'5', '6', '7'}
+  )
+
+define function IsNewbornBed(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/copayment-code'
+        and (E.value as FHIR.code).value = '903'
+  )
+
+define function IsHemophilia(encounter FHIR.Encounter):
+  GetPrimaryDiagnosis(encounter) in {'D66', 'D67', 'D681', 'D682'}
+
+define function HasCardiacCath(encounter FHIR.Encounter):
+  exists (
+    [Procedure] P
+      where GetId(P.encounter.reference) = GetId(encounter)
+        and exists (
+          P.code.coding C
+            where Substring(C.code.value, 0, 5) in {
+              '18020', '18021', '97501', '97502', '97503', '97506', '97507', '97508'
+            }
+        )
+  )
+
+define function HasCABG(encounter FHIR.Encounter):
+  exists (
+    [Procedure] P
+      where GetId(P.encounter.reference) = GetId(encounter)
+        and exists (
+          P.code.coding C
+            where Substring(C.code.value, 0, 5) in {'68023', '68024', '68025'}
+        )
+  )
+
+define function HasValveReplacement(encounter FHIR.Encounter):
+  exists (
+    [Procedure] P
+      where GetId(P.encounter.reference) = GetId(encounter)
+        and exists (
+          P.code.coding C
+            where Substring(C.code.value, 0, 5) in {'68016', '68017', '68018'}
+        )
+  )
+  and GetDiagnosisPrefix3(GetPrimaryDiagnosis(encounter)) >= 'I00'
+  and GetDiagnosisPrefix3(GetPrimaryDiagnosis(encounter)) <= 'I99'
+
+define function HasOrganTransplant(encounter FHIR.Encounter):
+  exists (
+    [Procedure] P
+      where GetId(P.encounter.reference) = GetId(encounter)
+        and exists (
+          P.code.coding C
+            where C.code.value in {
+              '75010', '68003', '68037', '68043', '75020', '76020', '75418', '85213'
+            }
+        )
+  )
+
+define function HasStentPlacement(encounter FHIR.Encounter):
+  exists (
+    [Procedure] P
+      where GetId(P.encounter.reference) = GetId(encounter)
+        and exists (
+          P.code.coding C
+            where C.code.value in {
+              '02703ZZ', '02704ZZ', '3E07317', '02713ZZ', '02714ZZ', '02723ZZ', '02733ZZ', '02734ZZ'
+            }
+        )
+  )
+  and exists (
+    [Procedure] P
+      where GetId(P.encounter.reference) = GetId(encounter)
+        and exists (
+          P.code.coding C
+            where Substring(C.code.value, 0, 5) in {'33076', '33077', '33078'}
+        )
+  )
+
+define function IsPostAcuteCare(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/case-type'
+        and (E.value as FHIR.code).value = '4'
+  )
+  and exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/pilot-program'
+        and (E.value as FHIR.code).value in {'1', '2', '3', '4', '6'}
+  )
+
+define function IsHospiceCare(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/payment-type'
+        and (E.value as FHIR.code).value = 'A'
+  )
+
+define function IsPlannedReadmission(encounter FHIR.Encounter):
+  IsOncologyCase(encounter)
+  or IsBreastCancerPilot(encounter)
+  or IsCancerTreatment(encounter)
+  or IsPretermLabor(encounter)
+  or IsRareDisease(encounter)
+  or IsTransferCase(encounter)
+  or IsNewbornBed(encounter)
+  or IsHemophilia(encounter)
+  or HasCardiacCath(encounter)
+  or HasCABG(encounter)
+  or HasValveReplacement(encounter)
+  or HasOrganTransplant(encounter)
+  or HasStentPlacement(encounter)
+  or IsPostAcuteCare(encounter)
+  or IsHospiceCare(encounter)
+
+// ============================================
+// Unplanned Discharges (分母)
+// ============================================
+
+define "Unplanned Discharges":
+  "All Inpatient Discharges" E
+    where not IsPlannedReadmission(E)
+
+define function UnplannedDischargesInPeriod(periodStart Date, periodEnd Date):
+  "Unplanned Discharges" E
+    where date from GetDischargeDate(E) in Interval[periodStart, periodEnd]
+
+define function DischargePatientCountInPeriod(periodStart Date, periodEnd Date):
+  Count(
+    distinct (
+      UnplannedDischargesInPeriod(periodStart, periodEnd) E
+        return GetId([Patient])
+    )
+  )
+
+// ============================================
+// 14-Day Readmissions (分子)
+// ============================================
+
+define function Has14DayReadmission(dischargeEncounter FHIR.Encounter):
+  exists (
+    "All Inpatient Discharges" R
+      where R.id != dischargeEncounter.id
+        and GetId(R.subject.reference) = GetId(dischargeEncounter.subject.reference)
+        and GetAdmissionDate(R) > GetDischargeDate(dischargeEncounter)
+        and DaysBetween(GetDischargeDate(dischargeEncounter), GetAdmissionDate(R)) <= 14
+        and not IsPlannedReadmission(R)
+  )
+
+define function ReadmissionPatientsInPeriod(periodStart Date, periodEnd Date):
+  UnplannedDischargesInPeriod(periodStart, periodEnd) E
+    where Has14DayReadmission(E)
+
+define function ReadmissionPatientCountInPeriod(periodStart Date, periodEnd Date):
+  Count(
+    distinct (
+      ReadmissionPatientsInPeriod(periodStart, periodEnd) E
+        return GetId([Patient])
+    )
+  )
+
+// ============================================
+// 2024Q1 Statistics
+// ============================================
+
+define "2024Q1 Denominator":
+  DischargePatientCountInPeriod("2024Q1 Start", "2024Q1 End")
+
+define "2024Q1 Numerator":
+  ReadmissionPatientCountInPeriod("2024Q1 Start", "2024Q1 End")
+
+define "2024Q1 Rate":
+  if "2024Q1 Denominator" > 0 then
+    ("2024Q1 Numerator" / "2024Q1 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q2 Statistics
+// ============================================
+
+define "2024Q2 Denominator":
+  DischargePatientCountInPeriod("2024Q2 Start", "2024Q2 End")
+
+define "2024Q2 Numerator":
+  ReadmissionPatientCountInPeriod("2024Q2 Start", "2024Q2 End")
+
+define "2024Q2 Rate":
+  if "2024Q2 Denominator" > 0 then
+    ("2024Q2 Numerator" / "2024Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q3 Statistics
+// ============================================
+
+define "2024Q3 Denominator":
+  DischargePatientCountInPeriod("2024Q3 Start", "2024Q3 End")
+
+define "2024Q3 Numerator":
+  ReadmissionPatientCountInPeriod("2024Q3 Start", "2024Q3 End")
+
+define "2024Q3 Rate":
+  if "2024Q3 Denominator" > 0 then
+    ("2024Q3 Numerator" / "2024Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q4 Statistics
+// ============================================
+
+define "2024Q4 Denominator":
+  DischargePatientCountInPeriod("2024Q4 Start", "2024Q4 End")
+
+define "2024Q4 Numerator":
+  ReadmissionPatientCountInPeriod("2024Q4 Start", "2024Q4 End")
+
+define "2024Q4 Rate":
+  if "2024Q4 Denominator" > 0 then
+    ("2024Q4 Numerator" / "2024Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q1 Statistics
+// ============================================
+
+define "2025Q1 Denominator":
+  DischargePatientCountInPeriod("2025Q1 Start", "2025Q1 End")
+
+define "2025Q1 Numerator":
+  ReadmissionPatientCountInPeriod("2025Q1 Start", "2025Q1 End")
+
+define "2025Q1 Rate":
+  if "2025Q1 Denominator" > 0 then
+    ("2025Q1 Numerator" / "2025Q1 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q2 Statistics
+// ============================================
+
+define "2025Q2 Denominator":
+  DischargePatientCountInPeriod("2025Q2 Start", "2025Q2 End")
+
+define "2025Q2 Numerator":
+  ReadmissionPatientCountInPeriod("2025Q2 Start", "2025Q2 End")
+
+define "2025Q2 Rate":
+  if "2025Q2 Denominator" > 0 then
+    ("2025Q2 Numerator" / "2025Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q3 Statistics
+// ============================================
+
+define "2025Q3 Denominator":
+  DischargePatientCountInPeriod("2025Q3 Start", "2025Q3 End")
+
+define "2025Q3 Numerator":
+  ReadmissionPatientCountInPeriod("2025Q3 Start", "2025Q3 End")
+
+define "2025Q3 Rate":
+  if "2025Q3 Denominator" > 0 then
+    ("2025Q3 Numerator" / "2025Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q4 Statistics
+// ============================================
+
+define "2025Q4 Denominator":
+  DischargePatientCountInPeriod("2025Q4 Start", "2025Q4 End")
+
+define "2025Q4 Numerator":
+  ReadmissionPatientCountInPeriod("2025Q4 Start", "2025Q4 End")
+
+define "2025Q4 Rate":
+  if "2025Q4 Denominator" > 0 then
+    ("2025Q4 Numerator" / "2025Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2026Q1 Statistics
+// ============================================
+
+define "2026Q1 Denominator":
+  DischargePatientCountInPeriod("2026Q1 Start", "2026Q1 End")
+
+define "2026Q1 Numerator":
+  ReadmissionPatientCountInPeriod("2026Q1 Start", "2026Q1 End")
+
+define "2026Q1 Rate":
+  if "2026Q1 Denominator" > 0 then
+    ("2026Q1 Numerator" / "2026Q1 Denominator") * 100
+  else null
+
+// ============================================
+// Indicator Result
+// ============================================
+
+define "Indicator Result":
+  {
+    indicatorCodeQuarterly: '1077.01',
+    indicatorCodeAnnual: '1809',
+    indicatorName: '非計畫性住院案件出院後十四日內再住院率',
+    indicatorNameEn: 'Unplanned 14-Day Readmission Rate',
+    measurementPeriodStart: "Measurement Period Start",
+    measurementPeriodEnd: "Measurement Period End",
+    dataSource: '醫療給付檔案分析系統',
+    compiledBy: '衛生福利部 中央健康保險署',
+    compiledDate: '114/11/06',
+    version: '1.0.0',
+    readmissionDays: 14,
+    denominatorCriteria: '當季出院人數(排除計畫性再住院)',
+    numeratorCriteria: '病人14日再住院人數(排除計畫性再住院)',
+    exclusionCount: 15,
+    exclusionCriteria: '腫瘤科、乳癌試辦、癌症治療、早產安胎、罕見疾病、轉院、新生兒床號、血友病、心導管、冠狀動脈繞道、瓣膜置換、器官移植、支架置放、急性後期照護、安寧照護'
+  }
  * 
  * 公式說明:
  * 非計畫性住院案件出院後十四日內再住院率 = 

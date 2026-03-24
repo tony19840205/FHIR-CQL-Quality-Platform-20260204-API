@@ -1,0 +1,430 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:patient-prostate-extra-1",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "PROSTATE-CROSS-P4",
+        "gender": "male",
+        "birthDate": "1957-05-22",
+        "name": [
+          {
+            "text": "楊俊傑",
+            "family": "Yang",
+            "given": [
+              "Junjie"
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/PROSTATE-CROSS-P4"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-prostate-extra-2",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "PROSTATE-CROSS-P5",
+        "gender": "male",
+        "birthDate": "1963-09-14",
+        "name": [
+          {
+            "text": "吳文雄",
+            "family": "Wu",
+            "given": [
+              "Wenxiong"
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/PROSTATE-CROSS-P5"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-prostate-4a",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "PROSTATE-E4A",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/PROSTATE-CROSS-P4"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-C"
+        },
+        "period": {
+          "start": "2026-01-01T10:00:00+08:00",
+          "end": "2026-01-01T10:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/PROSTATE-E4A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-prostate-4a",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "PROSTATE-M4A",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "G04CA02",
+              "display": "Tamsulosin"
+            }
+          ],
+          "text": "活路利淨 Tamsulosin 0.2mg"
+        },
+        "subject": {
+          "reference": "Patient/PROSTATE-CROSS-P4"
+        },
+        "encounter": {
+          "reference": "Encounter/PROSTATE-E4A"
+        },
+        "authoredOn": "2025-10-07T10:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-06"
+                },
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "capsule"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-01",
+            "end": "2026-01-06"
+          },
+          "quantity": {
+            "value": 28,
+            "unit": "capsule"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/PROSTATE-M4A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-prostate-4b",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "PROSTATE-E4B",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/PROSTATE-CROSS-P4"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-D"
+        },
+        "period": {
+          "start": "2026-01-03T14:00:00+08:00",
+          "end": "2026-01-03T14:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/PROSTATE-E4B"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-prostate-4b",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "PROSTATE-M4B",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "G04CA04",
+              "display": "Doxazosin"
+            }
+          ],
+          "text": "可迅 Doxazosin 4mg"
+        },
+        "subject": {
+          "reference": "Patient/PROSTATE-CROSS-P4"
+        },
+        "encounter": {
+          "reference": "Encounter/PROSTATE-E4B"
+        },
+        "authoredOn": "2025-10-14T14:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-03",
+                  "end": "2026-01-07"
+                },
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-03",
+            "end": "2026-01-07"
+          },
+          "quantity": {
+            "value": 28,
+            "unit": "tablet"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/PROSTATE-M4B"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-prostate-5a",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "PROSTATE-E5A",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/PROSTATE-CROSS-P5"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-C"
+        },
+        "period": {
+          "start": "2026-01-02T09:00:00+08:00",
+          "end": "2026-01-02T09:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/PROSTATE-E5A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-prostate-5a",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "PROSTATE-M5A",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "G04CB01",
+              "display": "Finasteride"
+            }
+          ],
+          "text": "柔沛 Finasteride 5mg"
+        },
+        "subject": {
+          "reference": "Patient/PROSTATE-CROSS-P5"
+        },
+        "encounter": {
+          "reference": "Encounter/PROSTATE-E5A"
+        },
+        "authoredOn": "2025-10-09T09:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-02",
+                  "end": "2026-01-06"
+                },
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-02",
+            "end": "2026-01-06"
+          },
+          "quantity": {
+            "value": 28,
+            "unit": "tablet"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/PROSTATE-M5A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-prostate-5b",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "PROSTATE-E5B",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/PROSTATE-CROSS-P5"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-D"
+        },
+        "period": {
+          "start": "2026-01-03T11:00:00+08:00",
+          "end": "2026-01-03T11:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/PROSTATE-E5B"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-prostate-5b",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "PROSTATE-M5B",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "G04CB02",
+              "display": "Dutasteride"
+            }
+          ],
+          "text": "適尿通 Dutasteride 0.5mg"
+        },
+        "subject": {
+          "reference": "Patient/PROSTATE-CROSS-P5"
+        },
+        "encounter": {
+          "reference": "Encounter/PROSTATE-E5B"
+        },
+        "authoredOn": "2025-10-16T11:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-03",
+                  "end": "2026-01-07"
+                },
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "capsule"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-03",
+            "end": "2026-01-07"
+          },
+          "quantity": {
+            "value": 28,
+            "unit": "capsule"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/PROSTATE-M5B"
+      }
+    }
+  ]
+}

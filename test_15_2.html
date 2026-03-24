@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>15-2測試</title>
+</head>
+<body>
+    <h1>15-2 測試查詢</h1>
+    <button onclick="test()">執行測試</button>
+    <pre id="result"></pre>
+
+<script>
+async function test() {
+    const output = document.getElementById('result');
+    output.textContent = '查詢中...\n';
+    
+    const baseUrl = 'https://thas.mohw.gov.tw/v/r4/fhir';
+    
+    // 1. 查詢2026-Q1的Procedure
+    const procsRes = await fetch(`${baseUrl}/Procedure?status=completed&date=ge2026-01-01&date=le2026-03-31&_count=1000`);
+    const procs = await procsRes.json();
+    
+    output.textContent += `找到 ${procs.entry?.length || 0} 個Procedure\n\n`;
+    
+    const totalTkaCodes = ['64164B', '97805K', '97806A', '97807B', '64169B'];
+    const infectionCodes = ['64053B', '64198B'];
+    
+    let totalTkaCount = 0;
+    let infectionCount = 0;
+    
+    if (procs.entry) {
+        for (const entry of procs.entry) {
+            const proc = entry.resource;
+            const procCode = proc.code?.coding?.[0]?.code;
+            const patientRef = proc.subject?.reference;
+            const procDate = proc.performedDateTime || proc.performedPeriod?.start;
+            
+            if (procCode && totalTkaCodes.includes(procCode)) {
+                totalTkaCount++;
+                output.textContent += `TKA ${totalTkaCount}: ${proc.id} (${procCode}) @ ${procDate}\n`;
+                
+                if (procDate && patientRef) {
+                    const procDateObj = new Date(procDate);
+                    const ninetyDaysLater = new Date(procDateObj);
+                    ninetyDaysLater.setDate(ninetyDaysLater.getDate() + 90);
+                    
+                    const dateStart = procDate.split('T')[0];
+                    const dateEnd = ninetyDaysLater.toISOString().split('T')[0];
+                    
+                    const infUrl = `${baseUrl}/Procedure?patient=${patientRef}&status=completed&date=ge${dateStart}&date=le${dateEnd}&_count=20`;
+                    output.textContent += `  查詢感染: ${infUrl}\n`;
+                    
+                    const infRes = await fetch(infUrl);
+                    const infProcs = await infRes.json();
+                    
+                    output.textContent += `  找到 ${infProcs.entry?.length || 0} 個Procedure\n`;
+                    
+                    if (infProcs.entry) {
+                        for (const infEntry of infProcs.entry) {
+                            const infProc = infEntry.resource;
+                            const infCode = infProc.code?.coding?.[0]?.code;
+                            const infDate = infProc.performedDateTime || infProc.performedPeriod?.start;
+                            
+                            output.textContent += `    - ${infProc.id}: ${infCode}\n`;
+                            
+                            if (infCode && infectionCodes.includes(infCode)) {
+                                const isSameDay = procDate.split('T')[0] === infDate?.split('T')[0];
+                                if (!(isSameDay && infCode === '64198B')) {
+                                    infectionCount++;
+                                    output.textContent += `      ✓ 計入分子！\n`;
+                                    break;
+                                } else {
+                                    output.textContent += `      ✗ 同日64198B，排除\n`;
+                                }
+                            }
+                        }
+                    }
+                }
+                output.textContent += `\n`;
+            }
+        }
+    }
+    
+    const rate = totalTkaCount > 0 ? ((infectionCount / totalTkaCount) * 100).toFixed(2) : '0.00';
+    
+    output.textContent += `\n=== 結果 ===\n`;
+    output.textContent += `分母（TKA手術）: ${totalTkaCount}\n`;
+    output.textContent += `分子（感染）: ${infectionCount}\n`;
+    output.textContent += `感染率: ${rate}%\n`;
+}
+</script>
+</body>
+</html>

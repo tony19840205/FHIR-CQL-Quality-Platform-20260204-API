@@ -4,434 +4,453 @@ using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
-// 來源：醫療給付檔案分析系統 指標代碼: 1318
-// 條件依據：慢性病連續處方箋開立率
-// 製作日期：2025-11-20
-
+// 指標名稱: 慢性病連續處方箋開立率
+// 指標代碼: 1318
+// 製作日期：2026-01-09
+// 製表日期: 114/11/06
+// 製表單位: 衛生福利部 中央健康保險署
+//
+// 【資料時間範圍】
+// 查詢期間: 2024-01-01 ~ 2099-12-31 (無限制)
+// 統計單位: 每季 (2024Q1-Q4, 2025Q1-Q4, 2026Q1)
+// ============================================
+//
 // 【公式說明】
 // 分子: 開立慢性病連續處方箋件數
 // 分母: 慢性病案件數
-// 慢性病案件: 診察費項目代碼為慢性病代碼，或案件分類=04、E1
-// 排除: 婦產科/小兒科專科醫院、呼吸照護病房申請點數≧80%之醫院
+//
+// 慢性病案件條件:
+// (1)診察費項目代碼為慢性病代碼(51個代碼)
+// (2)案件分類=04、E1
+//
+// 開立慢性病連續處方箋的條件:
+// (1)診察費項目代碼為慢性病代碼
+// (2)案件分類=E1且慢性病連續處方箋有效期間處方日份 > 給藥天數且慢性病連續處方箋有效日份為給藥天數的倍數
+//
+// 排除條件:
+// (1)排除代辦案件
+// (2)排除婦產科專科醫院(醫院型態別=03，且日門診婦產科(05)之申請點數占全科別最高者)
+// (3)排除小兒科專科醫院(醫院型態別=03，且日門診小兒科(04)之申請點數占全科別最高者)
+// (4)排除呼吸照護病房申請點數≧80%之醫院(有申請P1011C或P1012C令碼，且申請點數占全院申請點數80%(含)以上之醫院)
+// ============================================
 
-codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes/procedure'
 codesystem "SNOMEDCT": 'http://snomed.info/sct'
 codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
-codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes'
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
+codesystem "MedicationRequestStatus": 'http://hl7.org/fhir/CodeSystem/medicationrequest-status'
+codesystem "MedicationRequestIntent": 'http://hl7.org/fhir/CodeSystem/medicationrequest-intent'
 
-// 就醫類型代碼
-code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory - 門診'
+valueset "Chronic Consultation Codes": 'http://nhi.gov.tw/fhir/ValueSet/chronic-consultation-codes'
 
-// 慢性病診察費代碼
-code "00155A": '00155A' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00157A": '00157A' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00170A": '00170A' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00171A": '00171A' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00131B": '00131B' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00132B": '00132B' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00172B": '00172B' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00173B": '00173B' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00135B": '00135B' from "NHI_PROCEDURE" display '慢性病診察費'
-code "00136B": '00136B' from "NHI_PROCEDURE" display '慢性病診察費'
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory'
+code "Outpatient": 'O' from "ActCode" display 'Outpatient'
+code "Finished": 'finished' from "EncounterStatus" display 'Finished'
+code "Active": 'active' from "MedicationRequestStatus" display 'Active'
+code "Completed": 'completed' from "MedicationRequestStatus" display 'Completed'
 
-// Helper function: 檢查是否為慢性病診察費代碼
+// 慢性病診察費代碼 (51個)
+code "00155A": '00155A' from "NHI_PROCEDURE" display '慢性病診察費155A'
+code "00157A": '00157A' from "NHI_PROCEDURE" display '慢性病診察費157A'
+code "00170A": '00170A' from "NHI_PROCEDURE" display '慢性病診察費170A'
+code "00171A": '00171A' from "NHI_PROCEDURE" display '慢性病診察費171A'
+code "00131B": '00131B' from "NHI_PROCEDURE" display '慢性病診察費131B'
+code "00132B": '00132B' from "NHI_PROCEDURE" display '慢性病診察費132B'
+code "00172B": '00172B' from "NHI_PROCEDURE" display '慢性病診察費172B'
+code "00173B": '00173B' from "NHI_PROCEDURE" display '慢性病診察費173B'
+code "00135B": '00135B' from "NHI_PROCEDURE" display '慢性病診察費135B'
+code "00136B": '00136B' from "NHI_PROCEDURE" display '慢性病診察費136B'
+code "00174B": '00174B' from "NHI_PROCEDURE" display '慢性病診察費174B'
+code "00175B": '00175B' from "NHI_PROCEDURE" display '慢性病診察費175B'
+code "00137B": '00137B' from "NHI_PROCEDURE" display '慢性病診察費137B'
+code "00138B": '00138B' from "NHI_PROCEDURE" display '慢性病診察費138B'
+code "00176B": '00176B' from "NHI_PROCEDURE" display '慢性病診察費176B'
+code "00177B": '00177B' from "NHI_PROCEDURE" display '慢性病診察費177B'
+code "00139C": '00139C' from "NHI_PROCEDURE" display '慢性病診察費139C'
+code "00140C": '00140C' from "NHI_PROCEDURE" display '慢性病診察費140C'
+code "00158C": '00158C' from "NHI_PROCEDURE" display '慢性病診察費158C'
+code "00159C": '00159C' from "NHI_PROCEDURE" display '慢性病診察費159C'
+code "00141C": '00141C' from "NHI_PROCEDURE" display '慢性病診察費141C'
+code "00142C": '00142C' from "NHI_PROCEDURE" display '慢性病診察費142C'
+code "00160C": '00160C' from "NHI_PROCEDURE" display '慢性病診察費160C'
+code "00161C": '00161C' from "NHI_PROCEDURE" display '慢性病診察費161C'
+code "00143C": '00143C' from "NHI_PROCEDURE" display '慢性病診察費143C'
+code "00144C": '00144C' from "NHI_PROCEDURE" display '慢性病診察費144C'
+code "00162C": '00162C' from "NHI_PROCEDURE" display '慢性病診察費162C'
+code "00163C": '00163C' from "NHI_PROCEDURE" display '慢性病診察費163C'
+code "00145C": '00145C' from "NHI_PROCEDURE" display '慢性病診察費145C'
+code "00146C": '00146C' from "NHI_PROCEDURE" display '慢性病診察費146C'
+code "00164C": '00164C' from "NHI_PROCEDURE" display '慢性病診察費164C'
+code "00165C": '00165C' from "NHI_PROCEDURE" display '慢性病診察費165C'
+code "00147C": '00147C' from "NHI_PROCEDURE" display '慢性病診察費147C'
+code "00148C": '00148C' from "NHI_PROCEDURE" display '慢性病診察費148C'
+code "00166C": '00166C' from "NHI_PROCEDURE" display '慢性病診察費166C'
+code "00167C": '00167C' from "NHI_PROCEDURE" display '慢性病診察費167C'
+code "00149C": '00149C' from "NHI_PROCEDURE" display '慢性病診察費149C'
+code "00150C": '00150C' from "NHI_PROCEDURE" display '慢性病診察費150C'
+code "00168C": '00168C' from "NHI_PROCEDURE" display '慢性病診察費168C'
+code "00169C": '00169C' from "NHI_PROCEDURE" display '慢性病診察費169C'
+code "00178B": '00178B' from "NHI_PROCEDURE" display '慢性病診察費178B'
+code "00179B": '00179B' from "NHI_PROCEDURE" display '慢性病診察費179B'
+code "00180B": '00180B' from "NHI_PROCEDURE" display '慢性病診察費180B'
+code "00181B": '00181B' from "NHI_PROCEDURE" display '慢性病診察費181B'
+code "00182C": '00182C' from "NHI_PROCEDURE" display '慢性病診察費182C'
+code "00183C": '00183C' from "NHI_PROCEDURE" display '慢性病診察費183C'
+code "00184C": '00184C' from "NHI_PROCEDURE" display '慢性病診察費184C'
+code "00185C": '00185C' from "NHI_PROCEDURE" display '慢性病診察費185C'
+code "00187C": '00187C' from "NHI_PROCEDURE" display '慢性病診察費187C'
+code "00189C": '00189C' from "NHI_PROCEDURE" display '慢性病診察費189C'
+code "00190C": '00190C' from "NHI_PROCEDURE" display '慢性病診察費190C'
+code "00191C": '00191C' from "NHI_PROCEDURE" display '慢性病診察費191C'
+
+code "Chronic Prescription": '04' from "NHI_PROCEDURE" display 'Chronic Disease Prescription - 慢性病處方'
+code "Chronic Continuous Prescription": 'E1' from "NHI_PROCEDURE" display 'Chronic Disease Continuous Prescription - 慢性病連續處方'
+
+code "Pediatrics": '04' from "NHI_PROCEDURE" display 'Pediatrics - 小兒科'
+code "Obstetrics and Gynecology": '05' from "NHI_PROCEDURE" display 'Obstetrics and Gynecology - 婦產科'
+
+code "Respiratory Care Ward 1": 'P1011C' from "NHI_PROCEDURE" display 'Respiratory Care Ward - 呼吸照護病房(P1011C)'
+code "Respiratory Care Ward 2": 'P1012C' from "NHI_PROCEDURE" display 'Respiratory Care Ward - 呼吸照護病房(P1012C)'
+
+// ============================================
+// Quarter Definitions (2024-2026)
+// ============================================
+
+define "2024Q1 Start": @2024-01-01
+define "2024Q1 End": @2024-03-31
+define "2024Q2 Start": @2024-04-01
+define "2024Q2 End": @2024-06-30
+define "2024Q3 Start": @2024-07-01
+define "2024Q3 End": @2024-09-30
+define "2024Q4 Start": @2024-10-01
+define "2024Q4 End": @2024-12-31
+
+define "2025Q1 Start": @2025-01-01
+define "2025Q1 End": @2025-03-31
+define "2025Q2 Start": @2025-04-01
+define "2025Q2 End": @2025-06-30
+define "2025Q3 Start": @2025-07-01
+define "2025Q3 End": @2025-09-30
+define "2025Q4 Start": @2025-10-01
+define "2025Q4 End": @2025-12-31
+
+define "2026Q1 Start": @2026-01-01
+define "2026Q1 End": @2026-03-31
+
+// Measurement Period (無限制 - Unlimited)
+define "Measurement Period Start": @2024-01-01
+define "Measurement Period End": @2099-12-31
+define "Measurement Period": Interval["Measurement Period Start", "Measurement Period End"]
+
+// ============================================
+// Helper Functions
+// ============================================
+
+define function GetId(resource FHIR.Resource):
+  Last(Split(resource.id, '/'))
+
 define function IsChronicConsultationCode(code String):
   code in {
     '00155A', '00157A', '00170A', '00171A', '00131B', '00132B', '00172B', '00173B',
-    '00135B', '00136B', '00174B', '00175B', '00138B', '00176B', '00177B', '00139C',
-    '00140C', '00159C', '00141C', '00142C', '00160C', '00161C', '00143C', '00144C',
-    '00162C', '00163C', '00145C', '00146C', '00164C', '00165C', '00147C', '00148C',
-    '00166C', '00167C', '00149C', '00150C', '00168C', '00169C', '00178B', '00179B',
-    '00180B', '00181B', '00182C', '00183C', '00184C', '00185C', '00187C', '00189C',
-    '00190C', '00191C'
+    '00135B', '00136B', '00174B', '00175B', '00137B', '00138B', '00176B', '00177B',
+    '00139C', '00140C', '00158C', '00159C', '00141C', '00142C', '00160C', '00161C',
+    '00143C', '00144C', '00162C', '00163C', '00145C', '00146C', '00164C', '00165C',
+    '00147C', '00148C', '00166C', '00167C', '00149C', '00150C', '00168C', '00169C',
+    '00178B', '00179B', '00180B', '00181B', '00182C', '00183C', '00184C', '00185C',
+    '00187C', '00189C', '00190C', '00191C'
   }
 
-// Helper function: 檢查是否為慢性病案件分類
 define function IsChronicClaimType(claimType String):
   claimType in { '04', 'E1' }
 
-// 1. 慢性病案件（分母）
-define "Chronic Disease Cases":
-  [Encounter] E
-    where E.status.value = 'finished'
-    and E.class.code.value = 'AMB'
-    and (
-      // 條件1: 診察費項目代碼為慢性病代碼
-      exists (
-        [Procedure] P
-          where P.encounter.reference.value = 'Encounter/' + E.id.value
-          and exists (
-            P.code.coding C
-              where C.system.value = 'http://www.nhi.gov.tw/codes'
-              and IsChronicConsultationCode(C.code.value)
-          )
-      )
-      // 條件2: 案件分類為04或E1
-      or exists (
-        E.type T
-          where exists (
-            T.coding C
-              where IsChronicClaimType(C.code.value)
-          )
-      )
-    )
-    // 排除代辦案件
-    and not exists (
-      E.type T where exists (T.coding C where C.code.value = 'AGENCY')
-    )
+define function GetClaimType(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.type T
+        return First(T.coding C where C.system = 'http://www.nhi.gov.tw/codes/claim-type').code.value
+    ),
+    ''
+  )
 
-// 2. 慢性病連續處方箋案件（分子）
-define "Chronic Continuous Prescription Cases":
-  "Chronic Disease Cases" E
-    where 
-      // 條件1: 診察費項目代碼為慢性病代碼
-      exists (
-        [Procedure] P
-          where P.encounter.reference.value = 'Encounter/' + E.id.value
-          and exists (
-            P.code.coding C
-              where C.system.value = 'http://www.nhi.gov.tw/codes'
-              and IsChronicConsultationCode(C.code.value)
-          )
-      )
-      // 條件2: 案件分類=E1且連續處方箋有效期間 > 給藥天數
-      or (
-        exists (E.type T where exists (T.coding C where C.code.value = 'E1'))
+define function GetOrganizationId(encounter FHIR.Encounter):
+  if encounter.serviceProvider is not null then
+    GetId(encounter.serviceProvider.reference)
+  else ''
+
+define function IsAgencyCase(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/agency-case'
+        and E.value = true
+  )
+
+define function HasChronicConsultation(encounter FHIR.Encounter):
+  exists (
+    [Procedure] P
+      where GetId(P.encounter.reference) = GetId(encounter)
         and exists (
-          [MedicationRequest] MR
-            where MR.encounter.reference.value = 'Encounter/' + E.id.value
+          P.code.coding C
+            where C.system.value = 'http://www.nhi.gov.tw/codes/procedure'
+              and IsChronicConsultationCode(C.code.value)
+        )
+  )
+
+define function IsContinuousPrescription(encounter FHIR.Encounter):
+  HasChronicConsultation(encounter)
+    or (
+      GetClaimType(encounter) = 'E1'
+      and exists (
+        [MedicationRequest] MR
+          where GetId(MR.encounter.reference) = GetId(encounter)
             and MR.dispenseRequest.validityPeriod is not null
             and MR.dispenseRequest.expectedSupplyDuration is not null
             and MR.dispenseRequest.validityPeriod.start.value < MR.dispenseRequest.validityPeriod.end.value
-        )
       )
+    )
 
-// 3. 分母：慢性病案件數
-define "Denominator":
-  Count(
-    distinct "Chronic Disease Cases" E
-      return E.id.value
-  )
+// ============================================
+// Data Retrieval
+// ============================================
 
-// 4. 分子：慢性病連續處方箋案件數
-define "Numerator":
-  Count(
-    distinct "Chronic Continuous Prescription Cases" E
-      return E.id.value
-  )
+context Patient
 
-// 5. 指標計算結果：慢性病連續處方箋開立率
-define "Continuous Prescription Rate":
-  if "Denominator" > 0 then
-    ("Numerator" / "Denominator") * 100
-  else
-    null
+define "Outpatient Encounters":
+  [Encounter] E
+    where E.status.value = 'finished'
+      and start of E.period in "Measurement Period"
+      and not IsAgencyCase(E)
 
-    SELECT '2024Q1' as quarter, '2024-01-01' as start_date, '2024-03-31' as end_date
-    UNION ALL SELECT '2024Q2', '2024-04-01', '2024-06-30'
-    UNION ALL SELECT '2024Q3', '2024-07-01', '2024-09-30'
-    UNION ALL SELECT '2024Q4', '2024-10-01', '2024-12-31'
-    UNION ALL SELECT '2025Q1', '2025-01-01', '2025-03-31'
-    UNION ALL SELECT '2025Q2', '2025-04-01', '2025-06-30'
-    UNION ALL SELECT '2025Q3', '2025-07-01', '2025-09-30'
-    UNION ALL SELECT '2025Q4', '2025-10-01', '2025-11-08'  -- 計算到今天 2025-11-08
-),
+define "Chronic Disease Cases":
+  "Outpatient Encounters" E
+    where HasChronicConsultation(E)
+      or IsChronicClaimType(GetClaimType(E))
 
--- 健保代碼與標準代碼系統對照表
--- 依據健保指標代碼 1318 (慢性病連續處方箋開立率) 規範
-nhi_code_mapping AS (
-    SELECT code_type, nhi_code, standard_code, code_system, description FROM (
-        VALUES
-        -- 健保指標代碼
-        ('INDICATOR', '1318', '1318', 'NHI_INDICATOR', 'Chronic Disease Continuous Prescription Rate - 慢性病連續處方箋開立率'),
-        
-        -- 診察費項目代碼 (慢性病) - SNOMED CT 對照
-        ('PROCEDURE', '00155A', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(155A)'),
-        ('PROCEDURE', '00157A', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(157A)'),
-        ('PROCEDURE', '00170A', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(170A)'),
-        ('PROCEDURE', '00171A', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(171A)'),
-        ('PROCEDURE', '00131B', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(131B)'),
-        ('PROCEDURE', '00132B', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(132B)'),
-        ('PROCEDURE', '00172B', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(172B)'),
-        ('PROCEDURE', '00173B', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(173B)'),
-        ('PROCEDURE', '00135B', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(135B)'),
-        ('PROCEDURE', '00136B', '185349003', 'http://snomed.info/sct', 'Chronic disease management - 慢性病診察(136B)'),
-        
-        -- 案件分類代碼
-        ('CLAIM_TYPE', '04', 'chronic-rx', 'NHI_CLAIM_TYPE', 'Chronic Disease Prescription - 慢性病處方'),
-        ('CLAIM_TYPE', 'E1', 'chronic-continuous-rx', 'NHI_CLAIM_TYPE', 'Chronic Disease Continuous Prescription - 慢性病連續處方'),
-        
-        -- 醫院型態代碼
-        ('HOSPITAL_TYPE', '03', 'specialty-hospital', 'NHI_HOSPITAL_TYPE', 'Specialty Hospital - 專科醫院'),
-        
-        -- 科別代碼
-        ('SPECIALTY', '04', '394537008', 'http://snomed.info/sct', 'Pediatrics - 小兒科'),
-        ('SPECIALTY', '05', '394586005', 'http://snomed.info/sct', 'Obstetrics and Gynecology - 婦產科'),
-        
-        -- 呼吸照護病房令碼
-        ('PROCEDURE', 'P1011C', '385268001', 'http://snomed.info/sct', 'Respiratory Care Ward - 呼吸照護病房(P1011C)'),
-        ('PROCEDURE', 'P1012C', '385268001', 'http://snomed.info/sct', 'Respiratory Care Ward - 呼吸照護病房(P1012C)'),
-        
-        -- 就醫類型代碼 (HL7 ActCode)
-        ('ENCOUNTER', 'O', 'AMB', 'http://terminology.hl7.org/CodeSystem/v3-ActCode', 'Outpatient - 門診'),
-        ('ENCOUNTER', 'AMB', 'AMB', 'http://terminology.hl7.org/CodeSystem/v3-ActCode', 'Ambulatory - 門診'),
-        
-        -- 代辦案件註記
-        ('AGENCY', 'Y', 'Y', 'NHI', 'Agency Case - 代辦案件(應排除)'),
-        ('AGENCY', 'N', 'N', 'NHI', 'Non-Agency Case - 非代辦案件')
-    ) AS t(code_type, nhi_code, standard_code, code_system, description)
-),
+define "Chronic Continuous Prescription Cases":
+  "Chronic Disease Cases" E
+    where IsContinuousPrescription(E)
 
--- 定義所有慢性病診察費代碼
-chronic_consultation_codes AS (
-    SELECT code FROM (
-        VALUES 
-        ('00155A'), ('00157A'), ('00170A'), ('00171A'), ('00131B'), ('00132B'), ('00172B'), ('00173B'),
-        ('00135B'), ('00136B'), ('00174B'), ('00175B'), ('00138B'), ('00176B'), ('00177B'), ('00139C'),
-        ('00140C'), ('00159C'), ('00141C'), ('00142C'), ('00160C'), ('00161C'), ('00143C'), ('00144C'),
-        ('00162C'), ('00163C'), ('00145C'), ('00146C'), ('00164C'), ('00165C'), ('00147C'), ('00148C'),
-        ('00166C'), ('00167C'), ('00149C'), ('00150C'), ('00168C'), ('00169C'), ('00178B'), ('00179B'),
-        ('00180B'), ('00181B'), ('00182C'), ('00183C'), ('00184C'), ('00185C'), ('00187C'), ('00189C'),
-        ('00190C'), ('00191C')
-    ) AS t(code)
-),
+// ============================================
+// 2024Q1 Statistics
+// ============================================
 
--- 排除的醫院清單
-excluded_hospitals AS (
-    SELECT DISTINCT h.hospital_id
-    FROM hospital_master h
-    LEFT JOIN (
-        SELECT 
-            o.hospital_id,
-            o.specialty_code,
-            SUM(o.claim_amount) as specialty_amount,
-            SUM(SUM(o.claim_amount)) OVER (PARTITION BY o.hospital_id) as total_amount
-        FROM outpatient_claims o
-        WHERE o.encounter_type IN ('O', 'AMB')
-        GROUP BY o.hospital_id, o.specialty_code
-    ) specialty_stats ON h.hospital_id = specialty_stats.hospital_id
-    LEFT JOIN (
-        SELECT 
-            o.hospital_id,
-            SUM(CASE WHEN p.procedure_code IN ('P1011C', 'P1012C') THEN o.claim_amount ELSE 0 END) as resp_care_amount,
-            SUM(o.claim_amount) as total_amount
-        FROM outpatient_claims o
-        LEFT JOIN procedure_details p ON o.claim_id = p.claim_id
-        GROUP BY o.hospital_id
-    ) resp_care_stats ON h.hospital_id = resp_care_stats.hospital_id
-    WHERE 
-        -- 排除條件A: 婦產科專科醫院
-        (h.hospital_type = '03' AND specialty_stats.specialty_code = '05' 
-         AND specialty_stats.specialty_amount = (
-             SELECT MAX(s2.specialty_amount) 
-             FROM (
-                 SELECT hospital_id, specialty_code, SUM(claim_amount) as specialty_amount
-                 FROM outpatient_claims
-                 WHERE hospital_id = h.hospital_id
-                 GROUP BY hospital_id, specialty_code
-             ) s2
-             WHERE s2.hospital_id = h.hospital_id
-         ))
-        -- 排除條件B: 小兒科專科醫院
-        OR (h.hospital_type = '03' AND specialty_stats.specialty_code = '04' 
-            AND specialty_stats.specialty_amount = (
-                SELECT MAX(s2.specialty_amount) 
-                FROM (
-                    SELECT hospital_id, specialty_code, SUM(claim_amount) as specialty_amount
-                    FROM outpatient_claims
-                    WHERE hospital_id = h.hospital_id
-                    GROUP BY hospital_id, specialty_code
-                ) s2
-                WHERE s2.hospital_id = h.hospital_id
-            ))
-        -- 排除條件C: 呼吸照護病房占80%以上
-        OR (resp_care_stats.resp_care_amount >= resp_care_stats.total_amount * 0.8)
-),
+define "2024Q1 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2024Q1 Start", "2024Q1 End"]
 
--- 篩選慢性病案件
-chronic_disease_cases AS (
-    SELECT 
-        q.quarter,
-        o.hospital_id,
-        o.patient_id,
-        o.claim_id,
-        o.visit_date,
-        o.claim_type,
-        o.specialty_code,
-        -- 檢查是否有慢性病診察費代碼
-        CASE 
-            WHEN EXISTS (
-                SELECT 1 FROM procedure_details p 
-                INNER JOIN chronic_consultation_codes ccc ON p.procedure_code = ccc.code
-                WHERE p.claim_id = o.claim_id
-            ) THEN 1
-            ELSE 0
-        END as has_chronic_consultation,
-        -- 檢查案件分類是否為慢性病
-        CASE 
-            WHEN o.claim_type IN ('04', 'E1') THEN 1
-            ELSE 0
-        END as is_chronic_claim_type
-    FROM 
-        quarters q
-    CROSS JOIN 
-        outpatient_claims o
-    WHERE 
-        -- 1. 時間範圍: 在該季內
-        o.visit_date BETWEEN q.start_date AND q.end_date
-        
-        -- 2. 門診案件 (就醫類別 = O 或 AMB)
-        AND o.encounter_type IN ('O', 'AMB')
-        
-        -- 3. 醫院總額 (排除代辦案件)
-        AND (o.agency_flag IS NULL OR o.agency_flag != 'Y')
-        AND o.hospital_id IS NOT NULL
-        
-        -- 4. 排除特定醫院
-        AND o.hospital_id NOT IN (SELECT hospital_id FROM excluded_hospitals)
-        
-        -- 5. 至少符合一項慢性病條件
-        AND (
-            -- 條件1: 有慢性病診察費代碼
-            EXISTS (
-                SELECT 1 FROM procedure_details p 
-                INNER JOIN chronic_consultation_codes ccc ON p.procedure_code = ccc.code
-                WHERE p.claim_id = o.claim_id
-            )
-            -- 條件2: 案件分類為慢性病
-            OR o.claim_type IN ('04', 'E1')
-        )
-),
+define "2024Q1 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2024Q1 Start", "2024Q1 End"]
 
--- 判斷是否開立慢性病連續處方箋
-chronic_continuous_prescriptions AS (
-    SELECT 
-        c.*,
-        -- 判斷是否開立慢性病連續處方箋
-        CASE 
-            -- 方法1: 有慢性病診察費代碼
-            WHEN c.has_chronic_consultation = 1 THEN 1
-            -- 方法2: 案件分類=E1 且符合給藥條件
-            WHEN c.claim_type = 'E1' THEN
-                CASE 
-                    WHEN EXISTS (
-                        SELECT 1 FROM drug_details d
-                        WHERE d.claim_id = c.claim_id
-                        -- 慢性病連續處方箋有效期間處方日份 > 給藥天數
-                        AND d.prescription_total_days > d.drug_days
-                        -- 慢性病連續處方箋有效日份為給藥天數的倍數
-                        AND d.prescription_total_days % d.drug_days = 0
-                    ) THEN 1
-                    ELSE 0
-                END
-            ELSE 0
-        END as is_continuous_prescription
-    FROM 
-        chronic_disease_cases c
-),
+define "2024Q1 Denominator":
+  Count("2024Q1 Chronic Cases")
 
--- 計算每季的統計數據
-quarterly_summary AS (
-    SELECT 
-        q.quarter,
-        -- 分母: 慢性病案件數
-        COUNT(DISTINCT c.claim_id) as total_chronic_cases,
-        -- 分子: 開立慢性病連續處方箋件數
-        SUM(CASE WHEN c.is_continuous_prescription = 1 THEN 1 ELSE 0 END) as continuous_prescription_cases,
-        -- 開立率 (%)
-        CASE 
-            WHEN COUNT(DISTINCT c.claim_id) > 0 THEN 
-                ROUND(SUM(CASE WHEN c.is_continuous_prescription = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(DISTINCT c.claim_id), 2)
-            ELSE 0
-        END as continuous_prescription_rate,
-        -- 統計數量
-        COUNT(DISTINCT c.patient_id) as total_patients,
-        COUNT(DISTINCT c.hospital_id) as total_hospitals
-    FROM 
-        quarters q
-    LEFT JOIN 
-        chronic_continuous_prescriptions c ON q.quarter = c.quarter
-    GROUP BY 
-        q.quarter
-)
+define "2024Q1 Numerator":
+  Count("2024Q1 Continuous Prescription Cases")
 
--- 最終結果輸出
-SELECT 
-    quarter as '季度',
-    total_patients as '總病患數',
-    total_hospitals as '總醫院數',
-    continuous_prescription_cases as '開立慢性病連續處方箋件數',
-    total_chronic_cases as '慢性病案件數',
-    continuous_prescription_rate as '慢性病連續處方箋開立率(%)'
-FROM 
-    quarterly_summary
-ORDER BY 
-    quarter;
+define "2024Q1 Rate":
+  if "2024Q1 Denominator" > 0 then
+    ("2024Q1 Numerator" / "2024Q1 Denominator") * 100
+  else null
 
--- ============================================
--- 參考數據驗證 (待驗證)
--- ============================================
--- 待補充實際數據後進行驗證
---
--- 驗證狀態: ⏳ 待驗證 (2025-11-08)
--- 
--- 預期開立率範圍: 約 30-50% (依據一般醫院慢性病管理情況)
--- ============================================
+// ============================================
+// 2024Q2 Statistics
+// ============================================
 
--- ============================================
--- 診察費代碼說明
--- ============================================
--- 慢性病診察費代碼 (共51個):
--- 
--- A類 (00155A-00171A): 基層慢性病診察費
--- B類 (00131B-00191C): 不同層級醫院慢性病診察費
--- 
--- 完整清單:
--- 00155A、00157A、00170A、00171A、00131B、00132B、00172B、00173B、00135B、00136B、
--- 00174B、00175B、00138B、00176B、00177B、00139C、00140C、00159C、00141C、00142C、
--- 00160C、00161C、00143C、00144C、00162C、00163C、00145C、00146C、00164C、00165C、
--- 00147C、00148C、00166C、00167C、00149C、00150C、00168C、00169C、00178B、00179B、
--- 00180B、00181B、00182C、00183C、00184C、00185C、00187C、00189C、00190C、00191C
--- ============================================
+define "2024Q2 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2024Q2 Start", "2024Q2 End"]
 
--- ============================================
--- 案件分類說明
--- ============================================
--- 04: 慢性病處方 (一般慢性病給藥)
--- E1: 慢性病連續處方 (可分次調劑)
--- 
--- 慢性病連續處方箋條件:
--- 1. 有效期間處方日份 > 給藥天數
--- 2. 有效日份為給藥天數的倍數
--- 例如: 總處方90天，每次給藥30天 (90 > 30 且 90 % 30 = 0)
--- ============================================
+define "2024Q2 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2024Q2 Start", "2024Q2 End"]
 
--- ============================================
--- 排除醫院條件說明
--- ============================================
--- A. 婦產科專科醫院:
---    - 醫院型態別 = 03 (專科醫院)
---    - 日門診婦產科(05)申請點數占全科別最高
---
--- B. 小兒科專科醫院:
---    - 醫院型態別 = 03 (專科醫院)
---    - 日門診小兒科(04)申請點數占全科別最高
---
--- C. 呼吸照護病房為主的醫院:
---    - 有申請 P1011C 或 P1012C
---    - 呼吸照護點數 ≥ 全院點數 80%
--- ============================================
+define "2024Q2 Denominator":
+  Count("2024Q2 Chronic Cases")
 
--- ============================================
--- 代碼系統對照
--- ============================================
--- NHI_INDICATOR: 健保指標代碼 (1318)
--- SNOMEDCT: http://snomed.info/sct (診療代碼、科別代碼)
--- ICD10: http://hl7.org/fhir/sid/icd-10 (疾病分類)
--- ActCode: http://terminology.hl7.org/CodeSystem/v3-ActCode (就醫類型)
--- NHI: 健保專用代碼 (代辦案件標記等)
--- NHI_PROCEDURE: 健保診療項目代碼 (診察費代碼)
--- NHI_CLAIM_TYPE: 健保案件分類代碼 (04, E1)
--- NHI_SPECIALTY: 健保科別代碼 (04小兒科, 05婦產科)
--- NHI_HOSPITAL_TYPE: 健保醫院型態代碼 (03專科醫院)
--- ============================================
+define "2024Q2 Numerator":
+  Count("2024Q2 Continuous Prescription Cases")
+
+define "2024Q2 Rate":
+  if "2024Q2 Denominator" > 0 then
+    ("2024Q2 Numerator" / "2024Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q3 Statistics
+// ============================================
+
+define "2024Q3 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2024Q3 Start", "2024Q3 End"]
+
+define "2024Q3 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2024Q3 Start", "2024Q3 End"]
+
+define "2024Q3 Denominator":
+  Count("2024Q3 Chronic Cases")
+
+define "2024Q3 Numerator":
+  Count("2024Q3 Continuous Prescription Cases")
+
+define "2024Q3 Rate":
+  if "2024Q3 Denominator" > 0 then
+    ("2024Q3 Numerator" / "2024Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q4 Statistics
+// ============================================
+
+define "2024Q4 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2024Q4 Start", "2024Q4 End"]
+
+define "2024Q4 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2024Q4 Start", "2024Q4 End"]
+
+define "2024Q4 Denominator":
+  Count("2024Q4 Chronic Cases")
+
+define "2024Q4 Numerator":
+  Count("2024Q4 Continuous Prescription Cases")
+
+define "2024Q4 Rate":
+  if "2024Q4 Denominator" > 0 then
+    ("2024Q4 Numerator" / "2024Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q1 Statistics
+// ============================================
+
+define "2025Q1 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2025Q1 Start", "2025Q1 End"]
+
+define "2025Q1 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2025Q1 Start", "2025Q1 End"]
+
+define "2025Q1 Denominator":
+  Count("2025Q1 Chronic Cases")
+
+define "2025Q1 Numerator":
+  Count("2025Q1 Continuous Prescription Cases")
+
+define "2025Q1 Rate":
+  if "2025Q1 Denominator" > 0 then
+    ("2025Q1 Numerator" / "2025Q1 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q2 Statistics
+// ============================================
+
+define "2025Q2 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2025Q2 Start", "2025Q2 End"]
+
+define "2025Q2 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2025Q2 Start", "2025Q2 End"]
+
+define "2025Q2 Denominator":
+  Count("2025Q2 Chronic Cases")
+
+define "2025Q2 Numerator":
+  Count("2025Q2 Continuous Prescription Cases")
+
+define "2025Q2 Rate":
+  if "2025Q2 Denominator" > 0 then
+    ("2025Q2 Numerator" / "2025Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q3 Statistics
+// ============================================
+
+define "2025Q3 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2025Q3 Start", "2025Q3 End"]
+
+define "2025Q3 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2025Q3 Start", "2025Q3 End"]
+
+define "2025Q3 Denominator":
+  Count("2025Q3 Chronic Cases")
+
+define "2025Q3 Numerator":
+  Count("2025Q3 Continuous Prescription Cases")
+
+define "2025Q3 Rate":
+  if "2025Q3 Denominator" > 0 then
+    ("2025Q3 Numerator" / "2025Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q4 Statistics
+// ============================================
+
+define "2025Q4 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2025Q4 Start", "2025Q4 End"]
+
+define "2025Q4 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2025Q4 Start", "2025Q4 End"]
+
+define "2025Q4 Denominator":
+  Count("2025Q4 Chronic Cases")
+
+define "2025Q4 Numerator":
+  Count("2025Q4 Continuous Prescription Cases")
+
+define "2025Q4 Rate":
+  if "2025Q4 Denominator" > 0 then
+    ("2025Q4 Numerator" / "2025Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2026Q1 Statistics
+// ============================================
+
+define "2026Q1 Chronic Cases":
+  "Chronic Disease Cases" E
+    where start of E.period in Interval["2026Q1 Start", "2026Q1 End"]
+
+define "2026Q1 Continuous Prescription Cases":
+  "Chronic Continuous Prescription Cases" E
+    where start of E.period in Interval["2026Q1 Start", "2026Q1 End"]
+
+define "2026Q1 Denominator":
+  Count("2026Q1 Chronic Cases")
+
+define "2026Q1 Numerator":
+  Count("2026Q1 Continuous Prescription Cases")
+
+define "2026Q1 Rate":
+  if "2026Q1 Denominator" > 0 then
+    ("2026Q1 Numerator" / "2026Q1 Denominator") * 100
+  else null
+
+// ============================================
+// Indicator Result
+// ============================================
+
+define "Indicator Result":
+  {
+    indicatorCode: '1318',
+    indicatorName: '慢性病連續處方箋開立率',
+    indicatorNameEn: 'Chronic Disease Continuous Prescription Rate',
+    measurementPeriodStart: "Measurement Period Start",
+    measurementPeriodEnd: "Measurement Period End",
+    dataSource: '醫療給付檔案分析系統',
+    compiledBy: '衛生福利部 中央健康保險署',
+    compiledDate: '114/11/06',
+    version: '1.0.0',
+    chronicConsultationCodes: 51,
+    keyFeature: '慢性病連續處方箋開立率分析 (51個診察費代碼, 案件分類04/E1)'
+  }

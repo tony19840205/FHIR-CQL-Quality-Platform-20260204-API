@@ -1,0 +1,2220 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:org-hospital-cgmh",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "org-hospital-cgmh",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/hospital",
+            "value": "CGMH-001"
+          }
+        ],
+        "name": "長庚紀念醫院"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/org-hospital-cgmh"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-001",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-001"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓001"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-001"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-001-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-001-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-001"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-001-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-001-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-001-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-001-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-001-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-001-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-001-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-001"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-26T14:00:00Z",
+          "end": "2026-01-26T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-001-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-001-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-001-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-001-2"
+        },
+        "authoredOn": "2026-01-26T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-26",
+                  "end": "2026-02-24"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-26",
+            "end": "2026-02-24"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-001-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-002",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-002",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-002"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓002"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-002"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-002-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-002-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-002"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-002-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-002-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-002-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-002"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-002-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-002-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-002-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-002-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-002"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-26T14:00:00Z",
+          "end": "2026-01-26T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-002-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-002-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-002-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-002"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-002-2"
+        },
+        "authoredOn": "2026-01-26T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-26",
+                  "end": "2026-02-24"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-26",
+            "end": "2026-02-24"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-002-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-003",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-003",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-003"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓003"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-003"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-003-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-003-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-003"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-003-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-003-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-003-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-003"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-003-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-003-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-003-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-003-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-003"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-26T14:00:00Z",
+          "end": "2026-01-26T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-003-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-003-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-003-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-003"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-003-2"
+        },
+        "authoredOn": "2026-01-26T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-26",
+                  "end": "2026-02-24"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-26",
+            "end": "2026-02-24"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-003-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-004",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-004",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-004"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓004"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-004"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-004-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-004-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-004"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-004-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-004-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-004-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-004"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-004-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-004-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-004-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-004-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-004"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-26T14:00:00Z",
+          "end": "2026-01-26T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-004-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-004-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-004-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-004"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-004-2"
+        },
+        "authoredOn": "2026-01-26T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-26",
+                  "end": "2026-02-24"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-26",
+            "end": "2026-02-24"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-004-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-005",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-005",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-005"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓005"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-005"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-005-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-005-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-005"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-005-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-005-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-005-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-005"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-005-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-005-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-005-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-005-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-005"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-12T14:00:00Z",
+          "end": "2026-02-12T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-005-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-005-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-005-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-005"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-005-2"
+        },
+        "authoredOn": "2026-02-12T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-12",
+                  "end": "2026-03-13"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-12",
+            "end": "2026-03-13"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-005-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-006",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-006",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-006"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓006"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-006"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-006-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-006-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-006"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-006-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-006-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-006-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-006"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-006-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-006-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-006-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-006-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-006"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-12T14:00:00Z",
+          "end": "2026-02-12T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-006-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-006-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-006-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-006"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-006-2"
+        },
+        "authoredOn": "2026-02-12T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-12",
+                  "end": "2026-03-13"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-12",
+            "end": "2026-03-13"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-006-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-007",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-007",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-007"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓007"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-007"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-007-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-007-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-007"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-007-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-007-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-007-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-007"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-007-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-007-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-007-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-007-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-007"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-12T14:00:00Z",
+          "end": "2026-02-12T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-007-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-007-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-007-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-007"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-007-2"
+        },
+        "authoredOn": "2026-02-12T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-12",
+                  "end": "2026-03-13"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-12",
+            "end": "2026-03-13"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-007-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-008",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-008",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-008"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓008"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-008"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-008-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-008-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-008"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-008-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-008-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-008-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-008"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-008-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-008-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-008-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-008-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-008"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-12T14:00:00Z",
+          "end": "2026-02-12T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-008-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-008-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-008-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-008"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-008-2"
+        },
+        "authoredOn": "2026-02-12T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-12",
+                  "end": "2026-03-13"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-12",
+            "end": "2026-03-13"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-008-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-009",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-009",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-009"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓009"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-009"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-009-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-009-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-009"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-009-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-009-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-009-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-009"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-009-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-009-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-009-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-009-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-009"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-12T14:00:00Z",
+          "end": "2026-02-12T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-009-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-009-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-009-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-009"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-009-2"
+        },
+        "authoredOn": "2026-02-12T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-12",
+                  "end": "2026-03-13"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-12",
+            "end": "2026-03-13"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-009-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-010",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-010",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-010"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓010"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-010"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-010-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-010-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-010"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-010-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-010-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-010-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-010"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-010-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-010-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-010-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-010-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-010"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-12T14:00:00Z",
+          "end": "2026-02-12T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-010-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-010-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-010-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-010"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-010-2"
+        },
+        "authoredOn": "2026-02-12T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-12",
+                  "end": "2026-03-13"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-12",
+            "end": "2026-03-13"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-010-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-011",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-011",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-011"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓011"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-011"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-011-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-011-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-011"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-011-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-011-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-011-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-011"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-011-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-011-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-011-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-011-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-011"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-12T14:00:00Z",
+          "end": "2026-02-12T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-011-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-011-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-011-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-011"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-011-2"
+        },
+        "authoredOn": "2026-02-12T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-12",
+                  "end": "2026-03-13"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-12",
+            "end": "2026-03-13"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-011-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antithromb-012",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antithromb-012",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTITHROMB-012"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗栓012"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antithromb-012"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-012-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-012-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-012"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-11T08:00:00Z",
+          "end": "2026-01-11T08:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-012-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-012-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-012-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AC06",
+              "display": "Aspirin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-012"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-012-1"
+        },
+        "authoredOn": "2026-01-11T08:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-11",
+                  "end": "2026-02-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-11",
+            "end": "2026-02-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-012-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antithromb-012-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antithromb-012-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-012"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-12T14:00:00Z",
+          "end": "2026-02-12T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antithromb-012-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antithromb-012-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antithromb-012-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "B01AA03",
+              "display": "Warfarin (抗血栓藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antithromb-012"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antithromb-012-2"
+        },
+        "authoredOn": "2026-02-12T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-12",
+                  "end": "2026-03-13"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-12",
+            "end": "2026-03-13"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antithromb-012-2"
+      }
+    }
+  ]
+}

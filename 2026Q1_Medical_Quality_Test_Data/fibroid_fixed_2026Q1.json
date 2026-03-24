@@ -1,0 +1,124 @@
+﻿{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10020",
+        "name": [{"family": "王", "given": ["美玲"]}],
+        "gender": "female",
+        "birthDate": "1978-05-20"
+      },
+      "request": {"method": "PUT", "url": "Patient/TW10020"}
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "FIBROID-ENC1",
+        "status": "finished",
+        "class": {"code": "IMP"},
+        "subject": {"reference": "Patient/TW10020"},
+        "period": {"start": "2026-01-08", "end": "2026-01-09"}
+      },
+      "request": {"method": "PUT", "url": "Encounter/FIBROID-ENC1"}
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "FIBROID-COND-SURGERY1",
+        "code": {
+          "coding": [{"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "D25.9"}]
+        },
+        "subject": {"reference": "Patient/TW10020"},
+        "encounter": {"reference": "Encounter/FIBROID-ENC1"}
+      },
+      "request": {"method": "PUT", "url": "Condition/FIBROID-COND-SURGERY1"}
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "FIBROID-PROC1",
+        "status": "completed",
+        "code": {
+          "coding": [{"system": "http://tw-order-code", "code": "97010K"}]
+        },
+        "subject": {"reference": "Patient/TW10020"},
+        "encounter": {"reference": "Encounter/FIBROID-ENC1"},
+        "performedDateTime": "2026-01-08"
+      },
+      "request": {"method": "PUT", "url": "Procedure/FIBROID-PROC1"}
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "FIBROID-READM1",
+        "status": "finished",
+        "class": {"code": "IMP"},
+        "subject": {"reference": "Patient/TW10020"},
+        "period": {"start": "2026-01-10", "end": "2026-01-10"}
+      },
+      "request": {"method": "PUT", "url": "Encounter/FIBROID-READM1"}
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "FIBROID-COND-READM1",
+        "code": {
+          "coding": [{"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "N70.0"}]
+        },
+        "subject": {"reference": "Patient/TW10020"},
+        "encounter": {"reference": "Encounter/FIBROID-READM1"}
+      },
+      "request": {"method": "PUT", "url": "Condition/FIBROID-COND-READM1"}
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10021",
+        "name": [{"family": "林", "given": ["淑芬"]}],
+        "gender": "female",
+        "birthDate": "1982-08-15"
+      },
+      "request": {"method": "PUT", "url": "Patient/TW10021"}
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "FIBROID-ENC2",
+        "status": "finished",
+        "class": {"code": "IMP"},
+        "subject": {"reference": "Patient/TW10021"},
+        "period": {"start": "2026-01-11", "end": "2026-01-11"}
+      },
+      "request": {"method": "PUT", "url": "Encounter/FIBROID-ENC2"}
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "FIBROID-COND-SURGERY2",
+        "code": {
+          "coding": [{"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "D25.1"}]
+        },
+        "subject": {"reference": "Patient/TW10021"},
+        "encounter": {"reference": "Encounter/FIBROID-ENC2"}
+      },
+      "request": {"method": "PUT", "url": "Condition/FIBROID-COND-SURGERY2"}
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "FIBROID-PROC2",
+        "status": "completed",
+        "code": {
+          "coding": [{"system": "http://tw-order-code", "code": "97011A"}]
+        },
+        "subject": {"reference": "Patient/TW10021"},
+        "encounter": {"reference": "Encounter/FIBROID-ENC2"},
+        "performedDateTime": "2026-01-11"
+      },
+      "request": {"method": "PUT", "url": "Procedure/FIBROID-PROC2"}
+    }
+  ]
+}
+

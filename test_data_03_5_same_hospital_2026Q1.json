@@ -1,0 +1,2769 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:org-hospital-cgmh",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "org-hospital-cgmh",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/hospital",
+            "value": "CGMH-001"
+          }
+        ],
+        "name": "長庚紀念醫院"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/org-hospital-cgmh"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-001",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-001"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂001"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-001"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-001-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-001-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-001"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-001-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-001-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-001-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-001-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-001-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-001-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-001-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-001"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-25T16:00:00Z",
+          "end": "2026-01-25T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-001-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-001-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-001-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-001-2"
+        },
+        "authoredOn": "2026-01-25T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-25",
+                  "end": "2026-02-23"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-25",
+            "end": "2026-02-23"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-001-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-002",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-002",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-002"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂002"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-002"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-002-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-002-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-002"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-002-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-002-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-002-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-002"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-002-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-002-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-002-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-002-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-002"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-25T16:00:00Z",
+          "end": "2026-01-25T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-002-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-002-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-002-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-002"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-002-2"
+        },
+        "authoredOn": "2026-01-25T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-25",
+                  "end": "2026-02-23"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-25",
+            "end": "2026-02-23"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-002-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-003",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-003",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-003"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂003"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-003"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-003-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-003-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-003"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-003-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-003-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-003-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-003"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-003-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-003-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-003-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-003-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-003"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-25T16:00:00Z",
+          "end": "2026-01-25T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-003-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-003-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-003-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-003"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-003-2"
+        },
+        "authoredOn": "2026-01-25T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-25",
+                  "end": "2026-02-23"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-25",
+            "end": "2026-02-23"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-003-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-004",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-004",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-004"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂004"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-004"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-004-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-004-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-004"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-004-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-004-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-004-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-004"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-004-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-004-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-004-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-004-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-004"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-25T16:00:00Z",
+          "end": "2026-01-25T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-004-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-004-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-004-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-004"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-004-2"
+        },
+        "authoredOn": "2026-01-25T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-25",
+                  "end": "2026-02-23"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-25",
+            "end": "2026-02-23"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-004-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-005",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-005",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-005"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂005"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-005"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-005-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-005-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-005"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-005-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-005-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-005-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-005"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-005-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-005-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-005-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-005-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-005"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-25T16:00:00Z",
+          "end": "2026-01-25T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-005-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-005-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-005-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-005"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-005-2"
+        },
+        "authoredOn": "2026-01-25T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-25",
+                  "end": "2026-02-23"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-25",
+            "end": "2026-02-23"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-005-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-006",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-006",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-006"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂006"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-006"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-006-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-006-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-006"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-006-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-006-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-006-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-006"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-006-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-006-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-006-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-006-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-006"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-006-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-006-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-006-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-006"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-006-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-006-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-007",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-007",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-007"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂007"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-007"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-007-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-007-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-007"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-007-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-007-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-007-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-007"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-007-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-007-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-007-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-007-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-007"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-007-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-007-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-007-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-007"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-007-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-007-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-008",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-008",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-008"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂008"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-008"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-008-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-008-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-008"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-008-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-008-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-008-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-008"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-008-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-008-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-008-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-008-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-008"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-008-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-008-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-008-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-008"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-008-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-008-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-009",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-009",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-009"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂009"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-009"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-009-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-009-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-009"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-009-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-009-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-009-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-009"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-009-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-009-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-009-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-009-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-009"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-009-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-009-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-009-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-009"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-009-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-009-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-010",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-010",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-010"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂010"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-010"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-010-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-010-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-010"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-010-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-010-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-010-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-010"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-010-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-010-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-010-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-010-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-010"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-010-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-010-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-010-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-010"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-010-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-010-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-011",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-011",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-011"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂011"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-011"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-011-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-011-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-011"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-011-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-011-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-011-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-011"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-011-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-011-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-011-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-011-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-011"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-011-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-011-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-011-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-011"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-011-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-011-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-012",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-012",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-012"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂012"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-012"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-012-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-012-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-012"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-012-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-012-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-012-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-012"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-012-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-012-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-012-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-012-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-012"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-012-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-012-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-012-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-012"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-012-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-012-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-013",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-013",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-013"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂013"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-013"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-013-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-013-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-013"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-013-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-013-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-013-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-013"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-013-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-013-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-013-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-013-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-013"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-013-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-013-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-013-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-013"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-013-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-013-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-014",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-014",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-014"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂014"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-014"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-014-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-014-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-014"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-014-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-014-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-014-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-014"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-014-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-014-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-014-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-014-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-014"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-014-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-014-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-014-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-014"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-014-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-014-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-015",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-015",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-015"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "抗憂015"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-015"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-015-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-015-1",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-015"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-01-09T11:00:00Z",
+          "end": "2026-01-09T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-015-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-015-1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-015-1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-015"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-015-1"
+        },
+        "authoredOn": "2026-01-09T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-09",
+                  "end": "2026-02-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-09",
+            "end": "2026-02-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-015-1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-015-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-015-2",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-015"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-cgmh"
+        },
+        "period": {
+          "start": "2026-02-10T16:00:00Z",
+          "end": "2026-02-10T16:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-015-2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-015-2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-015-2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥-SSRI)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-015"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-015-2"
+        },
+        "authoredOn": "2026-02-10T16:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-02-10",
+                  "end": "2026-03-11"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-02-10",
+            "end": "2026-03-11"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-015-2"
+      }
+    }
+  ]
+}

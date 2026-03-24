@@ -1,0 +1,868 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "translatorVersion": "3.10.0",
+        "translatorOptions": "DisableListDemotion,DisableListPromotion",
+        "signatureLevel": "Overloads",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "Indicator_06_Pediatric_Asthma_ED_Rate_1315Q_1317Y",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "codeSystems": {
+      "def": [
+        {
+          "name": "NHI_PROCEDURE",
+          "id": "http://www.nhi.gov.tw/codes/procedure",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "NHI_CLAIM",
+          "id": "http://www.nhi.gov.tw/codes/claim",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ICD10CM",
+          "id": "http://hl7.org/fhir/sid/icd-10-cm",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "SNOMEDCT",
+          "id": "http://snomed.info/sct",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ATC",
+          "id": "http://www.whocc.no/atc",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ActCode",
+          "id": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "EncounterStatus",
+          "id": "http://hl7.org/fhir/encounter-status",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ConditionClinicalStatus",
+          "id": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "name": "Asthma Diagnoses",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/asthma-diagnoses",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "Asthma Medications",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/asthma-medications",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "name": "Emergency",
+          "id": "EMER",
+          "display": "Emergency",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ActCode"}
+        },
+        {
+          "name": "Ambulatory",
+          "id": "AMB",
+          "display": "Ambulatory",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ActCode"}
+        },
+        {
+          "name": "Inpatient",
+          "id": "IMP",
+          "display": "Inpatient encounter",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ActCode"}
+        },
+        {
+          "name": "Finished",
+          "id": "finished",
+          "display": "Finished",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "EncounterStatus"}
+        },
+        {
+          "name": "Active",
+          "id": "active",
+          "display": "Active",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ConditionClinicalStatus"}
+        },
+        {
+          "name": "Asthma J45",
+          "id": "J45",
+          "display": "Asthma - 氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ICD10CM"}
+        },
+        {
+          "name": "Allergic Asthma",
+          "id": "J45.0",
+          "display": "Predominantly allergic asthma - 過敏性氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ICD10CM"}
+        },
+        {
+          "name": "Nonallergic Asthma",
+          "id": "J45.1",
+          "display": "Nonallergic asthma - 非過敏性氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ICD10CM"}
+        },
+        {
+          "name": "Mild Intermittent Asthma",
+          "id": "J45.2",
+          "display": "Mild intermittent asthma - 輕度間歇性氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ICD10CM"}
+        },
+        {
+          "name": "Mild Persistent Asthma",
+          "id": "J45.3",
+          "display": "Mild persistent asthma - 輕度持續性氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ICD10CM"}
+        },
+        {
+          "name": "Moderate Persistent Asthma",
+          "id": "J45.4",
+          "display": "Moderate persistent asthma - 中度持續性氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ICD10CM"}
+        },
+        {
+          "name": "Severe Persistent Asthma",
+          "id": "J45.5",
+          "display": "Severe persistent asthma - 重度持續性氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ICD10CM"}
+        },
+        {
+          "name": "Unspecified Asthma",
+          "id": "J45.9",
+          "display": "Asthma, unspecified - 未明示氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ICD10CM"}
+        },
+        {
+          "name": "Asthma SNOMED",
+          "id": "195967001",
+          "display": "Asthma - 氣喘",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "SNOMEDCT"}
+        },
+        {
+          "name": "Salbutamol",
+          "id": "R03AC02",
+          "display": "Salbutamol - 沙丁胺醇",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Terbutaline",
+          "id": "R03AC03",
+          "display": "Terbutaline - 特布他林",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Fenoterol",
+          "id": "R03AC04",
+          "display": "Fenoterol - 芬特羅",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Hexoprenaline",
+          "id": "R03AC06",
+          "display": "Hexoprenaline - 海索普林",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Salmeterol",
+          "id": "R03AC12",
+          "display": "Salmeterol - 沙美特羅",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Formoterol",
+          "id": "R03AC13",
+          "display": "Formoterol - 福莫特羅",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Indacaterol",
+          "id": "R03AC16",
+          "display": "Indacaterol - 茚達特羅",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Vilanterol",
+          "id": "R03AC18",
+          "display": "Vilanterol - 維蘭特羅",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Beclometasone",
+          "id": "R03BA01",
+          "display": "Beclometasone - 倍氯米松",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Budesonide",
+          "id": "R03BA02",
+          "display": "Budesonide - 布地奈德",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Fluticasone",
+          "id": "R03BA05",
+          "display": "Fluticasone - 氟替卡松",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Ciclesonide",
+          "id": "R03BA08",
+          "display": "Ciclesonide - 環索奈德",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Salmeterol Fluticasone",
+          "id": "R03AK06",
+          "display": "Salmeterol and fluticasone - 沙美特羅+氟替卡松",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Formoterol Budesonide",
+          "id": "R03AK07",
+          "display": "Formoterol and budesonide - 福莫特羅+布地奈德",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Formoterol Beclometasone",
+          "id": "R03AK08",
+          "display": "Formoterol and beclometasone - 福莫特羅+倍氯米松",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Prednisolone",
+          "id": "H02AB06",
+          "display": "Prednisolone - 普賴鬆龍",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Prednisone",
+          "id": "H02AB07",
+          "display": "Prednisone - 潑尼松",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Cromoglicic Acid",
+          "id": "R03DC01",
+          "display": "Cromoglicic acid - 色甘酸鈉",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Nedocromil",
+          "id": "R03DC03",
+          "display": "Nedocromil - 奈多羅米",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        },
+        {
+          "name": "Aminophylline",
+          "id": "R03DA05",
+          "display": "Aminophylline - 氨茶鹼",
+          "accessLevel": "Public",
+          "codeSystem": {"name": "ATC"}
+        }
+      ]
+    },
+    "statements": {
+      "def": [
+        {
+          "name": "Patient",
+          "context": "Patient",
+          "expression": {
+            "type": "SingletonFrom",
+            "operand": {
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "type": "Retrieve"
+            }
+          }
+        },
+        {
+          "name": "2024Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "3", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q2 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "4", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q2 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "6", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "30", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q3 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "7", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q3 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "9", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "30", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q4 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "10", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q4 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "12", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "3", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q2 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "4", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q2 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "6", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "30", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q3 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "7", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q3 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "9", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "30", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q4 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "10", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q4 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "12", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2026Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2026", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2026Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2026", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "3", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "Measurement Period Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "Measurement Period End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2099", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "12", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "Measurement Period",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "lowClosed": true,
+            "highClosed": true,
+            "type": "Interval",
+            "low": {"name": "Measurement Period Start", "type": "ExpressionRef"},
+            "high": {"name": "Measurement Period End", "type": "ExpressionRef"}
+          }
+        },
+        {
+          "name": "Patient Age",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "name": "GetAge",
+            "type": "FunctionRef",
+            "operand": [
+              {
+                "name": "Patient",
+                "type": "ExpressionRef"
+              }
+            ]
+          }
+        },
+        {
+          "name": "Is Patient Under 18",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "LessOrEqual",
+            "operand": [
+              {
+                "name": "Patient Age",
+                "type": "ExpressionRef"
+              },
+              {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "18",
+                "type": "Literal"
+              }
+            ]
+          }
+        },
+        {
+          "name": "All Encounters",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Query",
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "dataType": "{http://hl7.org/fhir}Encounter",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "relationship": [],
+            "where": {
+              "type": "And",
+              "operand": [
+                {
+                  "type": "And",
+                  "operand": [
+                    {
+                      "type": "Equal",
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "operand": [
+                            {
+                              "path": "value",
+                              "type": "Property",
+                              "source": {
+                                "path": "status",
+                                "scope": "E",
+                                "type": "Property"
+                              }
+                            }
+                          ]
+                        },
+                        {
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "finished",
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "In",
+                      "operand": [
+                        {
+                          "type": "Start",
+                          "operand": {
+                            "name": "ToInterval",
+                            "libraryName": "FHIRHelpers",
+                            "type": "FunctionRef",
+                            "operand": [
+                              {
+                                "path": "period",
+                                "scope": "E",
+                                "type": "Property"
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "Measurement Period",
+                          "type": "ExpressionRef"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Not",
+                  "operand": {
+                    "name": "IsAgencyCase",
+                    "type": "FunctionRef",
+                    "operand": [
+                      {
+                        "name": "E",
+                        "type": "AliasRef"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Asthma Encounters",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Query",
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "All Encounters",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "relationship": [],
+            "where": {
+              "name": "IsAsthmaCode",
+              "type": "FunctionRef",
+              "operand": [
+                {
+                  "name": "GetPrimaryDiagnosis",
+                  "type": "FunctionRef",
+                  "operand": [
+                    {
+                      "name": "E",
+                      "type": "AliasRef"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Indicator Result",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Tuple",
+            "element": [
+              {
+                "name": "indicatorCode",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1315/1317",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorName",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "十八歲以下氣喘病人急診率",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorNameEn",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "Emergency Visit Rate for Asthma Patients Under 18",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "measurementPeriodStart",
+                "value": {
+                  "name": "Measurement Period Start",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "measurementPeriodEnd",
+                "value": {
+                  "name": "Measurement Period End",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "dataSource",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "醫療給付檔案分析系統",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "compiledBy",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "衛生福利部 中央健康保險署",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "compiledDate",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "114/05/13",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "version",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1.0.0",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "asthmaCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "ICD10-CM J45* (主診斷前三碼)",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "denominatorCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "a)≥1次急診 or b)≥1次住院 or c)當期門診+前一年≥4次門診+其中≥2次有用藥",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "numeratorCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "分母病患中急診日期>氣喘病患日期",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "medicationCount",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "20種ATC氣喘用藥",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "ageLimit",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "≤18歲",
+                  "type": "Literal"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

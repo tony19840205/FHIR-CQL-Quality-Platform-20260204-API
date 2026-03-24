@@ -6,12 +6,350 @@ include FHIRHelpers version '4.0.1' called FHIRHelpers
 
 // 指標名稱: 清淨手術術後使用抗生素超過三日比率
 // 指標代碼: 1155
-// 製作日期：2025-11-20
+// 資料來源: 醫療給付檔案分析系統，指標代碼：1155
+// 製表日期: 114/11/06
+// 製表單位: 衛生福利部 中央健康保險署
 
-/*
- * 指標名稱: 清淨手術術後使用抗生素超過三日比率
- * Indicator: Clean Surgery Postoperative Antibiotic Use Over 3 Days Rate
- * 指標代碼: 1155
+// 指標名稱: 清淨手術術後使用抗生素超過三日比率
+// 指標代碼: 1155
+// 資料來源: 醫療給付檔案分析系統，指標代碼：1155
+// 製表日期: 114/11/06
+// 製表單位: 衛生福利部 中央健康保險署
+
+codesystem "NHI_CLAIM": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-claim'
+codesystem "NHI_PROCEDURE": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure'
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
+codesystem "ATC": 'http://www.whocc.no/atc'
+
+code "Finished": 'finished' from "EncounterStatus" display '已完成'
+code "Inpatient": 'IMP' from "ActCode" display '住院'
+code "Case_Category_05": '05' from "NHI_CLAIM" display '住院西醫'
+
+// Exclusion diagnosis codes
+code "Exclude_C40": 'C40' from "NHI_CLAIM" display '骨惡性腫瘤'
+code "Exclude_C41": 'C41' from "NHI_CLAIM" display '關節惡性腫瘤'
+code "Exclude_D65": 'D65' from "NHI_CLAIM" display '凝血異常D65'
+code "Exclude_D66": 'D66' from "NHI_CLAIM" display '凝血異常D66'
+code "Exclude_D67": 'D67' from "NHI_CLAIM" display '凝血異常D67'
+code "Exclude_D68": 'D68' from "NHI_CLAIM" display '凝血異常D68'
+code "Exclude_H65": 'H65' from "NHI_CLAIM" display '中耳炎H65'
+code "Exclude_H66": 'H66' from "NHI_CLAIM" display '中耳炎H66'
+code "Exclude_H67": 'H67' from "NHI_CLAIM" display '中耳炎H67'
+code "Exclude_H68": 'H68' from "NHI_CLAIM" display '耳咽管疾病H68'
+code "Exclude_H69": 'H69' from "NHI_CLAIM" display '耳咽管疾病H69'
+code "Exclude_J12": 'J12' from "NHI_CLAIM" display '病毒性肺炎'
+code "Exclude_J13": 'J13' from "NHI_CLAIM" display '肺炎鏈球菌肺炎'
+code "Exclude_J14": 'J14' from "NHI_CLAIM" display '嗜血桿菌肺炎'
+code "Exclude_J15": 'J15' from "NHI_CLAIM" display '細菌性肺炎'
+code "Exclude_J16": 'J16' from "NHI_CLAIM" display '其他感染性肺炎'
+code "Exclude_J17": 'J17' from "NHI_CLAIM" display '他處歸類肺炎'
+code "Exclude_J18": 'J18' from "NHI_CLAIM" display '未明示肺炎'
+code "Exclude_N30": 'N30' from "NHI_CLAIM" display '膀胱炎'
+code "Exclude_N34": 'N34' from "NHI_CLAIM" display '尿道炎'
+code "Exclude_N390": 'N390' from "NHI_CLAIM" display '泌尿道感染'
+
+// Thyroid disease codes (for inclusion with thyroid surgery)
+code "Thyroid_E00": 'E00' from "NHI_CLAIM" display '甲狀腺疾病E00'
+code "Thyroid_E01": 'E01' from "NHI_CLAIM" display '甲狀腺疾病E01'
+code "Thyroid_E02": 'E02' from "NHI_CLAIM" display '甲狀腺疾病E02'
+code "Thyroid_E03": 'E03' from "NHI_CLAIM" display '甲狀腺疾病E03'
+code "Thyroid_E04": 'E04' from "NHI_CLAIM" display '甲狀腺疾病E04'
+code "Thyroid_E05": 'E05' from "NHI_CLAIM" display '甲狀腺疾病E05'
+code "Thyroid_E06": 'E06' from "NHI_CLAIM" display '甲狀腺疾病E06'
+code "Thyroid_E07": 'E07' from "NHI_CLAIM" display '甲狀腺疾病E07'
+code "Thyroid_E35": 'E35' from "NHI_CLAIM" display '內分泌腺疾病'
+code "Thyroid_E890": 'E89.0' from "NHI_CLAIM" display '術後甲狀腺功能低下'
+code "Thyroid_D440": 'D44.0' from "NHI_CLAIM" display '甲狀腺良性腫瘤'
+
+// ICD-10-PCS Joint repair codes (18 codes)
+code "Joint_0YQ50ZZ": '0YQ50ZZ' from "NHI_PROCEDURE" display '膝關節修復'
+code "Joint_0YQ53ZZ": '0YQ53ZZ' from "NHI_PROCEDURE" display '膝關節修復經皮'
+code "Joint_0YQ54ZZ": '0YQ54ZZ' from "NHI_PROCEDURE" display '膝關節修復內視鏡'
+code "Joint_0YQ60ZZ": '0YQ60ZZ' from "NHI_PROCEDURE" display '膝關節修復右'
+code "Joint_0YQ63ZZ": '0YQ63ZZ' from "NHI_PROCEDURE" display '膝關節修復右經皮'
+code "Joint_0YQ64ZZ": '0YQ64ZZ' from "NHI_PROCEDURE" display '膝關節修復右內視鏡'
+code "Joint_0YQ70ZZ": '0YQ70ZZ' from "NHI_PROCEDURE" display '髖關節修復'
+code "Joint_0YQ73ZZ": '0YQ73ZZ' from "NHI_PROCEDURE" display '髖關節修復經皮'
+code "Joint_0YQ74ZZ": '0YQ74ZZ' from "NHI_PROCEDURE" display '髖關節修復內視鏡'
+code "Joint_0YQ80ZZ": '0YQ80ZZ' from "NHI_PROCEDURE" display '髖關節修復右'
+code "Joint_0YQ83ZZ": '0YQ83ZZ' from "NHI_PROCEDURE" display '髖關節修復右經皮'
+code "Joint_0YQ84ZZ": '0YQ84ZZ' from "NHI_PROCEDURE" display '髖關節修復右內視鏡'
+code "Joint_0YQC0ZZ": '0YQC0ZZ' from "NHI_PROCEDURE" display '踝關節修復'
+code "Joint_0YQC3ZZ": '0YQC3ZZ' from "NHI_PROCEDURE" display '踝關節修復經皮'
+code "Joint_0YQC4ZZ": '0YQC4ZZ' from "NHI_PROCEDURE" display '踝關節修復內視鏡'
+code "Joint_0YQE0ZZ": '0YQE0ZZ' from "NHI_PROCEDURE" display '跗骨關節修復'
+code "Joint_0YQE3ZZ": '0YQE3ZZ' from "NHI_PROCEDURE" display '跗骨關節修復經皮'
+code "Joint_0YQE4ZZ": '0YQE4ZZ' from "NHI_PROCEDURE" display '跗骨關節修復內視鏡'
+
+// NHI procedure codes for joint surgery (6 codes)
+code "NHI_Joint_75607C": '75607C' from "NHI_PROCEDURE" display '全膝關節置換術'
+code "NHI_Joint_75610B": '75610B' from "NHI_PROCEDURE" display '全髖關節置換術'
+code "NHI_Joint_75613C": '75613C' from "NHI_PROCEDURE" display '髖關節修復術'
+code "NHI_Joint_75614C": '75614C' from "NHI_PROCEDURE" display '膝關節修復術'
+code "NHI_Joint_75615C": '75615C' from "NHI_PROCEDURE" display '踝關節修復術'
+code "NHI_Joint_88029C": '88029C' from "NHI_PROCEDURE" display '關節置換處置費'
+
+// ICD-10-PCS Thyroid surgery codes (12 codes)
+code "Thyroid_0GBG0ZZ": '0GBG0ZZ' from "NHI_PROCEDURE" display '甲狀腺切除開放式'
+code "Thyroid_0GBG3ZZ": '0GBG3ZZ' from "NHI_PROCEDURE" display '甲狀腺切除經皮'
+code "Thyroid_0GBG4ZZ": '0GBG4ZZ' from "NHI_PROCEDURE" display '甲狀腺切除內視鏡'
+code "Thyroid_0GBH0ZZ": '0GBH0ZZ' from "NHI_PROCEDURE" display '甲狀腺右葉切除開放式'
+code "Thyroid_0GBH3ZZ": '0GBH3ZZ' from "NHI_PROCEDURE" display '甲狀腺右葉切除經皮'
+code "Thyroid_0GBH4ZZ": '0GBH4ZZ' from "NHI_PROCEDURE" display '甲狀腺右葉切除內視鏡'
+code "Thyroid_0GTG0ZZ": '0GTG0ZZ' from "NHI_PROCEDURE" display '甲狀腺全切除開放式'
+code "Thyroid_0GTG4ZZ": '0GTG4ZZ' from "NHI_PROCEDURE" display '甲狀腺全切除內視鏡'
+code "Thyroid_0GTH0ZZ": '0GTH0ZZ' from "NHI_PROCEDURE" display '甲狀腺右葉全切除開放式'
+code "Thyroid_0GTH4ZZ": '0GTH4ZZ' from "NHI_PROCEDURE" display '甲狀腺右葉全切除內視鏡'
+code "Thyroid_0GTK0ZZ": '0GTK0ZZ' from "NHI_PROCEDURE" display '甲狀腺左葉全切除開放式'
+code "Thyroid_0GTK4ZZ": '0GTK4ZZ' from "NHI_PROCEDURE" display '甲狀腺左葉全切除內視鏡'
+
+// NHI procedure codes for thyroid surgery (4 codes)
+code "NHI_Thyroid_64162B": '64162B' from "NHI_PROCEDURE" display '甲狀腺全切除術'
+code "NHI_Thyroid_64164B": '64164B' from "NHI_PROCEDURE" display '甲狀腺次全切除術'
+code "NHI_Thyroid_64169B": '64169B' from "NHI_PROCEDURE" display '甲狀腺葉切除術'
+code "NHI_Thyroid_64170B": '64170B' from "NHI_PROCEDURE" display '甲狀腺峽部切除術'
+
+// NHI procedure codes for joint replacement (4 codes)
+code "NHI_Replace_64162B": '64162B' from "NHI_PROCEDURE" display '關節置換64162B'
+code "NHI_Replace_64164B": '64164B' from "NHI_PROCEDURE" display '關節置換64164B'
+code "NHI_Replace_64169B": '64169B' from "NHI_PROCEDURE" display '關節置換64169B'
+code "NHI_Replace_64170B": '64170B' from "NHI_PROCEDURE" display '關節置換64170B'
+
+// Antibiotic ATC code
+code "Antibiotic_J01": 'J01' from "ATC" display '全身性抗細菌劑'
+
+valueset "Inpatient Encounters": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.666.5.307'
+
+parameter "Measurement Period" Interval<DateTime> default Interval[@2024-01-01T00:00:00.0, @2099-12-31T23:59:59.999]
+
+context Patient
+
+define function GetId(encounter Encounter): String is encounter.id
+
+define function GetDischargeDate(encounter Encounter): DateTime is 
+  end of encounter.period
+
+define function GetCaseCategory(encounter Encounter): String is
+  singleton from (
+    [Claim] C
+      where C.id.contains(encounter.id)
+      return First(
+        C.extension E
+          where E.url = 'https://twcore.mohw.gov.tw/ig/twcore/StructureDefinition/case-category'
+          return E.valueString
+      )
+  )
+
+define function GetMainDiagnosisPrefix3(encounter Encounter): String is
+  let diagnosis: singleton from (
+    [Condition] C
+      where C.encounter.reference.contains(encounter.id)
+        and exists(C.category.coding c where c.code = 'principal-diagnosis')
+      return First(C.code.coding).code
+  )
+  return if diagnosis is not null and Length(diagnosis) >= 3
+    then Substring(diagnosis, 0, 3)
+    else null
+
+define function GetMainDiagnosisFull(encounter Encounter): String is
+  singleton from (
+    [Condition] C
+      where C.encounter.reference.contains(encounter.id)
+        and exists(C.category.coding c where c.code = 'principal-diagnosis')
+      return First(C.code.coding).code
+  )
+
+define function HasJointRepairProcedure(encounter Encounter): Boolean is
+  exists(
+    [Procedure] P
+      where P.encounter.reference.contains(encounter.id)
+        and P.status ~ 'completed'
+        and (
+          P.code ~ "Joint_0YQ50ZZ" or P.code ~ "Joint_0YQ53ZZ" or P.code ~ "Joint_0YQ54ZZ" or
+          P.code ~ "Joint_0YQ60ZZ" or P.code ~ "Joint_0YQ63ZZ" or P.code ~ "Joint_0YQ64ZZ" or
+          P.code ~ "Joint_0YQ70ZZ" or P.code ~ "Joint_0YQ73ZZ" or P.code ~ "Joint_0YQ74ZZ" or
+          P.code ~ "Joint_0YQ80ZZ" or P.code ~ "Joint_0YQ83ZZ" or P.code ~ "Joint_0YQ84ZZ" or
+          P.code ~ "Joint_0YQC0ZZ" or P.code ~ "Joint_0YQC3ZZ" or P.code ~ "Joint_0YQC4ZZ" or
+          P.code ~ "Joint_0YQE0ZZ" or P.code ~ "Joint_0YQE3ZZ" or P.code ~ "Joint_0YQE4ZZ"
+        )
+  )
+
+define function HasJointNHIProcedure(encounter Encounter): Boolean is
+  exists(
+    [Procedure] P
+      where P.encounter.reference.contains(encounter.id)
+        and P.status ~ 'completed'
+        and (
+          P.code ~ "NHI_Joint_75607C" or P.code ~ "NHI_Joint_75610B" or 
+          P.code ~ "NHI_Joint_75613C" or P.code ~ "NHI_Joint_75614C" or 
+          P.code ~ "NHI_Joint_75615C" or P.code ~ "NHI_Joint_88029C"
+        )
+  )
+
+define function HasThyroidProcedure(encounter Encounter): Boolean is
+  exists(
+    [Procedure] P
+      where P.encounter.reference.contains(encounter.id)
+        and P.status ~ 'completed'
+        and (
+          P.code ~ "Thyroid_0GBG0ZZ" or P.code ~ "Thyroid_0GBG3ZZ" or P.code ~ "Thyroid_0GBG4ZZ" or
+          P.code ~ "Thyroid_0GBH0ZZ" or P.code ~ "Thyroid_0GBH3ZZ" or P.code ~ "Thyroid_0GBH4ZZ" or
+          P.code ~ "Thyroid_0GTG0ZZ" or P.code ~ "Thyroid_0GTG4ZZ" or
+          P.code ~ "Thyroid_0GTH0ZZ" or P.code ~ "Thyroid_0GTH4ZZ" or
+          P.code ~ "Thyroid_0GTK0ZZ" or P.code ~ "Thyroid_0GTK4ZZ"
+        )
+  )
+
+define function HasThyroidNHIProcedure(encounter Encounter): Boolean is
+  exists(
+    [Procedure] P
+      where P.encounter.reference.contains(encounter.id)
+        and P.status ~ 'completed'
+        and (
+          P.code ~ "NHI_Thyroid_64162B" or P.code ~ "NHI_Thyroid_64164B" or 
+          P.code ~ "NHI_Thyroid_64169B" or P.code ~ "NHI_Thyroid_64170B"
+        )
+  )
+
+define function HasThyroidDiagnosis(encounter Encounter): Boolean is
+  let diagPrefix3: GetMainDiagnosisPrefix3(encounter),
+      diagFull: GetMainDiagnosisFull(encounter)
+  return (
+    diagPrefix3 in {'E00', 'E01', 'E02', 'E03', 'E04', 'E05', 'E06', 'E07', 'E35'} or
+    diagFull in {'E89.0', 'D44.0'}
+  )
+
+define function HasExclusionDiagnosis(encounter Encounter): Boolean is
+  let diagPrefix3: GetMainDiagnosisPrefix3(encounter),
+      diagFull: GetMainDiagnosisFull(encounter)
+  return (
+    diagPrefix3 in {'C40', 'C41', 'D65', 'D66', 'D67', 'D68', 
+                    'H65', 'H66', 'H67', 'H68', 'H69',
+                    'J12', 'J13', 'J14', 'J15', 'J16', 'J17', 'J18',
+                    'N30', 'N34'} or
+    diagFull = 'N390'
+  )
+
+define function GetAntibioticDays(encounter Encounter): Integer is
+  let surgeryDate: GetDischargeDate(encounter),
+      antibiotics: (
+        [MedicationRequest] M
+          where M.subject.reference.contains(encounter.subject.reference)
+            and M.authoredOn > surgeryDate
+            and exists(M.medication.concept.coding c where c.system = 'http://www.whocc.no/atc' and c.code starts with 'J01')
+      )
+  return if Count(antibiotics) > 0
+    then days between Min(antibiotics A return A.authoredOn) and Max(antibiotics A return A.authoredOn) + 1
+    else 0
+
+define function IsCleanSurgeryJointRepair(encounter Encounter): Boolean is
+  GetCaseCategory(encounter) = '05'
+  and HasJointRepairProcedure(encounter)
+  and HasJointNHIProcedure(encounter)
+  and not HasExclusionDiagnosis(encounter)
+
+define function IsCleanSurgeryThyroid(encounter Encounter): Boolean is
+  GetCaseCategory(encounter) = '05'
+  and HasThyroidProcedure(encounter)
+  and HasThyroidNHIProcedure(encounter)
+  and HasThyroidDiagnosis(encounter)
+  and not HasExclusionDiagnosis(encounter)
+
+define function IsCleanSurgery(encounter Encounter): Boolean is
+  IsCleanSurgeryJointRepair(encounter) or IsCleanSurgeryThyroid(encounter)
+
+define "All Inpatient Discharges":
+  [Encounter: type in "Inpatient Encounters"] E
+    where E.status ~ "Finished"
+      and E.class ~ "Inpatient"
+      and GetDischargeDate(E) during "Measurement Period"
+
+define "Clean Surgery Cases":
+  "All Inpatient Discharges" E
+    where IsCleanSurgery(E)
+
+define "Antibiotic Over 3 Days Cases":
+  "Clean Surgery Cases" E
+    where GetAntibioticDays(E) > 3
+
+define "2024Q1 Start": DateTime(2024, 1, 1, 0, 0, 0, 0)
+define "2024Q1 End": DateTime(2024, 3, 31, 23, 59, 59, 999)
+define "2024Q2 Start": DateTime(2024, 4, 1, 0, 0, 0, 0)
+define "2024Q2 End": DateTime(2024, 6, 30, 23, 59, 59, 999)
+define "2024Q3 Start": DateTime(2024, 7, 1, 0, 0, 0, 0)
+define "2024Q3 End": DateTime(2024, 9, 30, 23, 59, 59, 999)
+define "2024Q4 Start": DateTime(2024, 10, 1, 0, 0, 0, 0)
+define "2024Q4 End": DateTime(2024, 12, 31, 23, 59, 59, 999)
+define "2025Q1 Start": DateTime(2025, 1, 1, 0, 0, 0, 0)
+define "2025Q1 End": DateTime(2025, 3, 31, 23, 59, 59, 999)
+define "2025Q2 Start": DateTime(2025, 4, 1, 0, 0, 0, 0)
+define "2025Q2 End": DateTime(2025, 6, 30, 23, 59, 59, 999)
+define "2025Q3 Start": DateTime(2025, 7, 1, 0, 0, 0, 0)
+define "2025Q3 End": DateTime(2025, 9, 30, 23, 59, 59, 999)
+define "2025Q4 Start": DateTime(2025, 10, 1, 0, 0, 0, 0)
+define "2025Q4 End": DateTime(2025, 12, 31, 23, 59, 59, 999)
+define "2026Q1 Start": DateTime(2026, 1, 1, 0, 0, 0, 0)
+define "2026Q1 End": DateTime(2026, 3, 31, 23, 59, 59, 999)
+
+define "2024Q1 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2024Q1 Start", "2024Q1 End"])
+define "2024Q1 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2024Q1 Start", "2024Q1 End"])
+define "2024Q1 Rate": if "2024Q1 Denominator" > 0 then ("2024Q1 Numerator" / "2024Q1 Denominator") * 100 else null
+
+define "2024Q2 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2024Q2 Start", "2024Q2 End"])
+define "2024Q2 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2024Q2 Start", "2024Q2 End"])
+define "2024Q2 Rate": if "2024Q2 Denominator" > 0 then ("2024Q2 Numerator" / "2024Q2 Denominator") * 100 else null
+
+define "2024Q3 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2024Q3 Start", "2024Q3 End"])
+define "2024Q3 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2024Q3 Start", "2024Q3 End"])
+define "2024Q3 Rate": if "2024Q3 Denominator" > 0 then ("2024Q3 Numerator" / "2024Q3 Denominator") * 100 else null
+
+define "2024Q4 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2024Q4 Start", "2024Q4 End"])
+define "2024Q4 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2024Q4 Start", "2024Q4 End"])
+define "2024Q4 Rate": if "2024Q4 Denominator" > 0 then ("2024Q4 Numerator" / "2024Q4 Denominator") * 100 else null
+
+define "2025Q1 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2025Q1 Start", "2025Q1 End"])
+define "2025Q1 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2025Q1 Start", "2025Q1 End"])
+define "2025Q1 Rate": if "2025Q1 Denominator" > 0 then ("2025Q1 Numerator" / "2025Q1 Denominator") * 100 else null
+
+define "2025Q2 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2025Q2 Start", "2025Q2 End"])
+define "2025Q2 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2025Q2 Start", "2025Q2 End"])
+define "2025Q2 Rate": if "2025Q2 Denominator" > 0 then ("2025Q2 Numerator" / "2025Q2 Denominator") * 100 else null
+
+define "2025Q3 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2025Q3 Start", "2025Q3 End"])
+define "2025Q3 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2025Q3 Start", "2025Q3 End"])
+define "2025Q3 Rate": if "2025Q3 Denominator" > 0 then ("2025Q3 Numerator" / "2025Q3 Denominator") * 100 else null
+
+define "2025Q4 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2025Q4 Start", "2025Q4 End"])
+define "2025Q4 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2025Q4 Start", "2025Q4 End"])
+define "2025Q4 Rate": if "2025Q4 Denominator" > 0 then ("2025Q4 Numerator" / "2025Q4 Denominator") * 100 else null
+
+define "2026Q1 Numerator": Count("Antibiotic Over 3 Days Cases" E where GetDischargeDate(E) in Interval["2026Q1 Start", "2026Q1 End"])
+define "2026Q1 Denominator": Count("Clean Surgery Cases" E where GetDischargeDate(E) in Interval["2026Q1 Start", "2026Q1 End"])
+define "2026Q1 Rate": if "2026Q1 Denominator" > 0 then ("2026Q1 Numerator" / "2026Q1 Denominator") * 100 else null
+
+define "Total Numerator": Count("Antibiotic Over 3 Days Cases")
+define "Total Denominator": Count("Clean Surgery Cases")
+define "Total Rate": if "Total Denominator" > 0 then ("Total Numerator" / "Total Denominator") * 100 else null
+
+define "Indicator Result":
+  Tuple {
+    indicatorCode: '1155',
+    indicatorName: '清淨手術術後使用抗生素超過三日比率',
+    measurementPeriod: "Measurement Period",
+    quarters: List{
+      Tuple { quarter: '2024Q1', numerator: "2024Q1 Numerator", denominator: "2024Q1 Denominator", rate: "2024Q1 Rate" },
+      Tuple { quarter: '2024Q2', numerator: "2024Q2 Numerator", denominator: "2024Q2 Denominator", rate: "2024Q2 Rate" },
+      Tuple { quarter: '2024Q3', numerator: "2024Q3 Numerator", denominator: "2024Q3 Denominator", rate: "2024Q3 Rate" },
+      Tuple { quarter: '2024Q4', numerator: "2024Q4 Numerator", denominator: "2024Q4 Denominator", rate: "2024Q4 Rate" },
+      Tuple { quarter: '2025Q1', numerator: "2025Q1 Numerator", denominator: "2025Q1 Denominator", rate: "2025Q1 Rate" },
+      Tuple { quarter: '2025Q2', numerator: "2025Q2 Numerator", denominator: "2025Q2 Denominator", rate: "2025Q2 Rate" },
+      Tuple { quarter: '2025Q3', numerator: "2025Q3 Numerator", denominator: "2025Q3 Denominator", rate: "2025Q3 Rate" },
+      Tuple { quarter: '2025Q4', numerator: "2025Q4 Numerator", denominator: "2025Q4 Denominator", rate: "2025Q4 Rate" },
+      Tuple { quarter: '2026Q1', numerator: "2026Q1 Numerator", denominator: "2026Q1 Denominator", rate: "2026Q1 Rate" }
+    },
+    total: Tuple { numerator: "Total Numerator", denominator: "Total Denominator", rate: "Total Rate" }
+  }
  * 
  * 資料來源: 醫療給付檔案分析系統
  * 資料範圍: 每季所有醫院總額之清淨手術案件

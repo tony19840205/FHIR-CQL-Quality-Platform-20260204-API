@@ -1,0 +1,75 @@
+{
+  "name": "pain-management-factors",
+  "version": "0.7.0",
+  "description": "Pain Management Factors SMART-on-FHIR App",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "cql-exec-fhir": "^2.1.5",
+    "cql-execution": "^3.0.1",
+    "fhirclient": "^2.5.3",
+    "moment": "^2.30.1",
+    "react": "^16.14.0",
+    "react-app-polyfill": "^3.0.0",
+    "react-collapsible": "^2.10.0",
+    "react-dom": "^16.14.0",
+    "react-modal": "^3.16.1",
+    "react-router-dom": "^6.24.1",
+    "react-table": "^6.11.4",
+    "react-tooltip": "^4.5.1",
+    "tocbot": "^4.28.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^12.1.5",
+    "@testing-library/user-event": "^14.5.2",
+    "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^2.0.2",
+    "axios": "^1.7.2",
+    "cql-exec-vsac": "^2.2.0",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "eslint-config-react-app": "^7.0.1",
+    "gh-pages": "^6.1.1",
+    "jsdom": "^24.1.0",
+    "react-router-test-context": "^0.1.0",
+    "temp": "^0.9.1",
+    "vite": "^5.3.3",
+    "vite-plugin-node-polyfills": "^0.22.0",
+    "vitest": "^2.0.2"
+  },
+  "overrides": {
+    "@expo/image-utils": {
+      "semver": "^7.5.3"
+    }
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "scripts": {
+    "cql-to-elm": "cross-env ./gradlew cql2elm",
+    "start": "vite --port 8000",
+    "build": "vite build",
+    "serve": "vite preview --port 8000",
+    "test": "vitest",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -r https://github.com/AHRQ-CDS/AHRQ-CDS-Connect-PAIN-MANAGEMENT-SUMMARY.git -d dist",
+    "upload-test-patients": "node ./src/utils/uploadTestPatients",
+    "update-test-patients": "node ./src/utils/updateTestPatients",
+    "lint": "eslint ."
+  }
+}

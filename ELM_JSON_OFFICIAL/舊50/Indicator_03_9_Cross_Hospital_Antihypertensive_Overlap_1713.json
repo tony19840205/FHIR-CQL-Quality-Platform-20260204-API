@@ -1,0 +1,1186 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "translatorOptions": "DisableListDemotion,DisableListPromotion",
+        "translatorVersion": "3.10.0",
+        "signatureLevel": "Overloads",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "Indicator_03_9_Cross_Hospital_Antihypertensive_Overlap_1713",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localId": "1",
+          "locator": "3:1-3:26",
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "includes": {
+      "def": [
+        {
+          "localId": "2",
+          "locator": "4:1-4:35",
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "codeSystems": {
+      "def": [
+        {
+          "localId": "3",
+          "locator": "15:1-15:51",
+          "name": "ATC",
+          "id": "http://www.whocc.no/atc",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "4",
+          "locator": "16:1-16:79",
+          "name": "ActCode",
+          "id": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "5",
+          "locator": "17:1-17:59",
+          "name": "SNOMEDCT",
+          "id": "http://snomed.info/sct",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "6",
+          "locator": "18:1-18:100",
+          "name": "MedicationRequestStatus",
+          "id": "http://hl7.org/fhir/CodeSystem/medicationrequest-status",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "7",
+          "locator": "19:1-19:100",
+          "name": "MedicationRequestIntent",
+          "id": "http://hl7.org/fhir/CodeSystem/medicationrequest-intent",
+          "accessLevel": "Public"
+        },
+        {
+          "localId": "8",
+          "locator": "20:1-20:73",
+          "name": "EncounterStatus",
+          "id": "http://hl7.org/fhir/encounter-status",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "localId": "9",
+          "locator": "23:1-23:92",
+          "name": "Antihypertensive ATC Codes",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/antihypertensive-atc-codes",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "localId": "10",
+          "locator": "26:1-26:66",
+          "name": "Ambulatory",
+          "id": "AMB",
+          "display": "Ambulatory",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "11",
+            "locator": "26:27-26:36",
+            "name": "ActCode"
+          }
+        },
+        {
+          "localId": "12",
+          "locator": "27:1-27:62",
+          "name": "Outpatient",
+          "id": "O",
+          "display": "Outpatient",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "13",
+            "locator": "27:25-27:34",
+            "name": "ActCode"
+          }
+        },
+        {
+          "localId": "14",
+          "locator": "30:1-30:84",
+          "name": "Active",
+          "id": "active",
+          "display": "Active",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "15",
+            "locator": "30:22-30:47",
+            "name": "MedicationRequestStatus"
+          }
+        },
+        {
+          "localId": "16",
+          "locator": "31:1-31:94",
+          "name": "Completed",
+          "id": "completed",
+          "display": "Completed",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "17",
+            "locator": "31:26-31:51",
+            "name": "MedicationRequestStatus"
+          }
+        },
+        {
+          "localId": "18",
+          "locator": "34:1-34:76",
+          "name": "Finished",
+          "id": "finished",
+          "display": "Finished",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "19",
+            "locator": "34:25-34:42",
+            "name": "EncounterStatus"
+          }
+        },
+        {
+          "localId": "20",
+          "locator": "38:1-38:95",
+          "name": "C02CA",
+          "id": "C02CA",
+          "display": "Alpha-adrenoreceptor antagonists - α受體阻斷劑",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "21",
+            "locator": "38:22-38:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "22",
+          "locator": "39:1-39:92",
+          "name": "C02DB",
+          "id": "C02DB",
+          "display": "Hydrazinophthalazine derivatives - 肼屈嗪類",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "23",
+            "locator": "39:22-39:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "24",
+          "locator": "40:1-40:79",
+          "name": "C02DC",
+          "id": "C02DC",
+          "display": "Pyrimidine derivatives - 嘧啶類",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "25",
+            "locator": "40:22-40:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "26",
+          "locator": "41:1-41:91",
+          "name": "C02DD",
+          "id": "C02DD",
+          "display": "Nitroferricyanide derivatives - 硝普鹽類",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "27",
+            "locator": "41:22-41:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "28",
+          "locator": "44:1-44:82",
+          "name": "C03AA",
+          "id": "C03AA",
+          "display": "Thiazides, plain - 噻嗪類利尿劑",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "29",
+            "locator": "44:22-44:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "30",
+          "locator": "45:1-45:86",
+          "name": "C03BA",
+          "id": "C03BA",
+          "display": "Sulfonamides, plain - 磺胺類利尿劑",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "31",
+            "locator": "45:22-45:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "32",
+          "locator": "46:1-46:71",
+          "name": "C03CA",
+          "id": "C03CA",
+          "display": "Sulfonamides, plain - 磺胺類",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "33",
+            "locator": "46:22-46:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "34",
+          "locator": "47:1-47:87",
+          "name": "C03DA",
+          "id": "C03DA",
+          "display": "Aldosterone antagonists - 醛固酮拮抗劑",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "35",
+            "locator": "47:22-47:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "36",
+          "locator": "50:1-50:72",
+          "name": "C07",
+          "id": "C07",
+          "display": "Beta blocking agents - β阻斷劑",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "37",
+            "locator": "50:19-50:24",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "38",
+          "locator": "53:1-53:89",
+          "name": "C08CA",
+          "id": "C08CA",
+          "display": "Dihydropyridine derivatives - 二氫吡啶類",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "39",
+            "locator": "53:22-53:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "40",
+          "locator": "54:1-54:93",
+          "name": "C08DA",
+          "id": "C08DA",
+          "display": "Phenylalkylamine derivatives - 苯烷基胺類",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "41",
+            "locator": "54:22-54:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "42",
+          "locator": "55:1-55:95",
+          "name": "C08DB",
+          "id": "C08DB",
+          "display": "Benzothiazepine derivatives - 苯並硫氮䓬類",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "43",
+            "locator": "55:22-55:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "44",
+          "locator": "58:1-58:100",
+          "name": "C09AA",
+          "id": "C09AA",
+          "display": "ACE inhibitors, plain - 血管張力素轉化酶抑制劑",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "45",
+            "locator": "58:22-58:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "46",
+          "locator": "59:1-59:117",
+          "name": "C09CA",
+          "id": "C09CA",
+          "display": "Angiotensin II receptor blockers (ARBs), plain - 血管張力素II受體阻斷劑",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "47",
+            "locator": "59:22-59:27",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "48",
+          "locator": "62:1-62:67",
+          "name": "C07AA05",
+          "id": "C07AA05",
+          "display": "Propranolol - 應排除",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "49",
+            "locator": "62:25-62:30",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "50",
+          "locator": "63:1-63:67",
+          "name": "C08CA06",
+          "id": "C08CA06",
+          "display": "Nimodipine - 應排除",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "51",
+            "locator": "63:25-63:30",
+            "name": "ATC"
+          }
+        },
+        {
+          "localId": "52",
+          "locator": "66:1-66:75",
+          "name": "Oral",
+          "id": "385268001",
+          "display": "Oral dose form - 口服劑型",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "localId": "53",
+            "locator": "66:20-66:30",
+            "name": "SNOMEDCT"
+          }
+        }
+      ]
+    },
+    "statements": {
+      "def": [
+        {
+          "locator": "1:1-1:15",
+          "name": "Patient",
+          "context": "Patient",
+          "expression": {
+            "type": "SingletonFrom",
+            "operand": {
+              "locator": "1:1-1:15",
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "type": "Retrieve"
+            }
+          }
+        },
+        {
+          "localId": "55",
+          "locator": "72:1-72:37",
+          "name": "2024Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "55",
+                "s": [
+                  {
+                    "value": [
+                      "define ",
+                      "\"2024Q1 Start\"",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "54",
+                    "s": [
+                      {
+                        "value": [
+                          "@2024-01-01"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "54",
+            "locator": "72:26-72:37",
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "localId": "57",
+          "locator": "73:1-73:35",
+          "name": "2024Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "57",
+                "s": [
+                  {
+                    "value": [
+                      "define ",
+                      "\"2024Q1 End\"",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "56",
+                    "s": [
+                      {
+                        "value": [
+                          "@2024-03-31"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "56",
+            "locator": "73:24-73:35",
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "3",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "localId": "59",
+          "locator": "111:1-111:53",
+          "name": "Measurement Period Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "59",
+                "s": [
+                  {
+                    "value": [
+                      "define ",
+                      "\"Measurement Period Start\"",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "58",
+                    "s": [
+                      {
+                        "value": [
+                          "@2024-01-01"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "58",
+            "locator": "111:42-111:53",
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "localId": "61",
+          "locator": "112:1-112:51",
+          "name": "Measurement Period End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "type": "Annotation",
+              "s": {
+                "r": "61",
+                "s": [
+                  {
+                    "value": [
+                      "define ",
+                      "\"Measurement Period End\"",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "60",
+                    "s": [
+                      {
+                        "value": [
+                          "@2099-12-31"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "expression": {
+            "localId": "60",
+            "locator": "112:40-112:51",
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2099",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "12",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "localId": "63",
+          "locator": "113:1-114:59",
+          "name": "Measurement Period",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "62",
+            "locator": "114:3-114:59",
+            "lowClosed": true,
+            "highClosed": true,
+            "type": "Interval",
+            "low": {
+              "name": "Measurement Period Start",
+              "type": "ExpressionRef"
+            },
+            "high": {
+              "name": "Measurement Period End",
+              "type": "ExpressionRef"
+            }
+          }
+        },
+        {
+          "localId": "200",
+          "locator": "250:1-255:5",
+          "name": "Outpatient Encounters",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "199",
+            "locator": "251:3-255:5",
+            "type": "Query",
+            "source": [
+              {
+                "localId": "185",
+                "locator": "251:3-251:43",
+                "alias": "E",
+                "expression": {
+                  "localId": "184",
+                  "locator": "251:3-251:41",
+                  "dataType": "{http://hl7.org/fhir}Encounter",
+                  "codeProperty": "class",
+                  "codeComparator": "in",
+                  "type": "Retrieve",
+                  "codes": {
+                    "name": "Ambulatory",
+                    "type": "CodeRef"
+                  }
+                }
+              }
+            ],
+            "relationship": [],
+            "where": {
+              "localId": "198",
+              "locator": "252:5-257:8",
+              "type": "And",
+              "operand": [
+                {
+                  "type": "And",
+                  "operand": [
+                    {
+                      "localId": "187",
+                      "locator": "252:11-252:50",
+                      "type": "Equal",
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "operand": [
+                            {
+                              "localId": "186",
+                              "locator": "252:11-252:18",
+                              "path": "status",
+                              "scope": "E",
+                              "type": "Property"
+                            }
+                          ]
+                        },
+                        {
+                          "localId": "188",
+                          "locator": "252:22-252:50",
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "finished",
+                          "type": "Literal"
+                        }
+                      ]
+                    },
+                    {
+                      "localId": "194",
+                      "locator": "253:11-253:65",
+                      "type": "In",
+                      "operand": [
+                        {
+                          "type": "Start",
+                          "operand": {
+                            "localId": "190",
+                            "locator": "253:11-253:28",
+                            "path": "period",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        },
+                        {
+                          "localId": "193",
+                          "locator": "253:37-253:65",
+                          "name": "Measurement Period",
+                          "type": "ExpressionRef"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "localId": "197",
+                  "locator": "254:11-257:8",
+                  "type": "Not",
+                  "operand": {
+                    "type": "Exists",
+                    "operand": {
+                      "locator": "255:7-257:8",
+                      "type": "Query",
+                      "source": [
+                        {
+                          "alias": "EX",
+                          "expression": {
+                            "path": "extension",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        }
+                      ],
+                      "relationship": [],
+                      "where": {
+                        "type": "And",
+                        "operand": [
+                          {
+                            "type": "Equal",
+                            "operand": [
+                              {
+                                "name": "ToString",
+                                "libraryName": "FHIRHelpers",
+                                "type": "FunctionRef",
+                                "operand": [
+                                  {
+                                    "path": "url",
+                                    "scope": "EX",
+                                    "type": "Property"
+                                  }
+                                ]
+                              },
+                              {
+                                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                                "value": "http://nhi.gov.tw/fhir/StructureDefinition/agency-case",
+                                "type": "Literal"
+                              }
+                            ]
+                          },
+                          {
+                            "type": "Equal",
+                            "operand": [
+                              {
+                                "path": "value",
+                                "scope": "EX",
+                                "type": "Property"
+                              },
+                              {
+                                "valueType": "{urn:hl7-org:elm-types:r1}Boolean",
+                                "value": "true",
+                                "type": "Literal"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "localId": "210",
+          "locator": "260:1-264:40",
+          "name": "All Medication Requests",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "209",
+            "locator": "261:3-264:40",
+            "type": "Query",
+            "source": [
+              {
+                "localId": "201",
+                "locator": "261:3-261:23",
+                "alias": "MR",
+                "expression": {
+                  "localId": "200",
+                  "locator": "261:3-261:20",
+                  "dataType": "{http://hl7.org/fhir}MedicationRequest",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "relationship": [],
+            "where": {
+              "localId": "208",
+              "locator": "262:5-264:40",
+              "type": "And",
+              "operand": [
+                {
+                  "type": "And",
+                  "operand": [
+                    {
+                      "localId": "204",
+                      "locator": "262:11-262:68",
+                      "type": "In",
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "operand": [
+                            {
+                              "localId": "202",
+                              "locator": "262:11-262:19",
+                              "path": "status",
+                              "scope": "MR",
+                              "type": "Property"
+                            }
+                          ]
+                        },
+                        {
+                          "localId": "203",
+                          "locator": "262:24-262:68",
+                          "type": "List",
+                          "element": [
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "active",
+                              "type": "Literal"
+                            },
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "completed",
+                              "type": "Literal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "localId": "206",
+                      "locator": "263:11-263:51",
+                      "type": "Equal",
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "operand": [
+                            {
+                              "localId": "205",
+                              "locator": "263:11-263:19",
+                              "path": "intent",
+                              "scope": "MR",
+                              "type": "Property"
+                            }
+                          ]
+                        },
+                        {
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "order",
+                          "type": "Literal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "localId": "207",
+                  "locator": "264:11-264:40",
+                  "type": "In",
+                  "operand": [
+                    {
+                      "path": "authoredOn",
+                      "scope": "MR",
+                      "type": "Property"
+                    },
+                    {
+                      "name": "Measurement Period",
+                      "type": "ExpressionRef"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "localId": "380",
+          "locator": "450:1-455:20",
+          "name": "Total Drug Days",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "379",
+            "locator": "451:3-455:20",
+            "type": "Sum",
+            "source": {
+              "localId": "378",
+              "locator": "451:7-455:19",
+              "type": "Query",
+              "source": [
+                {
+                  "localId": "375",
+                  "locator": "451:7-451:51",
+                  "alias": "P",
+                  "expression": {
+                    "localId": "374",
+                    "locator": "451:7-451:49",
+                    "name": "Outpatient Antihypertensive Prescriptions",
+                    "type": "ExpressionRef"
+                  }
+                }
+              ],
+              "relationship": [],
+              "return": {
+                "localId": "377",
+                "locator": "455:12-455:19",
+                "expression": {
+                  "localId": "376",
+                  "locator": "455:19-455:27",
+                  "path": "drugDays",
+                  "scope": "P",
+                  "type": "Property"
+                }
+              }
+            }
+          }
+        },
+        {
+          "localId": "385",
+          "locator": "458:1-459:75",
+          "name": "Total Overlap Days",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "384",
+            "locator": "459:3-459:75",
+            "type": "Sum",
+            "source": {
+              "localId": "383",
+              "locator": "459:7-459:74",
+              "type": "Query",
+              "source": [
+                {
+                  "localId": "380",
+                  "locator": "459:7-459:56",
+                  "alias": "PP",
+                  "expression": {
+                    "localId": "379",
+                    "locator": "459:7-459:53",
+                    "name": "Cross Hospital Prescription Pairs with Overlap",
+                    "type": "ExpressionRef"
+                  }
+                }
+              ],
+              "relationship": [],
+              "return": {
+                "localId": "382",
+                "locator": "459:61-459:74",
+                "expression": {
+                  "localId": "381",
+                  "locator": "459:68-459:74",
+                  "path": "overlapDays",
+                  "scope": "PP",
+                  "type": "Property"
+                }
+              }
+            }
+          }
+        },
+        {
+          "localId": "392",
+          "locator": "462:1-464:48",
+          "name": "Overlap Rate",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "391",
+            "locator": "463:3-464:48",
+            "type": "If",
+            "condition": {
+              "localId": "388",
+              "locator": "463:6-463:58",
+              "type": "Or",
+              "operand": [
+                {
+                  "localId": "386",
+                  "locator": "463:6-463:32",
+                  "type": "IsNull",
+                  "operand": {
+                    "localId": "385",
+                    "locator": "463:6-463:24",
+                    "name": "Total Drug Days",
+                    "type": "ExpressionRef"
+                  }
+                },
+                {
+                  "localId": "387",
+                  "locator": "463:37-463:58",
+                  "type": "Equal",
+                  "operand": [
+                    {
+                      "name": "Total Drug Days",
+                      "type": "ExpressionRef"
+                    },
+                    {
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                      "value": "0",
+                      "type": "Literal"
+                    }
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "asType": "{urn:hl7-org:elm-types:r1}Decimal",
+              "type": "As",
+              "operand": {
+                "type": "Null"
+              }
+            },
+            "else": {
+              "localId": "390",
+              "locator": "464:8-464:48",
+              "type": "Multiply",
+              "operand": [
+                {
+                  "type": "Divide",
+                  "operand": [
+                    {
+                      "name": "Total Overlap Days",
+                      "type": "ExpressionRef"
+                    },
+                    {
+                      "name": "Total Drug Days",
+                      "type": "ExpressionRef"
+                    }
+                  ]
+                },
+                {
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal",
+                  "value": "100",
+                  "type": "Literal"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "localId": "500",
+          "locator": "530:1-548:3",
+          "name": "Indicator Result",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "localId": "499",
+            "locator": "531:3-548:3",
+            "type": "Tuple",
+            "element": [
+              {
+                "name": "indicatorCode",
+                "value": {
+                  "localId": "490",
+                  "locator": "532:21-532:26",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1713",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorName",
+                "value": {
+                  "localId": "491",
+                  "locator": "533:21-533:61",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "跨醫院門診同藥理用藥日數重疊率-降血壓藥物(口服)",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorNameEn",
+                "value": {
+                  "localId": "492",
+                  "locator": "534:23-534:93",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "Cross-Hospital Outpatient Antihypertensive Drug Overlap Rate (Oral)",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "measurementPeriodStart",
+                "value": {
+                  "localId": "493",
+                  "locator": "535:30-535:60",
+                  "name": "Measurement Period Start",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "measurementPeriodEnd",
+                "value": {
+                  "localId": "494",
+                  "locator": "536:28-536:56",
+                  "name": "Measurement Period End",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "totalDrugDays",
+                "value": {
+                  "localId": "495",
+                  "locator": "537:20-537:38",
+                  "name": "Total Drug Days",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "totalOverlapDays",
+                "value": {
+                  "localId": "496",
+                  "locator": "538:23-538:44",
+                  "name": "Total Overlap Days",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "overlapRate",
+                "value": {
+                  "localId": "497",
+                  "locator": "539:18-539:33",
+                  "name": "Overlap Rate",
+                  "type": "ExpressionRef"
+                }
+              },
+              {
+                "name": "quarterlyStatistics",
+                "value": {
+                  "localId": "498",
+                  "locator": "540:26-540:53",
+                  "name": "Statistics by Quarter",
+                  "type": "ExpressionRef"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

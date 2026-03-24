@@ -4,9 +4,398 @@ using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
-// 來源：醫療給付檔案分析系統 指標代碼: 1322
-// 條件依據：就診後同日於同醫院因同疾病再次就診率
-// 製作日期：2025-11-20
+// 指標名稱: 就診後同日於同醫院因同疾病再次就診率
+// 指標代碼: 1322
+// 製作日期：2026-01-09
+// 製表日期: 114/11/06
+// 製表單位: 衛生福利部 中央健康保險署
+//
+// 【資料時間範圍】
+// 查詢期間: 2024-01-01 ~ 2099-12-31 (無限制)
+// 統計單位: 每季 (2024Q1-Q4, 2025Q1-Q4, 2026Q1)
+// ============================================
+//
+// 【公式說明】
+// 分子: 排除診察費=0之案件，同一人、同一天、同一疾病(主診斷前三碼相同)、同一分區、同一院所，按ID歸戶，就診2次以上之人數
+// 分母: 排除診察費=0之案件，按ID歸戶，計算分區下各院所下之門診人數
+//
+// 【排除條件】
+// 1.排除代辦案件
+// 2.排除重大傷病病人
+// 3.排除急診案件
+// 4.排除門診手術案件
+// 5.排除慢性精神復健方調
+// 6.排除醫療給付改善方案及試辦計畫
+// 7.排除診察費=0之案件
+// ============================================
+
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes/procedure'
+codesystem "NHI_CLAIM": 'http://www.nhi.gov.tw/codes/claim'
+codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
+
+valueset "Outpatient Encounters": 'http://nhi.gov.tw/fhir/ValueSet/outpatient-encounters'
+valueset "Excluded Cases": 'http://nhi.gov.tw/fhir/ValueSet/excluded-cases'
+
+// 就醫類型代碼
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory'
+code "Emergency": 'EMER' from "ActCode" display 'Emergency'
+code "Finished": 'finished' from "EncounterStatus" display 'Finished'
+
+// 健保案件分類代碼
+code "Outpatient Case": '01' from "NHI_CLAIM" display '門診案件'
+code "Emergency Case": '02' from "NHI_CLAIM" display '急診案件'
+code "Outpatient Surgery": '03' from "NHI_CLAIM" display '門診手術案件'
+
+// 健保分區代碼
+code "Taipei Region": '1' from "NHI_CLAIM" display '台北業務組'
+code "Northern Region": '2' from "NHI_CLAIM" display '北區業務組'
+code "Central Region": '3' from "NHI_CLAIM" display '中區業務組'
+code "Southern Region": '4' from "NHI_CLAIM" display '南區業務組'
+code "Kaohsiung Region": '5' from "NHI_CLAIM" display '高屏業務組'
+code "Eastern Region": '6' from "NHI_CLAIM" display '東區業務組'
+
+// 排除案件類型代碼
+code "Catastrophic Illness": '001' from "NHI_CLAIM" display '重大傷病'
+code "Psychiatric Rehabilitation": 'PSYCH_REHAB' from "NHI_CLAIM" display '慢性精神復健'
+code "Improvement Plan": 'IMPROVE' from "NHI_CLAIM" display '醫療給付改善方案'
+code "Pilot Program": 'PILOT' from "NHI_CLAIM" display '試辦計畫'
+
+// ============================================
+// Quarter Definitions (2024-2026)
+// ============================================
+
+define "2024Q1 Start": @2024-01-01
+define "2024Q1 End": @2024-03-31
+define "2024Q2 Start": @2024-04-01
+define "2024Q2 End": @2024-06-30
+define "2024Q3 Start": @2024-07-01
+define "2024Q3 End": @2024-09-30
+define "2024Q4 Start": @2024-10-01
+define "2024Q4 End": @2024-12-31
+
+define "2025Q1 Start": @2025-01-01
+define "2025Q1 End": @2025-03-31
+define "2025Q2 Start": @2025-04-01
+define "2025Q2 End": @2025-06-30
+define "2025Q3 Start": @2025-07-01
+define "2025Q3 End": @2025-09-30
+define "2025Q4 Start": @2025-10-01
+define "2025Q4 End": @2025-12-31
+
+define "2026Q1 Start": @2026-01-01
+define "2026Q1 End": @2026-03-31
+
+// Measurement Period (無限制 - Unlimited)
+define "Measurement Period Start": @2024-01-01
+define "Measurement Period End": @2099-12-31
+define "Measurement Period": Interval["Measurement Period Start", "Measurement Period End"]
+
+// ============================================
+// Helper Functions
+// ============================================
+
+define function GetId(resource FHIR.Resource):
+  Last(Split(resource.id, '/'))
+
+define function GetConsultationFee(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.extension E
+        where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/consultation-fee'
+        return (E.value as FHIR.decimal).value
+    ),
+    0
+  )
+
+define function GetCaseType(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.extension E
+        where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/case-type'
+        return (E.value as FHIR.code).value
+    ),
+    ''
+  )
+
+define function GetRegionCode(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.extension E
+        where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/region-code'
+        return (E.value as FHIR.code).value
+    ),
+    ''
+  )
+
+define function IsAgencyCase(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/agency-case'
+        and E.value = true
+  )
+
+define function IsCatastrophicIllness(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/catastrophic-illness'
+        and E.value = true
+  )
+
+define function IsSpecialProgram(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/special-program'
+        and E.value = true
+  )
+
+define function GetPrimaryDiagnosis(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.diagnosis D
+        where exists (D.use.coding C where C.code.value = 'primary')
+        return First(
+          [Condition: id in GetId(D.condition.reference)]
+        ).code.coding[0].code.value
+    ),
+    ''
+  )
+
+define function GetDiagnosisPrefix3(diagnosisCode String):
+  if Length(diagnosisCode) >= 3 then
+    Substring(diagnosisCode, 0, 3)
+  else
+    diagnosisCode
+
+define function GetHospitalId(encounter FHIR.Encounter):
+  Coalesce(
+    GetId(encounter.serviceProvider.reference),
+    ''
+  )
+
+define function GetEncounterDate(encounter FHIR.Encounter):
+  date from start of encounter.period
+
+// ============================================
+// Data Retrieval
+// ============================================
+
+context Patient
+
+define "All Outpatient Encounters":
+  [Encounter] E
+    where E.status.value = 'finished'
+      and E.class.code.value = 'AMB'
+      and start of E.period in "Measurement Period"
+
+define "Valid Encounters":
+  "All Outpatient Encounters" E
+    where GetConsultationFee(E) > 0
+      and not IsAgencyCase(E)
+      and not IsCatastrophicIllness(E)
+      and not IsSpecialProgram(E)
+      and GetCaseType(E) not in {'02', '03'}
+
+define "Encounters With Diagnosis":
+  "Valid Encounters" E
+    where GetPrimaryDiagnosis(E) is not null
+      and Length(GetPrimaryDiagnosis(E)) >= 3
+
+// ============================================
+// 分母: 按ID歸戶的門診人數
+// ============================================
+
+define function EncountersInPeriod(periodStart Date, periodEnd Date):
+  "Encounters With Diagnosis" E
+    where GetEncounterDate(E) in Interval[periodStart, periodEnd]
+
+define function PatientCountInPeriod(periodStart Date, periodEnd Date):
+  Count(
+    distinct (
+      EncountersInPeriod(periodStart, periodEnd) E
+        return GetId([Patient])
+    )
+  )
+
+// ============================================
+// 分子: 同日同院同疾病就診≥2次的人數
+// ============================================
+
+define function SameDayRevisitInPeriod(periodStart Date, periodEnd Date):
+  exists (
+    EncountersInPeriod(periodStart, periodEnd) E1
+      where exists (
+        EncountersInPeriod(periodStart, periodEnd) E2
+          where E1.id != E2.id
+            and GetEncounterDate(E1) = GetEncounterDate(E2)
+            and GetHospitalId(E1) = GetHospitalId(E2)
+            and GetRegionCode(E1) = GetRegionCode(E2)
+            and GetDiagnosisPrefix3(GetPrimaryDiagnosis(E1)) = GetDiagnosisPrefix3(GetPrimaryDiagnosis(E2))
+      )
+  )
+
+define function RevisitPatientCountInPeriod(periodStart Date, periodEnd Date):
+  if SameDayRevisitInPeriod(periodStart, periodEnd) then 1
+  else 0
+
+// ============================================
+// 2024Q1 Statistics
+// ============================================
+
+define "2024Q1 Denominator":
+  PatientCountInPeriod("2024Q1 Start", "2024Q1 End")
+
+define "2024Q1 Numerator":
+  RevisitPatientCountInPeriod("2024Q1 Start", "2024Q1 End")
+
+define "2024Q1 Rate":
+  if "2024Q1 Denominator" > 0 then
+    ("2024Q1 Numerator" / "2024Q1 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q2 Statistics
+// ============================================
+
+define "2024Q2 Denominator":
+  PatientCountInPeriod("2024Q2 Start", "2024Q2 End")
+
+define "2024Q2 Numerator":
+  RevisitPatientCountInPeriod("2024Q2 Start", "2024Q2 End")
+
+define "2024Q2 Rate":
+  if "2024Q2 Denominator" > 0 then
+    ("2024Q2 Numerator" / "2024Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q3 Statistics
+// ============================================
+
+define "2024Q3 Denominator":
+  PatientCountInPeriod("2024Q3 Start", "2024Q3 End")
+
+define "2024Q3 Numerator":
+  RevisitPatientCountInPeriod("2024Q3 Start", "2024Q3 End")
+
+define "2024Q3 Rate":
+  if "2024Q3 Denominator" > 0 then
+    ("2024Q3 Numerator" / "2024Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q4 Statistics
+// ============================================
+
+define "2024Q4 Denominator":
+  PatientCountInPeriod("2024Q4 Start", "2024Q4 End")
+
+define "2024Q4 Numerator":
+  RevisitPatientCountInPeriod("2024Q4 Start", "2024Q4 End")
+
+define "2024Q4 Rate":
+  if "2024Q4 Denominator" > 0 then
+    ("2024Q4 Numerator" / "2024Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q1 Statistics
+// ============================================
+
+define "2025Q1 Denominator":
+  PatientCountInPeriod("2025Q1 Start", "2025Q1 End")
+
+define "2025Q1 Numerator":
+  RevisitPatientCountInPeriod("2025Q1 Start", "2025Q1 End")
+
+define "2025Q1 Rate":
+  if "2025Q1 Denominator" > 0 then
+    ("2025Q1 Numerator" / "2025Q1 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q2 Statistics
+// ============================================
+
+define "2025Q2 Denominator":
+  PatientCountInPeriod("2025Q2 Start", "2025Q2 End")
+
+define "2025Q2 Numerator":
+  RevisitPatientCountInPeriod("2025Q2 Start", "2025Q2 End")
+
+define "2025Q2 Rate":
+  if "2025Q2 Denominator" > 0 then
+    ("2025Q2 Numerator" / "2025Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q3 Statistics
+// ============================================
+
+define "2025Q3 Denominator":
+  PatientCountInPeriod("2025Q3 Start", "2025Q3 End")
+
+define "2025Q3 Numerator":
+  RevisitPatientCountInPeriod("2025Q3 Start", "2025Q3 End")
+
+define "2025Q3 Rate":
+  if "2025Q3 Denominator" > 0 then
+    ("2025Q3 Numerator" / "2025Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q4 Statistics
+// ============================================
+
+define "2025Q4 Denominator":
+  PatientCountInPeriod("2025Q4 Start", "2025Q4 End")
+
+define "2025Q4 Numerator":
+  RevisitPatientCountInPeriod("2025Q4 Start", "2025Q4 End")
+
+define "2025Q4 Rate":
+  if "2025Q4 Denominator" > 0 then
+    ("2025Q4 Numerator" / "2025Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2026Q1 Statistics
+// ============================================
+
+define "2026Q1 Denominator":
+  PatientCountInPeriod("2026Q1 Start", "2026Q1 End")
+
+define "2026Q1 Numerator":
+  RevisitPatientCountInPeriod("2026Q1 Start", "2026Q1 End")
+
+define "2026Q1 Rate":
+  if "2026Q1 Denominator" > 0 then
+    ("2026Q1 Numerator" / "2026Q1 Denominator") * 100
+  else null
+
+// ============================================
+// Indicator Result
+// ============================================
+
+define "Indicator Result":
+  {
+    indicatorCode: '1322',
+    indicatorName: '就診後同日於同醫院因同疾病再次就診率',
+    indicatorNameEn: 'Same-Day Same-Disease Re-Visit Rate at Same Hospital',
+    measurementPeriodStart: "Measurement Period Start",
+    measurementPeriodEnd: "Measurement Period End",
+    dataSource: '醫療給付檔案分析系統',
+    compiledBy: '衛生福利部 中央健康保險署',
+    compiledDate: '114/11/06',
+    version: '1.0.0',
+    sameDayCriteria: '同一人、同一天、同一疾病(主診斷前三碼)、同一分區、同一院所',
+    revisitThreshold: '就診2次以上',
+    denominatorCriteria: '按ID歸戶的門診人數(排除診察費=0)',
+    numeratorCriteria: '同日同院同疾病就診≥2次之人數',
+    excludedCases: '代辦案件、重大傷病、急診、門診手術、慢性精神復健、改善方案、試辦計畫、診察費=0'
+  }
 -- 
 -- 【資料時間範圍】
 -- 查詢期間: 2024-01-01 ~ 2025-11-08 (今天)

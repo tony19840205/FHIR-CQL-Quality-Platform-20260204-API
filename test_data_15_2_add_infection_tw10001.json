@@ -1,0 +1,40 @@
+﻿{
+    "resourceType":  "Bundle",
+    "entry":  [
+                  {
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-infection-tw10001"
+                                  },
+                      "resource":  {
+                                       "id":  "cond-infection-tw10001",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "T84.54XA",
+                                                                       "display":  "Infection and inflammatory reaction due to internal left knee prosthesis, initial encounter",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/total-knee-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-total-knee-001"
+                                                     },
+                                       "resourceType":  "Condition",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "active"
+                                                                             }
+                                                                         ]
+                                                          }
+                                   },
+                      "fullUrl":  "Condition/cond-infection-tw10001"
+                  }
+              ],
+    "type":  "transaction"
+}

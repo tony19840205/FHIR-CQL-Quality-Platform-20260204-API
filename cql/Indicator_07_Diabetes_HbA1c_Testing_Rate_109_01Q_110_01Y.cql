@@ -4,9 +4,408 @@ using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
-// 來源：醫療給付檔案分析系統 指標代碼: 109.01(季) / 110.01(年)
-// 條件依據：糖尿病病人醣化血紅素(HbA1c)或糖化白蛋白執行率
-// 製作日期：2025-11-20
+// 指標名稱: 糖尿病病人醣化血紅素(HbA1c)或糖化白蛋白執行率
+// 指標代碼: 109.01 (季度), 110.01 (年度)
+// 製作日期：2026-01-09
+// 製表日期: 114/11/06
+// 製表單位: 衛生福利部 中央健康保險署
+//
+// 【資料時間範圍】
+// 查詢期間: 2024-01-01 ~ 2099-12-31 (無限制)
+// 統計單位: 每季 (2024Q1-Q4, 2025Q1-Q4, 2026Q1)
+// ============================================
+//
+// 【公式說明】
+// 分子: 分母ID中，在統計期間於門診有執行醣化血紅素(HbA1c)或糖化白蛋白(glycated albumin)檢驗人數
+// 分母: 統計累計日當年度1月至當期門診主次診斷為糖尿病且使用糖尿病用藥之病人數
+//
+// (1)糖尿病: 任一主、次診斷之ICD-10-CM前三碼為E08-E13之門診案件
+// (2)糖尿病用藥: 指ATC前三碼為A10
+// (3)醣化血紅素(HbA1c)或糖化白蛋白(glycated albumin)案件: 申報號分代碼前五碼為09006或09139之案件
+// (4)計算符合分母條件之ID時，主次診斷為糖尿病且使用糖尿病用藥這兩個條件限定要發生在同處方案件
+// (5)統計期間: 計算符合分子之ID時，從分母的ID繼續觀察，只要該ID於統計期間有執行醣化血紅素(HbA1c)或糖化白蛋白(glycated albumin)檢驗即成立
+//
+// 排除條件:
+// 1.排除代辦案件
+// ============================================
+
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes/procedure'
+codesystem "NHI_CLAIM": 'http://www.nhi.gov.tw/codes/claim'
+codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
+codesystem "ATC": 'http://www.whocc.no/atc'
+codesystem "LOINC": 'http://loinc.org'
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
+codesystem "ObservationStatus": 'http://hl7.org/fhir/observation-status'
+
+valueset "Diabetes Diagnoses": 'http://nhi.gov.tw/fhir/ValueSet/diabetes-diagnoses'
+valueset "Diabetes Medications": 'http://nhi.gov.tw/fhir/ValueSet/diabetes-medications'
+valueset "HbA1c Tests": 'http://nhi.gov.tw/fhir/ValueSet/hba1c-tests'
+
+// 就醫類型代碼
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory'
+code "Finished": 'finished' from "EncounterStatus" display 'Finished'
+code "Final": 'final' from "ObservationStatus" display 'Final'
+
+// 糖尿病診斷代碼 (ICD-10-CM E08-E13)
+code "Diabetes E08": 'E08' from "ICD10CM" display 'Diabetes mellitus due to underlying condition - 其他特定的糖尿病'
+code "Diabetes E09": 'E09' from "ICD10CM" display 'Drug or chemical induced diabetes mellitus - 藥物或化學物質引起的糖尿病'
+code "Diabetes E10": 'E10' from "ICD10CM" display 'Type 1 diabetes mellitus - 第1型糖尿病'
+code "Diabetes E11": 'E11' from "ICD10CM" display 'Type 2 diabetes mellitus - 第2型糖尿病'
+code "Diabetes E12": 'E12' from "ICD10CM" display 'Malnutrition-related diabetes mellitus - 營養不良相關糖尿病'
+code "Diabetes E13": 'E13' from "ICD10CM" display 'Other specified diabetes mellitus - 其他特定的糖尿病'
+
+// 糖尿病 SNOMED CT 代碼
+code "Diabetes SNOMED": '73211009' from "SNOMEDCT" display 'Diabetes mellitus - 糖尿病'
+code "Type 1 Diabetes SNOMED": '46635009' from "SNOMEDCT" display 'Type 1 diabetes mellitus - 第1型糖尿病'
+code "Type 2 Diabetes SNOMED": '44054006' from "SNOMEDCT" display 'Type 2 diabetes mellitus - 第2型糖尿病'
+
+// 糖尿病用藥 ATC代碼 (A10系列)
+code "Diabetes Medication A10": 'A10' from "ATC" display 'Drugs used in diabetes - 糖尿病用藥'
+code "Insulin A10A": 'A10A' from "ATC" display 'Insulins and analogues - 胰島素及其類似物'
+code "Oral Hypoglycemic A10B": 'A10B' from "ATC" display 'Blood glucose lowering drugs, excl. insulins - 降血糖藥(不含胰島素)'
+
+// HbA1c檢驗 LOINC代碼
+code "HbA1c LOINC": '4548-4' from "LOINC" display 'Hemoglobin A1c/Hemoglobin.total in Blood - 醣化血紅素'
+code "HbA1c HPLC": '17856-6' from "LOINC" display 'Hemoglobin A1c/Hemoglobin.total in Blood by HPLC'
+code "HbA1c IFCC": '59261-8' from "LOINC" display 'Hemoglobin A1c/Hemoglobin.total in Blood by IFCC protocol'
+
+// Glycated Albumin檢驗 LOINC代碼
+code "Glycated Albumin LOINC": '62388-4' from "LOINC" display 'Glycated albumin/Albumin.total in Serum or Plasma - 糖化白蛋白'
+
+// 健保檢驗代碼
+code "HbA1c NHI": '09006' from "NHI_PROCEDURE" display 'HbA1c - 醣化血紅素檢驗'
+code "Glycated Albumin NHI": '09139' from "NHI_PROCEDURE" display 'Glycated Albumin - 糖化白蛋白檢驗'
+
+// ============================================
+// Quarter Definitions (2024-2026)
+// ============================================
+
+define "2024Q1 Start": @2024-01-01
+define "2024Q1 End": @2024-03-31
+define "2024Q2 Start": @2024-04-01
+define "2024Q2 End": @2024-06-30
+define "2024Q3 Start": @2024-07-01
+define "2024Q3 End": @2024-09-30
+define "2024Q4 Start": @2024-10-01
+define "2024Q4 End": @2024-12-31
+
+define "2025Q1 Start": @2025-01-01
+define "2025Q1 End": @2025-03-31
+define "2025Q2 Start": @2025-04-01
+define "2025Q2 End": @2025-06-30
+define "2025Q3 Start": @2025-07-01
+define "2025Q3 End": @2025-09-30
+define "2025Q4 Start": @2025-10-01
+define "2025Q4 End": @2025-12-31
+
+define "2026Q1 Start": @2026-01-01
+define "2026Q1 End": @2026-03-31
+
+// Measurement Period (無限制 - Unlimited)
+define "Measurement Period Start": @2024-01-01
+define "Measurement Period End": @2099-12-31
+define "Measurement Period": Interval["Measurement Period Start", "Measurement Period End"]
+
+// ============================================
+// Helper Functions
+// ============================================
+
+define function GetId(resource FHIR.Resource):
+  Last(Split(resource.id, '/'))
+
+define function IsDiabetesCode(code String):
+  Substring(code, 0, 3) in {'E08', 'E09', 'E10', 'E11', 'E12', 'E13'}
+
+define function IsDiabetesMedication(atcCode String):
+  Substring(atcCode, 0, 3) = 'A10'
+
+define function IsHbA1cOrGlycatedAlbuminTest(testCode String):
+  Substring(testCode, 0, 5) in {'09006', '09139'}
+
+define function IsAgencyCase(encounter FHIR.Encounter):
+  exists (
+    encounter.extension E
+      where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/agency-case'
+        and E.value = true
+  )
+
+define function GetPrimaryDiagnosis(encounter FHIR.Encounter):
+  Coalesce(
+    First(
+      encounter.diagnosis D
+        where exists (D.use.coding C where C.code.value = 'primary')
+        return First(
+          [Condition: id in GetId(D.condition.reference)]
+        ).code.coding[0].code.value
+    ),
+    ''
+  )
+
+define function GetSecondaryDiagnoses(encounter FHIR.Encounter):
+  encounter.diagnosis D
+    where exists (D.use.coding C where C.code.value = 'secondary')
+    return First(
+      [Condition: id in GetId(D.condition.reference)]
+    ).code.coding[0].code.value
+
+define function HasDiabetesDiagnosis(encounter FHIR.Encounter):
+  IsDiabetesCode(GetPrimaryDiagnosis(encounter))
+    or exists (
+      GetSecondaryDiagnoses(encounter) SD
+        where IsDiabetesCode(SD)
+    )
+
+define function HasDiabetesMedicationInEncounter(encounter FHIR.Encounter):
+  exists (
+    [MedicationRequest] MR
+      where GetId(MR.encounter.reference) = GetId(encounter)
+        and exists (
+          MR.medicationCodeableConcept.coding MC
+            where IsDiabetesMedication(MC.code.value)
+        )
+        and MR.status.value = 'completed'
+  )
+
+define function GetEncounterDate(encounter FHIR.Encounter):
+  start of encounter.period
+
+define function YearStart(quarterEnd Date):
+  Date(year from quarterEnd, 1, 1)
+
+// ============================================
+// Data Retrieval
+// ============================================
+
+context Patient
+
+define "Outpatient Encounters":
+  [Encounter] E
+    where E.status.value = 'finished'
+      and E.class.code.value = 'AMB'
+      and start of E.period in "Measurement Period"
+      and not IsAgencyCase(E)
+
+define "Diabetes Encounters":
+  "Outpatient Encounters" E
+    where HasDiabetesDiagnosis(E)
+
+define "Diabetes Encounters With Medication":
+  "Diabetes Encounters" E
+    where HasDiabetesMedicationInEncounter(E)
+
+define "HbA1c Or Glycated Albumin Observations":
+  [Observation] O
+    where O.status.value in {'final', 'amended', 'corrected'}
+      and (
+        exists (
+          O.code.coding C
+            where C.code.value in {'4548-4', '17856-6', '59261-8', '62388-4'}
+        )
+        or exists (
+          O.extension E
+            where E.url.value = 'http://nhi.gov.tw/fhir/StructureDefinition/lab-code'
+              and (E.value as FHIR.Coding).code.value in {'09006', '09139'}
+        )
+      )
+      and start of O.effective in "Measurement Period"
+
+// ============================================
+// 分母: 門診主次診斷為糖尿病且使用糖尿病用藥之病人
+// ============================================
+
+define function DiabetesPatientsInPeriod(periodStart Date, periodEnd Date):
+  "Diabetes Encounters With Medication" E
+    where GetEncounterDate(E) in Interval[YearStart(periodEnd), periodEnd]
+
+define function DiabetesPatientsCountInPeriod(periodStart Date, periodEnd Date):
+  Count(
+    distinct (
+      DiabetesPatientsInPeriod(periodStart, periodEnd) E
+        return GetId([Patient])
+    )
+  )
+
+// ============================================
+// 分子: 有執行HbA1c或Glycated Albumin檢驗的糖尿病病人
+// ============================================
+
+define function PatientsWithTestInPeriod(periodStart Date, periodEnd Date):
+  exists (
+    DiabetesPatientsInPeriod(periodStart, periodEnd)
+  )
+    and exists (
+      "HbA1c Or Glycated Albumin Observations" O
+        where start of O.effective in Interval[periodStart, periodEnd]
+    )
+
+define function PatientsWithTestCountInPeriod(periodStart Date, periodEnd Date):
+  if exists (DiabetesPatientsInPeriod(periodStart, periodEnd)) then
+    if exists (
+      "HbA1c Or Glycated Albumin Observations" O
+        where start of O.effective in Interval[periodStart, periodEnd]
+    ) then 1
+    else 0
+  else 0
+
+// ============================================
+// 2024Q1 Statistics
+// ============================================
+
+define "2024Q1 Denominator":
+  DiabetesPatientsCountInPeriod("2024Q1 Start", "2024Q1 End")
+
+define "2024Q1 Numerator":
+  PatientsWithTestCountInPeriod("2024Q1 Start", "2024Q1 End")
+
+define "2024Q1 Rate":
+  if "2024Q1 Denominator" > 0 then
+    ("2024Q1 Numerator" / "2024Q1 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q2 Statistics
+// ============================================
+
+define "2024Q2 Denominator":
+  DiabetesPatientsCountInPeriod("2024Q2 Start", "2024Q2 End")
+
+define "2024Q2 Numerator":
+  PatientsWithTestCountInPeriod("2024Q2 Start", "2024Q2 End")
+
+define "2024Q2 Rate":
+  if "2024Q2 Denominator" > 0 then
+    ("2024Q2 Numerator" / "2024Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q3 Statistics
+// ============================================
+
+define "2024Q3 Denominator":
+  DiabetesPatientsCountInPeriod("2024Q3 Start", "2024Q3 End")
+
+define "2024Q3 Numerator":
+  PatientsWithTestCountInPeriod("2024Q3 Start", "2024Q3 End")
+
+define "2024Q3 Rate":
+  if "2024Q3 Denominator" > 0 then
+    ("2024Q3 Numerator" / "2024Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2024Q4 Statistics
+// ============================================
+
+define "2024Q4 Denominator":
+  DiabetesPatientsCountInPeriod("2024Q4 Start", "2024Q4 End")
+
+define "2024Q4 Numerator":
+  PatientsWithTestCountInPeriod("2024Q4 Start", "2024Q4 End")
+
+define "2024Q4 Rate":
+  if "2024Q4 Denominator" > 0 then
+    ("2024Q4 Numerator" / "2024Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q1 Statistics
+// ============================================
+
+define "2025Q1 Denominator":
+  DiabetesPatientsCountInPeriod("2025Q1 Start", "2025Q1 End")
+
+define "2025Q1 Numerator":
+  PatientsWithTestCountInPeriod("2025Q1 Start", "2025Q1 End")
+
+define "2025Q1 Rate":
+  if "2025Q1 Denominator" > 0 then
+    ("2025Q1 Numerator" / "2025Q1 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q2 Statistics
+// ============================================
+
+define "2025Q2 Denominator":
+  DiabetesPatientsCountInPeriod("2025Q2 Start", "2025Q2 End")
+
+define "2025Q2 Numerator":
+  PatientsWithTestCountInPeriod("2025Q2 Start", "2025Q2 End")
+
+define "2025Q2 Rate":
+  if "2025Q2 Denominator" > 0 then
+    ("2025Q2 Numerator" / "2025Q2 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q3 Statistics
+// ============================================
+
+define "2025Q3 Denominator":
+  DiabetesPatientsCountInPeriod("2025Q3 Start", "2025Q3 End")
+
+define "2025Q3 Numerator":
+  PatientsWithTestCountInPeriod("2025Q3 Start", "2025Q3 End")
+
+define "2025Q3 Rate":
+  if "2025Q3 Denominator" > 0 then
+    ("2025Q3 Numerator" / "2025Q3 Denominator") * 100
+  else null
+
+// ============================================
+// 2025Q4 Statistics
+// ============================================
+
+define "2025Q4 Denominator":
+  DiabetesPatientsCountInPeriod("2025Q4 Start", "2025Q4 End")
+
+define "2025Q4 Numerator":
+  PatientsWithTestCountInPeriod("2025Q4 Start", "2025Q4 End")
+
+define "2025Q4 Rate":
+  if "2025Q4 Denominator" > 0 then
+    ("2025Q4 Numerator" / "2025Q4 Denominator") * 100
+  else null
+
+// ============================================
+// 2026Q1 Statistics
+// ============================================
+
+define "2026Q1 Denominator":
+  DiabetesPatientsCountInPeriod("2026Q1 Start", "2026Q1 End")
+
+define "2026Q1 Numerator":
+  PatientsWithTestCountInPeriod("2026Q1 Start", "2026Q1 End")
+
+define "2026Q1 Rate":
+  if "2026Q1 Denominator" > 0 then
+    ("2026Q1 Numerator" / "2026Q1 Denominator") * 100
+  else null
+
+// ============================================
+// Indicator Result
+// ============================================
+
+define "Indicator Result":
+  {
+    indicatorCode: '109.01/110.01',
+    indicatorName: '糖尿病病人醣化血紅素(HbA1c)或糖化白蛋白執行率',
+    indicatorNameEn: 'Performance Rate of HbA1c or Glycated Albumin Testing for Diabetes Patients',
+    measurementPeriodStart: "Measurement Period Start",
+    measurementPeriodEnd: "Measurement Period End",
+    dataSource: '醫療給付檔案分析系統',
+    compiledBy: '衛生福利部 中央健康保險署',
+    compiledDate: '114/11/06',
+    version: '1.0.0',
+    diabetesCriteria: 'ICD10-CM E08-E13 (主次診斷前三碼)',
+    medicationCriteria: 'ATC A10* (糖尿病用藥)',
+    testCriteria: '09006(HbA1c), 09139(Glycated Albumin)',
+    denominatorCriteria: '門診主次診斷為糖尿病且使用糖尿病用藥(同處方案件)',
+    numeratorCriteria: '分母病患中於統計期間有執行HbA1c或Glycated Albumin檢驗',
+    keyRequirement: '診斷與用藥需發生在同一處方案件'
+  }
  * 
  * 公式說明:
  * 糖尿病病人醣化血紅素(HbA1c)或糖化白蛋白(glycated albumin)執行率 = 

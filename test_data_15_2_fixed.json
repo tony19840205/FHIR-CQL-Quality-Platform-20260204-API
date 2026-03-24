@@ -1,0 +1,564 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "total-knee-15-2-001",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "TW10001"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1961-03-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/total-knee-15-2-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "total-knee-15-2-enc-001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "住院"
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-001"
+        },
+        "period": {
+          "start": "2026-01-03T08:00:00+08:00",
+          "end": "2026-01-03T20:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/total-knee-15-2-enc-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "total-knee-15-2-proc-001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "人工膝關節置換"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-001"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-001"
+        },
+        "performedDateTime": "2026-01-03T10:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/total-knee-15-2-proc-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "total-knee-15-2-cond-001",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "T84.54XA",
+              "display": "膝關節深部感染"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-001"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/total-knee-15-2-cond-001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "total-knee-15-2-002",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "TW10002"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1962-04-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/total-knee-15-2-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "total-knee-15-2-enc-002",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "住院"
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-002"
+        },
+        "period": {
+          "start": "2026-01-04T08:00:00+08:00",
+          "end": "2026-01-04T20:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/total-knee-15-2-enc-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "total-knee-15-2-proc-002",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "人工膝關節置換"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-002"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-002"
+        },
+        "performedDateTime": "2026-01-04T10:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/total-knee-15-2-proc-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "total-knee-15-2-cond-002",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "T84.54XA",
+              "display": "膝關節深部感染"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-002"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-002"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/total-knee-15-2-cond-002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "total-knee-15-2-003",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "TW10003"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1963-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/total-knee-15-2-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "total-knee-15-2-enc-003",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "住院"
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-003"
+        },
+        "period": {
+          "start": "2026-01-05T08:00:00+08:00",
+          "end": "2026-01-05T20:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/total-knee-15-2-enc-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "total-knee-15-2-proc-003",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "人工膝關節置換"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-003"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-003"
+        },
+        "performedDateTime": "2026-01-05T10:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/total-knee-15-2-proc-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "total-knee-15-2-cond-003",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "M17.11",
+              "display": "單側原發性膝骨關節炎"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-003"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-003"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/total-knee-15-2-cond-003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "total-knee-15-2-004",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "TW10004"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1964-06-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/total-knee-15-2-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "total-knee-15-2-enc-004",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "住院"
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-004"
+        },
+        "period": {
+          "start": "2026-01-06T08:00:00+08:00",
+          "end": "2026-01-06T20:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/total-knee-15-2-enc-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "total-knee-15-2-proc-004",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "人工膝關節置換"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-004"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-004"
+        },
+        "performedDateTime": "2026-01-06T10:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/total-knee-15-2-proc-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "total-knee-15-2-cond-004",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "M17.11",
+              "display": "單側原發性膝骨關節炎"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-004"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-004"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/total-knee-15-2-cond-004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "total-knee-15-2-005",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "TW10005"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1965-07-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/total-knee-15-2-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "total-knee-15-2-enc-005",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "住院"
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-005"
+        },
+        "period": {
+          "start": "2026-01-07T08:00:00+08:00",
+          "end": "2026-01-07T20:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/total-knee-15-2-enc-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "total-knee-15-2-proc-005",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "人工膝關節置換"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-005"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-005"
+        },
+        "performedDateTime": "2026-01-07T10:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/total-knee-15-2-proc-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "total-knee-15-2-cond-005",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "M17.11",
+              "display": "單側原發性膝骨關節炎"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-005"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-005"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/total-knee-15-2-cond-005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "total-knee-15-2-006",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "TW10006"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1966-08-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/total-knee-15-2-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "total-knee-15-2-enc-006",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "住院"
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-006"
+        },
+        "period": {
+          "start": "2026-01-08T08:00:00+08:00",
+          "end": "2026-01-08T20:00:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/total-knee-15-2-enc-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "total-knee-15-2-proc-006",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "人工膝關節置換"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-006"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-006"
+        },
+        "performedDateTime": "2026-01-08T10:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/total-knee-15-2-proc-006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "total-knee-15-2-cond-006",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "M17.11",
+              "display": "單側原發性膝骨關節炎"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/total-knee-15-2-006"
+        },
+        "encounter": {
+          "reference": "Encounter/total-knee-15-2-enc-006"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/total-knee-15-2-cond-006"
+      }
+    }
+  ]
+}

@@ -1,0 +1,613 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:org-hospital-g",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "org-hospital-g",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/hospital",
+            "value": "HOSP-G-007"
+          }
+        ],
+        "name": "庚醫院",
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+                "code": "prov",
+                "display": "Healthcare Provider"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/org-hospital-g"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:org-hospital-h",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "org-hospital-h",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/hospital",
+            "value": "HOSP-H-008"
+          }
+        ],
+        "name": "辛醫院",
+        "type": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/organization-type",
+                "code": "prov",
+                "display": "Healthcare Provider"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Organization/org-hospital-h"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-overlap-001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-overlap-001",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-OVERLAP-001"
+          }
+        ],
+        "name": [
+          {
+            "family": "蔡",
+            "given": [
+              "雅婷"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1978-02-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-overlap-001"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-overlap-001-g",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-overlap-001-g",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-001"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-g"
+        },
+        "period": {
+          "start": "2026-01-01T09:00:00Z",
+          "end": "2026-01-01T09:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-overlap-001-g"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-overlap-001-g",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-overlap-001-g",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB03",
+              "display": "Fluoxetine (抗憂鬱藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-overlap-001-g"
+        },
+        "authoredOn": "2025-10-04T09:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-06"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-01",
+            "end": "2026-01-06"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-overlap-001-g"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-overlap-001-h",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-overlap-001-h",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-001"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-h"
+        },
+        "period": {
+          "start": "2026-01-04T14:00:00Z",
+          "end": "2026-01-04T14:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-overlap-001-h"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-overlap-001-h",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-overlap-001-h",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB04",
+              "display": "Sertraline (抗憂鬱藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-overlap-001-h"
+        },
+        "authoredOn": "2025-10-22T14:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-04",
+                  "end": "2026-01-09"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-04",
+            "end": "2026-01-09"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-overlap-001-h"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-overlap-002",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-overlap-002",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-OVERLAP-002"
+          }
+        ],
+        "name": [
+          {
+            "family": "許",
+            "given": [
+              "建志"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1982-06-25"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-overlap-002"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-overlap-002-g",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-overlap-002-g",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-002"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-g"
+        },
+        "period": {
+          "start": "2026-01-02T10:00:00Z",
+          "end": "2026-01-02T10:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-overlap-002-g"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-overlap-002-g",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-overlap-002-g",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB06",
+              "display": "Paroxetine (抗憂鬱藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-002"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-overlap-002-g"
+        },
+        "authoredOn": "2025-10-09T10:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-02",
+                  "end": "2026-01-07"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-02",
+            "end": "2026-01-07"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-overlap-002-g"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-overlap-002-h",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-overlap-002-h",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-002"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-h"
+        },
+        "period": {
+          "start": "2026-01-05T11:00:00Z",
+          "end": "2026-01-05T11:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-overlap-002-h"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-overlap-002-h",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-overlap-002-h",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AB10",
+              "display": "Escitalopram (抗憂鬱藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-002"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-overlap-002-h"
+        },
+        "authoredOn": "2025-10-28T11:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-05",
+                  "end": "2026-01-10"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-05",
+            "end": "2026-01-10"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-overlap-002-h"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antidep-overlap-003",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-antidep-overlap-003",
+        "identifier": [
+          {
+            "system": "http://www.mohw.gov.tw/patient",
+            "value": "ANTIDEP-OVERLAP-003"
+          }
+        ],
+        "name": [
+          {
+            "family": "謝",
+            "given": [
+              "淑惠"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-09-30"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-antidep-overlap-003"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-overlap-003-g",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-overlap-003-g",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-003"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-g"
+        },
+        "period": {
+          "start": "2026-01-01T15:00:00Z",
+          "end": "2026-01-01T15:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-overlap-003-g"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-overlap-003-g",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-overlap-003-g",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AX03",
+              "display": "Mirtazapine (抗憂鬱藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-003"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-overlap-003-g"
+        },
+        "authoredOn": "2025-10-01T15:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-05"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-01",
+            "end": "2026-01-05"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-overlap-003-g"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-antidep-overlap-003-h",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-antidep-overlap-003-h",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-003"
+        },
+        "serviceProvider": {
+          "reference": "Organization/org-hospital-h"
+        },
+        "period": {
+          "start": "2026-01-03T13:00:00Z",
+          "end": "2026-01-03T13:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-antidep-overlap-003-h"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antidep-overlap-003-h",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "med-antidep-overlap-003-h",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N06AX11",
+              "display": "Venlafaxine (抗憂鬱藥)"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/patient-antidep-overlap-003"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-antidep-overlap-003-h"
+        },
+        "authoredOn": "2025-10-18T13:15:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-03",
+                  "end": "2026-01-08"
+                }
+              }
+            }
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-03",
+            "end": "2026-01-08"
+          },
+          "quantity": {
+            "value": 30,
+            "unit": "tablets"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/med-antidep-overlap-003-h"
+      }
+    }
+  ]
+}

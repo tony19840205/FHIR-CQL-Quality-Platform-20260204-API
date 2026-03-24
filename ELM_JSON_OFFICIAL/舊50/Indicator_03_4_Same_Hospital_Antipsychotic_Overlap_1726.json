@@ -1,0 +1,1532 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "translatorVersion": "3.10.0",
+        "translatorOptions": "DisableListDemotion,DisableListPromotion",
+        "signatureLevel": "Overloads",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "Indicator_03_4_Same_Hospital_Antipsychotic_Overlap_1726",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1",
+          "annotation": []
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1",
+          "annotation": []
+        }
+      ]
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1",
+          "annotation": []
+        }
+      ]
+    },
+    "codeSystems": {
+      "def": [
+        {
+          "name": "ATC",
+          "id": "http://www.whocc.no/atc",
+          "accessLevel": "Public",
+          "annotation": []
+        },
+        {
+          "name": "ActCode",
+          "id": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "accessLevel": "Public",
+          "annotation": []
+        },
+        {
+          "name": "SNOMEDCT",
+          "id": "http://snomed.info/sct",
+          "accessLevel": "Public",
+          "annotation": []
+        },
+        {
+          "name": "MedicationRequestStatus",
+          "id": "http://hl7.org/fhir/CodeSystem/medicationrequest-status",
+          "accessLevel": "Public",
+          "annotation": []
+        },
+        {
+          "name": "MedicationRequestIntent",
+          "id": "http://hl7.org/fhir/CodeSystem/medicationrequest-intent",
+          "accessLevel": "Public",
+          "annotation": []
+        },
+        {
+          "name": "EncounterStatus",
+          "id": "http://hl7.org/fhir/encounter-status",
+          "accessLevel": "Public",
+          "annotation": []
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "name": "Antipsychotic ATC Codes",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/antipsychotic-atc-codes",
+          "accessLevel": "Public",
+          "annotation": []
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "name": "Ambulatory",
+          "id": "AMB",
+          "display": "Ambulatory",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ActCode",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Outpatient",
+          "id": "O",
+          "display": "Outpatient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ActCode",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Active",
+          "id": "active",
+          "display": "Active",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "MedicationRequestStatus",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Completed",
+          "id": "completed",
+          "display": "Completed",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "MedicationRequestStatus",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Finished",
+          "id": "finished",
+          "display": "Finished",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "EncounterStatus",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AA",
+          "id": "N05AA",
+          "display": "Phenothiazines with aliphatic side-chain - 酚噻嗪類(脂肪族側鏈)",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AB",
+          "id": "N05AB",
+          "display": "Phenothiazines with piperazine structure - 酚噻嗪類(哌嗪結構)",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AC",
+          "id": "N05AC",
+          "display": "Phenothiazines with piperidine structure - 酚噻嗪類(哌啶結構)",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AD",
+          "id": "N05AD",
+          "display": "Butyrophenone derivatives - 丁苯酮類",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AE",
+          "id": "N05AE",
+          "display": "Indole derivatives - 吲哚類",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AF",
+          "id": "N05AF",
+          "display": "Thioxanthene derivatives - 噻噸類",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AG",
+          "id": "N05AG",
+          "display": "Diphenylbutylpiperidine derivatives - 二苯丁基哌啶類",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AH",
+          "id": "N05AH",
+          "display": "Diazepines, oxazepines, thiazepines and oxepines - 二氮䓬類",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AL",
+          "id": "N05AL",
+          "display": "Benzamides - 苯甲醯胺類",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AN",
+          "id": "N05AN",
+          "display": "Lithium - 鋰鹽",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AX",
+          "id": "N05AX",
+          "display": "Other antipsychotics - 其他抗精神病藥",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AB04",
+          "id": "N05AB04",
+          "display": "Prochlorperazine - 應排除",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "N05AN01",
+          "id": "N05AN01",
+          "display": "Lithium - 應排除",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "ATC",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Oral",
+          "id": "385268001",
+          "display": "Oral dose form - 口服劑型",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "SNOMEDCT",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Injection",
+          "id": "385219001",
+          "display": "Injection - 注射劑",
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "name": "SNOMEDCT",
+            "annotation": []
+          }
+        }
+      ]
+    },
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "statements": {
+      "def": [
+        {
+          "name": "Patient",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "SingletonFrom",
+            "annotation": [],
+            "signature": [],
+            "operand": {
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve",
+              "annotation": [],
+              "include": [],
+              "codeFilter": [],
+              "dateFilter": [],
+              "otherFilter": []
+            }
+          }
+        },
+        {
+          "name": "2024Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Date",
+            "annotation": [],
+            "signature": [],
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal",
+              "annotation": []
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal",
+              "annotation": []
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal",
+              "annotation": []
+            }
+          }
+        },
+        {
+          "name": "2024Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Date",
+            "annotation": [],
+            "signature": [],
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal",
+              "annotation": []
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "3",
+              "type": "Literal",
+              "annotation": []
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal",
+              "annotation": []
+            }
+          }
+        },
+        {
+          "name": "Measurement Period Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Date",
+            "annotation": [],
+            "signature": [],
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal",
+              "annotation": []
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal",
+              "annotation": []
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal",
+              "annotation": []
+            }
+          }
+        },
+        {
+          "name": "Measurement Period End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Today",
+            "annotation": [],
+            "signature": []
+          }
+        },
+        {
+          "name": "Measurement Period",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "lowClosed": true,
+            "highClosed": true,
+            "type": "Interval",
+            "annotation": [],
+            "low": {
+              "name": "Measurement Period Start",
+              "type": "ExpressionRef",
+              "annotation": []
+            },
+            "high": {
+              "name": "Measurement Period End",
+              "type": "ExpressionRef",
+              "annotation": []
+            }
+          }
+        },
+        {
+          "name": "GetId",
+          "context": "Unfiltered",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "annotation": [],
+          "expression": {
+            "type": "Last",
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "type": "Split",
+              "annotation": [],
+              "signature": [],
+              "stringToSplit": {
+                "path": "reference",
+                "type": "Property",
+                "annotation": [],
+                "source": {
+                  "name": "reference",
+                  "type": "OperandRef",
+                  "annotation": []
+                }
+              },
+              "separator": {
+                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                "value": "/",
+                "type": "Literal",
+                "annotation": []
+              }
+            }
+          },
+          "operand": [
+            {
+              "name": "reference",
+              "annotation": [],
+              "operandTypeSpecifier": {
+                "name": "{http://hl7.org/fhir}Reference",
+                "type": "NamedTypeSpecifier",
+                "annotation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetATCCodePrefix",
+          "context": "Unfiltered",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "annotation": [],
+          "expression": {
+            "type": "If",
+            "annotation": [],
+            "condition": {
+              "type": "Or",
+              "annotation": [],
+              "signature": [],
+              "operand": [
+                {
+                  "type": "IsNull",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": {
+                    "name": "medication",
+                    "type": "OperandRef",
+                    "annotation": []
+                  }
+                },
+                {
+                  "type": "IsNull",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": {
+                    "path": "code",
+                    "type": "Property",
+                    "annotation": [],
+                    "source": {
+                      "name": "medication",
+                      "type": "OperandRef",
+                      "annotation": []
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "type": "As",
+              "annotation": [],
+              "signature": [],
+              "operand": {
+                "type": "Null",
+                "annotation": []
+              }
+            },
+            "else": {
+              "type": "First",
+              "annotation": [],
+              "signature": [],
+              "source": {
+                "type": "Query",
+                "annotation": [],
+                "source": [
+                  {
+                    "alias": "C",
+                    "annotation": [],
+                    "expression": {
+                      "path": "coding",
+                      "type": "Property",
+                      "annotation": [],
+                      "source": {
+                        "path": "code",
+                        "type": "Property",
+                        "annotation": [],
+                        "source": {
+                          "name": "medication",
+                          "type": "OperandRef",
+                          "annotation": []
+                        }
+                      }
+                    }
+                  }
+                ],
+                "let": [],
+                "relationship": [],
+                "where": {
+                  "type": "Equal",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": [
+                    {
+                      "name": "ToS 快捷键tring",
+                      "libraryName": "FHIRHelpers",
+                      "type": "FunctionRef",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "path": "system",
+                          "scope": "C",
+                          "type": "Property",
+                          "annotation": []
+                        }
+                      ]
+                    },
+                    {
+                      "valueType": "{urn:hl7-org:elm-types:r1}String",
+                      "value": "http://www.whocc.no/atc",
+                      "type": "Literal",
+                      "annotation": []
+                    }
+                  ]
+                },
+                "return": {
+                  "annotation": [],
+                  "expression": {
+                    "type": "Substring",
+                    "annotation": [],
+                    "signature": [],
+                    "stringToSub": {
+                      "name": "ToString",
+                      "libraryName": "FHIRHelpers",
+                      "type": "FunctionRef",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "path": "code",
+                          "scope": "C",
+                          "type": "Property",
+                          "annotation": []
+                        }
+                      ]
+                    },
+                    "startIndex": {
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                      "value": "0",
+                      "type": "Literal",
+                      "annotation": []
+                    },
+                    "length": {
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                      "value": "5",
+                      "type": "Literal",
+                      "annotation": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "operand": [
+            {
+              "name": "medication",
+              "annotation": [],
+              "operandTypeSpecifier": {
+                "name": "{http://hl7.org/fhir}Medication",
+                "type": "NamedTypeSpecifier",
+                "annotation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "IsAntipsychoticATC",
+          "context": "Unfiltered",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "annotation": [],
+          "expression": {
+            "type": "In",
+            "annotation": [],
+            "signature": [],
+            "operand": [
+              {
+                "name": "atcPrefix",
+                "type": "OperandRef",
+                "annotation": []
+              },
+              {
+                "type": "List",
+                "annotation": [],
+                "element": [
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AA",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AB",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AC",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AD",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AE",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AF",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AG",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AH",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AL",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AN",
+                    "type": "Literal",
+                    "annotation": []
+                  },
+                  {
+                    "valueType": "{urn:hl7-org:elm-types:r1}String",
+                    "value": "N05AX",
+                    "type": "Literal",
+                    "annotation": []
+                  }
+                ]
+              }
+            ]
+          },
+          "operand": [
+            {
+              "name": "atcPrefix",
+              "annotation": [],
+              "operandTypeSpecifier": {
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier",
+                "annotation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "IsExcludedATC",
+          "context": "Unfiltered",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "annotation": [],
+          "expression": {
+            "type": "If",
+            "annotation": [],
+            "condition": {
+              "type": "Or",
+              "annotation": [],
+              "signature": [],
+              "operand": [
+                {
+                  "type": "IsNull",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": {
+                    "name": "medication",
+                    "type": "OperandRef",
+                    "annotation": []
+                  }
+                },
+                {
+                  "type": "IsNull",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": {
+                    "path": "code",
+                    "type": "Property",
+                    "annotation": [],
+                    "source": {
+                      "name": "medication",
+                      "type": "OperandRef",
+                      "annotation": []
+                    }
+                  }
+                }
+              ]
+            },
+            "then": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean",
+              "value": "false",
+              "type": "Literal",
+              "annotation": []
+            },
+            "else": {
+              "type": "Exists",
+              "annotation": [],
+              "signature": [],
+              "operand": {
+                "type": "Query",
+                "annotation": [],
+                "source": [
+                  {
+                    "alias": "C",
+                    "annotation": [],
+                    "expression": {
+                      "path": "coding",
+                      "type": "Property",
+                      "annotation": [],
+                      "source": {
+                        "path": "code",
+                        "type": "Property",
+                        "annotation": [],
+                        "source": {
+                          "name": "medication",
+                          "type": "OperandRef",
+                          "annotation": []
+                        }
+                      }
+                    }
+                  }
+                ],
+                "let": [],
+                "relationship": [],
+                "where": {
+                  "type": "And",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": [
+                    {
+                      "type": "Equal",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "annotation": [],
+                          "signature": [],
+                          "operand": [
+                            {
+                              "path": "system",
+                              "scope": "C",
+                              "type": "Property",
+                              "annotation": []
+                            }
+                          ]
+                        },
+                        {
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "http://www.whocc.no/atc",
+                          "type": "Literal",
+                          "annotation": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "In",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "annotation": [],
+                          "signature": [],
+                          "operand": [
+                            {
+                              "path": "code",
+                              "scope": "C",
+                              "type": "Property",
+                              "annotation": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "List",
+                          "annotation": [],
+                          "element": [
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "N05AB04",
+                              "type": "Literal",
+                              "annotation": []
+                            },
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "N05AN01",
+                              "type": "Literal",
+                              "annotation": []
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "operand": [
+            {
+              "name": "medication",
+              "annotation": [],
+              "operandTypeSpecifier": {
+                "name": "{http://hl7.org/fhir}Medication",
+                "type": "NamedTypeSpecifier",
+                "annotation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetDrugDays",
+          "context": "Unfiltered",
+          "accessLevel": "Public",
+          "type": "FunctionDef",
+          "annotation": [],
+          "expression": {
+            "type": "Coalesce",
+            "annotation": [],
+            "signature": [],
+            "operand": [
+              {
+                "path": "value",
+                "type": "Property",
+                "annotation": [],
+                "source": {
+                  "path": "expectedSupplyDuration",
+                  "type": "Property",
+                  "annotation": [],
+                  "source": {
+                    "path": "dispenseRequest",
+                    "type": "Property",
+                    "annotation": [],
+                    "source": {
+                      "name": "medicationRequest",
+                      "type": "OperandRef",
+                      "annotation": []
+                    }
+                  }
+                }
+              },
+              {
+                "type": "First",
+                "annotation": [],
+                "signature": [],
+                "source": {
+                  "type": "Query",
+                  "annotation": [],
+                  "source": [
+                    {
+                      "alias": "DI",
+                      "annotation": [],
+                      "expression": {
+                        "path": "dosageInstruction",
+                        "type": "Property",
+                        "annotation": [],
+                        "source": {
+                          "name": "medicationRequest",
+                          "type": "OperandRef",
+                          "annotation": []
+                        }
+                      }
+                    }
+                  ],
+                  "let": [],
+                  "relationship": [],
+                  "return": {
+                    "annotation": [],
+                    "expression": {
+                      "path": "value",
+                      "type": "Property",
+                      "annotation": [],
+                      "source": {
+                        "path": "boundsDuration",
+                        "type": "Property",
+                        "annotation": [],
+                        "source": {
+                          "path": "repeat",
+                          "type": "Property",
+                          "annotation": [],
+                          "source": {
+                            "path": "timing",
+                            "scope": "DI",
+                            "type": "Property",
+                            "annotation": []
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+                "value": "30",
+                "type": "Literal",
+                "annotation": []
+              }
+            ]
+          },
+          "operand": [
+            {
+              "name": "medicationRequest",
+              "annotation": [],
+              "operandTypeSpecifier": {
+                "name": "{http://hl7.org/fhir}MedicationRequest",
+                "type": "NamedTypeSpecifier",
+                "annotation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "Outpatient Encounters",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Query",
+            "annotation": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "dataType": "{http://hl7.org/fhir}Encounter",
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                  "codeProperty": "class",
+                  "codeComparator": "in",
+                  "type": "Retrieve",
+                  "annotation": [],
+                  "codes": {
+                    "type": "ToList",
+                    "annotation": [],
+                    "signature": [],
+                    "operand": {
+                      "name": "Ambulatory",
+                      "type": "CodeRef",
+                      "annotation": []
+                    }
+                  },
+                  "include": [],
+                  "codeFilter": [],
+                  "dateFilter": [],
+                  "otherFilter": []
+                }
+              }
+            ],
+            "let": [],
+            "relationship": [],
+            "where": {
+              "type": "And",
+              "annotation": [],
+              "signature": [],
+              "operand": [
+                {
+                  "type": "And",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": [
+                    {
+                      "type": "Equal",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "annotation": [],
+                          "signature": [],
+                          "operand": [
+                            {
+                              "path": "status",
+                              "scope": "E",
+                              "type": "Property",
+                              "annotation": []
+                            }
+                          ]
+                        },
+                        {
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "finished",
+                          "type": "Literal",
+                          "annotation": []
+                        }
+                      ]
+                    },
+                    {
+                      "type": "In",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "type": "Start",
+                          "annotation": [],
+                          "signature": [],
+                          "operand": {
+                            "name": "ToInterval",
+                            "libraryName": "FHIRHelpers",
+                            "type": "FunctionRef",
+                            "annotation": [],
+                            "signature": [],
+                            "operand": [
+                              {
+                                "path": "period",
+                                "scope": "E",
+                                "type": "Property",
+                                "annotation": []
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "name": "Measurement Period",
+                          "type": "ExpressionRef",
+                          "annotation": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "Not",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": {
+                    "type": "Exists",
+                    "annotation": [],
+                    "signature": [],
+                    "operand": {
+                      "type": "Query",
+                      "annotation": [],
+                      "source": [
+                        {
+                          "alias": "EX",
+                          "annotation": [],
+                          "expression": {
+                            "path": "extension",
+                            "scope": "E",
+                            "type": "Property",
+                            "annotation": []
+                          }
+                        }
+                      ],
+                      "let": [],
+                      "relationship": [],
+                      "where": {
+                        "type": "And",
+                        "annotation": [],
+                        "signature": [],
+                        "operand": [
+                          {
+                            "type": "Equal",
+                            "annotation": [],
+                            "signature": [],
+                            "operand": [
+                              {
+                                "name": "ToString",
+                                "libraryName": "FHIRHelpers",
+                                "type": "FunctionRef",
+                                "annotation": [],
+                                "signature": [],
+                                "operand": [
+                                  {
+                                    "path": "url",
+                                    "scope": "EX",
+                                    "type": "Property",
+                                    "annotation": []
+                                  }
+                                ]
+                              },
+                              {
+                                "valueType": "{urn:hl7-org:elm-types:r1}String",
+                                "value": "http://nhi.gov.tw/fhir/StructureDefinition/agency-case",
+                                "type": "Literal",
+                                "annotation": []
+                              }
+                            ]
+                          },
+                          {
+                            "type": "Equal",
+                            "annotation": [],
+                            "signature": [],
+                            "operand": [
+                              {
+                                "path": "value",
+                                "scope": "EX",
+                                "type": "Property",
+                                "annotation": []
+                              },
+                              {
+                                "valueType": "{urn:hl7-org:elm-types:r1}Boolean",
+                                "value": "true",
+                                "type": "Literal",
+                                "annotation": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "All Medication Requests",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Query",
+            "annotation": [],
+            "source": [
+              {
+                "alias": "MR",
+                "annotation": [],
+                "expression": {
+                  "dataType": "{http://hl7.org/fhir}MedicationRequest",
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                  "type": "Retrieve",
+                  "annotation": [],
+                  "include": [],
+                  "codeFilter": [],
+                  "dateFilter": [],
+                  "otherFilter": []
+                }
+              }
+            ],
+            "let": [],
+            "relationship": [],
+            "where": {
+              "type": "And",
+              "annotation": [],
+              "signature": [],
+              "operand": [
+                {
+                  "type": "And",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": [
+                    {
+                      "type": "In",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "annotation": [],
+                          "signature": [],
+                          "operand": [
+                            {
+                              "path": "status",
+                              "scope": "MR",
+                              "type": "Property",
+                              "annotation": []
+                            }
+                          ]
+                        },
+                        {
+                          "type": "List",
+                          "annotation": [],
+                          "element": [
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "active",
+                              "type": "Literal",
+                              "annotation": []
+                            },
+                            {
+                              "valueType": "{urn:hl7-org:elm-types:r1}String",
+                              "value": "completed",
+                              "type": "Literal",
+                              "annotation": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "Equal",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "name": "ToString",
+                          "libraryName": "FHIRHelpers",
+                          "type": "FunctionRef",
+                          "annotation": [],
+                          "signature": [],
+                          "operand": [
+                            {
+                              "path": "intent",
+                              "scope": "MR",
+                              "type": "Property",
+                              "annotation": []
+                            }
+                          ]
+                        },
+                        {
+                          "valueType": "{urn:hl7-org:elm-types:r1}String",
+                          "value": "order",
+                          "type": "Literal",
+                          "annotation": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "In",
+                  "annotation": [],
+                  "signature": [],
+                  "operand": [
+                    {
+                      "name": "ToDateTime",
+                      "libraryName": "FHIRHelpers",
+                      "type": "FunctionRef",
+                      "annotation": [],
+                      "signature": [],
+                      "operand": [
+                        {
+                          "path": "authoredOn",
+                          "scope": "MR",
+                          "type": "Property",
+                          "annotation": []
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Measurement Period",
+                      "type": "ExpressionRef",
+                      "annotation": []
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Total Drug Days",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Null",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Total Overlap Days",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Null",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Overlap Rate",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Null",
+            "annotation": []
+          }
+        },
+        {
+          "name": "Indicator Result",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "annotation": [],
+          "expression": {
+            "type": "Tuple",
+            "annotation": [],
+            "element": [
+              {
+                "name": "indicatorCode",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1726",
+                  "type": "Literal",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "indicatorName",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "同醫院門診同藥理用藥日數重疊率-抗思覺失調症",
+                  "type": "Literal",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "indicatorNameEn",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "Same Hospital Outpatient Antipsychotic Drug Overlap Rate",
+                  "type": "Literal",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "measurementPeriodStart",
+                "value": {
+                  "name": "Measurement Period Start",
+                  "type": "ExpressionRef",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "measurementPeriodEnd",
+                "value": {
+                  "name": "Measurement Period End",
+                  "type": "ExpressionRef",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "numerator",
+                "value": {
+                  "name": "Total Overlap Days",
+                  "type": "ExpressionRef",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "denominator",
+                "value": {
+                  "name": "Total Drug Days",
+                  "type": "ExpressionRef",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "overlapRate",
+                "value": {
+                  "name": "Overlap Rate",
+                  "type": "ExpressionRef",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "unit",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "%",
+                  "type": "Literal",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "dataSource",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "醫療給付檔案分析系統",
+                  "type": "Literal",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "compiledBy",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "衛生福利部 中央健康保險署",
+                  "type": "Literal",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "compiledDate",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "114/11/06",
+                  "type": "Literal",
+                  "annotation": []
+                }
+              },
+              {
+                "name": "version",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1.0.0",
+                  "type": "Literal",
+                  "annotation": []
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

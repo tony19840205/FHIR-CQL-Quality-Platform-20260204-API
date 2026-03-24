@@ -1,0 +1,642 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:patient-antipsychotic-same-1",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ANTIPSYCHOTIC-SAME-P1",
+        "gender": "female",
+        "birthDate": "1975-04-12",
+        "name": [
+          {
+            "text": "張雅琪",
+            "family": "Zhang",
+            "given": [
+              "Yaqi"
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/ANTIPSYCHOTIC-SAME-P1"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antipsychotic-same-2",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ANTIPSYCHOTIC-SAME-P2",
+        "gender": "male",
+        "birthDate": "1980-09-20",
+        "name": [
+          {
+            "text": "李俊宏",
+            "family": "Li",
+            "given": [
+              "Junhong"
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/ANTIPSYCHOTIC-SAME-P2"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-antipsychotic-same-3",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ANTIPSYCHOTIC-SAME-P3",
+        "gender": "female",
+        "birthDate": "1978-06-15",
+        "name": [
+          {
+            "text": "王美惠",
+            "family": "Wang",
+            "given": [
+              "Meihui"
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/ANTIPSYCHOTIC-SAME-P3"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-antipsychotic-same-1a",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ANTIPSYCHOTIC-SAME-E1A",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P1"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-C"
+        },
+        "period": {
+          "start": "2026-01-01T10:00:00+08:00",
+          "end": "2026-01-01T10:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ANTIPSYCHOTIC-SAME-E1A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antipsychotic-same-1a",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "ANTIPSYCHOTIC-SAME-M1A",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N05AH04",
+              "display": "Quetiapine"
+            }
+          ],
+          "text": "思樂康 Quetiapine 100mg"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P1"
+        },
+        "encounter": {
+          "reference": "Encounter/ANTIPSYCHOTIC-SAME-E1A"
+        },
+        "authoredOn": "2025-10-01T10:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-05"
+                },
+                "frequency": 2,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-01",
+            "end": "2026-01-05"
+          },
+          "quantity": {
+            "value": 56,
+            "unit": "tablet"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/ANTIPSYCHOTIC-SAME-M1A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-antipsychotic-same-1b",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ANTIPSYCHOTIC-SAME-E1B",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P1"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-C"
+        },
+        "period": {
+          "start": "2026-01-02T14:00:00+08:00",
+          "end": "2026-01-02T14:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ANTIPSYCHOTIC-SAME-E1B"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antipsychotic-same-1b",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "ANTIPSYCHOTIC-SAME-M1B",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N05AH03",
+              "display": "Olanzapine"
+            }
+          ],
+          "text": "金普薩 Olanzapine 10mg"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P1"
+        },
+        "encounter": {
+          "reference": "Encounter/ANTIPSYCHOTIC-SAME-E1B"
+        },
+        "authoredOn": "2025-10-10T14:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-02",
+                  "end": "2026-01-06"
+                },
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-02",
+            "end": "2026-01-06"
+          },
+          "quantity": {
+            "value": 28,
+            "unit": "tablet"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/ANTIPSYCHOTIC-SAME-M1B"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-antipsychotic-same-2a",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ANTIPSYCHOTIC-SAME-E2A",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P2"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-C"
+        },
+        "period": {
+          "start": "2026-01-01T09:00:00+08:00",
+          "end": "2026-01-01T09:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ANTIPSYCHOTIC-SAME-E2A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antipsychotic-same-2a",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "ANTIPSYCHOTIC-SAME-M2A",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N05AX08",
+              "display": "Risperidone"
+            }
+          ],
+          "text": "理思必妥 Risperidone 2mg"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P2"
+        },
+        "encounter": {
+          "reference": "Encounter/ANTIPSYCHOTIC-SAME-E2A"
+        },
+        "authoredOn": "2025-10-03T09:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-05"
+                },
+                "frequency": 2,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-01",
+            "end": "2026-01-05"
+          },
+          "quantity": {
+            "value": 56,
+            "unit": "tablet"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/ANTIPSYCHOTIC-SAME-M2A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-antipsychotic-same-2b",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ANTIPSYCHOTIC-SAME-E2B",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P2"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-C"
+        },
+        "period": {
+          "start": "2026-01-02T11:00:00+08:00",
+          "end": "2026-01-02T11:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ANTIPSYCHOTIC-SAME-E2B"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antipsychotic-same-2b",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "ANTIPSYCHOTIC-SAME-M2B",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N05AH04",
+              "display": "Quetiapine"
+            }
+          ],
+          "text": "思樂康 Quetiapine 100mg"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P2"
+        },
+        "encounter": {
+          "reference": "Encounter/ANTIPSYCHOTIC-SAME-E2B"
+        },
+        "authoredOn": "2025-10-12T11:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-02",
+                  "end": "2026-01-07"
+                },
+                "frequency": 2,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-02",
+            "end": "2026-01-07"
+          },
+          "quantity": {
+            "value": 56,
+            "unit": "tablet"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/ANTIPSYCHOTIC-SAME-M2B"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-antipsychotic-same-3a",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ANTIPSYCHOTIC-SAME-E3A",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P3"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-C"
+        },
+        "period": {
+          "start": "2026-01-01T15:00:00+08:00",
+          "end": "2026-01-01T15:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ANTIPSYCHOTIC-SAME-E3A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antipsychotic-same-3a",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "ANTIPSYCHOTIC-SAME-M3A",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N05AX12",
+              "display": "Aripiprazole"
+            }
+          ],
+          "text": "安立復 Aripiprazole 10mg"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P3"
+        },
+        "encounter": {
+          "reference": "Encounter/ANTIPSYCHOTIC-SAME-E3A"
+        },
+        "authoredOn": "2025-10-05T15:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-01",
+                  "end": "2026-01-06"
+                },
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-01",
+            "end": "2026-01-06"
+          },
+          "quantity": {
+            "value": 28,
+            "unit": "tablet"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/ANTIPSYCHOTIC-SAME-M3A"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:enc-antipsychotic-same-3b",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ANTIPSYCHOTIC-SAME-E3B",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P3"
+        },
+        "serviceProvider": {
+          "reference": "Organization/HOSPITAL-C"
+        },
+        "period": {
+          "start": "2026-01-03T16:00:00+08:00",
+          "end": "2026-01-03T16:30:00+08:00"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ANTIPSYCHOTIC-SAME-E3B"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:med-antipsychotic-same-3b",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "ANTIPSYCHOTIC-SAME-M3B",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "N05AH03",
+              "display": "Olanzapine"
+            }
+          ],
+          "text": "金普薩 Olanzapine 10mg"
+        },
+        "subject": {
+          "reference": "Patient/ANTIPSYCHOTIC-SAME-P3"
+        },
+        "encounter": {
+          "reference": "Encounter/ANTIPSYCHOTIC-SAME-E3B"
+        },
+        "authoredOn": "2025-10-14T16:00:00+08:00",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "boundsPeriod": {
+                  "start": "2026-01-03",
+                  "end": "2026-01-07"
+                },
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            },
+            "doseAndRate": [
+              {
+                "doseQuantity": {
+                  "value": 1,
+                  "unit": "tablet"
+                }
+              }
+            ]
+          }
+        ],
+        "dispenseRequest": {
+          "validityPeriod": {
+            "start": "2026-01-03",
+            "end": "2026-01-07"
+          },
+          "quantity": {
+            "value": 28,
+            "unit": "tablet"
+          },
+          "expectedSupplyDuration": {
+            "value": 28,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/ANTIPSYCHOTIC-SAME-M3B"
+      }
+    }
+  ]
+}

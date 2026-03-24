@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'info.cqframework:cql-to-elm:3.10.0'
+    implementation 'info.cqframework:model:3.10.0'
+    implementation 'info.cqframework:elm:3.10.0'
+}
+
+task cql2elm(type: JavaExec) {
+    description = 'Convert CQL to ELM using cql-to-elm-cli 3.10.0'
+    group = 'application'
+    
+    classpath = configurations.runtimeClasspath
+    mainClass = 'org.cqframework.cql.cql2elm.cli.CqlToElmCommand'
+    
+    def cqlFile = project.findProperty('cql_file') ?: 'Indicator_03_3_Same_Hospital_Antidiabetic_Overlap_1712.cql'
+    def inputDir = './cql_only_2'
+    def outputDir = './ELM_JSON_OFFICIAL/舊50_AHRQ_Official'
+    
+    args = [
+        '--input', inputDir,
+        '--output', outputDir,
+        '--format', 'JSON',
+        '--model-info-file', 'fhir-modelinfo-4.0.1.xml',
+        '--translator-options', 'DisableListDemotion,DisableListPromotion',
+        '--signature-level', 'Overloads',
+        '--include-file', cqlFile
+    ]
+    
+    doFirst {
+        println "=================================================================================="
+        println "TRANSLATE ./${inputDir}/${cqlFile}"
+        file(outputDir).mkdirs()
+    }
+    
+    doLast {
+        def outputFile = "${outputDir}/${cqlFile.replace('.cql', '.json')}"
+        if (file(outputFile).exists()) {
+            println "Translation completed successfully."
+            println "ELM output written to: ./${outputFile}"
+        } else {
+            println "Warning: Output file not found at ${outputFile}"
+        }
+        println "=================================================================================="
+    }
+}

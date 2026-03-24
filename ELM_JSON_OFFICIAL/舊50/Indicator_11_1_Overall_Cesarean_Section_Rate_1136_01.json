@@ -1,0 +1,507 @@
+{
+  "library": {
+    "identifier": {
+      "id": "Indicator_11_1_Overall_Cesarean_Section_Rate_1136_01",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "codeSystems": {
+      "def": [
+        {
+          "name": "NHI_CLAIM",
+          "id": "http://www.nhi.gov.tw/codes/claim",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "NHI_PROCEDURE",
+          "id": "http://www.nhi.gov.tw/codes/procedure",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ActCode",
+          "id": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "EncounterStatus",
+          "id": "http://hl7.org/fhir/encounter-status",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "name": "Inpatient Encounters",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/inpatient-encounters",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "name": "Finished",
+          "id": "finished",
+          "display": "Finished",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "EncounterStatus"
+          }
+        },
+        {
+          "name": "Inpatient",
+          "id": "IMP",
+          "display": "Inpatient",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ActCode"
+          }
+        },
+        {
+          "name": "Natural DRG 372",
+          "id": "372",
+          "display": "TW-DRG 372 自然產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Natural DRG 373",
+          "id": "373",
+          "display": "TW-DRG 373 自然產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Natural DRG 374",
+          "id": "374",
+          "display": "TW-DRG 374 自然產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Natural DRG 375",
+          "id": "375",
+          "display": "TW-DRG 375 自然產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Cesarean DRG 370",
+          "id": "370",
+          "display": "TW-DRG 370 剖腹產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Cesarean DRG 371",
+          "id": "371",
+          "display": "TW-DRG 371 剖腹產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Cesarean DRG 513",
+          "id": "513",
+          "display": "TW-DRG 513 剖腹產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Natural 0373A",
+          "id": "0373A",
+          "display": "DRG_CODE 0373A 自然產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Natural 0373C",
+          "id": "0373C",
+          "display": "DRG_CODE 0373C 自然產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Cesarean 0371A",
+          "id": "0371A",
+          "display": "DRG_CODE 0371A 剖腹產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Cesarean 0373B",
+          "id": "0373B",
+          "display": "DRG_CODE 0373B 剖腹產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_CLAIM"
+          }
+        },
+        {
+          "name": "Natural 81017C",
+          "id": "81017C",
+          "display": "自然產接生",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 81018C",
+          "id": "81018C",
+          "display": "自然產接生(含會陰切開)",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 81019C",
+          "id": "81019C",
+          "display": "自然產接生(含會陰修補)",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 81024C",
+          "id": "81024C",
+          "display": "產鉗助產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 81025C",
+          "id": "81025C",
+          "display": "真空吸引助產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 81026C",
+          "id": "81026C",
+          "display": "臀位牽引術",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 81034C",
+          "id": "81034C",
+          "display": "複雜性陰道分娩",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 97004C",
+          "id": "97004C",
+          "display": "自然產接生費",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 97005D",
+          "id": "97005D",
+          "display": "陰道分娩",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Natural 97934C",
+          "id": "97934C",
+          "display": "產科接生處置",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Cesarean 81004C",
+          "id": "81004C",
+          "display": "剖腹產術",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Cesarean 81005C",
+          "id": "81005C",
+          "display": "剖腹產合併子宮切除",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Cesarean 81028C",
+          "id": "81028C",
+          "display": "選擇性剖腹產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Cesarean 81029C",
+          "id": "81029C",
+          "display": "緊急剖腹產",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Cesarean 97009C",
+          "id": "97009C",
+          "display": "剖腹產手術費",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Cesarean 97014C",
+          "id": "97014C",
+          "display": "剖腹產處置費",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        }
+      ]
+    },
+    "statements": {
+      "def": [
+        {
+          "name": "Patient",
+          "context": "Patient",
+          "expression": {
+            "type": "SingletonFrom",
+            "operand": {
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "type": "Retrieve"
+            }
+          }
+        },
+        {
+          "name": "Measurement Period Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2024",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "1",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "Measurement Period End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "2099",
+              "type": "Literal"
+            },
+            "month": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "12",
+              "type": "Literal"
+            },
+            "day": {
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer",
+              "value": "31",
+              "type": "Literal"
+            }
+          }
+        },
+        {
+          "name": "Indicator Result",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Tuple",
+            "element": [
+              {
+                "name": "indicatorCode",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1136.01",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorName",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "剖腹產率-整體",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorNameEn",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "Overall Cesarean Section Rate",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "dataSource",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "醫療給付檔案分析系統",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "compiledBy",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "衛生福利部 中央健康保險署",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "compiledDate",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "114/11/06",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "version",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1.0.0",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "denominatorCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "生產案件數(自然產案件+剖腹產案件)",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "numeratorCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "剖腹產案件數",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "note",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "本項指標含符合適應症及自行要求剖腹產案件，各院所收治產婦之複雜度不同",
+                  "type": "Literal"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "translatorVersion": "3.10.0",
+  "translatorOptions": "DisableListDemotion,DisableListPromotion",
+  "signatureLevel": "Overloads",
+  "metadata": {
+    "indicatorCode": "1136.01",
+    "indicatorName": "剖腹產率-整體",
+    "indicatorNameEn": "Overall Cesarean Section Rate",
+    "cqlVersion": "1.0.0",
+    "fhirVersion": "4.0.1",
+    "measurementPeriod": "2024-01-01 to 2099-12-31",
+    "dataSource": "醫療給付檔案分析系統",
+    "compiledBy": "衛生福利部 中央健康保險署",
+    "compiledDate": "114/11/06",
+    "codeSystemCount": 4,
+    "valueSetCount": 1,
+    "codeCount": 29,
+    "denominatorCriteria": "生產案件數(自然產案件+剖腹產案件)",
+    "numeratorCriteria": "剖腹產案件數",
+    "naturalDeliveryCriteria": "TW-DRG前三碼372-375或DRG_CODE為0373A/0373C或符合自然產醫令代碼",
+    "cesareanDeliveryCriteria": "TW-DRG前三碼370/371/513或DRG_CODE為0371A/0373B或符合剖腹產醫令代碼",
+    "naturalProcedureCodes": "81017C, 81018C, 81019C, 81024C, 81025C, 81026C, 81034C, 97004C, 97005D, 97934C",
+    "cesareanProcedureCodes": "81004C, 81005C, 81028C, 81029C, 97009C, 97014C",
+    "note": "本項指標含符合適應症及自行要求剖腹產案件，各院所收治產婦之複雜度不同"
+  }
+}

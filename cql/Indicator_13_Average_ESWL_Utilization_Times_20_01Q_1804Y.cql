@@ -5,173 +5,300 @@ using FHIR version '4.0.1'
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
 // 指標名稱: 接受體外震波碎石術(ESWL)病人平均利用ESWL之次數
-// 指標代碼: 1804
-// 製作日期：2025-11-20
+// 指標代碼: 20.01 (季), 1804 (年)
+// 資料來源: 醫療給付檔案分析系統，指標代碼：20.01 (季)、1804 (年)
+// 製表日期: 114/11/06
+// 製表單位: 衛生福利部 中央健康保險署
 
-/*
- * 指標名稱: 13. 接受體外震波碎石術(ESWL)病人平均利用ESWL之次數
- * Indicator: Average number of ESWL procedures per patient receiving ESWL
- * 指標代碼暫以: 20.01 (季), 1804年 - 根據檔名說明
- * 檔名: 13_接受體外震波碎石術(ESWL)病人平均利用ESWL之次數(20.01季 1804年).cql
- *
- * 說明:
- * - 分子: 在觀察期內發生之 ESWL (體外震波碎石術) 總次數
- * - 分母: 在觀察期內接受至少一次 ESWL 之個別病人數 (unique patients)
- * - 指標值: 平均每位接受 ESWL 病人之 ESWL 次數 = 分子 / 分母
- *
- * 注意: 本CQL以常用的國際代碼作為初始代碼集 (SNOMED CT, CPT, ICD10-PCS 等)。
- * 若您有完整的在地代碼（NHI_PROCEDURE、國內ICD/手術代碼等），請提供，我會立即替換或補齊。
- */
-
--- ==================== Codesystem 定義 ====================
-
-codesystem "SNOMEDCT": 'http://snomed.info/sct'
-codesystem "ICD10PCS": 'http://hl7.org/fhir/sid/icd-10-pcs'
-codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
-codesystem "CPT": 'http://www.ama-assn.org/go/cpt'
-codesystem "NHI_PROCEDURE": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure'
-codesystem "LOINC": 'http://loinc.org'
+codesystem "NHI_CLAIM": 'http://www.nhi.gov.tw/codes/claim'
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes/procedure'
 codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
-codesystem "DRG_CODE": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/drg-code'
-codesystem "TW_DRG": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/tw-drg'
-codesystem "NHI": 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-code'
+codesystem "EncounterStatus": 'http://hl7.org/fhir/encounter-status'
 
--- ==================== Code 定義 (示例) ====================
--- 註: 下列代碼為常見或國際代碼，請於需要時提供在地完整清單以便更新
+code "Finished": 'finished' from "EncounterStatus" display '已完成'
+code "Inpatient": 'IMP' from "ActCode" display '住院'
+code "Case_Category_05": '05' from "NHI_CLAIM" display '住院西醫'
 
--- SNOMED CT
-code "SNOMED_ESWL" : '80146002' from "SNOMEDCT" display 'Extracorporeal shockwave lithotripsy (ESWL)'
+code "ESWL_50023A": '50023A' from "NHI_PROCEDURE" display 'ESWL處置50023A'
+code "ESWL_50024A": '50024A' from "NHI_PROCEDURE" display 'ESWL處置50024A'
+code "ESWL_50025A": '50025A' from "NHI_PROCEDURE" display 'ESWL處置50025A'
+code "ESWL_50026A": '50026A' from "NHI_PROCEDURE" display 'ESWL處置50026A'
 
--- CPT
-code "CPT_ESWL_50590" : '50590' from "CPT" display 'Lithotripsy, extracorporeal shock wave; pyelolithotomy; fragmentation of renal calculi'
+valueset "Inpatient Encounters": 'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.666.5.307'
 
--- ICD-10-PCS (示例，需確認)
-code "ICD10PCS_ESWL_0TF" : '0TF00ZZ' from "ICD10PCS" display 'Extracorporeal lithotripsy, kidney (approximate)'
-
--- NHI 處置代碼 (需要在地代碼清單，以下為示例 placeholder)
-code "NHI_ESWL_XXXX" : 'XXXX' from "NHI_PROCEDURE" display 'ESWL (placeholder - replace with actual NHI code)'
-
--- LOINC (若有觀察值相關)
-code "LOINC_ESWL_INDICATION" : '57074-7' from "LOINC" display 'Indication for lithotripsy (example)'
-
--- ==================== ValueSet 定義 ====================
-valueset "ESWL_Procedures_ValueSet": 'urn:oid:1.2.840.10008.2.16.4' -- (placeholder URI; replace with authoritative valueset URI if available)
-
--- ==================== 參數 ====================
-parameter "Measurement_Period" Interval<DateTime>
-    default Interval[@2024-01-01T00:00:00.0, @2024-12-31T23:59:59.999]
+parameter "Measurement Period" Interval<DateTime>
+  default Interval[@2024-01-01T00:00:00.0, @2099-12-31T23:59:59.999]
 
 context Patient
 
--- ==================== 定義: ESWL Procedures ====================
+define function GetId(encounter Encounter):
+  Last(Split(encounter.id, '/'))
 
--- 取得觀察期內的 Procedure 資源，符合 ESWL 相關代碼
-define "ESWL_Procedures":
-    [Procedure] P
-        where P.status = 'completed'
-            and exists (P.code.coding C where 
-                (
-                    C.system = 'http://snomed.info/sct' and C.code in { '80146002' }
-                ) or (
-                    C.system = 'http://www.ama-assn.org/go/cpt' and C.code in { '50590' }
-                ) or (
-                    C.system = 'http://hl7.org/fhir/sid/icd-10-pcs' and C.code in { '0TF00ZZ' }
-                ) or (
-                    C.system = 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure' and C.code in { 'XXXX' }
-                )
-            )
-            and P.performed during "Measurement_Period"
+define function GetDischargeDate(encounter Encounter):
+  end of FHIRHelpers.ToInterval(encounter.period)
 
--- 若需要限制在住院或門診，可額外篩選 Encounter/class
+define function GetCaseCategory(encounter Encounter):
+  First(
+    encounter.type T
+      where exists (T.coding C where C.system = 'http://www.nhi.gov.tw/codes/claim')
+      return First(T.coding).code.value
+  )
 
--- ==================== 定義: 每位病人的 ESWL 次數 ====================
--- 針對每位 Patient 計算在觀察期內之 ESWL Procedure 次數
-
-define "Patient_ESWL_Counts":
-    {
-        PatientId: id Patient,
-        ESWLCount: Count(
-            [Procedure] P
-                where P.subject.reference = 'Patient/' + id Patient
-                    and exists (P.code.coding C where 
-                        (
-                            C.system = 'http://snomed.info/sct' and C.code in { '80146002' }
-                        ) or (
-                            C.system = 'http://www.ama-assn.org/go/cpt' and C.code in { '50590' }
-                        ) or (
-                            C.system = 'http://hl7.org/fhir/sid/icd-10-pcs' and C.code in { '0TF00ZZ' }
-                        ) or (
-                            C.system = 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure' and C.code in { 'XXXX' }
-                        )
-                    )
-                    and P.performed during "Measurement_Period"
+define function HasESWLProcedure(encounter Encounter):
+  exists (
+    encounter.extension E
+      where E.url = 'http://www.nhi.gov.tw/fhir/StructureDefinition/procedure'
+        and exists (
+          E.extension PE
+            where PE.url = 'code'
+              and PE.value as CodeableConcept ~ "ESWL_50023A"
+                or PE.value as CodeableConcept ~ "ESWL_50024A"
+                or PE.value as CodeableConcept ~ "ESWL_50025A"
+                or PE.value as CodeableConcept ~ "ESWL_50026A"
         )
-    }
+  )
 
--- ==================== 定義: 接受至少一次 ESWL 之病人名單 ====================
+define function CountESWLProcedures(encounter Encounter):
+  Count(
+    encounter.extension E
+      where E.url = 'http://www.nhi.gov.tw/fhir/StructureDefinition/procedure'
+        and exists (
+          E.extension PE
+            where PE.url = 'code'
+              and (PE.value as CodeableConcept ~ "ESWL_50023A"
+                or PE.value as CodeableConcept ~ "ESWL_50024A"
+                or PE.value as CodeableConcept ~ "ESWL_50025A"
+                or PE.value as CodeableConcept ~ "ESWL_50026A")
+        )
+  )
 
-define "Patients_With_ESWL":
-    distinct (
-        [Patient] PAT
-            where exists (
-                [Procedure] P
-                    where P.subject.reference = 'Patient/' + id PAT
-                        and exists (P.code.coding C where 
-                            (
-                                C.system = 'http://snomed.info/sct' and C.code in { '80146002' }
-                            ) or (
-                                C.system = 'http://www.ama-assn.org/go/cpt' and C.code in { '50590' }
-                            ) or (
-                                C.system = 'http://hl7.org/fhir/sid/icd-10-pcs' and C.code in { '0TF00ZZ' }
-                            ) or (
-                                C.system = 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure' and C.code in { 'XXXX' }
-                            )
-                        )
-                        and P.performed during "Measurement_Period"
-            )
-    )
+define "All Inpatient Discharges":
+  [Encounter: type in "Inpatient Encounters"] E
+    where E.status ~ "Finished"
+      and E.class ~ "Inpatient"
+      and GetDischargeDate(E) during "Measurement Period"
+      and GetCaseCategory(E) = '05'
 
--- ==================== 定義: 總 ESWL 次數 (分子) ====================
+define "ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
 
-define "Total_ESWL_Procedures":
-    Count(
-        [Procedure] P
-            where exists (P.code.coding C where 
-                (
-                    C.system = 'http://snomed.info/sct' and C.code in { '80146002' }
-                ) or (
-                    C.system = 'http://www.ama-assn.org/go/cpt' and C.code in { '50590' }
-                ) or (
-                    C.system = 'http://hl7.org/fhir/sid/icd-10-pcs' and C.code in { '0TF00ZZ' }
-                ) or (
-                    C.system = 'https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure' and C.code in { 'XXXX' }
-                )
-            )
-            and P.performed during "Measurement_Period"
-    )
+define "ESWL Patient IDs":
+  distinct (
+    "ESWL Cases" E
+      return Last(Split(E.subject.reference, '/'))
+  )
 
--- ==================== 定義: 接受 ESWL 之病人數 (分母) ====================
+define "Total ESWL Procedures":
+  Sum(
+    "ESWL Cases" E
+      return CountESWLProcedures(E)
+  )
 
-define "Number_of_Patients_With_ESWL":
-    Count("Patients_With_ESWL")
+define "Total ESWL Patients":
+  Count("ESWL Patient IDs")
 
--- ==================== 定義: 平均每位病人之 ESWL 次數 (指標) ====================
+define "Average ESWL Per Patient":
+  if "Total ESWL Patients" > 0
+  then "Total ESWL Procedures" / "Total ESWL Patients"
+  else null
 
-define "Average_ESWL_Per_Patient":
-    if "Number_of_Patients_With_ESWL" > 0
-    then ("Total_ESWL_Procedures" / "Number_of_Patients_With_ESWL")
-    else null
+define "2024Q1 Start": DateTime(2024, 1, 1, 0, 0, 0, 0)
+define "2024Q1 End": DateTime(2024, 3, 31, 23, 59, 59, 999)
+define "2024Q2 Start": DateTime(2024, 4, 1, 0, 0, 0, 0)
+define "2024Q2 End": DateTime(2024, 6, 30, 23, 59, 59, 999)
+define "2024Q3 Start": DateTime(2024, 7, 1, 0, 0, 0, 0)
+define "2024Q3 End": DateTime(2024, 9, 30, 23, 59, 59, 999)
+define "2024Q4 Start": DateTime(2024, 10, 1, 0, 0, 0, 0)
+define "2024Q4 End": DateTime(2024, 12, 31, 23, 59, 59, 999)
+define "2025Q1 Start": DateTime(2025, 1, 1, 0, 0, 0, 0)
+define "2025Q1 End": DateTime(2025, 3, 31, 23, 59, 59, 999)
+define "2025Q2 Start": DateTime(2025, 4, 1, 0, 0, 0, 0)
+define "2025Q2 End": DateTime(2025, 6, 30, 23, 59, 59, 999)
+define "2025Q3 Start": DateTime(2025, 7, 1, 0, 0, 0, 0)
+define "2025Q3 End": DateTime(2025, 9, 30, 23, 59, 59, 999)
+define "2025Q4 Start": DateTime(2025, 10, 1, 0, 0, 0, 0)
+define "2025Q4 End": DateTime(2025, 12, 31, 23, 59, 59, 999)
+define "2026Q1 Start": DateTime(2026, 1, 1, 0, 0, 0, 0)
+define "2026Q1 End": DateTime(2026, 3, 31, 23, 59, 59, 999)
 
--- ==================== 輸出結果物件 ====================
+define "2024Q1 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2024Q1 Start", "2024Q1 End"]
 
-define "Indicator_13_Result":
-    {
-        IndicatorName: '接受體外震波碎石術(ESWL)病人平均利用ESWL之次數',
-        IndicatorCode: '13',
-        MeasurementPeriod: "Measurement_Period",
-        TotalESWLProcedures: "Total_ESWL_Procedures",
-        PatientsWithESWL: "Number_of_Patients_With_ESWL",
-        AveragePerPatient: "Average_ESWL_Per_Patient"
-    }
+define "2024Q1 ESWL Procedures":
+  Sum("2024Q1 ESWL Cases" E return CountESWLProcedures(E))
 
--- End of file
+define "2024Q1 ESWL Patients":
+  Count(distinct ("2024Q1 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2024Q1 Average":
+  if "2024Q1 ESWL Patients" > 0
+  then "2024Q1 ESWL Procedures" / "2024Q1 ESWL Patients"
+  else null
+
+define "2024Q2 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2024Q2 Start", "2024Q2 End"]
+
+define "2024Q2 ESWL Procedures":
+  Sum("2024Q2 ESWL Cases" E return CountESWLProcedures(E))
+
+define "2024Q2 ESWL Patients":
+  Count(distinct ("2024Q2 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2024Q2 Average":
+  if "2024Q2 ESWL Patients" > 0
+  then "2024Q2 ESWL Procedures" / "2024Q2 ESWL Patients"
+  else null
+
+define "2024Q3 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2024Q3 Start", "2024Q3 End"]
+
+define "2024Q3 ESWL Procedures":
+  Sum("2024Q3 ESWL Cases" E return CountESWLProcedures(E))
+
+define "2024Q3 ESWL Patients":
+  Count(distinct ("2024Q3 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2024Q3 Average":
+  if "2024Q3 ESWL Patients" > 0
+  then "2024Q3 ESWL Procedures" / "2024Q3 ESWL Patients"
+  else null
+
+define "2024Q4 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2024Q4 Start", "2024Q4 End"]
+
+define "2024Q4 ESWL Procedures":
+  Sum("2024Q4 ESWL Cases" E return CountESWLProcedures(E))
+
+define "2024Q4 ESWL Patients":
+  Count(distinct ("2024Q4 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2024Q4 Average":
+  if "2024Q4 ESWL Patients" > 0
+  then "2024Q4 ESWL Procedures" / "2024Q4 ESWL Patients"
+  else null
+
+define "2025Q1 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2025Q1 Start", "2025Q1 End"]
+
+define "2025Q1 ESWL Procedures":
+  Sum("2025Q1 ESWL Cases" E return CountESWLProcedures(E))
+
+define "2025Q1 ESWL Patients":
+  Count(distinct ("2025Q1 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2025Q1 Average":
+  if "2025Q1 ESWL Patients" > 0
+  then "2025Q1 ESWL Procedures" / "2025Q1 ESWL Patients"
+  else null
+
+define "2025Q2 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2025Q2 Start", "2025Q2 End"]
+
+define "2025Q2 ESWL Procedures":
+  Sum("2025Q2 ESWL Cases" E return CountESWLProcedures(E))
+
+define "2025Q2 ESWL Patients":
+  Count(distinct ("2025Q2 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2025Q2 Average":
+  if "2025Q2 ESWL Patients" > 0
+  then "2025Q2 ESWL Procedures" / "2025Q2 ESWL Patients"
+  else null
+
+define "2025Q3 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2025Q3 Start", "2025Q3 End"]
+
+define "2025Q3 ESWL Procedures":
+  Sum("2025Q3 ESWL Cases" E return CountESWLProcedures(E))
+
+define "2025Q3 ESWL Patients":
+  Count(distinct ("2025Q3 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2025Q3 Average":
+  if "2025Q3 ESWL Patients" > 0
+  then "2025Q3 ESWL Procedures" / "2025Q3 ESWL Patients"
+  else null
+
+define "2025Q4 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2025Q4 Start", "2025Q4 End"]
+
+define "2025Q4 ESWL Procedures":
+  Sum("2025Q4 ESWL Cases" E return CountESWLProcedures(E))
+
+define "2025Q4 ESWL Patients":
+  Count(distinct ("2025Q4 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2025Q4 Average":
+  if "2025Q4 ESWL Patients" > 0
+  then "2025Q4 ESWL Procedures" / "2025Q4 ESWL Patients"
+  else null
+
+define "2026Q1 ESWL Cases":
+  "All Inpatient Discharges" E
+    where HasESWLProcedure(E)
+      and GetDischargeDate(E) in Interval["2026Q1 Start", "2026Q1 End"]
+
+define "2026Q1 ESWL Procedures":
+  Sum("2026Q1 ESWL Cases" E return CountESWLProcedures(E))
+
+define "2026Q1 ESWL Patients":
+  Count(distinct ("2026Q1 ESWL Cases" E return Last(Split(E.subject.reference, '/'))))
+
+define "2026Q1 Average":
+  if "2026Q1 ESWL Patients" > 0
+  then "2026Q1 ESWL Procedures" / "2026Q1 ESWL Patients"
+  else null
+
+define "Indicator Result":
+  {
+    IndicatorCode: '20.01/1804',
+    IndicatorName: '接受體外震波碎石術(ESWL)病人平均利用ESWL之次數',
+    MeasurementPeriod: "Measurement Period",
+    TotalESWLProcedures: "Total ESWL Procedures",
+    TotalESWLPatients: "Total ESWL Patients",
+    AveragePerPatient: "Average ESWL Per Patient",
+    Q2024_1_Procedures: "2024Q1 ESWL Procedures",
+    Q2024_1_Patients: "2024Q1 ESWL Patients",
+    Q2024_1_Average: "2024Q1 Average",
+    Q2024_2_Procedures: "2024Q2 ESWL Procedures",
+    Q2024_2_Patients: "2024Q2 ESWL Patients",
+    Q2024_2_Average: "2024Q2 Average",
+    Q2024_3_Procedures: "2024Q3 ESWL Procedures",
+    Q2024_3_Patients: "2024Q3 ESWL Patients",
+    Q2024_3_Average: "2024Q3 Average",
+    Q2024_4_Procedures: "2024Q4 ESWL Procedures",
+    Q2024_4_Patients: "2024Q4 ESWL Patients",
+    Q2024_4_Average: "2024Q4 Average",
+    Q2025_1_Procedures: "2025Q1 ESWL Procedures",
+    Q2025_1_Patients: "2025Q1 ESWL Patients",
+    Q2025_1_Average: "2025Q1 Average",
+    Q2025_2_Procedures: "2025Q2 ESWL Procedures",
+    Q2025_2_Patients: "2025Q2 ESWL Patients",
+    Q2025_2_Average: "2025Q2 Average",
+    Q2025_3_Procedures: "2025Q3 ESWL Procedures",
+    Q2025_3_Patients: "2025Q3 ESWL Patients",
+    Q2025_3_Average: "2025Q3 Average",
+    Q2025_4_Procedures: "2025Q4 ESWL Procedures",
+    Q2025_4_Patients: "2025Q4 ESWL Patients",
+    Q2025_4_Average: "2025Q4 Average",
+    Q2026_1_Procedures: "2026Q1 ESWL Procedures",
+    Q2026_1_Patients: "2026Q1 ESWL Patients",
+    Q2026_1_Average: "2026Q1 Average"
+  }

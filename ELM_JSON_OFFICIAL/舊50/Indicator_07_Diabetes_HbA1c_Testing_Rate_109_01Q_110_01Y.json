@@ -1,0 +1,667 @@
+{
+  "library": {
+    "identifier": {
+      "id": "Indicator_07_Diabetes_HbA1c_Testing_Rate_109_01Q_110_01Y",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "codeSystems": {
+      "def": [
+        {
+          "name": "NHI_PROCEDURE",
+          "id": "http://www.nhi.gov.tw/codes/procedure",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "NHI_CLAIM",
+          "id": "http://www.nhi.gov.tw/codes/claim",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ICD10CM",
+          "id": "http://hl7.org/fhir/sid/icd-10-cm",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "SNOMEDCT",
+          "id": "http://snomed.info/sct",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ATC",
+          "id": "http://www.whocc.no/atc",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "LOINC",
+          "id": "http://loinc.org",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ActCode",
+          "id": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "EncounterStatus",
+          "id": "http://hl7.org/fhir/encounter-status",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "ObservationStatus",
+          "id": "http://hl7.org/fhir/observation-status",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "name": "Diabetes Diagnoses",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/diabetes-diagnoses",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "Diabetes Medications",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/diabetes-medications",
+          "accessLevel": "Public"
+        },
+        {
+          "name": "HbA1c Tests",
+          "id": "http://nhi.gov.tw/fhir/ValueSet/hba1c-tests",
+          "accessLevel": "Public"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "name": "Ambulatory",
+          "id": "AMB",
+          "display": "Ambulatory",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ActCode"
+          }
+        },
+        {
+          "name": "Finished",
+          "id": "finished",
+          "display": "Finished",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "EncounterStatus"
+          }
+        },
+        {
+          "name": "Final",
+          "id": "final",
+          "display": "Final",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ObservationStatus"
+          }
+        },
+        {
+          "name": "Diabetes E08",
+          "id": "E08",
+          "display": "Diabetes mellitus due to underlying condition - 其他特定的糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ICD10CM"
+          }
+        },
+        {
+          "name": "Diabetes E09",
+          "id": "E09",
+          "display": "Drug or chemical induced diabetes mellitus - 藥物或化學物質引起的糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ICD10CM"
+          }
+        },
+        {
+          "name": "Diabetes E10",
+          "id": "E10",
+          "display": "Type 1 diabetes mellitus - 第1型糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ICD10CM"
+          }
+        },
+        {
+          "name": "Diabetes E11",
+          "id": "E11",
+          "display": "Type 2 diabetes mellitus - 第2型糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ICD10CM"
+          }
+        },
+        {
+          "name": "Diabetes E12",
+          "id": "E12",
+          "display": "Malnutrition-related diabetes mellitus - 營養不良相關糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ICD10CM"
+          }
+        },
+        {
+          "name": "Diabetes E13",
+          "id": "E13",
+          "display": "Other specified diabetes mellitus - 其他特定的糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ICD10CM"
+          }
+        },
+        {
+          "name": "Diabetes SNOMED",
+          "id": "73211009",
+          "display": "Diabetes mellitus - 糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMEDCT"
+          }
+        },
+        {
+          "name": "Type 1 Diabetes SNOMED",
+          "id": "46635009",
+          "display": "Type 1 diabetes mellitus - 第1型糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMEDCT"
+          }
+        },
+        {
+          "name": "Type 2 Diabetes SNOMED",
+          "id": "44054006",
+          "display": "Type 2 diabetes mellitus - 第2型糖尿病",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMEDCT"
+          }
+        },
+        {
+          "name": "Diabetes Medication A10",
+          "id": "A10",
+          "display": "Drugs used in diabetes - 糖尿病用藥",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ATC"
+          }
+        },
+        {
+          "name": "Insulin A10A",
+          "id": "A10A",
+          "display": "Insulins and analogues - 胰島素及其類似物",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ATC"
+          }
+        },
+        {
+          "name": "Oral Hypoglycemic A10B",
+          "id": "A10B",
+          "display": "Blood glucose lowering drugs, excl. insulins - 降血糖藥(不含胰島素)",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ATC"
+          }
+        },
+        {
+          "name": "HbA1c LOINC",
+          "id": "4548-4",
+          "display": "Hemoglobin A1c/Hemoglobin.total in Blood - 醣化血紅素",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          }
+        },
+        {
+          "name": "HbA1c HPLC",
+          "id": "17856-6",
+          "display": "Hemoglobin A1c/Hemoglobin.total in Blood by HPLC",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          }
+        },
+        {
+          "name": "HbA1c IFCC",
+          "id": "59261-8",
+          "display": "Hemoglobin A1c/Hemoglobin.total in Blood by IFCC protocol",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          }
+        },
+        {
+          "name": "Glycated Albumin LOINC",
+          "id": "62388-4",
+          "display": "Glycated albumin/Albumin.total in Serum or Plasma - 糖化白蛋白",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          }
+        },
+        {
+          "name": "HbA1c NHI",
+          "id": "09006",
+          "display": "HbA1c - 醣化血紅素檢驗",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        },
+        {
+          "name": "Glycated Albumin NHI",
+          "id": "09139",
+          "display": "Glycated Albumin - 糖化白蛋白檢驗",
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "NHI_PROCEDURE"
+          }
+        }
+      ]
+    },
+    "statements": {
+      "def": [
+        {
+          "name": "Patient",
+          "context": "Patient",
+          "expression": {
+            "type": "SingletonFrom",
+            "operand": {
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "type": "Retrieve"
+            }
+          }
+        },
+        {
+          "name": "2024Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "3", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q2 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "4", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q2 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "6", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "30", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q3 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "7", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q3 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "9", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "30", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q4 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "10", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2024Q4 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "12", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "3", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q2 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "4", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q2 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "6", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "30", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q3 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "7", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q3 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "9", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "30", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q4 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "10", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2025Q4 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2025", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "12", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2026Q1 Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2026", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "2026Q1 End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2026", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "3", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "Measurement Period Start",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2024", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "1", "type": "Literal"}
+          }
+        },
+        {
+          "name": "Measurement Period End",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Date",
+            "year": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "2099", "type": "Literal"},
+            "month": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "12", "type": "Literal"},
+            "day": {"valueType": "{urn:hl7-org:elm-types:r1}Integer", "value": "31", "type": "Literal"}
+          }
+        },
+        {
+          "name": "Measurement Period",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "lowClosed": true,
+            "highClosed": true,
+            "type": "Interval",
+            "low": {"name": "Measurement Period Start", "type": "ExpressionRef"},
+            "high": {"name": "Measurement Period End", "type": "ExpressionRef"}
+          }
+        },
+        {
+          "name": "Indicator Result",
+          "context": "Patient",
+          "accessLevel": "Public",
+          "expression": {
+            "type": "Tuple",
+            "element": [
+              {
+                "name": "indicatorCode",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "109.01/110.01",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorName",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "糖尿病病人醣化血紅素(HbA1c)或糖化白蛋白執行率",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "indicatorNameEn",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "Performance Rate of HbA1c or Glycated Albumin Testing for Diabetes Patients",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "measurementPeriodStart",
+                "value": {"name": "Measurement Period Start", "type": "ExpressionRef"}
+              },
+              {
+                "name": "measurementPeriodEnd",
+                "value": {"name": "Measurement Period End", "type": "ExpressionRef"}
+              },
+              {
+                "name": "dataSource",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "醫療給付檔案分析系統",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "compiledBy",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "衛生福利部 中央健康保險署",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "compiledDate",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "114/11/06",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "version",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "1.0.0",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "diabetesCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "ICD10-CM E08-E13 (主次診斷前三碼)",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "medicationCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "ATC A10* (糖尿病用藥)",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "testCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "09006(HbA1c), 09139(Glycated Albumin)",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "denominatorCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "門診主次診斷為糖尿病且使用糖尿病用藥(同處方案件)",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "numeratorCriteria",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "分母病患中於統計期間有執行HbA1c或Glycated Albumin檢驗",
+                  "type": "Literal"
+                }
+              },
+              {
+                "name": "keyRequirement",
+                "value": {
+                  "valueType": "{urn:hl7-org:elm-types:r1}String",
+                  "value": "診斷與用藥需發生在同一處方案件",
+                  "type": "Literal"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "translatorVersion": "3.10.0",
+  "translatorOptions": "DisableListDemotion,DisableListPromotion",
+  "signatureLevel": "Overloads"
+}

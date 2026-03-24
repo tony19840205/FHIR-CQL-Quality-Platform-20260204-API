@@ -1,0 +1,2046 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorVersion" : "3.10.0",
+         "translatorOptions" : "DisableListDemotion,DisableListPromotion",
+         "signatureLevel" : "Overloads",
+         "type" : "CqlToElmInfo"
+      } ],
+      "identifier" : {
+         "id" : "Indicator_19_Clean_Surgery_Wound_Infection_Rate_2524Q_2526Y",
+         "version" : "1.0.0"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1",
+            "annotation" : [ ]
+         }, {
+            "localIdentifier" : "FHIR",
+            "uri" : "http://hl7.org/fhir",
+            "version" : "4.0.1",
+            "annotation" : [ ]
+         } ]
+      },
+      "includes" : {
+         "def" : [ {
+            "localIdentifier" : "FHIRHelpers",
+            "path" : "FHIRHelpers",
+            "version" : "4.0.1",
+            "annotation" : [ ]
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "name" : "Patient",
+            "annotation" : [ ]
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "name" : "Patient",
+            "context" : "Patient",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "SingletonFrom",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : {
+                  "dataType" : "{http://hl7.org/fhir}Patient",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
+                  "type" : "Retrieve",
+                  "annotation" : [ ],
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
+               }
+            }
+         }, {
+            "name" : "Clean Surgery Procedures",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "P",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}Procedure",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Procedure",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "And",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "value",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "status",
+                           "scope" : "P",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "completed",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "type" : "Or",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "type" : "Or",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "type" : "Or",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "type" : "Or",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : [ {
+                                 "type" : "Or",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "type" : "Exists",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "operand" : {
+                                       "type" : "Query",
+                                       "annotation" : [ ],
+                                       "source" : [ {
+                                          "alias" : "C",
+                                          "annotation" : [ ],
+                                          "expression" : {
+                                             "path" : "coding",
+                                             "type" : "Property",
+                                             "annotation" : [ ],
+                                             "source" : {
+                                                "path" : "code",
+                                                "scope" : "P",
+                                                "type" : "Property",
+                                                "annotation" : [ ]
+                                             }
+                                          }
+                                       } ],
+                                       "let" : [ ],
+                                       "relationship" : [ ],
+                                       "where" : {
+                                          "type" : "And",
+                                          "annotation" : [ ],
+                                          "signature" : [ ],
+                                          "operand" : [ {
+                                             "type" : "Equal",
+                                             "annotation" : [ ],
+                                             "signature" : [ {
+                                                "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             }, {
+                                                "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             } ],
+                                             "operand" : [ {
+                                                "path" : "value",
+                                                "type" : "Property",
+                                                "annotation" : [ ],
+                                                "source" : {
+                                                   "path" : "system",
+                                                   "scope" : "C",
+                                                   "type" : "Property",
+                                                   "annotation" : [ ]
+                                                }
+                                             }, {
+                                                "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                "value" : "http://www.nhi.gov.tw/codes",
+                                                "type" : "Literal",
+                                                "annotation" : [ ]
+                                             } ]
+                                          }, {
+                                             "type" : "In",
+                                             "annotation" : [ ],
+                                             "signature" : [ ],
+                                             "operand" : [ {
+                                                "path" : "value",
+                                                "type" : "Property",
+                                                "annotation" : [ ],
+                                                "source" : {
+                                                   "path" : "code",
+                                                   "scope" : "C",
+                                                   "type" : "Property",
+                                                   "annotation" : [ ]
+                                                }
+                                             }, {
+                                                "type" : "List",
+                                                "annotation" : [ ],
+                                                "element" : [ {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "75607C",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "75610B",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "75613C",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "75614C",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "75615C",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "88029C",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                } ]
+                                             } ]
+                                          } ]
+                                       }
+                                    }
+                                 }, {
+                                    "type" : "Exists",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "operand" : {
+                                       "type" : "Query",
+                                       "annotation" : [ ],
+                                       "source" : [ {
+                                          "alias" : "C",
+                                          "annotation" : [ ],
+                                          "expression" : {
+                                             "path" : "coding",
+                                             "type" : "Property",
+                                             "annotation" : [ ],
+                                             "source" : {
+                                                "path" : "code",
+                                                "scope" : "P",
+                                                "type" : "Property",
+                                                "annotation" : [ ]
+                                             }
+                                          }
+                                       } ],
+                                       "let" : [ ],
+                                       "relationship" : [ ],
+                                       "where" : {
+                                          "type" : "And",
+                                          "annotation" : [ ],
+                                          "signature" : [ ],
+                                          "operand" : [ {
+                                             "type" : "Equal",
+                                             "annotation" : [ ],
+                                             "signature" : [ {
+                                                "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             }, {
+                                                "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             } ],
+                                             "operand" : [ {
+                                                "path" : "value",
+                                                "type" : "Property",
+                                                "annotation" : [ ],
+                                                "source" : {
+                                                   "path" : "system",
+                                                   "scope" : "C",
+                                                   "type" : "Property",
+                                                   "annotation" : [ ]
+                                                }
+                                             }, {
+                                                "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                "value" : "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                "type" : "Literal",
+                                                "annotation" : [ ]
+                                             } ]
+                                          }, {
+                                             "type" : "In",
+                                             "annotation" : [ ],
+                                             "signature" : [ ],
+                                             "operand" : [ {
+                                                "path" : "value",
+                                                "type" : "Property",
+                                                "annotation" : [ ],
+                                                "source" : {
+                                                   "path" : "code",
+                                                   "scope" : "C",
+                                                   "type" : "Property",
+                                                   "annotation" : [ ]
+                                                }
+                                             }, {
+                                                "type" : "List",
+                                                "annotation" : [ ],
+                                                "element" : [ {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ50ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ537Z",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ54ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ60ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ637Z",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ74ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ80ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ83ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ8C0Z",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ8C3Z",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQ8C4Z",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQA0ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQA4ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQE0ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQE3ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0YQE4ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                } ]
+                                             } ]
+                                          } ]
+                                       }
+                                    }
+                                 } ]
+                              }, {
+                                 "type" : "And",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "type" : "Exists",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "operand" : {
+                                       "type" : "Query",
+                                       "annotation" : [ ],
+                                       "source" : [ {
+                                          "alias" : "C",
+                                          "annotation" : [ ],
+                                          "expression" : {
+                                             "path" : "coding",
+                                             "type" : "Property",
+                                             "annotation" : [ ],
+                                             "source" : {
+                                                "path" : "code",
+                                                "scope" : "P",
+                                                "type" : "Property",
+                                                "annotation" : [ ]
+                                             }
+                                          }
+                                       } ],
+                                       "let" : [ ],
+                                       "relationship" : [ ],
+                                       "where" : {
+                                          "type" : "And",
+                                          "annotation" : [ ],
+                                          "signature" : [ ],
+                                          "operand" : [ {
+                                             "type" : "Equal",
+                                             "annotation" : [ ],
+                                             "signature" : [ {
+                                                "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             }, {
+                                                "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             } ],
+                                             "operand" : [ {
+                                                "path" : "value",
+                                                "type" : "Property",
+                                                "annotation" : [ ],
+                                                "source" : {
+                                                   "path" : "system",
+                                                   "scope" : "C",
+                                                   "type" : "Property",
+                                                   "annotation" : [ ]
+                                                }
+                                             }, {
+                                                "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                "value" : "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                "type" : "Literal",
+                                                "annotation" : [ ]
+                                             } ]
+                                          }, {
+                                             "type" : "In",
+                                             "annotation" : [ ],
+                                             "signature" : [ ],
+                                             "operand" : [ {
+                                                "path" : "value",
+                                                "type" : "Property",
+                                                "annotation" : [ ],
+                                                "source" : {
+                                                   "path" : "code",
+                                                   "scope" : "C",
+                                                   "type" : "Property",
+                                                   "annotation" : [ ]
+                                                }
+                                             }, {
+                                                "type" : "List",
+                                                "annotation" : [ ],
+                                                "element" : [ {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GBG0ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GBG3ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GBG4ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GBH0ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GBH3ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GBH4ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GTG0ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GTG4ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GTH0ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GTH4ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GTK0ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                }, {
+                                                   "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                   "value" : "0GTK4ZZ",
+                                                   "type" : "Literal",
+                                                   "annotation" : [ ]
+                                                } ]
+                                             } ]
+                                          } ]
+                                       }
+                                    }
+                                 }, {
+                                    "type" : "Exists",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Condition",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    } ],
+                                    "operand" : {
+                                       "type" : "Query",
+                                       "annotation" : [ ],
+                                       "source" : [ {
+                                          "alias" : "Cond",
+                                          "annotation" : [ ],
+                                          "expression" : {
+                                             "dataType" : "{http://hl7.org/fhir}Condition",
+                                             "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                                             "type" : "Retrieve",
+                                             "annotation" : [ ],
+                                             "include" : [ ],
+                                             "codeFilter" : [ ],
+                                             "dateFilter" : [ ],
+                                             "otherFilter" : [ ]
+                                          }
+                                       } ],
+                                       "let" : [ ],
+                                       "relationship" : [ ],
+                                       "where" : {
+                                          "type" : "And",
+                                          "annotation" : [ ],
+                                          "signature" : [ ],
+                                          "operand" : [ {
+                                             "type" : "Equal",
+                                             "annotation" : [ ],
+                                             "signature" : [ {
+                                                "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             }, {
+                                                "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             } ],
+                                             "operand" : [ {
+                                                "type" : "Last",
+                                                "annotation" : [ ],
+                                                "signature" : [ ],
+                                                "source" : {
+                                                   "type" : "Split",
+                                                   "annotation" : [ ],
+                                                   "signature" : [ ],
+                                                   "stringToSplit" : {
+                                                      "path" : "value",
+                                                      "type" : "Property",
+                                                      "annotation" : [ ],
+                                                      "source" : {
+                                                         "path" : "reference",
+                                                         "type" : "Property",
+                                                         "annotation" : [ ],
+                                                         "source" : {
+                                                            "path" : "subject",
+                                                            "scope" : "Cond",
+                                                            "type" : "Property",
+                                                            "annotation" : [ ]
+                                                         }
+                                                      }
+                                                   },
+                                                   "separator" : {
+                                                      "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                      "value" : "/",
+                                                      "type" : "Literal",
+                                                      "annotation" : [ ]
+                                                   }
+                                                }
+                                             }, {
+                                                "type" : "Last",
+                                                "annotation" : [ ],
+                                                "signature" : [ ],
+                                                "source" : {
+                                                   "type" : "Split",
+                                                   "annotation" : [ ],
+                                                   "signature" : [ ],
+                                                   "stringToSplit" : {
+                                                      "path" : "value",
+                                                      "type" : "Property",
+                                                      "annotation" : [ ],
+                                                      "source" : {
+                                                         "path" : "reference",
+                                                         "type" : "Property",
+                                                         "annotation" : [ ],
+                                                         "source" : {
+                                                            "path" : "subject",
+                                                            "scope" : "P",
+                                                            "type" : "Property",
+                                                            "annotation" : [ ]
+                                                         }
+                                                      }
+                                                   },
+                                                   "separator" : {
+                                                      "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                      "value" : "/",
+                                                      "type" : "Literal",
+                                                      "annotation" : [ ]
+                                                   }
+                                                }
+                                             } ]
+                                          }, {
+                                             "type" : "Exists",
+                                             "annotation" : [ ],
+                                             "signature" : [ ],
+                                             "operand" : {
+                                                "type" : "Query",
+                                                "annotation" : [ ],
+                                                "source" : [ {
+                                                   "alias" : "CD",
+                                                   "annotation" : [ ],
+                                                   "expression" : {
+                                                      "path" : "coding",
+                                                      "type" : "Property",
+                                                      "annotation" : [ ],
+                                                      "source" : {
+                                                         "path" : "code",
+                                                         "scope" : "Cond",
+                                                         "type" : "Property",
+                                                         "annotation" : [ ]
+                                                      }
+                                                   }
+                                                } ],
+                                                "let" : [ ],
+                                                "relationship" : [ ],
+                                                "where" : {
+                                                   "type" : "And",
+                                                   "annotation" : [ ],
+                                                   "signature" : [ ],
+                                                   "operand" : [ {
+                                                      "type" : "Equal",
+                                                      "annotation" : [ ],
+                                                      "signature" : [ {
+                                                         "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                         "type" : "NamedTypeSpecifier",
+                                                         "annotation" : [ ]
+                                                      }, {
+                                                         "name" : "{urn:hl7-org:elm-types:r1}String",
+                                                         "type" : "NamedTypeSpecifier",
+                                                         "annotation" : [ ]
+                                                      } ],
+                                                      "operand" : [ {
+                                                         "path" : "value",
+                                                         "type" : "Property",
+                                                         "annotation" : [ ],
+                                                         "source" : {
+                                                            "path" : "system",
+                                                            "scope" : "CD",
+                                                            "type" : "Property",
+                                                            "annotation" : [ ]
+                                                         }
+                                                      }, {
+                                                         "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                         "value" : "http://hl7.org/fhir/sid/icd-10-cm",
+                                                         "type" : "Literal",
+                                                         "annotation" : [ ]
+                                                      } ]
+                                                   }, {
+                                                      "type" : "In",
+                                                      "annotation" : [ ],
+                                                      "signature" : [ ],
+                                                      "operand" : [ {
+                                                         "path" : "value",
+                                                         "type" : "Property",
+                                                         "annotation" : [ ],
+                                                         "source" : {
+                                                            "path" : "code",
+                                                            "scope" : "CD",
+                                                            "type" : "Property",
+                                                            "annotation" : [ ]
+                                                         }
+                                                      }, {
+                                                         "type" : "List",
+                                                         "annotation" : [ ],
+                                                         "element" : [ {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E00",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E01",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E02",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E03",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E04",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E05",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E06",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E07",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E35",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         }, {
+                                                            "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                                            "value" : "E89.0",
+                                                            "type" : "Literal",
+                                                            "annotation" : [ ]
+                                                         } ]
+                                                      } ]
+                                                   } ]
+                                                }
+                                             }
+                                          } ]
+                                       }
+                                    }
+                                 } ]
+                              } ]
+                           }, {
+                              "type" : "Exists",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "type" : "ListTypeSpecifier",
+                                 "annotation" : [ ],
+                                 "elementType" : {
+                                    "name" : "{http://hl7.org/fhir}Coding",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 }
+                              } ],
+                              "operand" : {
+                                 "type" : "Query",
+                                 "annotation" : [ ],
+                                 "source" : [ {
+                                    "alias" : "C",
+                                    "annotation" : [ ],
+                                    "expression" : {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "P",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }
+                                 } ],
+                                 "let" : [ ],
+                                 "relationship" : [ ],
+                                 "where" : {
+                                    "type" : "And",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "operand" : [ {
+                                       "type" : "Equal",
+                                       "annotation" : [ ],
+                                       "signature" : [ {
+                                          "name" : "{urn:hl7-org:elm-types:r1}String",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "name" : "{urn:hl7-org:elm-types:r1}String",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       } ],
+                                       "operand" : [ {
+                                          "path" : "value",
+                                          "type" : "Property",
+                                          "annotation" : [ ],
+                                          "source" : {
+                                             "path" : "system",
+                                             "scope" : "C",
+                                             "type" : "Property",
+                                             "annotation" : [ ]
+                                          }
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "http://www.nhi.gov.tw/codes",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       } ]
+                                    }, {
+                                       "type" : "In",
+                                       "annotation" : [ ],
+                                       "signature" : [ ],
+                                       "operand" : [ {
+                                          "path" : "value",
+                                          "type" : "Property",
+                                          "annotation" : [ ],
+                                          "source" : {
+                                             "path" : "code",
+                                             "scope" : "C",
+                                             "type" : "Property",
+                                             "annotation" : [ ]
+                                          }
+                                       }, {
+                                          "type" : "List",
+                                          "annotation" : [ ],
+                                          "element" : [ {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "82001C",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "82002C",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "82003C",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "82004B",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "82008B",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "82015B",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "82016B",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "66012B",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "66013B",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "66014B",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          }, {
+                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                             "value" : "66023B",
+                                             "type" : "Literal",
+                                             "annotation" : [ ]
+                                          } ]
+                                       } ]
+                                    } ]
+                                 }
+                              }
+                           } ]
+                        }, {
+                           "type" : "Exists",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "type" : "ListTypeSpecifier",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{http://hl7.org/fhir}Coding",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           } ],
+                           "operand" : {
+                              "type" : "Query",
+                              "annotation" : [ ],
+                              "source" : [ {
+                                 "alias" : "C",
+                                 "annotation" : [ ],
+                                 "expression" : {
+                                    "path" : "coding",
+                                    "type" : "Property",
+                                    "annotation" : [ ],
+                                    "source" : {
+                                       "path" : "code",
+                                       "scope" : "P",
+                                       "type" : "Property",
+                                       "annotation" : [ ]
+                                    }
+                                 }
+                              } ],
+                              "let" : [ ],
+                              "relationship" : [ ],
+                              "where" : {
+                                 "type" : "And",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "type" : "Equal",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "name" : "{urn:hl7-org:elm-types:r1}String",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}String",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "value",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "system",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "http://hl7.org/fhir/sid/icd-10-pcs",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }, {
+                                    "type" : "In",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "operand" : [ {
+                                       "path" : "value",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "type" : "List",
+                                       "annotation" : [ ],
+                                       "element" : [ {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR9019",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR901A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR901Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR9029",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR902A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR902Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR9039",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR903A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR903Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR9049",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR904A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR904Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR907Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR90J9",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR90JA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR90JZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SR90KZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB019",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB01A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB01Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB029",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB02A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB02Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB039",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB03A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB03Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB049",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB04A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB04Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB07Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRB0JA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRC07Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRC0J9",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRC0JA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRC0JZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRC0KZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRD0J9",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRD0JA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRD0JZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRDKZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRT07Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRT0J9",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRT0JA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRT0JZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRT0KZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRU07Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRU0J9",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRU0JA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRU0JZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRU0KZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRV07Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRV0J9",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRV0JA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRV0JZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRV0KZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRW07Z",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRW0J9",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRW0JA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRW0JZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "0SRW0KZ",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       } ]
+                                    } ]
+                                 } ]
+                              }
+                           }
+                        } ]
+                     }, {
+                        "type" : "Exists",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "type" : "ListTypeSpecifier",
+                           "annotation" : [ ],
+                           "elementType" : {
+                              "name" : "{http://hl7.org/fhir}Coding",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }
+                        } ],
+                        "operand" : {
+                           "type" : "Query",
+                           "annotation" : [ ],
+                           "source" : [ {
+                              "alias" : "C",
+                              "annotation" : [ ],
+                              "expression" : {
+                                 "path" : "coding",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "path" : "code",
+                                    "scope" : "P",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 }
+                              }
+                           } ],
+                           "let" : [ ],
+                           "relationship" : [ ],
+                           "where" : {
+                              "type" : "And",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : [ {
+                                 "type" : "Equal",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 }, {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "path" : "value",
+                                    "type" : "Property",
+                                    "annotation" : [ ],
+                                    "source" : {
+                                       "path" : "system",
+                                       "scope" : "C",
+                                       "type" : "Property",
+                                       "annotation" : [ ]
+                                    }
+                                 }, {
+                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                    "value" : "http://www.nhi.gov.tw/codes",
+                                    "type" : "Literal",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "type" : "In",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "value",
+                                    "type" : "Property",
+                                    "annotation" : [ ],
+                                    "source" : {
+                                       "path" : "code",
+                                       "scope" : "C",
+                                       "type" : "Property",
+                                       "annotation" : [ ]
+                                    }
+                                 }, {
+                                    "type" : "List",
+                                    "annotation" : [ ],
+                                    "element" : [ {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "64162B",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "64164B",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "64169B",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "64170B",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 } ]
+                              } ]
+                           }
+                        }
+                     } ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "Clean Surgery With Wound Infection",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "CSP",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Clean Surgery Procedures",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "Exists",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "type" : "ListTypeSpecifier",
+                     "annotation" : [ ],
+                     "elementType" : {
+                        "name" : "{http://hl7.org/fhir}Condition",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "operand" : {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "C",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "dataType" : "{http://hl7.org/fhir}Condition",
+                           "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                           "type" : "Retrieve",
+                           "annotation" : [ ],
+                           "include" : [ ],
+                           "codeFilter" : [ ],
+                           "dateFilter" : [ ],
+                           "otherFilter" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ ],
+                     "where" : {
+                        "type" : "And",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "type" : "Equal",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "type" : "Last",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "source" : {
+                                 "type" : "Split",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "stringToSplit" : {
+                                    "path" : "value",
+                                    "type" : "Property",
+                                    "annotation" : [ ],
+                                    "source" : {
+                                       "path" : "reference",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "subject",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }
+                                 },
+                                 "separator" : {
+                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                    "value" : "/",
+                                    "type" : "Literal",
+                                    "annotation" : [ ]
+                                 }
+                              }
+                           }, {
+                              "type" : "Last",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "source" : {
+                                 "type" : "Split",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "stringToSplit" : {
+                                    "path" : "value",
+                                    "type" : "Property",
+                                    "annotation" : [ ],
+                                    "source" : {
+                                       "path" : "reference",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "subject",
+                                          "scope" : "CSP",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }
+                                 },
+                                 "separator" : {
+                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                    "value" : "/",
+                                    "type" : "Literal",
+                                    "annotation" : [ ]
+                                 }
+                              }
+                           } ]
+                        }, {
+                           "type" : "Exists",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "type" : "ListTypeSpecifier",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{http://hl7.org/fhir}Coding",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           } ],
+                           "operand" : {
+                              "type" : "Query",
+                              "annotation" : [ ],
+                              "source" : [ {
+                                 "alias" : "CD",
+                                 "annotation" : [ ],
+                                 "expression" : {
+                                    "path" : "coding",
+                                    "type" : "Property",
+                                    "annotation" : [ ],
+                                    "source" : {
+                                       "path" : "code",
+                                       "scope" : "C",
+                                       "type" : "Property",
+                                       "annotation" : [ ]
+                                    }
+                                 }
+                              } ],
+                              "let" : [ ],
+                              "relationship" : [ ],
+                              "where" : {
+                                 "type" : "And",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "type" : "Equal",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "name" : "{urn:hl7-org:elm-types:r1}String",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}String",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "value",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "system",
+                                          "scope" : "CD",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                       "value" : "http://hl7.org/fhir/sid/icd-10-cm",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }, {
+                                    "type" : "In",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "operand" : [ {
+                                       "path" : "value",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "CD",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "type" : "List",
+                                       "annotation" : [ ],
+                                       "element" : [ {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "K6811",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "R5084",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T80211A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T80212A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T80218A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T80219A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T80222XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T81302A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T81303XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T81304XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T81351XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T81359XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T82451XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T82452XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T82453XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T8459XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84600XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84610A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84611A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84612A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84613A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84615A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84619A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84620A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84621A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84622A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84623A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84624A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84625A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84629A",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84633XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84639XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T84699XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T8571XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T8572XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T8579XA",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                          "value" : "T86842",
+                                          "type" : "Literal",
+                                          "annotation" : [ ]
+                                       } ]
+                                    } ]
+                                 } ]
+                              }
+                           }
+                        } ]
+                     }
+                  }
+               }
+            }
+         }, {
+            "name" : "Denominator",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Distinct",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "CSP",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "name" : "Clean Surgery Procedures",
+                           "type" : "ExpressionRef",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ ],
+                     "return" : {
+                        "annotation" : [ ],
+                        "expression" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "reference",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "subject",
+                                 "scope" : "CSP",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }, {
+            "name" : "Numerator",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Distinct",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "CSWI",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "name" : "Clean Surgery With Wound Infection",
+                           "type" : "ExpressionRef",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ ],
+                     "return" : {
+                        "annotation" : [ ],
+                        "expression" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "reference",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "subject",
+                                 "scope" : "CSWI",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }, {
+            "name" : "Infection Rate",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "If",
+               "annotation" : [ ],
+               "condition" : {
+                  "type" : "Greater",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : [ {
+                     "name" : "Denominator",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }, {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  } ]
+               },
+               "then" : {
+                  "type" : "Multiply",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : [ {
+                     "type" : "Divide",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "type" : "ToDecimal",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        } ],
+                        "operand" : {
+                           "name" : "Numerator",
+                           "type" : "ExpressionRef",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "type" : "ToDecimal",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        } ],
+                        "operand" : {
+                           "name" : "Denominator",
+                           "type" : "ExpressionRef",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }, {
+                     "type" : "ToDecimal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                        "value" : "100",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     }
+                  } ]
+               },
+               "else" : {
+                  "asType" : "{urn:hl7-org:elm-types:r1}Decimal",
+                  "type" : "As",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Null",
+                     "annotation" : [ ]
+                  }
+               }
+            }
+         } ]
+      }
+   }
+}
+
