@@ -6,6 +6,7 @@
     <title>FHIR CQL 整合平台 - 醫療數據分析系統</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="js/fhir-connection.js"></script>
 </head>
 <body>
     <!-- 導航欄 -->
@@ -50,7 +51,7 @@
         </section>
 
         <!-- FHIR 伺服器設定 -->
-        <section class="fhir-config">
+        <section class="fhir-config" style="display:none;">
             <div class="section-header">
                 <h2><i class="fas fa-server"></i> FHIR 伺服器設定</h2>
                 <p>配置您的 FHIR 數據源</p>
@@ -139,7 +140,7 @@
                         <li><i class="fas fa-bacteria"></i> 腹瀉疫情統計</li>
                     </ul>
                     <div class="feature-status">
-                        <span class="badge badge-success">已啟用</span>
+                        <span class="badge badge-emergency" id="badge-disease">未啟用</span>
                     </div>
                 </div>
 
@@ -156,7 +157,7 @@
                         <li><i class="fas fa-check"></i> 健康篩檢追蹤</li>
                     </ul>
                     <div class="feature-status">
-                        <span class="badge badge-success">已啟用</span>
+                        <span class="badge badge-emergency" id="badge-health">未啟用</span>
                     </div>
                 </div>
 
@@ -173,7 +174,7 @@
                         <li><i class="fas fa-check"></i> 電子病歷採用率</li>
                     </ul>
                     <div class="feature-status">
-                        <span class="badge badge-success">已啟用</span>
+                        <span class="badge badge-emergency" id="badge-esg">未啟用</span>
                     </div>
                 </div>
 
@@ -190,7 +191,7 @@
                         <li><i class="fas fa-check"></i> 病患安全追蹤</li>
                     </ul>
                     <div class="feature-status">
-                        <span class="badge badge-success">已啟用</span>
+                        <span class="badge badge-emergency" id="badge-quality">未啟用</span>
                     </div>
                 </div>
             </div>
@@ -198,10 +199,10 @@
 
         <!-- 快速開始 -->
         <section class="quick-start">
-            <div class="section-header">
+            <div class="section-header" style="display:none;">
                 <h2><i class="fas fa-rocket"></i> 快速開始</h2>
             </div>
-            <div class="steps-container">
+            <div class="steps-container" style="display:none;">
                 <div class="step-card">
                     <div class="step-number">1</div>
                     <h3>設定 FHIR 伺服器</h3>
@@ -237,6 +238,71 @@
 
     <script src="js/smart-launch.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/fhir-connection.js"></script>
+
+    <script>
+    // 頁面載入後自動連線衛福部 FHIR Server，並更新徽章狀態
+    document.addEventListener('DOMContentLoaded', async function() {
+        const badges = [
+            document.getElementById('badge-disease'),
+            document.getElementById('badge-health'),
+            document.getElementById('badge-esg'),
+            document.getElementById('badge-quality')
+        ];
+
+        function setBadges(connected) {
+            badges.forEach(badge => {
+                if (!badge) return;
+                if (connected) {
+                    badge.textContent = '已啟用';
+                    badge.className = 'badge badge-success';
+                } else {
+                    badge.textContent = '未啟用';
+                    badge.className = 'badge badge-emergency';
+                }
+            });
+        }
+
+        // 自動連線衛福部 FHIR Server
+        const serverUrl = 'https://thas.mohw.gov.tw/v/r4/fhir';
+        try {
+            const resp = await fetch(serverUrl + '/metadata', {
+                method: 'GET',
+                headers: { 'Accept': 'application/fhir+json' },
+                mode: 'cors'
+            });
+            if (resp.ok) {
+                setBadges(true);
+                // 儲存連線狀態供其他頁面使用
+                localStorage.setItem('fhirServer', serverUrl);
+                if (fhirConnection) {
+                    fhirConnection.serverUrl = serverUrl;
+                    fhirConnection.isConnected = true;
+                }
+            } else {
+                setBadges(false);
+            }
+        } catch (e) {
+            setBadges(false);
+        }
+
+        // 每 30 秒持續檢查連線
+        setInterval(async function() {
+            try {
+                const resp = await fetch(serverUrl + '/metadata', {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/fhir+json' },
+                    mode: 'cors'
+                });
+                setBadges(resp.ok);
+                if (fhirConnection) {
+                    fhirConnection.isConnected = resp.ok;
+                }
+            } catch (e) {
+                setBadges(false);
+                if (fhirConnection) fhirConnection.isConnected = false;
+            }
+        }, 30000);
+    });
+    </script>
 </body>
 </html>
