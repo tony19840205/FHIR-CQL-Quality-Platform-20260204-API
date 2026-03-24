@@ -4612,8 +4612,9 @@ function updateIndicatorCard(indicatorId, results) {
     element.classList.add('animated');
 }
 
-// 獲取當前季度
+// 獲取當前季度（鎖定最大季度為 2026-Q1，展示用）
 function getCurrentQuarter() {
+    const MAX_QUARTER = '2026-Q1';
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1; // 0-11 -> 1-12
@@ -4624,7 +4625,11 @@ function getCurrentQuarter() {
     else if (month >= 7 && month <= 9) quarter = 'Q3';
     else quarter = 'Q4';
     
-    return `${year}-${quarter}`;
+    const current = `${year}-${quarter}`;
+    
+    // 若超過最大季度，回傳鎖定值
+    if (current > MAX_QUARTER) return MAX_QUARTER;
+    return current;
 }
 
 // 獲取季度的日期範圍
@@ -5429,18 +5434,17 @@ async function collectAllIndicatorsData() {
     };
 }
 
-// 生成季度列表（2024Q1到當前季度）
+// 生成季度列表（2024Q1到最大季度2026Q1）
 function generateQuartersList() {
     const quarters = [];
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1;
-    const currentQuarter = Math.ceil(currentMonth / 3);
+    // 鎖定最大季度為 2026-Q1
+    const maxYear = 2026;
+    const maxQ = 1;
     
     // 從2024Q1開始
-    for (let year = 2024; year <= currentYear; year++) {
-        const maxQuarter = (year === currentYear) ? currentQuarter : 4;
-        for (let q = 1; q <= maxQuarter; q++) {
+    for (let year = 2024; year <= maxYear; year++) {
+        const endQuarter = (year === maxYear) ? maxQ : 4;
+        for (let q = 1; q <= endQuarter; q++) {
             quarters.push(`${year}Q${q}`);
         }
     }
