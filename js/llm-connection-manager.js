@@ -122,6 +122,17 @@ class LLMConnectionManager {
             this.setNodeState('public', 'active');
             this.setLineState('controlToPublic', 'transferring');
             this.addDataParticles('controlToPublic');
+
+            // ★ 真實數據匯出 — 收集去識別化數據並寫入民眾網頁 JSON
+            if (window.dataExporter) {
+                console.log('📦 開始匯出去識別化數據...');
+                try {
+                    const exportResult = await window.dataExporter.exportToPublicSite();
+                    console.log('✅ 數據匯出結果:', exportResult);
+                } catch (err) {
+                    console.warn('⚠️ 數據匯出失敗（動畫繼續）:', err);
+                }
+            }
             
             await this.sleep(transferDuration);
 

@@ -1,9 +1,11 @@
 // ========== 醫療品質指標後端 API ==========
-// 用途：計算分子分母，減輕前端負擔
+// 用途：計算分子分母，減輕前端負擔；匯出去識別化數據至民眾網頁
 // 使用方法：node server.js
 
 const express = require('express');
 const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
 const app = express();
 const PORT = 3000;
 
@@ -11,6 +13,8 @@ const PORT = 3000;
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
     next();
 });
 
@@ -192,6 +196,39 @@ async function calculateGeneric(fhirServer, quarter) {
         message: '尚未實作此指標的後端運算'
     };
 }
+
+// ========== 匯出去識別化數據至民眾網頁 ==========
+app.post('/api/export-public-data', (req, res) => {
+    try {
+        const data = req.body;
+        if (!data || typeof data !== 'object') {
+            return res.status(400).json({ error: '無效的數據格式' });
+        }
+
+        // 目標路徑：public-health-dashboard/public/data/dashboard-data.json
+        const publicSitePath = path.resolve(__dirname, '..', '..', 'public-health-dashboard', 'public', 'data');
+
+        // 確保目錄存在
+        fs.mkdirSync(publicSitePath, { recursive: true });
+
+        const filePath = path.join(publicSitePath, 'dashboard-data.json');
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+
+        console.log(`✅ 去識別化數據已匯出至: ${filePath}`);
+        console.log(`   匯出時間: ${data.exportedAt}`);
+        console.log(`   來源頁面: ${data.source}`);
+
+        res.json({
+            success: true,
+            message: '數據已匯出至民眾網頁',
+            path: filePath,
+            exportedAt: data.exportedAt,
+        });
+    } catch (error) {
+        console.error('❌ 匯出失敗:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // ========== 啟動伺服器 ==========
 app.listen(PORT, () => {
