@@ -15,6 +15,7 @@
 // - 時間範圍: 無限制(擷取所有資料)
 
 let currentResults = {};
+window.healthResults = currentResults;
 
 // ========== 輔助函數 ==========
 function capitalize(str) {

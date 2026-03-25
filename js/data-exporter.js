@@ -35,6 +35,7 @@ class DataExporter {
             source: window.location.pathname,
             diseaseItems: this._collectDiseaseItems(),
             qualityIndicators: this._collectAllQualityIndicators(),
+            healthIndicators: this._collectHealthItems(),
             esgIndicators: this._collectESGItems(),
             stats: this._collectStats(),
         };
@@ -81,6 +82,45 @@ class DataExporter {
                 if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v > 0) patients = v; }
             }
             return { ...item, patients, encounters };
+        });
+    }
+
+    // ──────────────────────────────────────────
+    //  國民健康 — 輸出 HealthIndicator[] 格式
+    // ──────────────────────────────────────────
+
+    _collectHealthItems() {
+        const hr = window.healthResults || {};
+        const template = [
+            { id: 'covid19-vaccine', name: 'COVID-19 疫苗接種率', cql: 'COVID19VaccinationCoverage', description: '監測 COVID-19 疫苗接種涵蓋率與劑次完成度', countLabel: '接種人數', rateLabel: '接種率', domCount: 'covidVaccineCount', domRate: 'covidVaccineRate' },
+            { id: 'influenza-vaccine', name: '流感疫苗接種率', cql: 'InfluenzaVaccinationCoverage', description: '追蹤季節性流感疫苗接種涵蓋率', countLabel: '接種人數', rateLabel: '接種率', domCount: 'fluVaccineCount', domRate: 'fluVaccineRate' },
+            { id: 'hypertension', name: '高血壓活動個案數', cql: 'HypertensionActiveCases', description: '監測高血壓患者的管理與控制情況', countLabel: '活動個案', rateLabel: '控制率', domCount: 'hypertensionCount', domRate: 'hypertensionRate' },
+        ];
+
+        return template.map(item => {
+            let count = null, rate = null;
+
+            // 優先從 window.healthResults 讀取
+            const result = hr[item.id];
+            if (result) {
+                if (result.count != null || result.vaccinatedCount != null) count = parseInt(result.count || result.vaccinatedCount, 10);
+                if (result.rate != null || result.avgDoses != null || result.controlRate != null) {
+                    rate = parseFloat(result.rate || result.avgDoses || result.controlRate);
+                    if (!isNaN(rate)) rate = parseFloat(rate.toFixed(2));
+                }
+            }
+
+            // DOM 降級
+            if (count === null) {
+                const el = document.getElementById(item.domCount);
+                if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v > 0) count = v; }
+            }
+            if (rate === null) {
+                const el = document.getElementById(item.domRate);
+                if (el) { const v = parseFloat(el.textContent); if (!isNaN(v)) rate = v; }
+            }
+
+            return { id: item.id, name: item.name, cql: item.cql, description: item.description, count, rate, countLabel: item.countLabel, rateLabel: item.rateLabel };
         });
     }
 
