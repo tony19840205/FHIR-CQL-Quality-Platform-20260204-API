@@ -161,11 +161,12 @@ class DataExporter {
             // 優先從 window.healthResults 讀取
             const result = hr[item.id];
             if (result) {
-                if (result.count != null || result.vaccinatedCount != null) count = parseInt(result.count || result.vaccinatedCount, 10);
-                if (result.rate != null || result.avgDoses != null || result.controlRate != null) {
-                    rate = parseFloat(result.rate || result.avgDoses || result.controlRate);
-                    if (!isNaN(rate)) rate = parseFloat(rate.toFixed(2));
-                }
+                // count: uniquePatients (疫苗) / totalCases (高血壓)
+                count = parseInt(result.count ?? result.uniquePatients ?? result.totalCases ?? result.vaccinatedCount, 10);
+                if (isNaN(count)) count = null;
+                // rate: averageDoses (疫苗) / controlRate (高血壓)
+                const rv = parseFloat(result.rate ?? result.averageDoses ?? result.controlRate ?? result.avgDoses);
+                if (!isNaN(rv)) rate = parseFloat(rv.toFixed(2));
             }
 
             // DOM 降級
@@ -266,9 +267,21 @@ class DataExporter {
             // 優先從 window.qualityResults 讀取
             const result = qr[def.id];
             if (result) {
-                if (result.rate != null) rate = parseFloat(parseFloat(result.rate).toFixed(2));
                 if (result.numerator != null) numerator = parseInt(result.numerator, 10);
                 if (result.denominator != null) denominator = parseInt(result.denominator, 10);
+                // rate 可能直接存在，或從 quarterlyDetails 的當季取，或從 numerator/denominator 計算
+                if (result.rate != null) {
+                    rate = parseFloat(parseFloat(result.rate).toFixed(2));
+                } else if (result.quarterlyDetails) {
+                    const qKeys = Object.keys(result.quarterlyDetails);
+                    if (qKeys.length > 0) {
+                        const latest = result.quarterlyDetails[qKeys[qKeys.length - 1]];
+                        if (latest && latest.rate != null) rate = parseFloat(parseFloat(latest.rate).toFixed(2));
+                    }
+                }
+                if (rate === null && numerator != null && denominator != null && denominator > 0) {
+                    rate = parseFloat((numerator / denominator * 100).toFixed(2));
+                }
             }
 
             // DOM 降級：讀取頁面上的 rate 元素
