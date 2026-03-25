@@ -23,24 +23,82 @@ class DataExporter {
         this.githubOwner = 'tony19840205';
         this.githubRepo  = 'public-health-dashboard';
         this.githubPath  = 'public/data/dashboard-data.json';
+        this.CACHE_KEY   = 'fhir_export_cache';
+
+        // 自動快取：每 5 秒把當前頁面的 window.*Results 存入 localStorage
+        this._startAutoCache();
+    }
+
+    // ──────────────────────────────────────────
+    //  跨頁面 localStorage 快取
+    // ──────────────────────────────────────────
+
+    _startAutoCache() {
+        const tick = () => this._cacheCurrentPageResults();
+        setInterval(tick, 5000);
+        window.addEventListener('beforeunload', tick);
+    }
+
+    /** 將當前頁面的 window.*Results 寫入 localStorage（僅非空時） */
+    _cacheCurrentPageResults() {
+        try {
+            const cache = JSON.parse(localStorage.getItem(this.CACHE_KEY) || '{}');
+            if (window.diseaseResults && Object.keys(window.diseaseResults).length > 0)
+                cache.diseaseResults = JSON.parse(JSON.stringify(window.diseaseResults));
+            if (window.qualityResults && Object.keys(window.qualityResults).length > 0)
+                cache.qualityResults = JSON.parse(JSON.stringify(window.qualityResults));
+            if (window.healthResults && Object.keys(window.healthResults).length > 0)
+                cache.healthResults = JSON.parse(JSON.stringify(window.healthResults));
+            if (window.esgResults && Object.keys(window.esgResults).length > 0)
+                cache.esgResults = JSON.parse(JSON.stringify(window.esgResults));
+            cache.lastCached = new Date().toISOString();
+            localStorage.setItem(this.CACHE_KEY, JSON.stringify(cache));
+        } catch (_) { /* quota exceeded — ignore */ }
+    }
+
+    /** 讀取快取 */
+    _getCache() {
+        try { return JSON.parse(localStorage.getItem(this.CACHE_KEY) || '{}'); }
+        catch { return {}; }
+    }
+
+    /** 判斷陣列中是否有任何非 null 值 */
+    _hasReal(items, field) {
+        return Array.isArray(items) && items.some(i => i[field] != null);
     }
 
     /**
-     * 從當前頁面收集所有可用的去識別化數據
-     * 輸出格式對應 public-health-dashboard 的 DashboardData 介面
+     * 從當前頁面收集所有可用的去識別化數據，
+     * 並與 localStorage 中其他頁面的歷史查詢結果合併。
      */
     collectData() {
+        // 寫入最新的 window.*Results
+        this._cacheCurrentPageResults();
+        const cached = this._getCache();
+        const lastExport = cached.lastExport || {};
+
+        // 從當前頁面收集（window → DOM → null）
+        const disease = this._collectDiseaseItems();
+        const quality = this._collectAllQualityIndicators();
+        const health  = this._collectHealthItems();
+        const esg     = this._collectESGItems();
+
+        // 合併：當前頁面有實際數據就用，否則用上次匯出的快取
         const data = {
             exportedAt: new Date().toISOString(),
             source: window.location.pathname,
-            diseaseItems: this._collectDiseaseItems(),
-            qualityIndicators: this._collectAllQualityIndicators(),
-            healthIndicators: this._collectHealthItems(),
-            esgIndicators: this._collectESGItems(),
+            diseaseItems:      this._hasReal(disease, 'patients') ? disease : (lastExport.diseaseItems || disease),
+            qualityIndicators: this._hasReal(quality, 'rate')     ? quality : (lastExport.qualityIndicators || quality),
+            healthIndicators:  this._hasReal(health, 'count')     ? health  : (lastExport.healthIndicators || health),
+            esgIndicators:     this._hasReal(esg, 'rate')         ? esg     : (lastExport.esgIndicators || esg),
             stats: this._collectStats(),
         };
 
-        console.log('📦 已收集匯出數據:', data);
+        // 儲存此次匯出結果供下次使用
+        cached.lastExport = data;
+        try { localStorage.setItem(this.CACHE_KEY, JSON.stringify(cached)); } catch (_) {}
+
+        console.log('📦 已收集匯出數據（含跨頁快取）:', data);
         return data;
     }
 
@@ -272,17 +330,21 @@ class DataExporter {
     // ──────────────────────────────────────────
 
     _collectStats() {
-        const dr = window.diseaseResults || {};
-        const qr = window.qualityResults || {};
-        const er = window.esgResults || {};
+        const cache = this._getCache();
+        const dr = window.diseaseResults || cache.diseaseResults || {};
+        const qr = window.qualityResults || cache.qualityResults || {};
+        const hr = window.healthResults  || cache.healthResults  || {};
+        const er = window.esgResults     || cache.esgResults     || {};
         return {
             cqlModules: 50,
             qualityIndicators: 39,
             diseaseItems: 5,
+            healthIndicators: 3,
             esgIndicators: 3,
             lastUpdated: new Date().toISOString(),
             queriedQuality: Object.keys(qr).length,
             queriedDisease: Object.keys(dr).length,
+            queriedHealth: Object.keys(hr).length,
             queriedESG: Object.keys(er).length,
         };
     }
