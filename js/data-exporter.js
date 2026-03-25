@@ -8,7 +8,17 @@
 
 class DataExporter {
     constructor() {
-        this.backendUrl = 'http://localhost:3000';
+        // 自動偵測後端 URL
+        const host = window.location.hostname;
+        if (host.includes('onrender.com')) {
+            // 在 Render 上時，後端就是同一個 origin
+            this.backendUrl = window.location.origin;
+        } else if (host.includes('github.io')) {
+            // 在 GitHub Pages 上時，打到 Render 後端
+            this.backendUrl = 'https://fhir-cql-quality-platform-20260204.onrender.com';
+        } else {
+            this.backendUrl = 'http://localhost:3000';
+        }
         // GitHub 設定
         this.githubOwner = 'tony19840205';
         this.githubRepo  = 'public-health-dashboard';

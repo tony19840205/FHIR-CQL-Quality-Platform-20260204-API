@@ -201,30 +201,70 @@ async function calculateGeneric(fhirServer, quarter) {
 }
 
 // ========== 匯出去識別化數據至民眾網頁 ==========
-app.post('/api/export-public-data', (req, res) => {
+app.post('/api/export-public-data', async (req, res) => {
     try {
         const data = req.body;
         if (!data || typeof data !== 'object') {
             return res.status(400).json({ error: '無效的數據格式' });
         }
 
-        // 目標路徑：public-health-dashboard/public/data/dashboard-data.json
+        const jsonContent = JSON.stringify(data, null, 2);
+
+        // 策略一：透過 GitHub API 推送（Render 或任何有 GITHUB_TOKEN 的環境）
+        const githubToken = process.env.GITHUB_TOKEN;
+        if (githubToken) {
+            const owner = 'tony19840205';
+            const repo = 'public-health-dashboard';
+            const filePath = 'public/data/dashboard-data.json';
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+            const content = Buffer.from(jsonContent).toString('base64');
+
+            // 取得目前檔案 SHA
+            let sha = null;
+            try {
+                const getRes = await axios.get(apiUrl, {
+                    headers: { 'Authorization': `token ${githubToken}`, 'Accept': 'application/vnd.github.v3+json' },
+                });
+                sha = getRes.data.sha;
+            } catch (_) { /* 檔案不存在 */ }
+
+            const body = {
+                message: `data: 控制台匯出去識別化數據 ${new Date().toISOString().slice(0, 16)}`,
+                content,
+                branch: 'main',
+            };
+            if (sha) body.sha = sha;
+
+            await axios.put(apiUrl, body, {
+                headers: {
+                    'Authorization': `token ${githubToken}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log('✅ 已透過 GitHub API 推送至民眾網頁 repo');
+            console.log(`   匯出時間: ${data.exportedAt}`);
+            return res.json({
+                success: true,
+                method: 'github-api',
+                message: '數據已推送至 GitHub，民眾網頁將自動更新',
+                exportedAt: data.exportedAt,
+            });
+        }
+
+        // 策略二：本地寫入（開發環境）
         const publicSitePath = path.resolve(__dirname, '..', '..', 'public-health-dashboard', 'public', 'data');
-
-        // 確保目錄存在
         fs.mkdirSync(publicSitePath, { recursive: true });
+        const localPath = path.join(publicSitePath, 'dashboard-data.json');
+        fs.writeFileSync(localPath, jsonContent, 'utf-8');
 
-        const filePath = path.join(publicSitePath, 'dashboard-data.json');
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-
-        console.log(`✅ 去識別化數據已匯出至: ${filePath}`);
-        console.log(`   匯出時間: ${data.exportedAt}`);
-        console.log(`   來源頁面: ${data.source}`);
-
-        res.json({
+        console.log(`✅ 去識別化數據已匯出至: ${localPath}`);
+        return res.json({
             success: true,
-            message: '數據已匯出至民眾網頁',
-            path: filePath,
+            method: 'local-file',
+            message: '數據已寫入本地民眾網頁資料夾',
+            path: localPath,
             exportedAt: data.exportedAt,
         });
     } catch (error) {
