@@ -16,6 +16,7 @@
 console.log('🚀 esg-indicators.js 文件已加载');
 
 let currentResults = {};
+window.esgResults = currentResults;  // ★ 供 data-exporter 存取
 
 // ========== 輔助函數 ==========
 function capitalize(str) {

@@ -2,6 +2,7 @@
 // Version: 2025-12-11-17:10 - Fixed indicator 11-2 date filtering
 
 let currentResults = {};
+window.qualityResults = currentResults;  // ★ 供 data-exporter 存取
 let currentFilter = 'all';
 
 // 頁面載入

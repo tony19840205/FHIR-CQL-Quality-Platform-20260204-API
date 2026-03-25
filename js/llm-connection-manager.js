@@ -123,14 +123,21 @@ class LLMConnectionManager {
             this.setLineState('controlToPublic', 'transferring');
             this.addDataParticles('controlToPublic');
 
-            // ★ 真實數據匯出 — 收集去識別化數據並寫入民眾網頁 JSON
+            // ★ 真實數據匯出 — 收集去識別化數據並推送至民眾網頁
             if (window.dataExporter) {
                 console.log('📦 開始匯出去識別化數據...');
+                this.showMessage('🔄 數據去識別化處理中... 匯出至民眾網頁', 'transfer');
                 try {
                     const exportResult = await window.dataExporter.exportToPublicSite();
                     console.log('✅ 數據匯出結果:', exportResult);
+                    if (exportResult.success) {
+                        this.showMessage(`✅ 數據已成功推送至民眾網頁 (${exportResult.method})`, 'success');
+                    } else {
+                        this.showMessage('📥 數據已下載，請手動部署至民眾網頁', 'info');
+                    }
                 } catch (err) {
                     console.warn('⚠️ 數據匯出失敗（動畫繼續）:', err);
+                    this.showMessage('⚠️ 匯出失敗，動畫繼續...', 'info');
                 }
             }
             

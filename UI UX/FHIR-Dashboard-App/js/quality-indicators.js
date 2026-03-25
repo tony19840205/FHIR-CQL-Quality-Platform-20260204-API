@@ -2,6 +2,7 @@
 // Version: 2025-12-11-17:10 - Fixed indicator 11-2 date filtering
 
 let currentResults = {};
+window.qualityResults = currentResults;  // ★ 供 data-exporter 存取
 let currentFilter = 'all';
 
 // 頁面載入
@@ -4612,8 +4613,9 @@ function updateIndicatorCard(indicatorId, results) {
     element.classList.add('animated');
 }
 
-// 獲取當前季度
+// 獲取當前季度（鎖定最大季度為 2026-Q1，展示用）
 function getCurrentQuarter() {
+    const MAX_QUARTER = '2026-Q1';
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1; // 0-11 -> 1-12
@@ -4624,7 +4626,11 @@ function getCurrentQuarter() {
     else if (month >= 7 && month <= 9) quarter = 'Q3';
     else quarter = 'Q4';
     
-    return `${year}-${quarter}`;
+    const current = `${year}-${quarter}`;
+    
+    // 若超過最大季度，回傳鎖定值
+    if (current > MAX_QUARTER) return MAX_QUARTER;
+    return current;
 }
 
 // 獲取季度的日期範圍
@@ -4773,7 +4779,8 @@ async function showDetailModal(indicatorId) {
                                 ${generateQuarterRow('2025', 'Q1', null, currentQuarter === '2025-Q1')}
                                 ${generateQuarterRow('2025', 'Q2', null, currentQuarter === '2025-Q2')}
                                 ${generateQuarterRow('2025', 'Q3', null, currentQuarter === '2025-Q3')}
-                                ${generateQuarterRow('2025', 'Q4', currentData, currentQuarter === '2025-Q4')}
+                                ${generateQuarterRow('2025', 'Q4', null, currentQuarter === '2025-Q4')}
+                                ${generateQuarterRow('2026', 'Q1', currentData, currentQuarter === '2026-Q1')}
                             </tbody>
                         </table>
                     </div>
@@ -4810,6 +4817,7 @@ async function showDetailModal(indicatorId) {
                                 ${generateQuarterRow('2025', 'Q2', updatedResults.quarterlyDetails['2025-Q2'], currentQuarter === '2025-Q2')}
                                 ${generateQuarterRow('2025', 'Q3', updatedResults.quarterlyDetails['2025-Q3'], currentQuarter === '2025-Q3')}
                                 ${generateQuarterRow('2025', 'Q4', updatedResults.quarterlyDetails['2025-Q4'], currentQuarter === '2025-Q4')}
+                                ${generateQuarterRow('2026', 'Q1', updatedResults.quarterlyDetails['2026-Q1'], currentQuarter === '2026-Q1')}
                             </tbody>
                         </table>
                     </div>
@@ -4837,8 +4845,8 @@ async function progressiveLoadQuarters(indicatorId, currentResults) {
     const currentQuarter = getCurrentQuarter();
     console.log(`當前季度: ${currentQuarter}`);
     
-    // 從最新往前載入：2025-Q4 → 2025-Q3 → 2025-Q2 → 2025-Q1 → 2024-Q4 → 2024-Q3 → 2024-Q2 → 2024-Q1
-    const quarters = ['2025-Q4', '2025-Q3', '2025-Q2', '2025-Q1', '2024-Q4', '2024-Q3', '2024-Q2', '2024-Q1'];
+    // 從最新往前載入：2026-Q1 → 2025-Q4 → 2025-Q3 → 2025-Q2 → 2025-Q1 → 2024-Q4 → 2024-Q3 → 2024-Q2 → 2024-Q1
+    const quarters = ['2026-Q1', '2025-Q4', '2025-Q3', '2025-Q2', '2025-Q1', '2024-Q4', '2024-Q3', '2024-Q2', '2024-Q1'];
     console.log(`需要載入的季度:`, quarters.filter(q => q !== currentQuarter));
     
     for (let i = 0; i < quarters.length; i++) {
@@ -5427,18 +5435,17 @@ async function collectAllIndicatorsData() {
     };
 }
 
-// 生成季度列表（2024Q1到當前季度）
+// 生成季度列表（2024Q1到最大季度2026Q1）
 function generateQuartersList() {
     const quarters = [];
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1;
-    const currentQuarter = Math.ceil(currentMonth / 3);
+    // 鎖定最大季度為 2026-Q1
+    const maxYear = 2026;
+    const maxQ = 1;
     
     // 從2024Q1開始
-    for (let year = 2024; year <= currentYear; year++) {
-        const maxQuarter = (year === currentYear) ? currentQuarter : 4;
-        for (let q = 1; q <= maxQuarter; q++) {
+    for (let year = 2024; year <= maxYear; year++) {
+        const endQuarter = (year === maxYear) ? maxQ : 4;
+        for (let q = 1; q <= endQuarter; q++) {
             quarters.push(`${year}Q${q}`);
         }
     }

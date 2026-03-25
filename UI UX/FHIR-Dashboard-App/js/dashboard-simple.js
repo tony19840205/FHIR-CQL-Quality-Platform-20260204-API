@@ -2,6 +2,7 @@
 // CQL整合版本 - 基於傳染病統計資料CQL1119文件夾
 
 let currentResults = {};
+window.diseaseResults = currentResults;  // ★ 供 data-exporter 存取
 let diseaseMap = null;
 let mapMarkers = {};
 let isMapMode = false;
