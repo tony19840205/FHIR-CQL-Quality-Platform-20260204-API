@@ -7,7 +7,10 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// 提供靜態前端檔案（HTML/CSS/JS）
+app.use(express.static(path.join(__dirname, '..')));
 
 // 允許跨域（前端才能呼叫）
 app.use((req, res, next) => {
@@ -239,6 +242,7 @@ app.listen(PORT, () => {
     console.log(`║   🌐 網址: http://localhost:${PORT}                  ║`);
     console.log('║   📊 計算API: POST /api/calculate                 ║');
     console.log('║   💚 健康檢查: GET /health                        ║');
+    console.log('║   📁 靜態檔案: /* (專案根目錄)                     ║');
     console.log('╚════════════════════════════════════════════════════╝');
     console.log('');
     console.log('✅ 後端運作中，按 Ctrl+C 停止');
