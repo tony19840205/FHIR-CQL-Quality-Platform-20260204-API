@@ -150,9 +150,9 @@ class DataExporter {
     _collectHealthItems() {
         const hr = window.healthResults || {};
         const template = [
-            { id: 'covid19-vaccine', name: 'COVID-19 疫苗接種率', cql: 'COVID19VaccinationCoverage', description: '監測 COVID-19 疫苗接種涵蓋率與劑次完成度', countLabel: '接種人數', rateLabel: '接種率', domCount: 'covidVaccineCount', domRate: 'covidVaccineRate' },
-            { id: 'influenza-vaccine', name: '流感疫苗接種率', cql: 'InfluenzaVaccinationCoverage', description: '追蹤季節性流感疫苗接種涵蓋率', countLabel: '接種人數', rateLabel: '接種率', domCount: 'fluVaccineCount', domRate: 'fluVaccineRate' },
-            { id: 'hypertension', name: '高血壓活動個案數', cql: 'HypertensionActiveCases', description: '監測高血壓患者的管理與控制情況', countLabel: '活動個案', rateLabel: '控制率', domCount: 'hypertensionCount', domRate: 'hypertensionRate' },
+            { id: 'covid19-vaccine', name: 'COVID-19 疫苗接種率', cql: 'COVID19VaccinationCoverage', description: '監測 COVID-19 疫苗接種涵蓋率與劑次完成度', countLabel: '接種人數', rateLabel: '接種率', rateUnit: '劑/人', domCount: 'covidVaccineCount', domRate: 'covidVaccineRate' },
+            { id: 'influenza-vaccine', name: '流感疫苗接種率', cql: 'InfluenzaVaccinationCoverage', description: '追蹤季節性流感疫苗接種涵蓋率', countLabel: '接種人數', rateLabel: '接種率', rateUnit: '劑/人', domCount: 'fluVaccineCount', domRate: 'fluVaccineRate' },
+            { id: 'hypertension', name: '高血壓活動個案數', cql: 'HypertensionActiveCases', description: '監測高血壓患者的管理與控制情況', countLabel: '活動個案', rateLabel: '控制率', rateUnit: '%', domCount: 'hypertensionCount', domRate: 'hypertensionRate' },
         ];
 
         return template.map(item => {
@@ -179,7 +179,7 @@ class DataExporter {
                 if (el) { const v = parseFloat(el.textContent); if (!isNaN(v)) rate = v; }
             }
 
-            return { id: item.id, name: item.name, cql: item.cql, description: item.description, count, rate, countLabel: item.countLabel, rateLabel: item.rateLabel };
+            return { id: item.id, name: item.name, cql: item.cql, description: item.description, count, rate, countLabel: item.countLabel, rateLabel: item.rateLabel, rateUnit: item.rateUnit };
         });
     }
 
