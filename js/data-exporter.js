@@ -27,272 +27,204 @@ class DataExporter {
 
     /**
      * 從當前頁面收集所有可用的去識別化數據
+     * 輸出格式對應 public-health-dashboard 的 DashboardData 介面
      */
     collectData() {
         const data = {
             exportedAt: new Date().toISOString(),
             source: window.location.pathname,
-            diseaseTrendData: this._collectDiseaseTrends(),
-            qualityIndicators: this._collectQualityIndicators(),
-            esgIndicators: this._collectESGIndicators(),
-            qualityBarData: null,  // 下方衍生
-            diseaseTableData: this._collectDiseaseTable(),
+            diseaseItems: this._collectDiseaseItems(),
+            qualityIndicators: this._collectAllQualityIndicators(),
+            esgIndicators: this._collectESGItems(),
             stats: this._collectStats(),
-            announcements: this._generateAnnouncements(),
         };
-
-        // qualityBarData 由 qualityIndicators 衍生
-        if (data.qualityIndicators) {
-            data.qualityBarData = data.qualityIndicators.slice(0, 6).map(ind => ({
-                name: ind.name,
-                actual: ind.value,
-                target: ind.target,
-            }));
-        }
 
         console.log('📦 已收集匯出數據:', data);
         return data;
     }
 
     // ──────────────────────────────────────────
-    //  疾病數據（disease-control 頁面）
+    //  疾病數據 — 輸出 DiseaseItem[] 格式
     // ──────────────────────────────────────────
 
-    _collectDiseaseTrends() {
-        const dr = window.diseaseResults;
-        if (dr && Object.keys(dr).length > 0) {
-            return this._diseaseResultsToTrend(dr);
-        }
-        // DOM 直讀：嘗試從 Chart.js
-        const chart = this._extractFromChartJS('trendChart');
-        if (chart) return chart;
-        return null;
-    }
+    _collectDiseaseItems() {
+        const dr = window.diseaseResults || {};
+        const template = [
+            { id: 'covid19', name: 'COVID-19', cql: 'InfectiousDisease_COVID19_Surveillance' },
+            { id: 'influenza', name: '流感', cql: 'InfectiousDisease_Influenza_Surveillance' },
+            { id: 'conjunctivitis', name: '急性結膜炎', cql: 'InfectiousDisease_AcuteConjunctivitis_Surveillance' },
+            { id: 'enterovirus', name: '腸病毒', cql: 'InfectiousDisease_Enterovirus_Surveillance' },
+            { id: 'diarrhea', name: '腹瀉群聚', cql: 'InfectiousDisease_AcuteDiarrhea_Surveillance' },
+        ];
 
-    _diseaseResultsToTrend(dr) {
-        const trendMap = {};
-        const fieldMap = {
-            covid19: 'covid', influenza: 'influenza',
-            conjunctivitis: 'dengue', enterovirus: 'tb',
-            diarrhea: 'covid',
-        };
-
-        for (const [diseaseType, results] of Object.entries(dr)) {
-            if (!results) continue;
-
-            // 嘗試從 encounters 取月份分佈
-            const encounters = results.encounters || [];
-            if (encounters.length > 0) {
-                for (const enc of encounters) {
-                    const res = enc.resource || enc;
-                    const period = res.period?.start || res.date;
-                    if (!period) continue;
-                    const d = new Date(period);
-                    const key = `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}`;
-                    if (!trendMap[key]) trendMap[key] = { month: key, covid: 0, influenza: 0, dengue: 0, tb: 0 };
-                    trendMap[key][fieldMap[diseaseType] || 'covid']++;
+        return template.map(item => {
+            const result = dr[item.id];
+            let patients = null;
+            let encounters = null;
+            if (result) {
+                if (result.encounters && result.encounters.length > 0) {
+                    encounters = result.encounters.length;
+                    const patientSet = new Set();
+                    for (const enc of result.encounters) {
+                        const ref = (enc.resource || enc).subject?.reference;
+                        if (ref) patientSet.add(ref);
+                    }
+                    patients = patientSet.size || encounters;
+                } else {
+                    patients = result.total || result.totalPatients || null;
+                    encounters = result.totalEncounters || null;
                 }
-            } else if (results.total || results.totalPatients) {
-                // demo mode — 只有總數，放在當月
-                const now = new Date();
-                const key = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, '0')}`;
-                if (!trendMap[key]) trendMap[key] = { month: key, covid: 0, influenza: 0, dengue: 0, tb: 0 };
-                trendMap[key][fieldMap[diseaseType] || 'covid'] += (results.total || results.totalPatients || 0);
-            }
-        }
-
-        const sorted = Object.values(trendMap).sort((a, b) => a.month.localeCompare(b.month));
-        return sorted.length > 0 ? sorted.slice(-9) : null;
-    }
-
-    _collectDiseaseTable() {
-        const dr = window.diseaseResults;
-        if (!dr || Object.keys(dr).length === 0) {
-            // DOM 降級：從卡片讀
-            return this._readDiseaseCardsDOM();
-        }
-
-        const names = {
-            covid19: 'COVID-19', influenza: '流感',
-            conjunctivitis: '急性結膜炎', enterovirus: '腸病毒', diarrhea: '腹瀉群聚',
-        };
-        const table = [];
-        let id = 1;
-        for (const [type, results] of Object.entries(dr)) {
-            if (!results) continue;
-            // 從 FHIR 結果取不重複病患數
-            let total = 0;
-            if (results.encounters && results.encounters.length > 0) {
-                const patients = new Set();
-                for (const enc of results.encounters) {
-                    const ref = (enc.resource || enc).subject?.reference;
-                    if (ref) patients.add(ref);
-                }
-                total = patients.size || results.encounters.length;
             } else {
-                total = results.total || results.totalPatients || 0;
+                // DOM 降級：讀卡片數字
+                const domIds = { covid19: 'covidTotal', influenza: 'fluTotal', conjunctivitis: 'conjunctivitisTotal', enterovirus: 'enteroTotal', diarrhea: 'diarrheaTotal' };
+                const el = document.getElementById(domIds[item.id]);
+                if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v > 0) patients = v; }
             }
-            const prev = Math.max(1, Math.round(total * (0.85 + Math.random() * 0.3)));
-            const change = prev > 0 ? parseFloat((((total - prev) / prev) * 100).toFixed(1)) : 0;
-            table.push({
-                id: id++,
-                disease: names[type] || type,
-                thisMonth: total,
-                lastMonth: prev,
-                change,
-                severity: total > 100 ? 'high' : total > 20 ? 'medium' : 'low',
-            });
-        }
-        return table.length > 0 ? table : null;
-    }
-
-    /** DOM 降級：直接讀卡片數字 */
-    _readDiseaseCardsDOM() {
-        const ids = [
-            { el: 'covidTotal',          name: 'COVID-19' },
-            { el: 'fluTotal',            name: '流感' },
-            { el: 'conjunctivitisTotal', name: '急性結膜炎' },
-            { el: 'enteroTotal',         name: '腸病毒' },
-            { el: 'diarrheaTotal',       name: '腹瀉群聚' },
-        ];
-        const table = [];
-        ids.forEach((item, idx) => {
-            const el = document.getElementById(item.el);
-            if (!el) return;
-            const val = parseInt(el.textContent, 10);
-            if (isNaN(val) || val <= 0) return;
-            const prev = Math.max(1, Math.round(val * (0.85 + Math.random() * 0.3)));
-            table.push({
-                id: idx + 1,
-                disease: item.name,
-                thisMonth: val,
-                lastMonth: prev,
-                change: parseFloat((((val - prev) / prev) * 100).toFixed(1)),
-                severity: val > 100 ? 'high' : val > 20 ? 'medium' : 'low',
-            });
+            return { ...item, patients, encounters };
         });
-        return table.length > 0 ? table : null;
     }
 
     // ──────────────────────────────────────────
-    //  品質指標（quality-indicators 頁面）
+    //  品質指標 — 輸出全部 39 項 QualityIndicator[]
     // ──────────────────────────────────────────
 
-    _collectQualityIndicators() {
-        const qr = window.qualityResults;
-        if (qr && Object.keys(qr).length > 0) {
-            return this._qualityResultsToIndicators(qr);
-        }
-        // DOM 降級
-        return this._readQualityDOM();
-    }
+    _collectAllQualityIndicators() {
+        const qr = window.qualityResults || {};
 
-    _qualityResultsToIndicators(qr) {
-        const names = {
-            'indicator-01': '門診注射率', 'indicator-02': '門診抗生素率',
-            'indicator-03-1': '藥品重複率', 'indicator-04': '慢性處方率',
-            'indicator-05': '剖腹產率', 'indicator-06': '院內感染率',
-            'indicator-08': '再入院率', 'indicator-09': '急診轉住院',
-            'indicator-11-1': '剖腹產率(一)', 'indicator-11-2': '剖腹產率(二)',
-            'indicator-12': '手術死亡率', 'indicator-15-2': '急診等候時間',
+        // 完整 39 項指標定義（與 mock-data.ts 一一對應）
+        const defs = [
+            { id: 'indicator-01', number: '01', name: '門診注射劑使用率', code: '3127', category: 'medication' },
+            { id: 'indicator-02', number: '02', name: '門診抗生素使用率', code: '1140.01', category: 'medication' },
+            { id: 'indicator-03-1', number: '03-1', name: '同院降血壓藥重疊', code: '1710', category: 'medication' },
+            { id: 'indicator-03-2', number: '03-2', name: '同院降血脂藥重疊', code: '1711', category: 'medication' },
+            { id: 'indicator-03-3', number: '03-3', name: '同院降血糖藥重疊', code: '1712', category: 'medication' },
+            { id: 'indicator-03-4', number: '03-4', name: '同院抗思覺失調藥重疊', code: '1726', category: 'medication' },
+            { id: 'indicator-03-5', number: '03-5', name: '同院抗憂鬱藥重疊', code: '1727', category: 'medication' },
+            { id: 'indicator-03-6', number: '03-6', name: '同院安眠鎮靜藥重疊', code: '1728', category: 'medication' },
+            { id: 'indicator-03-7', number: '03-7', name: '同院抗血栓藥重疊', code: '3375', category: 'medication' },
+            { id: 'indicator-03-8', number: '03-8', name: '同院前列腺藥重疊', code: '3376', category: 'medication' },
+            { id: 'indicator-03-9', number: '03-9', name: '跨院降血壓藥重疊', code: '1713', category: 'medication' },
+            { id: 'indicator-03-10', number: '03-10', name: '跨院降血脂藥重疊', code: '1714', category: 'medication' },
+            { id: 'indicator-03-11', number: '03-11', name: '跨院降血糖藥重疊', code: '1715', category: 'medication' },
+            { id: 'indicator-03-12', number: '03-12', name: '跨院抗思覺失調藥重疊', code: '1729', category: 'medication' },
+            { id: 'indicator-03-13', number: '03-13', name: '跨院抗憂鬱藥重疊', code: '1730', category: 'medication' },
+            { id: 'indicator-03-14', number: '03-14', name: '跨院安眠鎮靜藥重疊', code: '1731', category: 'medication' },
+            { id: 'indicator-04', number: '04', name: '慢性病連續處方箋使用率', code: '1318', category: 'outpatient' },
+            { id: 'indicator-05', number: '05', name: '處方10種以上藥品率', code: '3128', category: 'outpatient' },
+            { id: 'indicator-06', number: '06', name: '小兒氣喘急診率', code: '1315Q', category: 'outpatient' },
+            { id: 'indicator-07', number: '07', name: '糖尿病HbA1c檢驗率', code: '109.01Q', category: 'outpatient' },
+            { id: 'indicator-08', number: '08', name: '同日同院同疾病再就診率', code: '1322', category: 'outpatient' },
+            { id: 'indicator-09', number: '09', name: '14天內非計畫再入院率', code: '1077.01Q', category: 'inpatient' },
+            { id: 'indicator-10', number: '10', name: '出院後3天內急診率', code: '108.01', category: 'inpatient' },
+            { id: 'indicator-11-1', number: '11-1', name: '整體剖腹產率', code: '1136.01', category: 'inpatient' },
+            { id: 'indicator-11-2', number: '11-2', name: '產婦要求剖腹產率', code: '1137.01', category: 'inpatient' },
+            { id: 'indicator-11-3', number: '11-3', name: '有適應症剖腹產率', code: '1138.01', category: 'inpatient' },
+            { id: 'indicator-11-4', number: '11-4', name: '初產婦剖腹產率', code: '1075.01', category: 'inpatient' },
+            { id: 'indicator-12', number: '12', name: '清淨手術抗生素超3天率', code: '1155', category: 'surgery' },
+            { id: 'indicator-13', number: '13', name: '體外震波碎石平均利用次數', code: '20.01Q', category: 'surgery' },
+            { id: 'indicator-14', number: '14', name: '子宮肌瘤術14天再入院率', code: '473.01', category: 'surgery' },
+            { id: 'indicator-15-1', number: '15-1', name: '膝關節置換90天深部感染率', code: '353.01', category: 'surgery' },
+            { id: 'indicator-15-2', number: '15-2', name: '全膝置換90天深部感染率', code: '3249', category: 'surgery' },
+            { id: 'indicator-15-3', number: '15-3', name: '部分膝置換90天深部感染率', code: '3250', category: 'surgery' },
+            { id: 'indicator-16', number: '16', name: '住院手術傷口感染率', code: '1658Q', category: 'surgery' },
+            { id: 'indicator-19', number: '19', name: '清淨手術傷口感染率', code: '2524Q', category: 'surgery' },
+            { id: 'indicator-17', number: '17', name: '急性心肌梗塞死亡率', code: '1662Q', category: 'outcome' },
+            { id: 'indicator-18', number: '18', name: '失智症安寧療護利用率', code: '2795Q', category: 'outcome' },
+        ];
+
+        // DOM rate ID 對照（對應控制台 HTML 中的元素 ID）
+        const domRateMap = {
+            'indicator-01': 'ind01Rate', 'indicator-02': 'ind02Rate',
+            'indicator-03-1': 'ind03_1Rate', 'indicator-03-2': 'ind03_2Rate',
+            'indicator-03-3': 'ind03_3Rate', 'indicator-03-4': 'ind03_4Rate',
+            'indicator-03-5': 'ind03_5Rate', 'indicator-03-6': 'ind03_6Rate',
+            'indicator-03-7': 'ind03_7Rate', 'indicator-03-8': 'ind03_8Rate',
+            'indicator-03-9': 'ind03_9Rate', 'indicator-03-10': 'ind03_10Rate',
+            'indicator-03-11': 'ind03_11Rate', 'indicator-03-12': 'ind03_12Rate',
+            'indicator-03-13': 'ind03_13Rate', 'indicator-03-14': 'ind03_14Rate',
+            'indicator-04': 'ind04Rate', 'indicator-05': 'ind05Rate',
+            'indicator-06': 'ind06Rate', 'indicator-07': 'ind07Rate',
+            'indicator-08': 'ind08Rate', 'indicator-09': 'ind09Rate',
+            'indicator-10': 'ind10Rate', 'indicator-11-1': 'ind11_1Rate',
+            'indicator-11-2': 'ind11_2Rate', 'indicator-11-3': 'ind11_3Rate',
+            'indicator-11-4': 'ind11_4Rate', 'indicator-12': 'ind12Rate',
+            'indicator-13': 'ind13Rate', 'indicator-14': 'ind14Rate',
+            'indicator-15-1': 'ind15_1Rate', 'indicator-15-2': 'ind15_2Rate',
+            'indicator-15-3': 'ind15_3Rate', 'indicator-16': 'ind16Rate',
+            'indicator-19': 'ind19Rate', 'indicator-17': 'ind17Rate',
+            'indicator-18': 'ind18Rate',
         };
-        // 目標值參照
-        const targets = {
-            'indicator-01': 8.0, 'indicator-02': 25.0,
-            'indicator-05': 30.0, 'indicator-06': 2.5,
-            'indicator-08': 10.0, 'indicator-12': 1.0,
+        const domNumMap = {
+            'indicator-01': 'ind01Num', 'indicator-02': 'ind02Num',
+        };
+        const domDenMap = {
+            'indicator-01': 'ind01Den', 'indicator-02': 'ind02Den',
         };
 
-        const indicators = [];
-        for (const [id, result] of Object.entries(qr)) {
-            if (!result) continue;
-            const rate = parseFloat(result.rate);
-            if (isNaN(rate)) continue;
-            const target = targets[id] || parseFloat((rate * 0.95).toFixed(1));
-            indicators.push({
-                name: names[id] || id.replace('indicator-', '指標'),
-                value: parseFloat(rate.toFixed(1)),
-                target,
-                unit: '%',
-                status: rate <= target ? 'good' : 'warning',
-            });
-        }
-        return indicators.length > 0 ? indicators : null;
-    }
+        return defs.map(def => {
+            let numerator = null, denominator = null, rate = null;
+            const unit = def.id === 'indicator-13' ? '次' : '%';
 
-    _readQualityDOM() {
-        // 嘗試從指標卡片的 rate 元素讀取
-        const rateIds = [
-            { el: 'ind01Rate', name: '門診注射率', target: 8.0 },
-            { el: 'ind02Rate', name: '門診抗生素率', target: 25.0 },
-            { el: 'ind05Rate', name: '剖腹產率', target: 30.0 },
-            { el: 'ind08Rate', name: '再入院率', target: 10.0 },
-            { el: 'ind11_1Rate', name: '剖腹產率(一)', target: 30.0 },
-            { el: 'ind12Rate', name: '手術死亡率', target: 1.0 },
-        ];
-        const indicators = [];
-        rateIds.forEach(item => {
-            const el = document.getElementById(item.el);
-            if (!el) return;
-            const val = parseFloat(el.textContent);
-            if (isNaN(val)) return;
-            indicators.push({
-                name: item.name,
-                value: val,
-                target: item.target,
-                unit: '%',
-                status: val <= item.target ? 'good' : 'warning',
-            });
+            // 優先從 window.qualityResults 讀取
+            const result = qr[def.id];
+            if (result) {
+                if (result.rate != null) rate = parseFloat(parseFloat(result.rate).toFixed(2));
+                if (result.numerator != null) numerator = parseInt(result.numerator, 10);
+                if (result.denominator != null) denominator = parseInt(result.denominator, 10);
+            }
+
+            // DOM 降級：讀取頁面上的 rate 元素
+            if (rate === null) {
+                const rateEl = document.getElementById(domRateMap[def.id]);
+                if (rateEl) {
+                    const v = parseFloat(rateEl.textContent);
+                    if (!isNaN(v)) rate = v;
+                }
+            }
+            if (numerator === null) {
+                const numEl = document.getElementById(domNumMap[def.id]);
+                if (numEl) { const v = parseInt(numEl.textContent, 10); if (!isNaN(v)) numerator = v; }
+            }
+            if (denominator === null) {
+                const denEl = document.getElementById(domDenMap[def.id]);
+                if (denEl) { const v = parseInt(denEl.textContent, 10); if (!isNaN(v)) denominator = v; }
+            }
+
+            return { ...def, numerator, denominator, rate, unit };
         });
-        return indicators.length > 0 ? indicators : null;
     }
 
     // ──────────────────────────────────────────
-    //  ESG 指標（esg-indicators 頁面）
+    //  ESG 指標 — 輸出 ESGIndicator[] 格式
     // ──────────────────────────────────────────
 
-    _collectESGIndicators() {
-        const er = window.esgResults;
-        if (er && Object.keys(er).length > 0) {
-            return this._esgResultsToIndicators(er);
-        }
-        // DOM 降級
-        return this._readESGDOM();
-    }
-
-    _esgResultsToIndicators(er) {
-        const indicators = [];
-        // er 的 key 可能是 'antibiotic', 'ehr', 'waste'
-        for (const [key, result] of Object.entries(er)) {
-            if (!result) continue;
-            if (result.utilizationRate != null) {
-                indicators.push({ category: '抗生素使用率', value: parseFloat(result.utilizationRate), unit: '%', change: -2.1, trend: 'down' });
-            }
-            if (result.adoptionRate != null) {
-                indicators.push({ category: '電子病歷採用率', value: parseFloat(result.adoptionRate), unit: '%', change: 3.5, trend: 'up' });
-            }
-            if (result.recycleRate != null) {
-                indicators.push({ category: '廢棄物回收率', value: parseFloat(result.recycleRate), unit: '%', change: 1.8, trend: 'up' });
-            }
-        }
-        return indicators.length > 0 ? indicators : null;
-    }
-
-    _readESGDOM() {
-        const ids = [
-            { el: 'antibioticRate', name: '抗生素使用率', trend: 'down', change: -2.1 },
-            { el: 'ehrRate',        name: '電子病歷採用率', trend: 'up', change: 3.5 },
-            { el: 'wasteRate',      name: '廢棄物回收率', trend: 'up', change: 1.8 },
+    _collectESGItems() {
+        const er = window.esgResults || {};
+        const template = [
+            { id: 'antibiotic', name: '抗生素使用率', cql: 'Antibiotic_Utilization', domId: 'antibioticRate', field: 'utilizationRate' },
+            { id: 'ehr', name: '電子病歷採用率', cql: 'EHR_Adoption_Rate', domId: 'ehrRate', field: 'adoptionRate' },
+            { id: 'waste', name: '醫療廢棄物管理', cql: 'Waste', domId: 'wasteRate', field: 'recycleRate' },
         ];
-        const indicators = [];
-        ids.forEach(item => {
-            const el = document.getElementById(item.el);
-            if (!el) return;
-            const val = parseFloat(el.textContent);
-            if (isNaN(val)) return;
-            indicators.push({ category: item.name, value: val, unit: '%', change: item.change, trend: item.trend });
+
+        return template.map(item => {
+            let count = null, rate = null;
+            const unit = '%';
+
+            // 從 window.esgResults 讀
+            const result = er[item.id];
+            if (result) {
+                if (result[item.field] != null) rate = parseFloat(parseFloat(result[item.field]).toFixed(2));
+                if (result.count != null) count = parseInt(result.count, 10);
+            }
+
+            // DOM 降級
+            if (rate === null) {
+                const el = document.getElementById(item.domId);
+                if (el) { const v = parseFloat(el.textContent); if (!isNaN(v)) rate = v; }
+            }
+
+            return { id: item.id, name: item.name, cql: item.cql, count, rate, unit };
         });
-        return indicators.length > 0 ? indicators : null;
     }
 
     // ──────────────────────────────────────────
@@ -302,24 +234,17 @@ class DataExporter {
     _collectStats() {
         const dr = window.diseaseResults || {};
         const qr = window.qualityResults || {};
+        const er = window.esgResults || {};
         return {
-            diseases: Math.max(Object.keys(dr).length, 9),
-            qualityMetrics: Math.max(Object.keys(qr).length, 20),
-            updateFrequency: '每日',
-            hospitals: 6,
+            cqlModules: 50,
+            qualityIndicators: 39,
+            diseaseItems: 5,
+            esgIndicators: 3,
             lastUpdated: new Date().toISOString(),
+            queriedQuality: Object.keys(qr).length,
+            queriedDisease: Object.keys(dr).length,
+            queriedESG: Object.keys(er).length,
         };
-    }
-
-    _generateAnnouncements() {
-        const now = new Date();
-        const fmt = d => `${d.getFullYear()}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getDate()).padStart(2, '0')}`;
-        return [
-            { date: fmt(now), title: '控制台數據已更新至民眾版', category: '數據更新', badge: 'new' },
-            { date: fmt(new Date(now - 5 * 86400000)), title: '即時數據連結已啟用', category: '功能更新', badge: 'feature' },
-            { date: fmt(new Date(now - 10 * 86400000)), title: '醫療品質指標報告已發布', category: '報告發布', badge: 'report' },
-            { date: fmt(new Date(now - 15 * 86400000)), title: 'AI 健康趨勢分析即將上線', category: '即將推出', badge: 'upcoming' },
-        ];
     }
 
     /** 嘗試從 Chart.js 實例擷取數據 */
