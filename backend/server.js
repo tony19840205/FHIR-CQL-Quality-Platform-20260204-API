@@ -253,19 +253,27 @@ app.post('/api/export-public-data', async (req, res) => {
             });
         }
 
-        // 策略二：本地寫入（開發環境）
-        const publicSitePath = path.resolve(__dirname, '..', '..', 'public-health-dashboard', 'public', 'data');
-        fs.mkdirSync(publicSitePath, { recursive: true });
-        const localPath = path.join(publicSitePath, 'dashboard-data.json');
-        fs.writeFileSync(localPath, jsonContent, 'utf-8');
+        // 策略二：本地開發環境寫入
+        const isLocal = ['localhost', '127.0.0.1'].includes(req.hostname);
+        if (isLocal) {
+            const publicSitePath = path.resolve(__dirname, '..', '..', 'public-health-dashboard', 'public', 'data');
+            fs.mkdirSync(publicSitePath, { recursive: true });
+            const localPath = path.join(publicSitePath, 'dashboard-data.json');
+            fs.writeFileSync(localPath, jsonContent, 'utf-8');
+            console.log(`✅ 去識別化數據已匯出至: ${localPath}`);
+            return res.json({
+                success: true,
+                method: 'local-file',
+                message: '數據已寫入本地民眾網頁資料夾',
+                path: localPath,
+                exportedAt: data.exportedAt,
+            });
+        }
 
-        console.log(`✅ 去識別化數據已匯出至: ${localPath}`);
-        return res.json({
-            success: true,
-            method: 'local-file',
-            message: '數據已寫入本地民眾網頁資料夾',
-            path: localPath,
-            exportedAt: data.exportedAt,
+        // 非本地且無 GITHUB_TOKEN → 回傳錯誤，讓前端改用瀏覽器端推送
+        return res.status(501).json({
+            error: 'GITHUB_TOKEN 未設定，請使用瀏覽器端 GitHub API 推送',
+            needsClientPush: true,
         });
     } catch (error) {
         console.error('❌ 匯出失敗:', error.message);

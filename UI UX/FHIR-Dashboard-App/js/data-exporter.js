@@ -350,7 +350,7 @@ class DataExporter {
     async exportToPublicSite() {
         const data = this.collectData();
 
-        // 策略一：POST 到本地後端
+        // 策略一：POST 到後端（後端有 GITHUB_TOKEN 時會直接推送）
         try {
             const res = await fetch(`${this.backendUrl}/api/export-public-data`, {
                 method: 'POST',
@@ -359,27 +359,44 @@ class DataExporter {
             });
             if (res.ok) {
                 const result = await res.json();
-                console.log('✅ 數據已透過後端匯出:', result);
-                return { success: true, method: 'backend', ...result };
+                if (result.method === 'github-api' || result.method === 'local-file') {
+                    console.log('✅ 數據已透過後端匯出:', result);
+                    return { success: true, method: 'backend', ...result };
+                }
             }
+            // 501 = 後端沒有 GITHUB_TOKEN，繼續用瀏覽器端推送
         } catch (e) {
-            console.warn('⚠️ 後端不可用，嘗試 GitHub API...', e.message);
+            console.warn('⚠️ 後端不可用，嘗試瀏覽器端 GitHub API...', e.message);
         }
 
-        // 策略二：透過 GitHub API 直接推送
-        const githubToken = localStorage.getItem('githubToken');
-        if (githubToken) {
-            try {
-                const pushed = await this._pushToGitHub(data, githubToken);
-                if (pushed) return { success: true, method: 'github-api' };
-            } catch (e) {
-                console.warn('⚠️ GitHub API 推送失敗:', e.message);
+        // 策略二：透過瀏覽器端 GitHub API 直接推送
+        let githubToken = localStorage.getItem('githubToken');
+        if (!githubToken) {
+            githubToken = prompt(
+                '首次匯出需要 GitHub Personal Access Token\n'
+                + '（需 repo 權限，至 github.com → Settings → Developer settings → Personal access tokens 產生）\n\n'
+                + '請貼上 Token (ghp_... 開頭)：'
+            );
+            if (githubToken && githubToken.trim()) {
+                githubToken = githubToken.trim();
+                localStorage.setItem('githubToken', githubToken);
+            } else {
+                return { success: false, method: 'cancelled', message: '使用者取消輸入 Token' };
             }
         }
 
-        // 策略三：降級為下載
-        this._downloadJSON(data);
-        return { success: false, method: 'download', message: '已下載 JSON，請手動放入 public-health-dashboard/public/data/' };
+        try {
+            const pushed = await this._pushToGitHub(data, githubToken);
+            if (pushed) return { success: true, method: 'github-api' };
+        } catch (e) {
+            console.warn('⚠️ GitHub API 推送失敗:', e.message);
+            // Token 可能過期或無效，清除並提示重新輸入
+            localStorage.removeItem('githubToken');
+            alert('GitHub Token 無效或已過期，請重新操作並輸入有效的 Token');
+            return { success: false, method: 'github-api-failed', message: e.message };
+        }
+
+        return { success: false, method: 'unknown' };
     }
 
     /** 透過 GitHub Contents API 推送 JSON */
