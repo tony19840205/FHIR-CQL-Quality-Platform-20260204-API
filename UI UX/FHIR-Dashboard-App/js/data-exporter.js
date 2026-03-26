@@ -67,6 +67,23 @@ class DataExporter {
         return Array.isArray(items) && items.some(i => i[field] != null);
     }
 
+    /** 逐項目、逐欄位合併：current 非 null 優先，否則保留 prev 的值 */
+    _mergeItems(current, prev, fields) {
+        if (!Array.isArray(current)) return prev || [];
+        if (!Array.isArray(prev)) return current;
+        const prevMap = {};
+        for (const p of prev) if (p.id) prevMap[p.id] = p;
+        return current.map(item => {
+            const old = prevMap[item.id];
+            if (!old) return item;
+            const merged = { ...item };
+            for (const f of fields) {
+                if (merged[f] == null && old[f] != null) merged[f] = old[f];
+            }
+            return merged;
+        });
+    }
+
     /**
      * 從當前頁面收集所有可用的去識別化數據，
      * 並與 localStorage 中其他頁面的歷史查詢結果合併。
@@ -83,14 +100,14 @@ class DataExporter {
         const health  = this._collectHealthItems();
         const esg     = this._collectESGItems();
 
-        // 合併：當前頁面有實際數據就用，否則用上次匯出的快取
+        // 合併：逐項目、逐欄位合併，保留各頁面查詢到的非 null 值
         const data = {
             exportedAt: new Date().toISOString(),
             source: window.location.pathname,
-            diseaseItems:      this._hasReal(disease, 'patients') ? disease : (lastExport.diseaseItems || disease),
-            qualityIndicators: this._hasReal(quality, 'rate')     ? quality : (lastExport.qualityIndicators || quality),
-            healthIndicators:  this._hasReal(health, 'count')     ? health  : (lastExport.healthIndicators || health),
-            esgIndicators:     this._hasReal(esg, 'rate')         ? esg     : (lastExport.esgIndicators || esg),
+            diseaseItems:      this._mergeItems(disease, lastExport.diseaseItems, ['patients', 'encounters']),
+            qualityIndicators: this._mergeItems(quality, lastExport.qualityIndicators, ['numerator', 'denominator', 'rate']),
+            healthIndicators:  this._mergeItems(health, lastExport.healthIndicators, ['count', 'rate']),
+            esgIndicators:     this._mergeItems(esg, lastExport.esgIndicators, ['count', 'rate']),
             stats: this._collectStats(),
         };
 
@@ -331,10 +348,13 @@ class DataExporter {
     // ──────────────────────────────────────────
 
     _collectESGItems() {
-        const er = window.esgResults || {};
+        const cached = this._getCache();
+        const er = (window.esgResults && Object.keys(window.esgResults).length > 0)
+            ? window.esgResults
+            : (cached.esgResults || {});
         const template = [
             { id: 'antibiotic', name: '抗生素使用率', cql: 'Antibiotic_Utilization', description: '監測抗生素合理使用與抗藥性管理 (國際算法)', countLabel: '病人數', rateLabel: '使用率', domId: 'antibioticRate', domCountId: 'antibioticCount', rateField: 'utilizationRate', countField: 'totalPatients' },
-            { id: 'ehr', name: '電子病歷採用率', cql: 'EHR_Adoption_Rate', description: '追蹤病歷資料是否以結構化電子格式完整記錄', countLabel: '病人數', rateLabel: '採用率', domId: 'ehrRate', domCountId: 'ehrCount', rateField: 'adoptionRate', countField: 'totalOrganizations' },
+            { id: 'ehr', name: '電子病歷採用率', cql: 'EHR_Adoption_Rate', description: '追蹤病歷資料是否以結構化電子格式完整記錄', countLabel: '病人數', rateLabel: '採用率', domId: 'ehrRate', domCountId: 'ehrCount', rateField: 'adoptionRate', countField: 'ehrAdopted' },
             { id: 'waste', name: '醫療廢棄物管理', cql: 'Waste', description: '監測醫療廢棄物產生與處理情況', countLabel: '廢棄物量', rateLabel: '回收率', domId: 'wasteRate', domCountId: 'wasteCount', rateField: 'recycleRate', countField: 'totalWaste' },
         ];
 
