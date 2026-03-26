@@ -170,11 +170,11 @@ class DataExporter {
             const encounterDomIds = { covid19: 'covidEncounters', influenza: 'fluEncounters', conjunctivitis: 'conjunctivitisEncounters', enterovirus: 'enteroEncounters', diarrhea: 'diarrheaEncounters' };
             if (patients === null) {
                 const el = document.getElementById(patientDomIds[item.id]);
-                if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v > 0) patients = v; }
+                if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v >= 0) patients = v; }
             }
             if (encounters === null) {
                 const el = document.getElementById(encounterDomIds[item.id]);
-                if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v > 0) encounters = v; }
+                if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v >= 0) encounters = v; }
             }
 
             return { ...item, patients, encounters };
