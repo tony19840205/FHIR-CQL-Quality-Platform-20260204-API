@@ -312,9 +312,9 @@ class DataExporter {
     _collectESGItems() {
         const er = window.esgResults || {};
         const template = [
-            { id: 'antibiotic', name: '抗生素使用率', cql: 'Antibiotic_Utilization', domId: 'antibioticRate', field: 'utilizationRate' },
-            { id: 'ehr', name: '電子病歷採用率', cql: 'EHR_Adoption_Rate', domId: 'ehrRate', field: 'adoptionRate' },
-            { id: 'waste', name: '醫療廢棄物管理', cql: 'Waste', domId: 'wasteRate', field: 'recycleRate' },
+            { id: 'antibiotic', name: '抗生素使用率', cql: 'Antibiotic_Utilization', description: '監測抗生素合理使用與抗藥性管理 (國際算法)', countLabel: '病人數', rateLabel: '使用率', domId: 'antibioticRate', domCountId: 'antibioticCount', rateField: 'utilizationRate', countField: 'totalPatients' },
+            { id: 'ehr', name: '電子病歷採用率', cql: 'EHR_Adoption_Rate', description: '追蹤病歷資料是否以結構化電子格式完整記錄', countLabel: '病人數', rateLabel: '採用率', domId: 'ehrRate', domCountId: 'ehrCount', rateField: 'adoptionRate', countField: 'totalOrganizations' },
+            { id: 'waste', name: '醫療廢棄物管理', cql: 'Waste', description: '監測醫療廢棄物產生與處理情況', countLabel: '廢棄物量', rateLabel: '回收率', domId: 'wasteRate', domCountId: 'wasteCount', rateField: 'recycleRate', countField: 'totalWaste' },
         ];
 
         return template.map(item => {
@@ -324,8 +324,9 @@ class DataExporter {
             // 從 window.esgResults 讀
             const result = er[item.id];
             if (result) {
-                if (result[item.field] != null) rate = parseFloat(parseFloat(result[item.field]).toFixed(2));
-                if (result.count != null) count = parseInt(result.count, 10);
+                if (result[item.rateField] != null) rate = parseFloat(parseFloat(result[item.rateField]).toFixed(2));
+                const cv = parseFloat(result[item.countField]);
+                if (!isNaN(cv)) count = item.countField === 'totalWaste' ? cv : parseInt(cv, 10);
             }
 
             // DOM 降級
@@ -333,8 +334,12 @@ class DataExporter {
                 const el = document.getElementById(item.domId);
                 if (el) { const v = parseFloat(el.textContent); if (!isNaN(v)) rate = v; }
             }
+            if (count === null) {
+                const el = document.getElementById(item.domCountId);
+                if (el) { const v = parseFloat(el.textContent); if (!isNaN(v)) count = v; }
+            }
 
-            return { id: item.id, name: item.name, cql: item.cql, count, rate, unit };
+            return { id: item.id, name: item.name, cql: item.cql, description: item.description, count, rate, unit, countLabel: item.countLabel, rateLabel: item.rateLabel };
         });
     }
 
