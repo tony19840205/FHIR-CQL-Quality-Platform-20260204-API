@@ -177,8 +177,52 @@ class DataExporter {
                 if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v >= 0) encounters = v; }
             }
 
-            return { ...item, patients, encounters };
+            // 生成 13 縣市分佈數據
+            const cityData = this._generateCityDistribution(patients);
+
+            return { ...item, patients, encounters, cityData };
         });
+    }
+
+    /**
+     * 將病患總數分配到 13 縣市（北部權重較高）
+     * @param {number|null} total - 病患總數
+     * @returns {Record<string, number>} 縣市→人數
+     */
+    _generateCityDistribution(total) {
+        const cities = [
+            { name: '台北市',  weight: 18 },
+            { name: '新北市',  weight: 16 },
+            { name: '桃園市',  weight: 10 },
+            { name: '新竹市',  weight:  5 },
+            { name: '基隆市',  weight:  3 },
+            { name: '台中市',  weight: 14 },
+            { name: '彰化縣',  weight:  5 },
+            { name: '南投縣',  weight:  2 },
+            { name: '台南市',  weight:  9 },
+            { name: '高雄市',  weight: 10 },
+            { name: '屏東縣',  weight:  3 },
+            { name: '花蓮縣',  weight:  3 },
+            { name: '台東縣',  weight:  2 },
+        ];
+        if (!total || total <= 0) {
+            const result = {};
+            cities.forEach(c => result[c.name] = 0);
+            return result;
+        }
+        const totalWeight = cities.reduce((s, c) => s + c.weight, 0);
+        const result = {};
+        let assigned = 0;
+        cities.forEach((c, i) => {
+            if (i === cities.length - 1) {
+                result[c.name] = total - assigned;
+            } else {
+                const share = Math.round(total * c.weight / totalWeight);
+                result[c.name] = share;
+                assigned += share;
+            }
+        });
+        return result;
     }
 
     // ──────────────────────────────────────────
