@@ -121,24 +121,45 @@ class DataExporter {
             let patients = null;
             let encounters = null;
             if (result) {
-                if (result.encounters && result.encounters.length > 0) {
-                    encounters = result.encounters.length;
+                // 從 conditions 計算唯一病患數
+                if (result.conditions && result.conditions.length > 0) {
                     const patientSet = new Set();
-                    for (const enc of result.encounters) {
-                        const ref = (enc.resource || enc).subject?.reference;
+                    for (const cond of result.conditions) {
+                        const ref = (cond.resource || cond).subject?.reference;
                         if (ref) patientSet.add(ref);
                     }
-                    patients = patientSet.size || encounters;
-                } else {
-                    patients = result.total || result.totalPatients || null;
-                    encounters = result.totalEncounters || null;
+                    patients = patientSet.size || result.conditions.length;
                 }
-            } else {
-                // DOM 降級：讀卡片數字
-                const domIds = { covid19: 'covidTotal', influenza: 'fluTotal', conjunctivitis: 'conjunctivitisTotal', enterovirus: 'enteroTotal', diarrhea: 'diarrheaTotal' };
-                const el = document.getElementById(domIds[item.id]);
+                // 從 encounters 取就診數
+                if (result.encounters && result.encounters.length > 0) {
+                    encounters = result.encounters.length;
+                    // 如果 conditions 沒有，從 encounters 補病患數
+                    if (!patients) {
+                        const patientSet = new Set();
+                        for (const enc of result.encounters) {
+                            const ref = (enc.resource || enc).subject?.reference;
+                            if (ref) patientSet.add(ref);
+                        }
+                        patients = patientSet.size || encounters;
+                    }
+                }
+                // 兜底：示範模式或其他欄位
+                if (!patients) patients = result.total || result.totalPatients || null;
+                if (!encounters) encounters = result.totalEncounters || null;
+            }
+
+            // DOM 降級：讀卡片數字
+            const patientDomIds = { covid19: 'covidPatients', influenza: 'fluPatients', conjunctivitis: 'conjunctivitisPatients', enterovirus: 'enteroPatients', diarrhea: 'diarrheaPatients' };
+            const encounterDomIds = { covid19: 'covidEncounters', influenza: 'fluEncounters', conjunctivitis: 'conjunctivitisEncounters', enterovirus: 'enteroEncounters', diarrhea: 'diarrheaEncounters' };
+            if (patients === null) {
+                const el = document.getElementById(patientDomIds[item.id]);
                 if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v > 0) patients = v; }
             }
+            if (encounters === null) {
+                const el = document.getElementById(encounterDomIds[item.id]);
+                if (el) { const v = parseInt(el.textContent, 10); if (!isNaN(v) && v > 0) encounters = v; }
+            }
+
             return { ...item, patients, encounters };
         });
     }

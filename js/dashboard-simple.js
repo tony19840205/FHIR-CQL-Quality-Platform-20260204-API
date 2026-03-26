@@ -386,25 +386,42 @@ function updateCard(diseaseType, results) {
         });
     }
     
-    // 更新總人數
-    const totalMap = {
-        'covid19': 'covidTotal',
-        'influenza': 'fluTotal',
-        'conjunctivitis': 'conjunctivitisTotal',
-        'enterovirus': 'enteroTotal',
-        'diarrhea': 'diarrheaTotal'
+    // 更新病患數
+    const patientMap = {
+        'covid19': 'covidPatients',
+        'influenza': 'fluPatients',
+        'conjunctivitis': 'conjunctivitisPatients',
+        'enterovirus': 'enteroPatients',
+        'diarrhea': 'diarrheaPatients'
     };
     
-    const totalElement = document.getElementById(totalMap[diseaseType]);
-    if (totalElement) {
-        // 支援示範模式數據
-        if (results.demoMode && results.total) {
-            totalElement.textContent = results.total;
-            console.log(`✨ 示範模式顯示: ${results.total} 個案例`);
-        } else {
-            totalElement.textContent = uniquePatients.size;
-        }
+    // 更新就診數
+    const encounterMap = {
+        'covid19': 'covidEncounters',
+        'influenza': 'fluEncounters',
+        'conjunctivitis': 'conjunctivitisEncounters',
+        'enterovirus': 'enteroEncounters',
+        'diarrhea': 'diarrheaEncounters'
+    };
+
+    const patientCount = (results.demoMode && results.total) ? results.total : uniquePatients.size;
+    const encounterCount = (results.demoMode && results.encounters) 
+        ? results.encounters.length 
+        : (results.encounters ? results.encounters.length : 0);
+
+    const patientEl = document.getElementById(patientMap[diseaseType]);
+    if (patientEl) {
+        patientEl.textContent = patientCount;
+        patientEl.style.color = patientCount > 0 ? '#38bdf8' : '';
     }
+
+    const encounterEl = document.getElementById(encounterMap[diseaseType]);
+    if (encounterEl) {
+        encounterEl.textContent = encounterCount;
+        encounterEl.style.color = encounterCount > 0 ? '#38bdf8' : '';
+    }
+
+    console.log(`📊 ${diseaseType}: 病患數=${patientCount}, 就診數=${encounterCount}`);
 }
 
 // 顯示詳細報告
