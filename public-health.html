@@ -237,7 +237,7 @@
                         </h4>
                         <div style="display: flex; gap: 0.75rem;">
                             <button id="uiConnectBtn" onclick="toggleUIConnection()" class="btn-external-service inactive">
-                                <i class="fas fa-window-restore"></i> <span>連線 UI/UX</span>
+                                <i class="fas fa-window-restore"></i> <span>連線 民眾網頁</span>
                             </button>
                         </div>
                     </div>
@@ -316,65 +316,7 @@
                     </div>
                 </div>
                 
-                <!-- 使用狀態 -->
-                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h4 style="margin: 0 0 1rem 0; color: #1e293b;">
-                        <i class="fas fa-chart-line"></i> 即時使用狀態
-                    </h4>
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;">
-                        <div style="background: linear-gradient(135deg, #eff6ff, #dbeafe); padding: 1rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
-                            <div style="font-size: 0.75rem; color: #1e40af; margin-bottom: 0.3rem;">查詢次數</div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #1e40af;" id="queryCount">0</div>
-                        </div>
-                        <div style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981;">
-                            <div style="font-size: 0.75rem; color: #065f46; margin-bottom: 0.3rem;">輸入 Token</div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #065f46;" id="inputTokens">0</div>
-                        </div>
-                        <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                            <div style="font-size: 0.75rem; color: #92400e; margin-bottom: 0.3rem;">輸出 Token</div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #92400e;" id="outputTokens">0</div>
-                        </div>
-                        <div style="background: linear-gradient(135deg, #fce7f3, #fbcfe8); padding: 1rem; border-radius: 8px; border-left: 4px solid #ec4899;">
-                            <div style="font-size: 0.75rem; color: #831843; margin-bottom: 0.3rem;">資料傳輸</div>
-                            <div style="font-size: 1.5rem; font-weight: 700; color: #831843;" id="dataTransfer">0 KB</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- 獲利金額 -->
-                <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h4 style="margin: 0 0 1rem 0; color: #1e293b;">
-                        <i class="fas fa-dollar-sign"></i> 獲利金額 (USD)
-                    </h4>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                <th style="padding: 0.75rem; text-align: left; color: #64748b; font-weight: 600;">項目</th>
-                                <th style="padding: 0.75rem; text-align: right; color: #64748b; font-weight: 600;">數量</th>
-                                <th style="padding: 0.75rem; text-align: right; color: #64748b; font-weight: 600;">單價</th>
-                                <th style="padding: 0.75rem; text-align: right; color: #64748b; font-weight: 600;">費用</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 0.75rem; color: #1e293b;">輸入 Token</td>
-                                <td style="padding: 0.75rem; text-align: right; color: #64748b;" id="inputTokensTable">0</td>
-                                <td style="padding: 0.75rem; text-align: right; color: #64748b;">$3.00 / 1M</td>
-                                <td style="padding: 0.75rem; text-align: right; color: #10b981; font-weight: 600;" id="inputCost">$0.00</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 0.75rem; color: #1e293b;">輸出 Token</td>
-                                <td style="padding: 0.75rem; text-align: right; color: #64748b;" id="outputTokensTable">0</td>
-                                <td style="padding: 0.75rem; text-align: right; color: #64748b;">$15.00 / 1M</td>
-                                <td style="padding: 0.75rem; text-align: right; color: #10b981; font-weight: 600;" id="outputCost">$0.00</td>
-                            </tr>
-                            <tr style="background: linear-gradient(135deg, #ecfdf5, #d1fae5); font-weight: 700;">
-                                <td colspan="3" style="padding: 1rem; color: #065f46;">總計獲利</td>
-                                <td style="padding: 1rem; text-align: right; color: #065f46; font-size: 1.2rem;" id="totalRevenue">$0.00</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+
             </div>
         </div>
     </div>
