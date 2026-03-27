@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 font-sans;
+  }
+}
+
+@layer components {
+  /* Hero gradient */
+  .hero-gradient {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%);
+  }
+
+  /* Card hover effect */
+  .card-hover {
+    @apply transition-all duration-300 ease-out;
+  }
+  .card-hover:hover {
+    @apply -translate-y-1 shadow-lg;
+  }
+
+  /* Glass morphism */
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  /* Stat card gradient backgrounds */
+  .stat-blue { background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); }
+  .stat-emerald { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); }
+  .stat-amber { background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); }
+  .stat-violet { background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%); }
+
+  /* Section */
+  .section-card {
+    @apply bg-white rounded-2xl shadow-sm border border-slate-100 p-6;
+  }
+
+  /* Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-slate-300 rounded-full;
+  }
+}
+
+/* Recharts tooltip custom */
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  @apply !bg-white/95 !backdrop-blur-sm !border-slate-200 !rounded-xl !shadow-lg;
+}
+
+/* Smooth page transitions */
+@media (prefers-reduced-motion: no-preference) {
+  main {
+    animation: fadeIn 0.4s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Chat bubble styles */
+.chat-bubble-user {
+  @apply bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3;
+}
+.chat-bubble-ai {
+  @apply bg-white border border-slate-200 text-slate-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm;
+}
