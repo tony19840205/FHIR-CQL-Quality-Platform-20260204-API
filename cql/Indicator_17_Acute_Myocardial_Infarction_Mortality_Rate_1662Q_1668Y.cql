@@ -44,29 +44,33 @@ code "I22.9": 'I22.9' from "ICD10CM" display 'Subsequent ST elevation (STEMI) my
 // NHI 轉歸代碼
 code "TRAN_CODE_4": '4' from "NHI_TRAN_CODE" display '死亡'
 code "TRAN_CODE_A": 'A' from "NHI_TRAN_CODE" display '病危自動出院'
+// Helper function
+define function CodeInList(codeValue String, codeList List<String>):
+  codeValue in codeList
 
+context Patient
 // 1. 18歲以上且主診斷為急性心肌梗塞的住院+門診案件數 (Denominator)
 define "AMI Patients Over 18":
   [Condition] C
     where exists (
       C.code.coding CD 
-        where CD in {
-          "I21", "I21.0", "I21.01", "I21.02", "I21.09",
-          "I21.1", "I21.11", "I21.19",
-          "I21.2", "I21.21", "I21.29",
-          "I21.3", "I21.4", "I21.9",
-          "I21.A", "I21.A1", "I21.A9", "I21.B",
-          "I22", "I22.0", "I22.1", "I22.2", "I22.8", "I22.9"
-        }
+        where CodeInList(CD.code.value, {
+          'I21', 'I21.0', 'I21.01', 'I21.02', 'I21.09',
+          'I21.1', 'I21.11', 'I21.19',
+          'I21.2', 'I21.21', 'I21.29',
+          'I21.3', 'I21.4', 'I21.9',
+          'I21.A', 'I21.A1', 'I21.A9', 'I21.B',
+          'I22', 'I22.0', 'I22.1', 'I22.2', 'I22.8', 'I22.9'
+        })
     )
     and exists (
       [Patient] P
-        where P.id.value = C.subject.reference.value
-        and years between P.birthDate.value and Today() >= 18
+        where ('Patient/' + P.id.value) = C.subject.reference.value
+        and AgeInYearsAt(Today()) >= 18
     )
     and exists (
       [Encounter] E
-        where E.id.value = C.encounter.reference.value
+        where E.subject.reference.value = C.subject.reference.value
         and (E.class.code.value = 'IMP' or E.class.code.value = 'AMB')
     )
 
@@ -78,17 +82,17 @@ define "AMI Deaths":
       // 方法1: 病患死亡旗標
       exists (
         [Patient] P
-          where P.id.value = AMI.subject.reference.value
+          where ('Patient/' + P.id.value) = AMI.subject.reference.value
           and P.deceased is not null
           and (
-            (P.deceased as FHIR.boolean).value = true
-            or (P.deceased as FHIR.dateTime).value is not null
+            (P.deceased is FHIR.boolean and (P.deceased as FHIR.boolean).value = true)
+            or P.deceased is FHIR.dateTime
           )
       )
       // 方法2: 轉歸代碼為死亡或病危自動出院（住院案件）
       or exists (
         [Encounter] E
-          where E.id.value = AMI.encounter.reference.value
+          where E.subject.reference.value = AMI.subject.reference.value
           and E.class.code.value = 'IMP'
           and exists (
             E.extension EXT
@@ -118,6 +122,6 @@ define "Numerator":
 // 5. 指標計算結果
 define "Mortality Rate":
   if "Denominator" > 0 then
-    ("Numerator" / "Denominator") * 100
+    (ToDecimal("Numerator") / ToDecimal("Denominator")) * 100
   else
     null

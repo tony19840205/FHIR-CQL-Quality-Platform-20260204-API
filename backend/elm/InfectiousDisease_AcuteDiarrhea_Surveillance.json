@@ -1,0 +1,3594 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorVersion" : "3.10.0",
+         "translatorOptions" : "DisableListDemotion,DisableListPromotion",
+         "signatureLevel" : "Overloads",
+         "type" : "CqlToElmInfo"
+      } ],
+      "identifier" : {
+         "id" : "InfectiousDisease_AcuteDiarrhea_Surveillance",
+         "version" : "1.0.0"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1",
+            "annotation" : [ ]
+         }, {
+            "localIdentifier" : "FHIR",
+            "uri" : "http://hl7.org/fhir",
+            "version" : "4.0.1",
+            "annotation" : [ ]
+         } ]
+      },
+      "includes" : {
+         "def" : [ {
+            "localIdentifier" : "FHIRHelpers",
+            "path" : "FHIRHelpers",
+            "version" : "4.0.1",
+            "annotation" : [ ]
+         } ]
+      },
+      "parameters" : {
+         "def" : [ {
+            "name" : "Measurement Period",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "default" : {
+               "lowClosed" : true,
+               "highClosed" : true,
+               "type" : "Interval",
+               "annotation" : [ ],
+               "low" : {
+                  "type" : "DateTime",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "year" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1900",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "month" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "day" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "hour" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "minute" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "second" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "millisecond" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               },
+               "high" : {
+                  "type" : "DateTime",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "year" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "2100",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "month" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "12",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "day" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "31",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "hour" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "23",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "minute" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "59",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "second" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "59",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "millisecond" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }
+            },
+            "parameterTypeSpecifier" : {
+               "type" : "IntervalTypeSpecifier",
+               "annotation" : [ ],
+               "pointType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            }
+         } ]
+      },
+      "codeSystems" : {
+         "def" : [ {
+            "name" : "ICD-9-CM",
+            "id" : "http://hl7.org/fhir/sid/icd-9-cm",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "ICD-10-CM",
+            "id" : "http://hl7.org/fhir/sid/icd-10-cm",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "SNOMEDCT",
+            "id" : "http://snomed.info/sct",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "LOINC",
+            "id" : "http://loinc.org",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "ActCode",
+            "id" : "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         } ]
+      },
+      "valueSets" : {
+         "def" : [ {
+            "name" : "Acute Diarrhea ICD9 Codes",
+            "id" : "http://example.org/fhir/ValueSet/acute-diarrhea-icd9",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "Acute Diarrhea ICD10 Codes",
+            "id" : "http://example.org/fhir/ValueSet/acute-diarrhea-icd10",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "Acute Diarrhea SNOMED Codes",
+            "id" : "http://example.org/fhir/ValueSet/acute-diarrhea-snomed",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "Acute Diarrhea Lab Codes",
+            "id" : "http://example.org/fhir/ValueSet/acute-diarrhea-lab",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         } ]
+      },
+      "codes" : {
+         "def" : [ {
+            "name" : "ICD9 Cholera 001",
+            "id" : "001",
+            "display" : "Cholera",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Cholera due to V cholerae 001.0",
+            "id" : "001.0",
+            "display" : "Cholera due to Vibrio cholerae",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Cholera due to V cholerae el tor 001.1",
+            "id" : "001.1",
+            "display" : "Cholera due to Vibrio cholerae el tor",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Cholera unspecified 001.9",
+            "id" : "001.9",
+            "display" : "Cholera, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Typhoid fever 002",
+            "id" : "002",
+            "display" : "Typhoid and paratyphoid fevers",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Typhoid fever 002.0",
+            "id" : "002.0",
+            "display" : "Typhoid fever",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Paratyphoid fever A 002.1",
+            "id" : "002.1",
+            "display" : "Paratyphoid fever A",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Paratyphoid fever B 002.2",
+            "id" : "002.2",
+            "display" : "Paratyphoid fever B",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Paratyphoid fever C 002.3",
+            "id" : "002.3",
+            "display" : "Paratyphoid fever C",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Paratyphoid fever unspecified 002.9",
+            "id" : "002.9",
+            "display" : "Paratyphoid fever, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonellosis 003",
+            "id" : "003",
+            "display" : "Other salmonella infections",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella gastroenteritis 003.0",
+            "id" : "003.0",
+            "display" : "Salmonella gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella septicemia 003.1",
+            "id" : "003.1",
+            "display" : "Salmonella septicemia",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella localized infection 003.2",
+            "id" : "003.2",
+            "display" : "Localized salmonella infections",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella localized infection 003.20",
+            "id" : "003.20",
+            "display" : "Localized salmonella infection, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella localized infection 003.21",
+            "id" : "003.21",
+            "display" : "Salmonella meningitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella localized infection 003.22",
+            "id" : "003.22",
+            "display" : "Salmonella pneumonia",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella localized infection 003.23",
+            "id" : "003.23",
+            "display" : "Salmonella arthritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella localized infection 003.24",
+            "id" : "003.24",
+            "display" : "Salmonella osteomyelitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Salmonella localized infection 003.29",
+            "id" : "003.29",
+            "display" : "Other localized salmonella infections",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Shigellosis 004",
+            "id" : "004",
+            "display" : "Shigellosis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Shigella dysenteriae 004.0",
+            "id" : "004.0",
+            "display" : "Shigella dysenteriae",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Shigella flexneri 004.1",
+            "id" : "004.1",
+            "display" : "Shigella flexneri",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Shigella boydii 004.2",
+            "id" : "004.2",
+            "display" : "Shigella boydii",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Shigella sonnei 004.3",
+            "id" : "004.3",
+            "display" : "Shigella sonnei",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Shigella unspecified 004.9",
+            "id" : "004.9",
+            "display" : "Shigellosis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Food poisoning 005",
+            "id" : "005",
+            "display" : "Other food poisoning (bacterial)",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Staphylococcal food poisoning 005.0",
+            "id" : "005.0",
+            "display" : "Staphylococcal food poisoning",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Botulism 005.1",
+            "id" : "005.1",
+            "display" : "Botulism",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Food poisoning Clostridium perfringens 005.2",
+            "id" : "005.2",
+            "display" : "Food poisoning due to Clostridium perfringens",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Food poisoning other Clostridia 005.3",
+            "id" : "005.3",
+            "display" : "Food poisoning due to other Clostridia",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Food poisoning V parahaemolyticus 005.4",
+            "id" : "005.4",
+            "display" : "Food poisoning due to Vibrio parahaemolyticus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Food poisoning V vulnificus 005.81",
+            "id" : "005.81",
+            "display" : "Food poisoning due to Vibrio vulnificus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Food poisoning other organisms 005.89",
+            "id" : "005.89",
+            "display" : "Other bacterial food poisoning",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Food poisoning unspecified 005.9",
+            "id" : "005.9",
+            "display" : "Food poisoning, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Amoebiasis 006",
+            "id" : "006",
+            "display" : "Amoebiasis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute amoebic dysentery 006.0",
+            "id" : "006.0",
+            "display" : "Acute amebic dysentery without mention of abscess",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Chronic intestinal amoebiasis 006.1",
+            "id" : "006.1",
+            "display" : "Chronic intestinal amebiasis without mention of abscess",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Amoebic nondysenteric colitis 006.2",
+            "id" : "006.2",
+            "display" : "Amebic nondysenteric colitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Amoebic liver abscess 006.3",
+            "id" : "006.3",
+            "display" : "Amebic liver abscess",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Amoebic lung abscess 006.4",
+            "id" : "006.4",
+            "display" : "Amebic lung abscess",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other intestinal protozoal diseases 007",
+            "id" : "007",
+            "display" : "Other protozoal intestinal diseases",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Balantidiasis 007.0",
+            "id" : "007.0",
+            "display" : "Balantidiasis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Giardiasis 007.1",
+            "id" : "007.1",
+            "display" : "Giardiasis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Coccidiosis 007.2",
+            "id" : "007.2",
+            "display" : "Coccidiosis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Intestinal trichomoniasis 007.3",
+            "id" : "007.3",
+            "display" : "Intestinal trichomoniasis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Cryptosporidiosis 007.4",
+            "id" : "007.4",
+            "display" : "Cryptosporidiosis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Cyclosporiasis 007.5",
+            "id" : "007.5",
+            "display" : "Cyclosporiasis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Intestinal infection E coli 008",
+            "id" : "008",
+            "display" : "Intestinal infections due to other organisms",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 E coli intestinal infection 008.0",
+            "id" : "008.0",
+            "display" : "Intestinal infection due to E. coli",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 E coli enteropathogenic 008.00",
+            "id" : "008.00",
+            "display" : "E. coli, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 E coli enterotoxigenic 008.01",
+            "id" : "008.01",
+            "display" : "Enteropathogenic E. coli",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 E coli enteroinvasive 008.02",
+            "id" : "008.02",
+            "display" : "Enterotoxigenic E. coli",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 E coli enterohemorrhagic 008.03",
+            "id" : "008.03",
+            "display" : "Enteroinvasive E. coli",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 E coli other 008.04",
+            "id" : "008.04",
+            "display" : "Enterohemorrhagic E. coli",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Arizona group bacteria 008.1",
+            "id" : "008.1",
+            "display" : "Arizona group of paracolon bacilli",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Aerobacter aerogenes 008.2",
+            "id" : "008.2",
+            "display" : "Aerobacter aerogenes",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Proteus mirabilis 008.3",
+            "id" : "008.3",
+            "display" : "Proteus (mirabilis) (morganii)",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other gram negative bacteria 008.4",
+            "id" : "008.4",
+            "display" : "Other specified bacteria",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Pseudomonas 008.42",
+            "id" : "008.42",
+            "display" : "Pseudomonas",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Campylobacter 008.43",
+            "id" : "008.43",
+            "display" : "Campylobacter",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Yersinia enterocolitica 008.44",
+            "id" : "008.44",
+            "display" : "Yersinia enterocolitica",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 C difficile 008.45",
+            "id" : "008.45",
+            "display" : "Clostridium difficile",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other anaerobes 008.46",
+            "id" : "008.46",
+            "display" : "Other anaerobes",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other gram negative 008.47",
+            "id" : "008.47",
+            "display" : "Other gram-negative bacteria",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Bacterial enteritis unspecified 008.5",
+            "id" : "008.5",
+            "display" : "Bacterial enteritis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Viral enteritis 008.6",
+            "id" : "008.6",
+            "display" : "Enteritis due to specified virus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Rotavirus enteritis 008.61",
+            "id" : "008.61",
+            "display" : "Rotavirus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Adenovirus enteritis 008.62",
+            "id" : "008.62",
+            "display" : "Adenovirus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Norwalk virus enteritis 008.63",
+            "id" : "008.63",
+            "display" : "Norwalk virus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other small round virus 008.64",
+            "id" : "008.64",
+            "display" : "Other small round viruses",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Calicivirus 008.65",
+            "id" : "008.65",
+            "display" : "Calicivirus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Astrovirus 008.66",
+            "id" : "008.66",
+            "display" : "Astrovirus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other viral enteritis 008.69",
+            "id" : "008.69",
+            "display" : "Other viral enteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other organism enteritis 008.8",
+            "id" : "008.8",
+            "display" : "Other organism, not elsewhere classified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Ill-defined intestinal infection 009",
+            "id" : "009",
+            "display" : "Ill-defined intestinal infections",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Infectious colitis enteritis gastroenteritis 009.0",
+            "id" : "009.0",
+            "display" : "Infectious colitis, enteritis, and gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Colitis enteritis gastroenteritis presumed infectious 009.1",
+            "id" : "009.1",
+            "display" : "Colitis, enteritis, and gastroenteritis of presumed infectious origin",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Infectious diarrhea 009.2",
+            "id" : "009.2",
+            "display" : "Infectious diarrhea",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Diarrhea presumed infectious 009.3",
+            "id" : "009.3",
+            "display" : "Diarrhea of presumed infectious origin",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Intestinal infection unspecified organism 558.9",
+            "id" : "558.9",
+            "display" : "Other and unspecified noninfectious gastroenteritis and colitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Noninfectious diarrhea 787.91",
+            "id" : "787.91",
+            "display" : "Diarrhea",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Noninfectious gastroenteritis 558",
+            "id" : "558",
+            "display" : "Other and unspecified noninfectious gastroenteritis and colitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Infectious diarrhea A09",
+            "id" : "A09",
+            "display" : "Infectious gastroenteritis and colitis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Diarrhea K52",
+            "id" : "K52",
+            "display" : "Other and unspecified noninfective gastroenteritis and colitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Diarrhea R19.7",
+            "id" : "R19.7",
+            "display" : "Diarrhea, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Noninfective gastroenteritis K52.9",
+            "id" : "K52.9",
+            "display" : "Noninfective gastroenteritis and colitis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Functional diarrhea K59.1",
+            "id" : "K59.1",
+            "display" : "Functional diarrhea",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Cholera A00",
+            "id" : "A00",
+            "display" : "Cholera",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Typhoid fever A01.0",
+            "id" : "A01.0",
+            "display" : "Typhoid fever",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Paratyphoid fever A01.1",
+            "id" : "A01.1",
+            "display" : "Paratyphoid fever A",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Salmonella enteritis A02.0",
+            "id" : "A02.0",
+            "display" : "Salmonella enteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Shigellosis A03",
+            "id" : "A03",
+            "display" : "Shigellosis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Bacterial food poisoning A05",
+            "id" : "A05",
+            "display" : "Other bacterial foodborne intoxications",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Amoebiasis A06",
+            "id" : "A06",
+            "display" : "Amoebiasis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Giardiasis A07.1",
+            "id" : "A07.1",
+            "display" : "Giardiasis [lambliasis]",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Cryptosporidiosis A07.2",
+            "id" : "A07.2",
+            "display" : "Cryptosporidiosis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Rotavirus enteritis A08.0",
+            "id" : "A08.0",
+            "display" : "Rotaviral enteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Norovirus A08.1",
+            "id" : "A08.1",
+            "display" : "Acute gastroenteropathy due to Norwalk agent",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Adenovirus enteritis A08.2",
+            "id" : "A08.2",
+            "display" : "Adenoviral enteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute diarrhea",
+            "id" : "111939009",
+            "display" : "Acute diarrhea",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Infectious diarrhea",
+            "id" : "62315008",
+            "display" : "Diarrhea",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Gastroenteritis",
+            "id" : "25374005",
+            "display" : "Gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute gastroenteritis",
+            "id" : "41345002",
+            "display" : "Acute gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Infectious gastroenteritis",
+            "id" : "4602008",
+            "display" : "Infectious gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Viral gastroenteritis",
+            "id" : "70524001",
+            "display" : "Viral gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Bacterial gastroenteritis",
+            "id" : "409825003",
+            "display" : "Bacterial gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Cholera",
+            "id" : "63650001",
+            "display" : "Cholera",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Typhoid fever",
+            "id" : "4834000",
+            "display" : "Typhoid fever",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Salmonella infection",
+            "id" : "302231008",
+            "display" : "Salmonella infection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Salmonella gastroenteritis",
+            "id" : "3992009",
+            "display" : "Salmonella gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Shigellosis",
+            "id" : "36188001",
+            "display" : "Shigellosis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Campylobacter enteritis",
+            "id" : "186024005",
+            "display" : "Campylobacter enteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED E coli enteritis",
+            "id" : "84794001",
+            "display" : "Enteritis due to Escherichia coli",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Rotavirus gastroenteritis",
+            "id" : "186561008",
+            "display" : "Rotavirus enteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Norovirus gastroenteritis",
+            "id" : "52886002",
+            "display" : "Norwalk agent gastroenteritis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED C difficile colitis",
+            "id" : "186431008",
+            "display" : "Clostridium difficile colitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Giardiasis",
+            "id" : "4855003",
+            "display" : "Giardiasis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Cryptosporidiosis",
+            "id" : "7406009",
+            "display" : "Cryptosporidiosis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Amoebiasis",
+            "id" : "65415000",
+            "display" : "Amebiasis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Stool culture",
+            "id" : "625-4",
+            "display" : "Bacteria identified in Stool by Culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Stool O&P",
+            "id" : "673-4",
+            "display" : "Ova and parasites [Presence] in Stool by Light microscopy",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Rotavirus Ag stool",
+            "id" : "6575-4",
+            "display" : "Rotavirus Ag [Presence] in Stool",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Norovirus RNA",
+            "id" : "75756-7",
+            "display" : "Norovirus RNA [Presence] in Stool by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC C difficile toxin",
+            "id" : "17583-0",
+            "display" : "Clostridium difficile toxin A+B [Presence] in Stool",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Salmonella culture",
+            "id" : "630-4",
+            "display" : "Salmonella sp identified in Stool by Culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Shigella culture",
+            "id" : "535-5",
+            "display" : "Shigella sp identified in Stool by Culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Campylobacter culture",
+            "id" : "595-9",
+            "display" : "Campylobacter sp identified in Stool by Culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC E coli O157",
+            "id" : "625-4",
+            "display" : "Escherichia coli O157 [Presence] in Stool by Culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Giardia Ag",
+            "id" : "6571-3",
+            "display" : "Giardia lamblia Ag [Presence] in Stool",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Cryptosporidium Ag",
+            "id" : "6568-9",
+            "display" : "Cryptosporidium sp Ag [Presence] in Stool",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Enteric pathogen panel",
+            "id" : "82208-6",
+            "display" : "Enteric bacterial pathogens panel - Stool by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC GI pathogen panel",
+            "id" : "75757-5",
+            "display" : "Bacteria and Viruses panel - Stool by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Viral gastroenteritis panel",
+            "id" : "88462-7",
+            "display" : "Gastrointestinal pathogens panel - Stool by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Fecal leukocytes",
+            "id" : "9829-3",
+            "display" : "Leukocytes [Presence] in Stool",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Fecal lactoferrin",
+            "id" : "27157-7",
+            "display" : "Lactoferrin [Mass/volume] in Stool",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Stool WBC",
+            "id" : "821-6",
+            "display" : "Leukocytes [#/area] in Stool by Microscopy high power field",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Outpatient",
+            "id" : "AMB",
+            "display" : "Ambulatory/Outpatient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Emergency",
+            "id" : "EMER",
+            "display" : "Emergency",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Inpatient",
+            "id" : "IMP",
+            "display" : "Inpatient encounter",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "name" : "Patient",
+            "annotation" : [ ]
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "name" : "Patient",
+            "context" : "Patient",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "SingletonFrom",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : {
+                  "dataType" : "{http://hl7.org/fhir}Patient",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
+                  "type" : "Retrieve",
+                  "annotation" : [ ],
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
+               }
+            }
+         }, {
+            "name" : "Acute Diarrhea Diagnosis Conditions",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Union",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : [ {
+                  "type" : "Union",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "dataType" : "{http://hl7.org/fhir}Condition",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Acute Diarrhea ICD9 Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }, {
+                     "dataType" : "{http://hl7.org/fhir}Condition",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Acute Diarrhea ICD10 Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  } ]
+               }, {
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "annotation" : [ ],
+                  "codes" : {
+                     "name" : "Acute Diarrhea SNOMED Codes",
+                     "preserve" : true,
+                     "type" : "ValueSetRef",
+                     "annotation" : [ ]
+                  },
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Acute Diarrhea Lab Results",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "Lab",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}Observation",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Acute Diarrhea Lab Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "And",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "In",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "name" : "ToString",
+                        "libraryName" : "FHIRHelpers",
+                        "type" : "FunctionRef",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "name" : "{http://hl7.org/fhir}ObservationStatus",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        } ],
+                        "operand" : [ {
+                           "path" : "status",
+                           "scope" : "Lab",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        } ]
+                     }, {
+                        "type" : "List",
+                        "annotation" : [ ],
+                        "element" : [ {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "final",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "amended",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "corrected",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        } ]
+                     } ]
+                  }, {
+                     "type" : "Not",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "path" : "value",
+                           "scope" : "Lab",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }
+                  } ]
+               }
+            }
+         }, {
+            "name" : "All Encounters",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "E",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}Encounter",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Encounter",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "Equal",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : [ {
+                     "name" : "ToString",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{http://hl7.org/fhir}EncounterStatus",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "status",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "finished",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "Diagnosis Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "C",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Acute Diarrhea Diagnosis Conditions",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "value" : {
+                           "name" : "ToDateTime",
+                           "libraryName" : "FHIRHelpers",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{http://hl7.org/fhir}dateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "type" : "Coalesce",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : [ {
+                                 "strict" : false,
+                                 "type" : "As",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : {
+                                    "path" : "onset",
+                                    "scope" : "C",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 },
+                                 "asTypeSpecifier" : {
+                                    "name" : "{http://hl7.org/fhir}dateTime",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 }
+                              }, {
+                                 "path" : "recordedDate",
+                                 "scope" : "C",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              } ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Diagnosis",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "system",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "code",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "display",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "reference",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "encounter",
+                                 "scope" : "C",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Lab Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "L",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Acute Diarrhea Lab Results",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "value" : {
+                           "name" : "ToDateTime",
+                           "libraryName" : "FHIRHelpers",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{http://hl7.org/fhir}dateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "strict" : false,
+                              "type" : "As",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : {
+                                 "path" : "effective",
+                                 "scope" : "L",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              },
+                              "asTypeSpecifier" : {
+                                 "name" : "{http://hl7.org/fhir}dateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Laboratory",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "system",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "code",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "display",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "reference",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "encounter",
+                                 "scope" : "L",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "All Acute Diarrhea Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Union",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }, {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               } ],
+               "operand" : [ {
+                  "name" : "Diagnosis Events",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "Lab Events",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Sorted Acute Diarrhea Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "E",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "All Acute Diarrhea Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "Not",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "eventDate",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }
+                  }
+               },
+               "sort" : {
+                  "annotation" : [ ],
+                  "by" : [ {
+                     "direction" : "asc",
+                     "path" : "eventDate",
+                     "type" : "ByColumn",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "IsNewEpisode",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Not",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : {
+                  "type" : "Exists",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "PriorEvent",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "name" : "allEvents",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ ],
+                     "where" : {
+                        "type" : "And",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "type" : "Less",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "PriorEvent",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "currentDate",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           } ]
+                        }, {
+                           "type" : "GreaterOrEqual",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "PriorEvent",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }, {
+                              "type" : "Subtract",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Quantity",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "currentDate",
+                                 "type" : "OperandRef",
+                                 "annotation" : [ ]
+                              }, {
+                                 "value" : 30,
+                                 "unit" : "days",
+                                 "type" : "Quantity",
+                                 "annotation" : [ ]
+                              } ]
+                           } ]
+                        } ]
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "currentDate",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            }, {
+               "name" : "allEvents",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }
+            } ]
+         }, {
+            "name" : "Unique Acute Diarrhea Episodes",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "CurrentEvent",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Sorted Acute Diarrhea Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "name" : "IsNewEpisode",
+                  "type" : "FunctionRef",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "path" : "eventDate",
+                     "scope" : "CurrentEvent",
+                     "type" : "Property",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "Sorted Acute Diarrhea Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "CalculateAgeAtEvent",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "precision" : "Year",
+               "type" : "CalculateAgeAt",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               } ],
+               "operand" : [ {
+                  "type" : "ToDateTime",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}Date",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : {
+                     "path" : "birthDate.value",
+                     "type" : "Property",
+                     "annotation" : [ ],
+                     "source" : {
+                        "name" : "Patient",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "eventDate",
+                  "type" : "OperandRef",
+                  "annotation" : [ ]
+               } ]
+            },
+            "operand" : [ {
+               "name" : "eventDate",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "Patient Gender",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "path" : "value",
+               "type" : "Property",
+               "annotation" : [ ],
+               "source" : {
+                  "path" : "gender",
+                  "type" : "Property",
+                  "annotation" : [ ],
+                  "source" : {
+                     "name" : "Patient",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }
+            }
+         }, {
+            "name" : "GetEncounterTypeById",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "First",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "All Encounters",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "type" : "Concatenate",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Encounter/",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "id",
+                              "scope" : "E",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }
+                        } ]
+                     }, {
+                        "name" : "encId",
+                        "type" : "OperandRef",
+                        "annotation" : [ ]
+                     } ]
+                  },
+                  "return" : {
+                     "annotation" : [ ],
+                     "expression" : {
+                        "type" : "Case",
+                        "annotation" : [ ],
+                        "caseItem" : [ {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Inpatient",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Inpatient",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Emergency",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Emergency",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Outpatient",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Outpatient",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        } ],
+                        "else" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Other",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "encId",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "Acute Diarrhea Surveillance Results",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "Episode",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Unique Acute Diarrhea Episodes",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "patientId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "id",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "name" : "Patient",
+                                 "type" : "ExpressionRef",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     }, {
+                        "name" : "eventDate",
+                        "value" : {
+                           "type" : "ToString",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : {
+                              "path" : "eventDate",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }, {
+                        "name" : "age",
+                        "value" : {
+                           "name" : "CalculateAgeAtEvent",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "gender",
+                        "value" : {
+                           "name" : "Patient Gender",
+                           "type" : "ExpressionRef",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterType",
+                        "value" : {
+                           "name" : "GetEncounterTypeById",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "path" : "encounterId",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "path" : "eventType",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "diagnosisCode",
+                        "value" : {
+                           "path" : "codeValue",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "diagnosisName",
+                        "value" : {
+                           "path" : "codeDisplay",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "path" : "codeSystem",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Total Unique Episodes",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "name" : "Unique Acute Diarrhea Episodes",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Male Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique Acute Diarrhea Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "name" : "Patient Gender",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "male",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Female Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique Acute Diarrhea Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "name" : "Patient Gender",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "female",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Diagnosis Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique Acute Diarrhea Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "eventType",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Diagnosis",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Lab Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique Acute Diarrhea Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "eventType",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Laboratory",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Has Condition Data",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Exists",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "operand" : {
+                  "name" : "Acute Diarrhea Diagnosis Conditions",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Has Lab Data",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Exists",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Observation",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "operand" : {
+                  "name" : "Acute Diarrhea Lab Results",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Data Availability Check",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Tuple",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "hasConditionData",
+                  "value" : {
+                     "name" : "Has Condition Data",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "hasLabData",
+                  "value" : {
+                     "name" : "Has Lab Data",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "totalDiagnoses",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Condition",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "Acute Diarrhea Diagnosis Conditions",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "totalLabResults",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Observation",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "Acute Diarrhea Lab Results",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "totalEvents",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "type" : "TupleTypeSpecifier",
+                           "annotation" : [ ],
+                           "element" : [ {
+                              "name" : "eventDate",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "eventType",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeSystem",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeValue",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeDisplay",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "encounterId",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "All Acute Diarrhea Events",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "uniqueEpisodes",
+                  "value" : {
+                     "name" : "Total Unique Episodes",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ]
+            }
+         } ]
+      }
+   }
+}
+

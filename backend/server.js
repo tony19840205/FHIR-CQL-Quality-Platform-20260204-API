@@ -6,6 +6,8 @@ const express = require('express');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const cqlService = require('./cql-service');
+const gradleConverter = require('./gradle-converter');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -281,6 +283,130 @@ app.post('/api/export-public-data', async (req, res) => {
     }
 });
 
+// ========== CQL Engine API：列出可用 ELM 檔案 ==========
+app.get('/api/cql/available', async (req, res) => {
+    try {
+        const available = await cqlService.listAvailableELM();
+        res.json({ success: true, files: available });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ========== CQL Engine API：載入 ELM JSON ==========
+app.post('/api/convert-elm', async (req, res) => {
+    try {
+        const { cqlFile } = req.body;
+        if (!cqlFile) {
+            return res.status(400).json({ success: false, error: 'Missing cqlFile parameter' });
+        }
+        const elm = await cqlService.loadELM(cqlFile);
+        res.json({ success: true, elm: elm });
+    } catch (error) {
+        console.error('❌ 載入 ELM 失敗:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ========== CQL Engine API：執行 CQL 查詢 ==========
+app.post('/api/execute-cql', async (req, res) => {
+    try {
+        let { elm, fhirServerUrl, cqlFile, startDate, endDate, maxRecords } = req.body;
+        if (!fhirServerUrl) {
+            return res.status(400).json({ success: false, error: 'Missing required parameter: fhirServerUrl' });
+        }
+        if (!elm && !cqlFile) {
+            return res.status(400).json({ success: false, error: 'Missing required parameter: elm or cqlFile' });
+        }
+
+        // 如果只提供 cqlFile，從 backend/elm/ 載入 ELM JSON
+        if (!elm && cqlFile) {
+            elm = await cqlService.loadELM(cqlFile);
+        }
+
+        const startTime = Date.now();
+        const results = await cqlService.executeCQL(elm, fhirServerUrl, cqlFile, {
+            startDate, endDate, maxRecords: maxRecords || 200
+        });
+        const executionTime = Date.now() - startTime;
+
+        const isIndicator = results && results._type === 'indicator';
+
+        res.json({
+            success: true,
+            results: results,
+            resultType: isIndicator ? 'indicator' : 'standard',
+            executionMetadata: {
+                engine: 'cql-execution',
+                version: '2.4.0',
+                elmLibrary: elm.library?.identifier?.id || 'Unknown',
+                executionTime: `${executionTime}ms`,
+                fhirVersion: 'FHIR 4.0.1',
+                timestamp: new Date().toISOString()
+            }
+        });
+    } catch (error) {
+        console.error('❌ CQL 執行失敗:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// ========== Gradle CQL→ELM 轉換 API ==========
+
+// 檢查 Gradle 環境
+app.get('/api/gradle/status', async (req, res) => {
+    try {
+        const status = await gradleConverter.checkGradleEnvironment();
+        res.json({ success: true, ...status });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 列出所有 CQL 源碼檔案
+app.get('/api/cql/sources', async (req, res) => {
+    try {
+        const files = await gradleConverter.listCQLFiles();
+        res.json({ success: true, count: files.length, files: files });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 執行 Gradle 全量轉換 (CQL→ELM)
+app.post('/api/gradle/convert-all', async (req, res) => {
+    try {
+        const logs = [];
+        const result = await gradleConverter.convertCQLWithGradle({
+            onProgress: (msg) => logs.push(msg)
+        });
+        res.json({ success: true, ...result, logs: logs });
+    } catch (error) {
+        console.error('❌ Gradle 轉換失敗:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// 執行 Gradle 單檔轉換
+app.post('/api/gradle/convert-single', async (req, res) => {
+    try {
+        const { cqlFile } = req.body;
+        if (!cqlFile) {
+            return res.status(400).json({ success: false, error: 'Missing cqlFile parameter' });
+        }
+        // 防止路徑遍歷
+        if (cqlFile.includes('..') || cqlFile.includes('/') || cqlFile.includes('\\')) {
+            return res.status(400).json({ success: false, error: 'Invalid file name' });
+        }
+        const logs = [];
+        const result = await gradleConverter.convertSingleCQL(cqlFile, (msg) => logs.push(msg));
+        res.json({ success: true, ...result, logs: logs });
+    } catch (error) {
+        console.error('❌ 單檔轉換失敗:', error.message);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
 // ========== 啟動伺服器 ==========
 app.listen(PORT, () => {
     console.log('');
@@ -289,7 +415,14 @@ app.listen(PORT, () => {
     console.log('╠════════════════════════════════════════════════════╣');
     console.log(`║   🌐 網址: http://localhost:${PORT}                  ║`);
     console.log('║   📊 計算API: POST /api/calculate                 ║');
-    console.log('║   💚 健康檢查: GET /health                        ║');
+    console.log('║   🧠 CQL引擎: POST /api/execute-cql              ║');
+    console.log('║   📋 ELM載入: POST /api/convert-elm               ║');
+    console.log('║   📁 可用ELM: GET /api/cql/available              ║');
+    console.log('║   � Gradle轉換: POST /api/gradle/convert-all    ║');
+    console.log('║   🔧 單檔轉換: POST /api/gradle/convert-single   ║');
+    console.log('║   📂 CQL源碼: GET /api/cql/sources               ║');
+    console.log('║   ⚙️  Gradle狀態: GET /api/gradle/status          ║');
+    console.log('║   �💚 健康檢查: GET /health                        ║');
     console.log('║   📁 靜態檔案: /* (專案根目錄)                     ║');
     console.log('╚════════════════════════════════════════════════════╝');
     console.log('');

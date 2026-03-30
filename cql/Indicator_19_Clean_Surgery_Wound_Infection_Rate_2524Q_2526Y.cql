@@ -1,4 +1,4 @@
-﻿library Indicator_19_Clean_Surgery_Wound_Infection_Rate_2524Q_2526Y version '1.0.0'
+library Indicator_19_Clean_Surgery_Wound_Infection_Rate_2524Q_2526Y version '1.0.0'
 
 using FHIR version '4.0.1'
 
@@ -188,6 +188,8 @@ code "T8572XA": 'T8572XA' from "ICD10CM" display 'Infection and inflammatory rea
 code "T8579XA": 'T8579XA' from "ICD10CM" display 'Infection and inflammatory reaction due to other internal prosthetic devices, implants and grafts, initial encounter'
 code "T86842": 'T86842' from "ICD10CM" display 'Corneal transplant infection'
 
+context Patient
+
 // Helper function: check if code value is in list
 define function CodeInList(codeValue String, codeList List<String>):
   codeValue in codeList
@@ -304,6 +306,6 @@ define "Numerator":
 // 5. 指標計算結果
 define "Infection Rate":
   if "Denominator" > 0 then
-    ("Numerator" / "Denominator") * 100
+    (ToDecimal("Numerator") / ToDecimal("Denominator")) * 100
   else
     null

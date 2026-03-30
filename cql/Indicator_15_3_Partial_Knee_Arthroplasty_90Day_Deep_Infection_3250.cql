@@ -11,50 +11,41 @@ include FHIRHelpers version '4.0.1' called FHIRHelpers
 codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes'
 codesystem "SNOMEDCT": 'http://snomed.info/sct'
 
-// NHI 半人工膝關節置換術代碼
-code "64169B": '64169B' from "NHI_PROCEDURE" display '半人工膝關節置換術'
+context Patient
 
-// NHI 置換物深部感染代碼
-code "64053B": '64053B' from "NHI_PROCEDURE" display '西醫院所之住院案件中，以手術醫令行後續醫療置換物感染之手術'
-code "64198B": '64198B' from "NHI_PROCEDURE" display '置換物深部感染之手術'
-code "64164B": '64164B' from "NHI_PROCEDURE" display '人工膝關節置換術'
-
-// SNOMED 半人工膝關節置換術代碼
-code "425272008": '425272008' from "SNOMEDCT" display 'Unicompartmental knee replacement'
-code "609590004": '609590004' from "SNOMEDCT" display 'Partial knee replacement'
+// Helper: check if code string is in a list
+define function CodeInList(codeVal String, codeList List<String>):
+  codeList CL where CL = codeVal
 
 // 1. 半人工膝關節置換執行案件數 (Denominator)
 define "Partial TKA Procedures":
   [Procedure] P
     where (
-      exists (P.code.coding C where C in {
-        "64169B",
-        "425272008", "609590004"
-      })
+      exists (P.code.coding C where exists CodeInList(C.code.value, {'64169B', '425272008', '609590004'}))
     )
-    and P.status ~ 'completed'
+    and P.status.value = 'completed'
 
 // 2. 置換物深部感染案件數 (Numerator)
 define "Deep Infection After Partial TKA":
   [Procedure] PI
     where (
-      exists (PI.code.coding C where C in {"64053B", "64198B"})
+      exists (PI.code.coding C where exists CodeInList(C.code.value, {'64053B', '64198B'}))
     )
-    and PI.status ~ 'completed'
+    and PI.status.value = 'completed'
     and exists (
       "Partial TKA Procedures" PTKA
-        where PTKA.subject.reference = PI.subject.reference
-        // 正確時間邏輯：感染發生在半人工膝關節置換術後 90 天內
+        where PTKA.subject.reference.value = PI.subject.reference.value
+        // Infection within 90 days after partial TKA
         and (PI.performed as FHIR.dateTime).value in Interval[
           (PTKA.performed as FHIR.dateTime).value,
           (PTKA.performed as FHIR.dateTime).value + 90 days
         ]
-        // 排除條件：排除執行人工膝關節置換術(64164B)同日申報64198B 或 半人工膝關節置換術(64169B)同日申報64198B
+        // Exclude: 64198B reported same day as 64164B or 64169B
         and not (
-          exists (PI.code.coding C where C ~ "64198B")
+          exists (PI.code.coding C where C.code.value = '64198B')
           and (
-            exists (PTKA.code.coding C where C ~ "64164B")
-            or exists (PTKA.code.coding C where C ~ "64169B")
+            exists (PTKA.code.coding C where C.code.value = '64164B')
+            or exists (PTKA.code.coding C where C.code.value = '64169B')
           )
           and (PTKA.performed as FHIR.dateTime).value = (PI.performed as FHIR.dateTime).value
         )
@@ -71,6 +62,6 @@ define "Numerator":
 // 5. 指標計算結果
 define "Infection Rate":
   if "Denominator" > 0 then
-    ("Numerator" / "Denominator") * 100
+    (ToDecimal("Numerator") / ToDecimal("Denominator")) * 100
   else
     null

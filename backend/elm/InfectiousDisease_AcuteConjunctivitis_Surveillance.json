@@ -1,0 +1,3244 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorVersion" : "3.10.0",
+         "translatorOptions" : "DisableListDemotion,DisableListPromotion",
+         "signatureLevel" : "Overloads",
+         "type" : "CqlToElmInfo"
+      } ],
+      "identifier" : {
+         "id" : "InfectiousDisease_AcuteConjunctivitis_Surveillance",
+         "version" : "1.0.0"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1",
+            "annotation" : [ ]
+         }, {
+            "localIdentifier" : "FHIR",
+            "uri" : "http://hl7.org/fhir",
+            "version" : "4.0.1",
+            "annotation" : [ ]
+         } ]
+      },
+      "includes" : {
+         "def" : [ {
+            "localIdentifier" : "FHIRHelpers",
+            "path" : "FHIRHelpers",
+            "version" : "4.0.1",
+            "annotation" : [ ]
+         } ]
+      },
+      "parameters" : {
+         "def" : [ {
+            "name" : "Measurement Period",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "default" : {
+               "lowClosed" : true,
+               "highClosed" : true,
+               "type" : "Interval",
+               "annotation" : [ ],
+               "low" : {
+                  "type" : "DateTime",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "year" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1900",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "month" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "day" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "hour" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "minute" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "second" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "millisecond" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               },
+               "high" : {
+                  "type" : "DateTime",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "year" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "2100",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "month" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "12",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "day" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "31",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "hour" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "23",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "minute" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "59",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "second" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "59",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "millisecond" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }
+            },
+            "parameterTypeSpecifier" : {
+               "type" : "IntervalTypeSpecifier",
+               "annotation" : [ ],
+               "pointType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            }
+         } ]
+      },
+      "codeSystems" : {
+         "def" : [ {
+            "name" : "ICD-9-CM",
+            "id" : "http://hl7.org/fhir/sid/icd-9-cm",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "ICD-10-CM",
+            "id" : "http://hl7.org/fhir/sid/icd-10-cm",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "SNOMEDCT",
+            "id" : "http://snomed.info/sct",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "LOINC",
+            "id" : "http://loinc.org",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "ActCode",
+            "id" : "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         } ]
+      },
+      "valueSets" : {
+         "def" : [ {
+            "name" : "Acute Conjunctivitis ICD9 Codes",
+            "id" : "http://example.org/fhir/ValueSet/acute-conjunctivitis-icd9",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "Acute Conjunctivitis ICD10 Codes",
+            "id" : "http://example.org/fhir/ValueSet/acute-conjunctivitis-icd10",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "Acute Conjunctivitis SNOMED Codes",
+            "id" : "http://example.org/fhir/ValueSet/acute-conjunctivitis-snomed",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "Acute Conjunctivitis Lab Codes",
+            "id" : "http://example.org/fhir/ValueSet/acute-conjunctivitis-lab",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         } ]
+      },
+      "codes" : {
+         "def" : [ {
+            "name" : "ICD9 Conjunctivitis 077",
+            "id" : "077",
+            "display" : "Diseases of conjunctiva due to viruses and Chlamydiae",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Conjunctivitis 077.0",
+            "id" : "077.0",
+            "display" : "Inclusion conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Epidemic keratoconjunctivitis 077.1",
+            "id" : "077.1",
+            "display" : "Epidemic keratoconjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Pharyngoconjunctival fever 077.2",
+            "id" : "077.2",
+            "display" : "Pharyngoconjunctival fever",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other adenoviral conjunctivitis 077.3",
+            "id" : "077.3",
+            "display" : "Other adenoviral conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Epidemic hemorrhagic conjunctivitis 077.4",
+            "id" : "077.4",
+            "display" : "Epidemic hemorrhagic conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Newcastle conjunctivitis 077.8",
+            "id" : "077.8",
+            "display" : "Other viral conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Viral conjunctivitis unspecified 077.9",
+            "id" : "077.9",
+            "display" : "Unspecified diseases of conjunctiva due to viruses and Chlamydiae",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Conjunctivitis gonococcal 370.4",
+            "id" : "370.4",
+            "display" : "Other and unspecified keratoconjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Exposure keratoconjunctivitis 370.40",
+            "id" : "370.40",
+            "display" : "Keratoconjunctivitis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Conjunctivitis 372",
+            "id" : "372",
+            "display" : "Disorders of conjunctiva",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute conjunctivitis 372.0",
+            "id" : "372.0",
+            "display" : "Acute conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute follicular conjunctivitis 372.00",
+            "id" : "372.00",
+            "display" : "Acute conjunctivitis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Serous conjunctivitis 372.01",
+            "id" : "372.01",
+            "display" : "Serous conjunctivitis, except viral",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute follicular conjunctivitis 372.02",
+            "id" : "372.02",
+            "display" : "Acute follicular conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Other mucopurulent conjunctivitis 372.03",
+            "id" : "372.03",
+            "display" : "Other mucopurulent conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Pseudomembranous conjunctivitis 372.04",
+            "id" : "372.04",
+            "display" : "Pseudomembranous conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute atopic conjunctivitis 372.05",
+            "id" : "372.05",
+            "display" : "Acute atopic conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute chemical conjunctivitis 372.06",
+            "id" : "372.06",
+            "display" : "Acute chemical conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Ligneous conjunctivitis 372.71",
+            "id" : "372.71",
+            "display" : "Ligneous conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Conjunctivitis in other diseases 372.72",
+            "id" : "372.72",
+            "display" : "Conjunctivitis in other diseases classified elsewhere",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Viral conjunctivitis B30",
+            "id" : "B30",
+            "display" : "Viral conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Mucopurulent conjunctivitis H10",
+            "id" : "H10",
+            "display" : "Conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute conjunctivitis H10.0",
+            "id" : "H10.0",
+            "display" : "Mucopurulent conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute atopic conjunctivitis H10.1",
+            "id" : "H10.1",
+            "display" : "Acute atopic conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Other acute conjunctivitis H10.2",
+            "id" : "H10.2",
+            "display" : "Other acute conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute conjunctivitis unspecified H10.3",
+            "id" : "H10.3",
+            "display" : "Unspecified acute conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Chronic conjunctivitis H10.4",
+            "id" : "H10.4",
+            "display" : "Chronic conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Blepharoconjunctivitis H10.5",
+            "id" : "H10.5",
+            "display" : "Blepharoconjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Other conjunctivitis H10.8",
+            "id" : "H10.8",
+            "display" : "Other conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Conjunctivitis unspecified H10.9",
+            "id" : "H10.9",
+            "display" : "Unspecified conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Conjunctival hemorrhage H11.3",
+            "id" : "H11.3",
+            "display" : "Conjunctival hemorrhage",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Epidemic keratoconjunctivitis B30.0",
+            "id" : "B30.0",
+            "display" : "Keratoconjunctivitis due to adenovirus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Conjunctivitis due to adenovirus B30.1",
+            "id" : "B30.1",
+            "display" : "Conjunctivitis due to adenovirus",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Pharyngoconjunctival fever B30.2",
+            "id" : "B30.2",
+            "display" : "Viral pharyngoconjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute epidemic hemorrhagic conjunctivitis B30.3",
+            "id" : "B30.3",
+            "display" : "Acute epidemic hemorrhagic conjunctivitis (enteroviral)",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Other viral conjunctivitis B30.8",
+            "id" : "B30.8",
+            "display" : "Other viral conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Viral conjunctivitis unspecified B30.9",
+            "id" : "B30.9",
+            "display" : "Viral conjunctivitis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute conjunctivitis",
+            "id" : "9826008",
+            "display" : "Conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute viral conjunctivitis",
+            "id" : "51264003",
+            "display" : "Viral conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute bacterial conjunctivitis",
+            "id" : "193889007",
+            "display" : "Bacterial conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute follicular conjunctivitis",
+            "id" : "231977004",
+            "display" : "Acute follicular conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Mucopurulent conjunctivitis",
+            "id" : "246683000",
+            "display" : "Mucopurulent conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Allergic conjunctivitis",
+            "id" : "232008001",
+            "display" : "Allergic conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Epidemic keratoconjunctivitis",
+            "id" : "27901008",
+            "display" : "Epidemic keratoconjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Adenoviral conjunctivitis",
+            "id" : "410692000",
+            "display" : "Adenoviral conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Hemorrhagic conjunctivitis",
+            "id" : "428562003",
+            "display" : "Hemorrhagic conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Pharyngoconjunctival fever",
+            "id" : "56905009",
+            "display" : "Pharyngoconjunctival fever",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Gonococcal conjunctivitis",
+            "id" : "37415000",
+            "display" : "Gonococcal conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Chlamydial conjunctivitis",
+            "id" : "46965007",
+            "display" : "Chlamydial conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Inclusion conjunctivitis",
+            "id" : "266928009",
+            "display" : "Paratrachoma",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Chemical conjunctivitis",
+            "id" : "21007005",
+            "display" : "Conjunctivitis due to chemical",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Subconjunctival hemorrhage",
+            "id" : "246938007",
+            "display" : "Subconjunctival hemorrhage",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Red eye",
+            "id" : "246777003",
+            "display" : "Red eye",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Conjunctival hyperemia",
+            "id" : "23318009",
+            "display" : "Hyperemia of eye",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Neonatal conjunctivitis",
+            "id" : "70461003",
+            "display" : "Neonatal conjunctivitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Conjunctival culture",
+            "id" : "626-2",
+            "display" : "Bacteria identified in Conjunctiva by Culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Adenovirus Ag conjunctiva",
+            "id" : "88891-7",
+            "display" : "Adenovirus Ag [Presence] in Conjunctiva",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Adenovirus DNA",
+            "id" : "6309-8",
+            "display" : "Adenovirus DNA [Presence] in Specimen by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Chlamydia trachomatis DNA",
+            "id" : "21613-5",
+            "display" : "Chlamydia trachomatis DNA [Presence] in Specimen by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Neisseria gonorrhoeae DNA",
+            "id" : "21415-5",
+            "display" : "Neisseria gonorrhoeae DNA [Presence] in Specimen by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC HSV DNA",
+            "id" : "5017-9",
+            "display" : "Herpes simplex virus DNA [Presence] in Specimen by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Bacterial eye culture",
+            "id" : "625-4",
+            "display" : "Bacteria identified in Specimen by Culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Conjunctival smear",
+            "id" : "664-3",
+            "display" : "Microscopic observation [Identifier] in Specimen by Gram stain",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Eye pathogen panel",
+            "id" : "85827-4",
+            "display" : "Carbapenem resistance bla OXA-48-like gene [Presence] by Molecular method",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Adenovirus culture",
+            "id" : "548-8",
+            "display" : "Adenovirus [Presence] in Specimen by Organism specific culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Chlamydia culture conjunctiva",
+            "id" : "6345-2",
+            "display" : "Chlamydia sp identified in Conjunctiva by Organism specific culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Viral conjunctivitis panel",
+            "id" : "85613-8",
+            "display" : "Respiratory pathogens DNA and RNA panel - Respiratory specimen by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Eye bacterial pathogen",
+            "id" : "75756-7",
+            "display" : "Bacteria and Fungi identified in Isolate by Sequencing",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Conjunctival cytology",
+            "id" : "47527-7",
+            "display" : "Cytology report of Tissue Cyto stain",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Outpatient",
+            "id" : "AMB",
+            "display" : "Ambulatory/Outpatient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Emergency",
+            "id" : "EMER",
+            "display" : "Emergency",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Inpatient",
+            "id" : "IMP",
+            "display" : "Inpatient encounter",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "name" : "Patient",
+            "annotation" : [ ]
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "name" : "ICD9 Code List",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "List",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "ICD9 Conjunctivitis 077",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Conjunctivitis 077.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Epidemic keratoconjunctivitis 077.1",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Pharyngoconjunctival fever 077.2",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Other adenoviral conjunctivitis 077.3",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Epidemic hemorrhagic conjunctivitis 077.4",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Newcastle conjunctivitis 077.8",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Viral conjunctivitis unspecified 077.9",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Conjunctivitis gonococcal 370.4",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Exposure keratoconjunctivitis 370.40",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Conjunctivitis 372",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute conjunctivitis 372.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute follicular conjunctivitis 372.00",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Serous conjunctivitis 372.01",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute follicular conjunctivitis 372.02",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Other mucopurulent conjunctivitis 372.03",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Pseudomembranous conjunctivitis 372.04",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute atopic conjunctivitis 372.05",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute chemical conjunctivitis 372.06",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Ligneous conjunctivitis 372.71",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Conjunctivitis in other diseases 372.72",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "ICD10 Code List",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "List",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "ICD10 Viral conjunctivitis B30",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Mucopurulent conjunctivitis H10",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute conjunctivitis H10.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute atopic conjunctivitis H10.1",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Other acute conjunctivitis H10.2",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute conjunctivitis unspecified H10.3",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Chronic conjunctivitis H10.4",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Blepharoconjunctivitis H10.5",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Other conjunctivitis H10.8",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Conjunctivitis unspecified H10.9",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Conjunctival hemorrhage H11.3",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Epidemic keratoconjunctivitis B30.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Conjunctivitis due to adenovirus B30.1",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Pharyngoconjunctival fever B30.2",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute epidemic hemorrhagic conjunctivitis B30.3",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Other viral conjunctivitis B30.8",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Viral conjunctivitis unspecified B30.9",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "SNOMED Code List",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "List",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "SNOMED Acute conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute viral conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute bacterial conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute follicular conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Mucopurulent conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Allergic conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Epidemic keratoconjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Adenoviral conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Hemorrhagic conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Pharyngoconjunctival fever",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Gonococcal conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Chlamydial conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Inclusion conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Chemical conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Subconjunctival hemorrhage",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Red eye",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Conjunctival hyperemia",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Neonatal conjunctivitis",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Lab Code List",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "List",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "LOINC Conjunctival culture",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Adenovirus Ag conjunctiva",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Adenovirus DNA",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Chlamydia trachomatis DNA",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Neisseria gonorrhoeae DNA",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC HSV DNA",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Bacterial eye culture",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Conjunctival smear",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Eye pathogen panel",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Adenovirus culture",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Chlamydia culture conjunctiva",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Viral conjunctivitis panel",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Eye bacterial pathogen",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Conjunctival cytology",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Patient",
+            "context" : "Patient",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "SingletonFrom",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : {
+                  "dataType" : "{http://hl7.org/fhir}Patient",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
+                  "type" : "Retrieve",
+                  "annotation" : [ ],
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
+               }
+            }
+         }, {
+            "name" : "Acute Conjunctivitis Diagnosis Conditions",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Union",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : [ {
+                  "type" : "Union",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "dataType" : "{http://hl7.org/fhir}Condition",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Acute Conjunctivitis ICD9 Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }, {
+                     "dataType" : "{http://hl7.org/fhir}Condition",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Acute Conjunctivitis ICD10 Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  } ]
+               }, {
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "annotation" : [ ],
+                  "codes" : {
+                     "name" : "Acute Conjunctivitis SNOMED Codes",
+                     "preserve" : true,
+                     "type" : "ValueSetRef",
+                     "annotation" : [ ]
+                  },
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Acute Conjunctivitis Lab Results",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "Lab",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}Observation",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "Acute Conjunctivitis Lab Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "And",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "In",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "name" : "ToString",
+                        "libraryName" : "FHIRHelpers",
+                        "type" : "FunctionRef",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "name" : "{http://hl7.org/fhir}ObservationStatus",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        } ],
+                        "operand" : [ {
+                           "path" : "status",
+                           "scope" : "Lab",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        } ]
+                     }, {
+                        "type" : "List",
+                        "annotation" : [ ],
+                        "element" : [ {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "final",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "amended",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "corrected",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        } ]
+                     } ]
+                  }, {
+                     "type" : "Not",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "path" : "value",
+                           "scope" : "Lab",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }
+                  } ]
+               }
+            }
+         }, {
+            "name" : "All Encounters",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "E",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}Encounter",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Encounter",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "Equal",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : [ {
+                     "name" : "ToString",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{http://hl7.org/fhir}EncounterStatus",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "status",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "finished",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "Diagnosis Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "C",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Acute Conjunctivitis Diagnosis Conditions",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "value" : {
+                           "name" : "ToDateTime",
+                           "libraryName" : "FHIRHelpers",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{http://hl7.org/fhir}dateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "type" : "Coalesce",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : [ {
+                                 "strict" : false,
+                                 "type" : "As",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : {
+                                    "path" : "onset",
+                                    "scope" : "C",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 },
+                                 "asTypeSpecifier" : {
+                                    "name" : "{http://hl7.org/fhir}dateTime",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 }
+                              }, {
+                                 "path" : "recordedDate",
+                                 "scope" : "C",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              } ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Diagnosis",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "system",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "code",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "display",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "reference",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "encounter",
+                                 "scope" : "C",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Lab Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "L",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Acute Conjunctivitis Lab Results",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "value" : {
+                           "name" : "ToDateTime",
+                           "libraryName" : "FHIRHelpers",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{http://hl7.org/fhir}dateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "strict" : false,
+                              "type" : "As",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : {
+                                 "path" : "effective",
+                                 "scope" : "L",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              },
+                              "asTypeSpecifier" : {
+                                 "name" : "{http://hl7.org/fhir}dateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Laboratory",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "system",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "code",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "display",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "reference",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "encounter",
+                                 "scope" : "L",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "All Acute Conjunctivitis Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Union",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }, {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               } ],
+               "operand" : [ {
+                  "name" : "Diagnosis Events",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "Lab Events",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Sorted Acute Conjunctivitis Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "E",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "All Acute Conjunctivitis Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "Not",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "eventDate",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }
+                  }
+               },
+               "sort" : {
+                  "annotation" : [ ],
+                  "by" : [ {
+                     "direction" : "asc",
+                     "path" : "eventDate",
+                     "type" : "ByColumn",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "IsNewEpisode",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Not",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : {
+                  "type" : "Exists",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "PriorEvent",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "name" : "allEvents",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ ],
+                     "where" : {
+                        "type" : "And",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "type" : "Less",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "PriorEvent",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "currentDate",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           } ]
+                        }, {
+                           "type" : "GreaterOrEqual",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "PriorEvent",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }, {
+                              "type" : "Subtract",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Quantity",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "currentDate",
+                                 "type" : "OperandRef",
+                                 "annotation" : [ ]
+                              }, {
+                                 "value" : 30,
+                                 "unit" : "days",
+                                 "type" : "Quantity",
+                                 "annotation" : [ ]
+                              } ]
+                           } ]
+                        } ]
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "currentDate",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            }, {
+               "name" : "allEvents",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }
+            } ]
+         }, {
+            "name" : "Unique Acute Conjunctivitis Episodes",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "CurrentEvent",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Sorted Acute Conjunctivitis Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "name" : "IsNewEpisode",
+                  "type" : "FunctionRef",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "path" : "eventDate",
+                     "scope" : "CurrentEvent",
+                     "type" : "Property",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "Sorted Acute Conjunctivitis Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "CalculateAgeAtEvent",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "precision" : "Year",
+               "type" : "CalculateAgeAt",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               } ],
+               "operand" : [ {
+                  "type" : "ToDateTime",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}Date",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : {
+                     "path" : "birthDate.value",
+                     "type" : "Property",
+                     "annotation" : [ ],
+                     "source" : {
+                        "name" : "Patient",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "eventDate",
+                  "type" : "OperandRef",
+                  "annotation" : [ ]
+               } ]
+            },
+            "operand" : [ {
+               "name" : "eventDate",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "Patient Gender",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "path" : "value",
+               "type" : "Property",
+               "annotation" : [ ],
+               "source" : {
+                  "path" : "gender",
+                  "type" : "Property",
+                  "annotation" : [ ],
+                  "source" : {
+                     "name" : "Patient",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }
+            }
+         }, {
+            "name" : "GetEncounterTypeById",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "First",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "All Encounters",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "type" : "Concatenate",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Encounter/",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "id",
+                              "scope" : "E",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }
+                        } ]
+                     }, {
+                        "name" : "encId",
+                        "type" : "OperandRef",
+                        "annotation" : [ ]
+                     } ]
+                  },
+                  "return" : {
+                     "annotation" : [ ],
+                     "expression" : {
+                        "type" : "Case",
+                        "annotation" : [ ],
+                        "caseItem" : [ {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Inpatient",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Inpatient",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Emergency",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Emergency",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Outpatient",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Outpatient",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        } ],
+                        "else" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Other",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "encId",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "Acute Conjunctivitis Surveillance Results",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "Episode",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Unique Acute Conjunctivitis Episodes",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "patientId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "id",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "name" : "Patient",
+                                 "type" : "ExpressionRef",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     }, {
+                        "name" : "eventDate",
+                        "value" : {
+                           "type" : "ToString",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : {
+                              "path" : "eventDate",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }, {
+                        "name" : "age",
+                        "value" : {
+                           "name" : "CalculateAgeAtEvent",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "gender",
+                        "value" : {
+                           "name" : "Patient Gender",
+                           "type" : "ExpressionRef",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterType",
+                        "value" : {
+                           "name" : "GetEncounterTypeById",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "path" : "encounterId",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "path" : "eventType",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "diagnosisCode",
+                        "value" : {
+                           "path" : "codeValue",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "diagnosisName",
+                        "value" : {
+                           "path" : "codeDisplay",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "path" : "codeSystem",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Total Unique Episodes",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "name" : "Unique Acute Conjunctivitis Episodes",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Male Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique Acute Conjunctivitis Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "name" : "Patient Gender",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "male",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Female Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique Acute Conjunctivitis Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "name" : "Patient Gender",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "female",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Diagnosis Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique Acute Conjunctivitis Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "eventType",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Diagnosis",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Lab Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique Acute Conjunctivitis Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "eventType",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Laboratory",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Has Condition Data",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Exists",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "operand" : {
+                  "name" : "Acute Conjunctivitis Diagnosis Conditions",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Has Lab Data",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Exists",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Observation",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "operand" : {
+                  "name" : "Acute Conjunctivitis Lab Results",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Data Availability Check",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Tuple",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "hasConditionData",
+                  "value" : {
+                     "name" : "Has Condition Data",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "hasLabData",
+                  "value" : {
+                     "name" : "Has Lab Data",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "totalDiagnoses",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Condition",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "Acute Conjunctivitis Diagnosis Conditions",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "totalLabResults",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Observation",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "Acute Conjunctivitis Lab Results",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "totalEvents",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "type" : "TupleTypeSpecifier",
+                           "annotation" : [ ],
+                           "element" : [ {
+                              "name" : "eventDate",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "eventType",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeSystem",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeValue",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeDisplay",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "encounterId",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "All Acute Conjunctivitis Events",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "uniqueEpisodes",
+                  "value" : {
+                     "name" : "Total Unique Episodes",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ]
+            }
+         } ]
+      }
+   }
+}
+

@@ -12,7 +12,6 @@ codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
 
 // 參數定義
 parameter "Measurement Period" Interval<DateTime> default Interval[@1900-01-01T00:00:00.0, @2100-12-31T23:59:59.0]
-parameter "Lookback Days" Integer default 60
 
 // ============================================
 // 腸病毒相關代碼定義 (圖一 & 圖二)
@@ -66,60 +65,13 @@ code "ActCode Emergency": 'EMER' from "ActCode" display 'Emergency'
 code "ActCode Inpatient": 'IMP' from "ActCode" display 'Inpatient encounter'
 
 // ============================================
-// 值集定義
+// 值集定義 (URL-based for CQL-to-ELM compatibility)
 // ============================================
 
-valueset "Enterovirus ICD9 Codes": {
-  "ICD9 Enterovirus infection 008.67",
-  "ICD9 Intestinal infection enterovirus 047",
-  "ICD9 Hand foot mouth disease 074.0",
-  "ICD9 Herpangina 074.0",
-  "ICD9 Acute epidemic hemorrhagic conjunctivitis 074.1",
-  "ICD9 Coxsackie carditis 074.2",
-  "ICD9 Coxsackie pericarditis 074.21",
-  "ICD9 Coxsackie endocarditis 074.22",
-  "ICD9 Coxsackie myocarditis 074.23",
-  "ICD9 Hand foot mouth disease 074.3",
-  "ICD9 Herpangina 074.8",
-  "ICD9 Adenovirus infection 079.1",
-  "ICD9 Coxsackie virus infection 079.2"
-}
-
-valueset "Enterovirus ICD10 Codes": {
-  "ICD10 Enteroviral infection unspecified B08.4",
-  "ICD10 Enteroviral vesicular pharyngitis B08.5",
-  "ICD10 Herpangina 074.0",
-  "ICD10 Hand foot mouth disease 074.3"
-}
-
-valueset "Enterovirus SNOMED Codes": {
-  "SNOMED Enterovirus infection",
-  "SNOMED Hand foot mouth disease",
-  "SNOMED Herpangina",
-  "SNOMED Coxsackie virus infection",
-  "SNOMED Echovirus infection",
-  "SNOMED Enteroviral meningitis",
-  "SNOMED Enteroviral encephalitis",
-  "SNOMED Enteroviral carditis",
-  "SNOMED Enterovirus 71 infection"
-}
-
-valueset "Enterovirus Lab Codes": {
-  "LOINC Enterovirus RNA PCR",
-  "LOINC Enterovirus 71 RNA",
-  "LOINC Enterovirus Ab",
-  "LOINC Enterovirus culture",
-  "LOINC Coxsackie virus Ab",
-  "LOINC Coxsackie A virus",
-  "LOINC Coxsackie B virus",
-  "LOINC Echovirus Ab"
-}
-
-valueset "Encounter Type Codes": {
-  "ActCode Outpatient",
-  "ActCode Emergency",
-  "ActCode Inpatient"
-}
+valueset "Enterovirus ICD9 Codes": 'http://example.org/fhir/ValueSet/enterovirus-icd9'
+valueset "Enterovirus ICD10 Codes": 'http://example.org/fhir/ValueSet/enterovirus-icd10'
+valueset "Enterovirus SNOMED Codes": 'http://example.org/fhir/ValueSet/enterovirus-snomed'
+valueset "Enterovirus Lab Codes": 'http://example.org/fhir/ValueSet/enterovirus-lab'
 
 // ============================================
 // 核心邏輯：患者與事件定義
@@ -144,56 +96,33 @@ define "All Encounters":
   [Encounter] E
     where E.status = 'finished'
 
-// 合併所有腸病毒相關事件 (診斷 + 檢驗)
+// 診斷事件清單
+define "Diagnosis Events":
+  "Enterovirus Diagnosis Conditions" C
+    return Tuple {
+      eventDate: FHIRHelpers.ToDateTime(Coalesce(C.onset as FHIR.dateTime, C.recordedDate)),
+      eventType: 'Diagnosis',
+      codeSystem: Coalesce(C.code.coding[0].system.value, 'unknown'),
+      codeValue: Coalesce(C.code.coding[0].code.value, 'unknown'),
+      codeDisplay: Coalesce(C.code.coding[0].display.value, 'unknown'),
+      encounterId: C.encounter.reference.value
+    }
+
+// 檢驗事件清單
+define "Lab Events":
+  "Enterovirus Lab Results" L
+    return Tuple {
+      eventDate: FHIRHelpers.ToDateTime(L.effective as FHIR.dateTime),
+      eventType: 'Laboratory',
+      codeSystem: Coalesce(L.code.coding[0].system.value, 'unknown'),
+      codeValue: Coalesce(L.code.coding[0].code.value, 'unknown'),
+      codeDisplay: Coalesce(L.code.coding[0].display.value, 'unknown'),
+      encounterId: L.encounter.reference.value
+    }
+
+// 合併所有腸病毒相關事件
 define "All Enterovirus Events":
-  (
-    "Enterovirus Diagnosis Conditions" C
-      return {
-        eventDate: Coalesce(C.onset as dateTime, C.recordedDate),
-        eventType: 'Diagnosis',
-        code: C.code,
-        encounterId: C.encounter.reference
-      }
-  )
-  union
-  (
-    "Enterovirus Lab Results" L
-      return {
-        eventDate: Coalesce(L.effective as dateTime, L.issued),
-        eventType: 'Laboratory',
-        code: L.code,
-        encounterId: L.encounter.reference
-      }
-  )
-
-// 取得事件對應的就醫記錄
-define function "GetEncounterForEvent"(event Tuple { eventDate DateTime, eventType String, code Concept, encounterId String }):
-  First(
-    "All Encounters" E
-      where 'Encounter/' + E.id = event.encounterId
-  )
-
-// 取得就醫記錄的結束日期 (住院用)
-define function "GetEncounterEndDate"(encounter Encounter):
-  Coalesce(
-    encounter.period.end,
-    encounter.period.start
-  )
-
-// 判斷是否為住院
-define function "IsInpatientEncounter"(encounter Encounter):
-  encounter.class ~ "ActCode Inpatient"
-
-// ============================================
-// Episode 邏輯：30天內事件合併（住院延長）
-// ============================================
-
-// 計算 Episode 結束日期：確診日 + 30天，若有住院則為出院日 + 30天
-define function "CalculateEpisodeEndDate"(eventDate DateTime, encounter Encounter):
-  if "IsInpatientEncounter"(encounter) then
-    "GetEncounterEndDate"(encounter) + 30 days
-  else
-    eventDate + 30 days
+  "Diagnosis Events" union "Lab Events"
 
 // 排序所有事件（按時間）
 define "Sorted Enterovirus Events":
@@ -201,93 +130,88 @@ define "Sorted Enterovirus Events":
     where E.eventDate is not null
     sort by eventDate
 
+// ============================================
 // 去重複：30天內算一次 (Episode Window Logic)
+// ============================================
+
+define function "IsNewEpisode"(currentDate DateTime, allEvents List<Tuple { eventDate DateTime, eventType String, codeSystem String, codeValue String, codeDisplay String, encounterId String }>):
+  not exists (
+    allEvents PriorEvent
+      where PriorEvent.eventDate < currentDate
+        and PriorEvent.eventDate >= (currentDate - 30 days)
+  )
+
 define "Unique Enterovirus Episodes":
   "Sorted Enterovirus Events" CurrentEvent
-    let 
-      encounter: "GetEncounterForEvent"(CurrentEvent),
-      episodeEnd: "CalculateEpisodeEndDate"(CurrentEvent.eventDate, encounter),
-      // 檢查前面是否有事件在同一 Episode 內 (Lookback)
-      priorEventsInSameEpisode: 
-        "Sorted Enterovirus Events" PriorEvent
-          where PriorEvent.eventDate < CurrentEvent.eventDate
-            and PriorEvent.eventDate >= (CurrentEvent.eventDate - "Lookback Days" days)
-            and days between PriorEvent.eventDate and CurrentEvent.eventDate <= 30
-    // 只保留新 Episode 的首次事件
-    where Count(priorEventsInSameEpisode) = 0
-    return {
-      episodeStartDate: CurrentEvent.eventDate,
-      episodeEndDate: episodeEnd,
-      eventType: CurrentEvent.eventType,
-      code: CurrentEvent.code,
-      encounter: encounter,
-      encounterId: CurrentEvent.encounterId
-    }
+    where "IsNewEpisode"(CurrentEvent.eventDate, "Sorted Enterovirus Events")
 
 // ============================================
 // 輸出結果：年齡、性別、就醫類型
 // ============================================
 
-// 計算年齡（以事件發生時為準）
 define function "CalculateAgeAtEvent"(eventDate DateTime):
   AgeInYearsAt(eventDate)
 
-// 取得性別
 define "Patient Gender":
   Patient.gender.value
 
-// 判斷就醫類型（門診/急診/住院）
-define function "GetEncounterType"(encounter Encounter):
-  case
-    when encounter.class ~ "ActCode Inpatient" then '住院'
-    when encounter.class ~ "ActCode Emergency" then '急診'
-    when encounter.class ~ "ActCode Outpatient" then '門診'
-    else '其他'
-  end
-
-// 判斷病毒種類（標準化：會從 code 或 display 嘗試判斷常見病毒）
-define function "DetermineVirusType"(code Concept):
-  let firstCoding := Coalesce(code.coding[0], {})
-  let display := ToLower(Coalesce(firstCoding.display.value, ''))
-  let codeValue := Coalesce(firstCoding.code.value, '')
-  case
-    when display contains 'enterovirus' or display contains 'coxsackie' or display contains 'echovirus' then 'Enterovirus'
-    when display contains 'hand, foot and mouth' or display contains 'hand foot mouth' then 'Enterovirus'
-    when display contains 'adenovirus' then 'Adenovirus'
-    when display contains 'rotavirus' then 'Rotavirus'
-    when display contains 'norovirus' or display contains 'norwalk' then 'Norovirus'
-    else Coalesce(firstCoding.display.value, firstCoding.code.value)
-  end
+define function "GetEncounterTypeById"(encId String):
+  First(
+    "All Encounters" E
+      where ('Encounter/' + E.id.value) = encId
+      return
+        case
+          when E.class ~ "ActCode Inpatient" then 'Inpatient'
+          when E.class ~ "ActCode Emergency" then 'Emergency'
+          when E.class ~ "ActCode Outpatient" then 'Outpatient'
+          else 'Other'
+        end
+  )
 
 // 最終輸出結果
 define "Enterovirus Surveillance Results":
   "Unique Enterovirus Episodes" Episode
-    return {
-      患者ID: Patient.id,
-      事件日期: ToString(Episode.episodeStartDate),
-      Episode結束日期: ToString(Episode.episodeEndDate),
-      年齡: "CalculateAgeAtEvent"(Episode.episodeStartDate),
-      性別: "Patient Gender",
-      就醫類型: "GetEncounterType"(Episode.encounter),
-      病毒種類: "DetermineVirusType"(Episode.code),
-      事件類型: Episode.eventType,
-      診斷代碼: Episode.code.coding[0].code.value,
-      診斷名稱: Episode.code.coding[0].display.value
+    return Tuple {
+      patientId: Patient.id.value,
+      eventDate: ToString(Episode.eventDate),
+      age: "CalculateAgeAtEvent"(Episode.eventDate),
+      gender: "Patient Gender",
+      encounterType: "GetEncounterTypeById"(Episode.encounterId),
+      eventType: Episode.eventType,
+      diagnosisCode: Episode.codeValue,
+      diagnosisName: Episode.codeDisplay,
+      codeSystem: Episode.codeSystem
     }
 
 // 計數統計
 define "Total Unique Episodes":
   Count("Unique Enterovirus Episodes")
 
-define "Episode Count By Gender":
-  {
-    男性: Count("Unique Enterovirus Episodes" E where "Patient Gender" = 'male'),
-    女性: Count("Unique Enterovirus Episodes" E where "Patient Gender" = 'female')
-  }
+define "Male Episode Count":
+  Count("Unique Enterovirus Episodes" E where "Patient Gender" = 'male')
 
-define "Episode Count By Encounter Type":
-  {
-    門診: Count("Unique Enterovirus Episodes" E where "GetEncounterType"(E.encounter) = '門診'),
-    急診: Count("Unique Enterovirus Episodes" E where "GetEncounterType"(E.encounter) = '急診'),
-    住院: Count("Unique Enterovirus Episodes" E where "GetEncounterType"(E.encounter) = '住院')
+define "Female Episode Count":
+  Count("Unique Enterovirus Episodes" E where "Patient Gender" = 'female')
+
+define "Diagnosis Episode Count":
+  Count("Unique Enterovirus Episodes" E where E.eventType = 'Diagnosis')
+
+define "Lab Episode Count":
+  Count("Unique Enterovirus Episodes" E where E.eventType = 'Laboratory')
+
+// 資料完整性檢查
+define "Has Condition Data":
+  exists("Enterovirus Diagnosis Conditions")
+
+define "Has Lab Data":
+  exists("Enterovirus Lab Results")
+
+define "Data Availability Check":
+  Tuple {
+    hasConditionData: "Has Condition Data",
+    hasLabData: "Has Lab Data",
+    totalDiagnoses: Count("Enterovirus Diagnosis Conditions"),
+    totalLabResults: Count("Enterovirus Lab Results"),
+    totalEvents: Count("All Enterovirus Events"),
+    uniqueEpisodes: "Total Unique Episodes"
   }

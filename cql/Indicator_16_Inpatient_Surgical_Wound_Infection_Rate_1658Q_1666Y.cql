@@ -145,23 +145,33 @@ code "T85.79XA": 'T85.79XA' from "ICD10CM" display 'Infection and inflammatory r
 code "T86.842": 'T86.842' from "ICD10CM" display 'Corneal transplant infection'
 code "T88.8XXA": 'T88.8XXA' from "ICD10CM" display 'Other specified complications of surgical and medical care, not elsewhere classified, initial encounter'
 
+// Helper function
+define function CodeInList(codeValue String, codeList List<String>):
+  codeValue in codeList
+
+// Helper: check if NHI procedure code is surgical (prefix 62-88 or 97, length 6)
+define function IsSurgicalCode(codeValue String):
+  Length(codeValue) = 6
+    and (
+      (Substring(codeValue, 0, 2) >= '62' and Substring(codeValue, 0, 2) <= '88')
+      or Substring(codeValue, 0, 2) = '97'
+    )
+
+context Patient
+
 // 1. 住院手術案件數 (Denominator)
 // 醫令代碼全長6碼且前2碼為62-88及97者
 define "Inpatient Surgical Procedures":
   [Procedure] P
-    where P.status ~ 'completed'
+    where P.status.value = 'completed'
     and exists (
       P.code.coding C 
         where C.system.value = 'http://www.nhi.gov.tw/codes'
-        and (
-          (C.code.value.substring(0, 2) >= '62' and C.code.value.substring(0, 2) <= '88')
-          or C.code.value.substring(0, 2) = '97'
-        )
-        and C.code.value.length() = 6
+        and IsSurgicalCode(C.code.value)
     )
     and exists (
       [Encounter] E
-        where E.id.value = P.encounter.reference.value
+        where E.subject.reference.value = P.subject.reference.value
         and E.class.code.value = 'IMP'
     )
 
@@ -170,35 +180,35 @@ define "Surgical Wound Infections":
   [Condition] C
     where exists (
       C.code.coding CD 
-        where CD in {
-          "D78.01", "D78.02", "D78.21", "D78.22",
-          "E36.01", "E36.02",
-          "G97.31", "G97.32", "G97.51", "G97.52",
-          "H59.111", "H59.112", "H59.113", "H59.119", "H59.121", "H59.122", "H59.123", "H59.129",
-          "H59.311", "H59.312", "H59.313", "H59.319", "H59.321", "H59.322", "H59.323", "H59.329",
-          "H95.21", "H95.22", "H95.41", "H95.42",
-          "I97.410", "I97.411", "I97.418", "I97.42", "I97.610", "I97.611", "I97.618", "I97.62", "I97.631", "I97.641",
-          "J95.61", "J95.62", "J95.830", "J95.831",
-          "K68.11", "K91.61", "K91.62", "K91.840", "K91.841",
-          "L76.01", "L76.02", "L76.21", "L76.22",
-          "M96.810", "M96.811", "M96.830", "M96.831",
-          "N99.61", "N99.62", "N99.820", "N99.821",
-          "R50.84",
-          "T80.211A", "T80.212A", "T80.218A", "T80.219A", "T80.22XA",
-          "T81.30XA", "T81.31XA", "T81.32XA", "T81.33XA", "T81.4XXA",
-          "T82.6XXA", "T82.7XXA",
-          "T83.51XA", "T83.59XA", "T83.6XXA",
-          "T84.50XA", "T84.51XA", "T84.52XA", "T84.53XA", "T84.54XA", "T84.59XA",
-          "T84.60XA", "T84.610A", "T84.611A", "T84.612A", "T84.613A", "T84.614A", "T84.615A", "T84.619A",
-          "T84.620A", "T84.621A", "T84.622A", "T84.623A", "T84.624A", "T84.625A", "T84.629A",
-          "T84.63XA", "T84.69XA", "T84.7XXA",
-          "T85.71XA", "T85.72XA", "T85.79XA",
-          "T86.842", "T88.8XXA"
-        }
+        where CodeInList(CD.code.value, {
+          'D78.01', 'D78.02', 'D78.21', 'D78.22',
+          'E36.01', 'E36.02',
+          'G97.31', 'G97.32', 'G97.51', 'G97.52',
+          'H59.111', 'H59.112', 'H59.113', 'H59.119', 'H59.121', 'H59.122', 'H59.123', 'H59.129',
+          'H59.311', 'H59.312', 'H59.313', 'H59.319', 'H59.321', 'H59.322', 'H59.323', 'H59.329',
+          'H95.21', 'H95.22', 'H95.41', 'H95.42',
+          'I97.410', 'I97.411', 'I97.418', 'I97.42', 'I97.610', 'I97.611', 'I97.618', 'I97.62', 'I97.631', 'I97.641',
+          'J95.61', 'J95.62', 'J95.830', 'J95.831',
+          'K68.11', 'K91.61', 'K91.62', 'K91.840', 'K91.841',
+          'L76.01', 'L76.02', 'L76.21', 'L76.22',
+          'M96.810', 'M96.811', 'M96.830', 'M96.831',
+          'N99.61', 'N99.62', 'N99.820', 'N99.821',
+          'R50.84',
+          'T80.211A', 'T80.212A', 'T80.218A', 'T80.219A', 'T80.22XA',
+          'T81.30XA', 'T81.31XA', 'T81.32XA', 'T81.33XA', 'T81.4XXA',
+          'T82.6XXA', 'T82.7XXA',
+          'T83.51XA', 'T83.59XA', 'T83.6XXA',
+          'T84.50XA', 'T84.51XA', 'T84.52XA', 'T84.53XA', 'T84.54XA', 'T84.59XA',
+          'T84.60XA', 'T84.610A', 'T84.611A', 'T84.612A', 'T84.613A', 'T84.614A', 'T84.615A', 'T84.619A',
+          'T84.620A', 'T84.621A', 'T84.622A', 'T84.623A', 'T84.624A', 'T84.625A', 'T84.629A',
+          'T84.63XA', 'T84.69XA', 'T84.7XXA',
+          'T85.71XA', 'T85.72XA', 'T85.79XA',
+          'T86.842', 'T88.8XXA'
+        })
     )
     and exists (
       [Encounter] E
-        where E.id.value = C.encounter.reference.value
+        where E.subject.reference.value = C.subject.reference.value
         and E.class.code.value = 'IMP'
     )
 
@@ -216,6 +226,6 @@ define "Numerator":
 // 5. 指標計算結果
 define "Infection Rate":
   if "Denominator" > 0 then
-    ("Numerator" / "Denominator") * 100
+    (ToDecimal("Numerator") / ToDecimal("Denominator")) * 100
   else
     null

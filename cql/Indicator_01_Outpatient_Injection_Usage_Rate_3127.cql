@@ -4,16 +4,8 @@ using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
-// 來源：醫療給付項目案分析系統 指標代碼: 3127
-// 條件依據：門診注射劑使用率
-// 製作日期：2025-11-20
-// 
-// 【歷史參考基準】111年第1季 (2022Q1)
-// 針劑給藥案件數: 54,653
-// 給藥案件數: 5,831,409
-// 門診注射劑使用率: 0.94%
-
-// 【公式說明】
+// 指標名稱: 門診注射劑使用率
+// 指標代碼: 3127
 // 分子: 給藥案件之針劑藥品(醫令代碼為10碼、且第8碼為'2')案件數
 // 分母: 給藥案件數
 // 排除:
@@ -21,154 +13,242 @@ include FHIRHelpers version '4.0.1' called FHIRHelpers
 //   2.急診案件、流感疫苗(ATC前5碼J07BB)、破傷風(ATC:J07AM01)
 //   3.門診手術案件(案件分類03)、事前審查藥品、STAT藥品、病人攜回注射藥品
 
-codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
-codesystem "SNOMEDCT": 'http://snomed.info/sct'
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes/procedure'
 codesystem "ATC": 'http://www.whocc.no/atc'
 codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
-codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes'
 
-// 劑型代碼（注射劑）
-code "Injection": '385219001' from "SNOMEDCT" display 'Injection'
-code "Ampoule": '385221006' from "SNOMEDCT" display 'Ampoule'
-code "Vial": '415818006' from "SNOMEDCT" display 'Vial'
+context Patient
 
-// 就醫類型代碼
-code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory - 門診'
-code "Emergency": 'EMER' from "ActCode" display 'Emergency - 急診'
+// ============================================
+// Helper Functions
+// ============================================
 
-// 門診化療注射劑醫令代碼（需排除）
-code "37005B": '37005B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37031B": '37031B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37032B": '37032B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37033B": '37033B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37034B": '37034B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37035B": '37035B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37036B": '37036B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37037B": '37037B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37038B": '37038B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37039B": '37039B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37040B": '37040B' from "NHI_PROCEDURE" display '門診化療注射劑'
-code "37041B": '37041B' from "NHI_PROCEDURE" display '門診化療注射劑'
+define function ToDecimal(v Integer):
+  v * 1.0
 
-// Helper function: 檢查藥品代碼是否符合注射劑格式（10碼且第8碼為'2'）
+define function GetExtBoolean(E FHIR.Encounter, extUrl String):
+  exists(
+    E.extension Ext
+      where Ext.url.value = extUrl
+        and (Ext.value as FHIR.boolean).value = true
+  )
+
+define function GetExtCodingCode(E FHIR.Encounter, extUrl String):
+  Coalesce(
+    First(
+      E.extension Ext
+        where Ext.url.value = extUrl
+        return (Ext.value as FHIR.Coding).code.value
+    ),
+    ''
+  )
+
+define function IsAgencyCase(E FHIR.Encounter):
+  GetExtBoolean(E, 'http://nhi.gov.tw/fhir/StructureDefinition/agency-case')
+
+define function GetClaimType(E FHIR.Encounter):
+  GetExtCodingCode(E, 'http://nhi.gov.tw/fhir/StructureDefinition/claim-type')
+
+define function GetExtDecimal(E FHIR.Encounter, extUrl String):
+  Coalesce(
+    First(
+      E.extension Ext
+        where Ext.url.value = extUrl
+        return (Ext.value as FHIR.decimal).value
+    ),
+    0
+  )
+
+define function GetDispenseMethod(E FHIR.Encounter):
+  GetExtCodingCode(E, 'http://nhi.gov.tw/fhir/StructureDefinition/dispense-method')
+
+define function GetDrugCost(E FHIR.Encounter):
+  GetExtDecimal(E, 'http://nhi.gov.tw/fhir/StructureDefinition/drug-cost')
+
+define function GetDrugDays(E FHIR.Encounter):
+  Coalesce(
+    Max(
+      [MedicationRequest] MR
+        where MR.encounter.reference.value = 'Encounter/' + E.id.value
+        return MR.dispenseRequest.expectedSupplyDuration.value.value
+    ),
+    0
+  )
+
+define function IsMedicationCase(E FHIR.Encounter):
+  GetDrugCost(E) != 0
+    or GetDrugDays(E) != 0
+    or GetDispenseMethod(E) in {'0', '1', '6'}
+
+// ============================================
+// Injection Drug Code Check
+// 10-digit code, 8th char = '2'
+// ============================================
+
 define function IsInjectionDrugCode(drugCode String):
   Length(drugCode) = 10 and Substring(drugCode, 7, 1) = '2'
 
-// Helper function: 檢查 ATC 代碼是否為需排除的化療藥品
-define function IsExcludedChemotherapyDrug(atcCode String):
-  Substring(atcCode, 0, 3) in { 'L01', 'L02' } or
-  atcCode in {
-    'H01AB01', 'L03AB01', 'L03AB04', 'L03AB05', 'L03AB15',
-    'L03AC01', 'L03AX03', 'L03AX16', 'L04AX01',
-    'M05BA02', 'M05BA03', 'M05BA06', 'M05BA08', 'M05BX04',
-    'V10XX03', 'J07AM01'
-  }
+// ============================================
+// Exclusion: Chemo Procedure Codes
+// ============================================
 
-// Helper function: 檢查是否為流感疫苗
-define function IsInfluenzaVaccine(atcCode String):
-  Substring(atcCode, 0, 5) = 'J07BB'
-
-// Helper function: 檢查藥品代碼是否為需排除的門診化療注射劑
 define function IsExcludedChemoProcedure(procedureCode String):
   procedureCode in {
     '37005B', '37031B', '37032B', '37033B', '37034B', '37035B',
     '37036B', '37037B', '37038B', '37039B', '37040B', '37041B'
   }
 
-// 1. 門診給藥案件（分母）
-define "Outpatient Drug Encounters":
+// ============================================
+// Exclusion: Chemo ATC Codes
+// ============================================
+
+define function IsExcludedChemotherapyATC(atcCode String):
+  Substring(atcCode, 0, 3) in {'L01', 'L02'}
+    or atcCode in {
+      'H01AB01', 'L03AB01', 'L03AB04', 'L03AB05', 'L03AB15',
+      'L03AC01', 'L03AX03', 'L03AX16', 'L04AX01',
+      'M05BA02', 'M05BA03', 'M05BA06', 'M05BA08', 'M05BX04',
+      'V10XX03', 'J07AM01'
+    }
+
+// ============================================
+// Exclusion: Influenza Vaccine
+// ============================================
+
+define function IsInfluenzaVaccine(atcCode String):
+  Substring(atcCode, 0, 5) = 'J07BB'
+
+// ============================================
+// MedicationRequest Extension Helpers
+// ============================================
+
+define function GetMRExtBoolean(MR FHIR.MedicationRequest, extUrl String):
+  exists(
+    MR.extension Ext
+      where Ext.url.value = extUrl
+        and (Ext.value as FHIR.boolean).value = true
+  )
+
+define function HasPriorApproval(MR FHIR.MedicationRequest):
+  GetMRExtBoolean(MR, 'http://www.nhi.gov.tw/fhir/StructureDefinition/prior-approval')
+
+define function HasTakeHomeInjection(MR FHIR.MedicationRequest):
+  GetMRExtBoolean(MR, 'http://www.nhi.gov.tw/fhir/StructureDefinition/take-home-injection')
+
+define function IsStatMedication(MR FHIR.MedicationRequest):
+  exists(
+    MR.dosageInstruction DI
+      where (DI.asNeeded as FHIR.boolean).value = true
+        or exists(
+          DI.additionalInstruction AI
+            where exists(AI.coding C where C.code.value = 'STAT')
+        )
+  )
+
+// ============================================
+// Check if encounter has qualifying injection
+// ============================================
+
+define function HasQualifyingInjection(E FHIR.Encounter):
+  exists(
+    [MedicationRequest] MR
+      let drugCode: Coalesce(First((MR.medication as FHIR.CodeableConcept).coding).code.value, ''),
+          medCodings: (MR.medication as FHIR.CodeableConcept).coding
+      where MR.encounter.reference.value = 'Encounter/' + E.id.value
+        and MR.status.value = 'completed'
+        and IsInjectionDrugCode(drugCode)
+        and not IsExcludedChemoProcedure(drugCode)
+        and not exists(medCodings AC where AC.system.value = 'http://www.whocc.no/atc' and IsExcludedChemotherapyATC(AC.code.value))
+        and not exists(medCodings AC where AC.system.value = 'http://www.whocc.no/atc' and IsInfluenzaVaccine(AC.code.value))
+        and not HasPriorApproval(MR)
+        and not IsStatMedication(MR)
+        and not HasTakeHomeInjection(MR)
+  )
+
+// ============================================
+// Data Retrieval
+// ============================================
+
+define "Outpatient Encounters":
   [Encounter] E
     where E.status.value = 'finished'
-    and E.class.code.value = 'AMB'
-    and exists (
-      [MedicationRequest] MR
-        where MR.encounter.reference.value = 'Encounter/' + E.id.value
-        and MR.status.value = 'completed'
-        and (
-          // 藥費不為0、或給藥天數不為0、或處方調劑方式符合條件
-          exists (MR.dosageInstruction DI where DI.timing.repeat.boundsPeriod.start.value is not null)
-        )
-    )
-    // 排除代辦案件
-    and not exists (
-      E.type T where exists (T.coding C where C.code.value = 'AGENCY')
-    )
+      and E.class.code.value = 'AMB'
+      and not IsAgencyCase(E)
 
-// 2. 門診注射劑案件（分子）
-define "Outpatient Injection Cases":
-  "Outpatient Drug Encounters" E
-    where exists (
-      [MedicationRequest] MR
-        where MR.encounter.reference.value = 'Encounter/' + E.id.value
-        and MR.status.value = 'completed'
-        // 條件：醫令代碼為10碼且第8碼為'2'
-        and exists (
-          MR.medicationCodeableConcept.coding MC
-            where IsInjectionDrugCode(MC.code.value)
-        )
-        // 排除門診化療注射劑醫令
-        and not exists (
-          MR.medicationCodeableConcept.coding MC
-            where IsExcludedChemoProcedure(MC.code.value)
-        )
-        // 排除化療藥品（ATC碼檢查）
-        and not exists (
-          MR.medicationCodeableConcept.coding MC
-            where MC.system.value = 'http://www.whocc.no/atc'
-            and IsExcludedChemotherapyDrug(MC.code.value)
-        )
-        // 排除流感疫苗
-        and not exists (
-          MR.medicationCodeableConcept.coding MC
-            where MC.system.value = 'http://www.whocc.no/atc'
-            and IsInfluenzaVaccine(MC.code.value)
-        )
-        // 排除急診案件
-        and not exists (
-          E.type T where exists (T.coding C where C.code.value = '02')
-        )
-        // 排除門診手術案件
-        and not exists (
-          E.type T where exists (T.coding C where C.code.value = '03')
-        )
-        // 排除事前審查藥品
-        and (MR.extension is null or not exists (
-          MR.extension Ext 
-            where Ext.url.value = 'http://www.nhi.gov.tw/fhir/StructureDefinition/prior-approval'
-            and Ext.valueBoolean.value = true
-        ))
-        // 排除 STAT 用藥
-        and not exists (
-          MR.dosageInstruction DI
-            where DI.asNeededBoolean.value = true
-            or exists (DI.additionalInstruction AI 
-              where exists (AI.coding C where C.code.value = 'STAT'))
-        )
-        // 排除病人攜回注射藥品
-        and not exists (
-          MR.extension Ext
-            where Ext.url.value = 'http://www.nhi.gov.tw/fhir/StructureDefinition/take-home-injection'
-            and Ext.valueBoolean.value = true
-        )
-    )
+define "Medication Cases":
+  "Outpatient Encounters" E
+    where IsMedicationCase(E)
 
-// 3. 分母：門診給藥案件數
-define "Denominator":
-  Count(
-    distinct "Outpatient Drug Encounters" E
-      return E.id.value
-  )
+define "Injection Cases":
+  "Medication Cases" E
+    where not (GetClaimType(E) in {'02', '03'})
+      and HasQualifyingInjection(E)
 
-// 4. 分子：門診注射劑案件數
-define "Numerator":
-  Count(
-    distinct "Outpatient Injection Cases" E
-      return E.id.value
-  )
+// ============================================
+// Quarterly Statistics
+// ============================================
 
-// 5. 指標計算結果：門診注射劑使用率
-define "Injection Usage Rate":
-  if "Denominator" > 0 then
-    ("Numerator" / "Denominator") * 100
-  else
-    null
+define "2024Q1 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2024-01-01, @2024-03-31])
+define "2024Q1 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2024-01-01, @2024-03-31])
+define "2024Q1 Rate": if "2024Q1 Denominator" > 0 then (ToDecimal("2024Q1 Numerator") / ToDecimal("2024Q1 Denominator")) * 100 else null
+
+define "2024Q2 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2024-04-01, @2024-06-30])
+define "2024Q2 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2024-04-01, @2024-06-30])
+define "2024Q2 Rate": if "2024Q2 Denominator" > 0 then (ToDecimal("2024Q2 Numerator") / ToDecimal("2024Q2 Denominator")) * 100 else null
+
+define "2024Q3 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2024-07-01, @2024-09-30])
+define "2024Q3 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2024-07-01, @2024-09-30])
+define "2024Q3 Rate": if "2024Q3 Denominator" > 0 then (ToDecimal("2024Q3 Numerator") / ToDecimal("2024Q3 Denominator")) * 100 else null
+
+define "2024Q4 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2024-10-01, @2024-12-31])
+define "2024Q4 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2024-10-01, @2024-12-31])
+define "2024Q4 Rate": if "2024Q4 Denominator" > 0 then (ToDecimal("2024Q4 Numerator") / ToDecimal("2024Q4 Denominator")) * 100 else null
+
+define "2025Q1 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2025-01-01, @2025-03-31])
+define "2025Q1 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2025-01-01, @2025-03-31])
+define "2025Q1 Rate": if "2025Q1 Denominator" > 0 then (ToDecimal("2025Q1 Numerator") / ToDecimal("2025Q1 Denominator")) * 100 else null
+
+define "2025Q2 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2025-04-01, @2025-06-30])
+define "2025Q2 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2025-04-01, @2025-06-30])
+define "2025Q2 Rate": if "2025Q2 Denominator" > 0 then (ToDecimal("2025Q2 Numerator") / ToDecimal("2025Q2 Denominator")) * 100 else null
+
+define "2025Q3 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2025-07-01, @2025-09-30])
+define "2025Q3 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2025-07-01, @2025-09-30])
+define "2025Q3 Rate": if "2025Q3 Denominator" > 0 then (ToDecimal("2025Q3 Numerator") / ToDecimal("2025Q3 Denominator")) * 100 else null
+
+define "2025Q4 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2025-10-01, @2025-12-31])
+define "2025Q4 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2025-10-01, @2025-12-31])
+define "2025Q4 Rate": if "2025Q4 Denominator" > 0 then (ToDecimal("2025Q4 Numerator") / ToDecimal("2025Q4 Denominator")) * 100 else null
+
+define "2026Q1 Denominator": Count("Medication Cases" E where date from start of E.period in Interval[@2026-01-01, @2026-03-31])
+define "2026Q1 Numerator": Count("Injection Cases" E where date from start of E.period in Interval[@2026-01-01, @2026-03-31])
+define "2026Q1 Rate": if "2026Q1 Denominator" > 0 then (ToDecimal("2026Q1 Numerator") / ToDecimal("2026Q1 Denominator")) * 100 else null
+
+define "Total Denominator": Count("Medication Cases")
+define "Total Numerator": Count("Injection Cases")
+define "Total Rate": if "Total Denominator" > 0 then (ToDecimal("Total Numerator") / ToDecimal("Total Denominator")) * 100 else null
+
+// ============================================
+// Indicator Result
+// ============================================
+
+define "Indicator Result":
+  Tuple {
+    indicatorCode: '3127',
+    indicatorName: '門診注射劑使用率',
+    injectionCriteria: '醫令代碼10碼且第8碼為2',
+    exclusions: '門診化療注射劑, 化療ATC(L01/L02), 流感疫苗(J07BB), 破傷風(J07AM01), 急診(02), 門診手術(03), 事前審查, STAT, 病人攜回',
+    referenceValue: '111年Q1: 0.94%',
+    quarters: List{
+      Tuple { quarter: '2024Q1', numerator: "2024Q1 Numerator", denominator: "2024Q1 Denominator", rate: "2024Q1 Rate" },
+      Tuple { quarter: '2024Q2', numerator: "2024Q2 Numerator", denominator: "2024Q2 Denominator", rate: "2024Q2 Rate" },
+      Tuple { quarter: '2024Q3', numerator: "2024Q3 Numerator", denominator: "2024Q3 Denominator", rate: "2024Q3 Rate" },
+      Tuple { quarter: '2024Q4', numerator: "2024Q4 Numerator", denominator: "2024Q4 Denominator", rate: "2024Q4 Rate" },
+      Tuple { quarter: '2025Q1', numerator: "2025Q1 Numerator", denominator: "2025Q1 Denominator", rate: "2025Q1 Rate" },
+      Tuple { quarter: '2025Q2', numerator: "2025Q2 Numerator", denominator: "2025Q2 Denominator", rate: "2025Q2 Rate" },
+      Tuple { quarter: '2025Q3', numerator: "2025Q3 Numerator", denominator: "2025Q3 Denominator", rate: "2025Q3 Rate" },
+      Tuple { quarter: '2025Q4', numerator: "2025Q4 Numerator", denominator: "2025Q4 Denominator", rate: "2025Q4 Rate" },
+      Tuple { quarter: '2026Q1', numerator: "2026Q1 Numerator", denominator: "2026Q1 Denominator", rate: "2026Q1 Rate" }
+    },
+    total: Tuple { numerator: "Total Numerator", denominator: "Total Denominator", rate: "Total Rate" }
+  }

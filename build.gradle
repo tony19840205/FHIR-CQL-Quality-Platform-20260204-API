@@ -12,11 +12,28 @@ dependencies {
 
 task cql2elm(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
-  main = 'org.cqframework.cql.cql2elm.cli.Main'
-  args '--input', './cql_11_12_temp', 
-       '--output', './ELM_JSON_OFFICIAL/舊50_AHRQ_Official',
-       '--format', 'JSON', 
-       '--signatures', 'Overloads', 
-       '--disable-list-demotion', 
-       '--disable-list-promotion'
+  mainClass = 'org.cqframework.cql.cql2elm.cli.Main'
+  
+  // 支援動態路徑：gradle cql2elm -PcqlInput=./cql -PcqlOutput=./backend/elm
+  def inputDir = project.hasProperty('cqlInput') ? project.property('cqlInput') : './cql'
+  def outputDir = project.hasProperty('cqlOutput') ? project.property('cqlOutput') : './backend/elm'
+  
+  args '--input', inputDir, '--output', outputDir, '--format', 'JSON', '--signatures', 'Overloads', '--disable-list-demotion', '--disable-list-promotion'
+  
+  doFirst {
+    println "==================================================="
+    println "  CQL-to-ELM 官方轉換開始"
+    println "==================================================="
+    println "  輸入目錄: ${inputDir}"
+    println "  輸出目錄: ${outputDir}"
+    println "  轉換器版本: CQL-to-ELM 3.10.0"
+    println "  Gradle 版本: 8.11"
+    println "==================================================="
+  }
+  
+  doLast {
+    println "==================================================="
+    println "  ✅ ELM JSON 轉換完成！"
+    println "==================================================="
+  }
 }

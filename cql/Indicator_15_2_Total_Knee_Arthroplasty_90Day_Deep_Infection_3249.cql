@@ -71,6 +71,8 @@ code "0SRD0JZ": '0SRD0JZ' from "ICD10PCS" display 'Replacement of Left Knee Join
 // ============================================
 code "IMP": 'IMP' from "ActCode" display 'Inpatient encounter - 住院'
 
+context Patient
+
 // ============================================
 // Helper Functions
 // ============================================
@@ -266,7 +268,7 @@ define "Numerator":
 // 14. 指標計算結果：感染率（百分比）
 define "Infection Rate":
   if "Denominator" > 0 then
-    Round(("Numerator" / "Denominator") * 100, 2)
+    Round((ToDecimal("Numerator") / ToDecimal("Denominator")) * 100, 2)
   else
     null
 
@@ -327,7 +329,7 @@ define "Exclusion Summary":
     excludedSameDayCases: Count("Excluded Same Day Cases"),
     validInfectionCases: Count("Valid Deep Infection Cases"),
     exclusionRate: if Count("Deep Infection Within 90 Days After TKA") > 0 then
-      Round((Count("Excluded Same Day Cases") / Count("Deep Infection Within 90 Days After TKA")) * 100, 2)
+      Round((ToDecimal(Count("Excluded Same Day Cases")) / ToDecimal(Count("Deep Infection Within 90 Days After TKA"))) * 100, 2)
     else
       null
   }

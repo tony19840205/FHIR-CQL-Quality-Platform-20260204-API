@@ -57,23 +57,29 @@ code "05341C": '05341C' from "NHI_PROCEDURE" display '安寧居家療護醫令'
 code "05362C": '05362C' from "NHI_PROCEDURE" display '安寧居家療護醫令'
 code "05374C": '05374C' from "NHI_PROCEDURE" display '安寧居家療護醫令'
 
+// Helper function
+define function CodeInList(codeValue String, codeList List<String>):
+  codeValue in codeList
+
+context Patient
+
 // 1. 失智症病人數 (Denominator)
 // 每季所有屬醫院總額之門住診及門診其他醫療機構案件，排除代辦案件
 define "Dementia Patients":
   [Condition] C
     where exists (
       C.code.coding CD 
-        where CD in {
-          "F01", "F02", "F03",
-          "G30", "G30.0", "G30.1", "G30.8", "G30.9",
-          "G31",
-          "F1027", "F1097", "F1327", "F1397",
-          "F1827", "F1897", "F1927", "F1997"
-        }
+        where CodeInList(CD.code.value, {
+          'F01', 'F02', 'F03',
+          'G30', 'G30.0', 'G30.1', 'G30.8', 'G30.9',
+          'G31',
+          'F1027', 'F1097', 'F1327', 'F1397',
+          'F1827', 'F1897', 'F1927', 'F1997'
+        })
     )
     and exists (
       [Encounter] E
-        where E.id.value = C.encounter.reference.value
+        where E.subject.reference.value = C.subject.reference.value
         and (E.class.code.value = 'IMP' or E.class.code.value = 'AMB')
     )
 
@@ -83,15 +89,15 @@ define "Dementia Patients Using Hospice Care":
     where exists (
       [Procedure] P
         where P.subject.reference.value = DP.subject.reference.value
-        and P.status ~ 'completed'
+        and P.status.value = 'completed'
         and exists (
           P.code.coding C
-            where C in {
-              "05601K", "05602A", "05603B",
-              "P4401B", "P4402B", "P4403B",
-              "05312C", "05316C", "05323C", "05327C",
-              "05336C", "05341C", "05362C", "05374C"
-            }
+            where CodeInList(C.code.value, {
+              '05601K', '05602A', '05603B',
+              'P4401B', 'P4402B', 'P4403B',
+              '05312C', '05316C', '05323C', '05327C',
+              '05336C', '05341C', '05362C', '05374C'
+            })
         )
     )
 
@@ -112,6 +118,6 @@ define "Numerator":
 // 5. 指標計算結果
 define "Utilization Rate":
   if "Denominator" > 0 then
-    ("Numerator" / "Denominator") * 100
+    (ToDecimal("Numerator") / ToDecimal("Denominator")) * 100
   else
     null

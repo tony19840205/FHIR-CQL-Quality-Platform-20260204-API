@@ -93,7 +93,7 @@ code "Rare E763": 'E763' from "ICD10CM" display 'Mucopolysaccharidosis, unspecif
 // Hemophilia Codes (ICD-10-CM)
 code "Hemophilia D66": 'D66' from "ICD10CM" display 'Hereditary factor VIII deficiency'
 code "Hemophilia D67": 'D67' from "ICD10CM" display 'Hereditary factor IX deficiency'
-code "Hemophilia D681": 'D681' from "ICD10CM" display "Von Willebrand's disease"
+code "Hemophilia D681": 'D681' from "ICD10CM" display 'Von Willebrand disease'
 code "Hemophilia D682": 'D682' from "ICD10CM" display 'Hereditary deficiency of other clotting factors'
 
 // Organ Transplant Procedure Codes
@@ -102,6 +102,8 @@ code "Transplant 68037": '68037' from "NHI_PROCEDURE" display '雙肺移植'
 code "Transplant 68047": '68047' from "NHI_PROCEDURE" display '雙肺移植'
 code "Transplant 75020": '75020' from "NHI_PROCEDURE" display '肝臟移植'
 code "Transplant 76020": '76020' from "NHI_PROCEDURE" display '腎臟移植'
+
+context Patient
 
 // Helper Functions
 define function GetId(encounter Encounter):
@@ -128,21 +130,21 @@ define function GetDepartment(encounter Encounter):
   First(
     encounter.extension E
       where E.url.value = 'http://www.nhi.gov.tw/extensions/department'
-      return E.value as String
+      return (E.value as FHIR.string).value
   )
 
 define function GetCaseType(encounter Encounter):
   First(
     encounter.extension E
       where E.url.value = 'http://www.nhi.gov.tw/extensions/case-type'
-      return E.value as String
+      return (E.value as FHIR.string).value
   )
 
 define function GetDiseaseSource(encounter Encounter):
   First(
     encounter.extension E
       where E.url.value = 'http://www.nhi.gov.tw/extensions/disease-source'
-      return E.value as String
+      return (E.value as FHIR.string).value
   )
 
 define function GetDischargeStatus(encounter Encounter):
@@ -155,7 +157,7 @@ define function GetCopayment(encounter Encounter):
   First(
     encounter.extension E
       where E.url.value = 'http://www.nhi.gov.tw/extensions/copayment'
-      return E.value as String
+      return (E.value as FHIR.string).value
   )
 
 define function DaysBetween(date1 DateTime, date2 DateTime):
@@ -378,47 +380,47 @@ define "2026Q1 Numerator":
 // Indicator Rate by Quarter
 define "2024Q1 Rate":
   if "2024Q1 Denominator" > 0 
-  then "2024Q1 Numerator" / "2024Q1 Denominator" 
+  then ToDecimal("2024Q1 Numerator") / ToDecimal("2024Q1 Denominator") 
   else 0
 
 define "2024Q2 Rate":
   if "2024Q2 Denominator" > 0 
-  then "2024Q2 Numerator" / "2024Q2 Denominator" 
+  then ToDecimal("2024Q2 Numerator") / ToDecimal("2024Q2 Denominator") 
   else 0
 
 define "2024Q3 Rate":
   if "2024Q3 Denominator" > 0 
-  then "2024Q3 Numerator" / "2024Q3 Denominator" 
+  then ToDecimal("2024Q3 Numerator") / ToDecimal("2024Q3 Denominator") 
   else 0
 
 define "2024Q4 Rate":
   if "2024Q4 Denominator" > 0 
-  then "2024Q4 Numerator" / "2024Q4 Denominator" 
+  then ToDecimal("2024Q4 Numerator") / ToDecimal("2024Q4 Denominator") 
   else 0
 
 define "2025Q1 Rate":
   if "2025Q1 Denominator" > 0 
-  then "2025Q1 Numerator" / "2025Q1 Denominator" 
+  then ToDecimal("2025Q1 Numerator") / ToDecimal("2025Q1 Denominator") 
   else 0
 
 define "2025Q2 Rate":
   if "2025Q2 Denominator" > 0 
-  then "2025Q2 Numerator" / "2025Q2 Denominator" 
+  then ToDecimal("2025Q2 Numerator") / ToDecimal("2025Q2 Denominator") 
   else 0
 
 define "2025Q3 Rate":
   if "2025Q3 Denominator" > 0 
-  then "2025Q3 Numerator" / "2025Q3 Denominator" 
+  then ToDecimal("2025Q3 Numerator") / ToDecimal("2025Q3 Denominator") 
   else 0
 
 define "2025Q4 Rate":
   if "2025Q4 Denominator" > 0 
-  then "2025Q4 Numerator" / "2025Q4 Denominator" 
+  then ToDecimal("2025Q4 Numerator") / ToDecimal("2025Q4 Denominator") 
   else 0
 
 define "2026Q1 Rate":
   if "2026Q1 Denominator" > 0 
-  then "2026Q1 Numerator" / "2026Q1 Denominator" 
+  then ToDecimal("2026Q1 Numerator") / ToDecimal("2026Q1 Denominator") 
   else 0
 
 // Indicator Result
