@@ -1,5 +1,5 @@
-// ========== 疾管儀表板邏輯 - 簡化版 ==========
-// CQL整合版本 - 基於傳染病統計資料CQL1119文件夾
+// ========== 疾管儀表板邏輯 - API版 ==========
+// 透過後端 CQL Engine 執行查詢
 
 let currentResults = {};
 window.diseaseResults = currentResults;  // ★ 供 data-exporter 存取
@@ -53,25 +53,41 @@ function initializeCards() {
 }
 
 // 檢查 FHIR 連線
-async function checkFHIRConnection() {
-    await new Promise(resolve => setTimeout(resolve, 100));
-    
-    if (!window.fhirConnection || !window.fhirConnection.serverUrl) {
-        return false;
-    }
-    return true;
+// ========== API版 輔助函數 ==========
+function getBackendUrl() {
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    if (protocol === 'file:') return 'https://fhir-cql-quality-platform-20260204.onrender.com';
+    if (hostname.includes('onrender.com')) return window.location.origin;
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return 'http://localhost:3000';
+    return 'https://fhir-cql-quality-platform-20260204.onrender.com';
 }
 
-// 執行 CQL 查詢 - 簡化版本
+function getFHIRServerUrl() {
+    if (window.fhirConnection && window.fhirConnection.serverUrl) return window.fhirConnection.serverUrl;
+    return localStorage.getItem('fhirServer') || 'https://thas.mohw.gov.tw/v/r4/fhir';
+}
+
+function getCardQueryOptions(diseaseType) {
+    const idMap = { 'covid19':'Covid','influenza':'Influenza','conjunctivitis':'Conjunctivitis','enterovirus':'Enterovirus','diarrhea':'Diarrhea' };
+    const key = idMap[diseaseType] || '';
+    const startEl = document.getElementById('startDate' + key);
+    const endEl = document.getElementById('endDate' + key);
+    const maxEl = document.getElementById('maxRecords' + key);
+    return {
+        startDate: startEl ? startEl.value : '',
+        endDate: endEl ? endEl.value : '',
+        maxRecords: maxEl ? parseInt(maxEl.value) : 200
+    };
+}
+
+async function checkFHIRConnection() {
+    return true; // API版不需要前端 FHIR 連線檢查
+}
+
+// 執行 CQL 查詢 - API版本（透過後端 CQL Engine）
 async function executeCQL(diseaseType) {
-    console.log(`執行查詢: ${diseaseType}`);
-    
-    const isConnected = await checkFHIRConnection();
-    if (!isConnected) {
-        alert('請先在首頁設定 FHIR 伺服器連線');
-        window.location.href = 'index.html';
-        return;
-    }
+    console.log(`🚀 API版執行查詢: ${diseaseType}`);
     
     const idMap = {
         'covid19': 'Covid',
@@ -86,22 +102,23 @@ async function executeCQL(diseaseType) {
     
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 查詢中...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CQL Engine 執行中...';
     }
     
     if (statusElement) {
-        statusElement.innerHTML = '<span style="color: #2563eb;"><i class="fas fa-spinner fa-spin"></i> 執行中...</span>';
+        statusElement.innerHTML = '<span style="color: #2563eb;"><i class="fas fa-spinner fa-spin"></i> 後端引擎執行中...</span>';
     }
     
     try {
-        // 執行查詢
-        const conn = window.fhirConnection;
-        const results = await queryDiseaseData(diseaseType, conn);
+        const demoMode = localStorage.getItem('demoMode') === 'true';
+        let results;
+        if (demoMode) {
+            results = generateDemoDataDisease(diseaseType);
+        } else {
+            results = await queryDiseaseData(diseaseType);
+        }
         
-        // 儲存結果
         currentResults[diseaseType] = results;
-        
-        // 更新卡片顯示
         updateCard(diseaseType, results);
         
         if (statusElement) {
@@ -109,15 +126,12 @@ async function executeCQL(diseaseType) {
             setTimeout(() => { statusElement.innerHTML = ''; }, 3000);
         }
         
-        // 查詢完成後自動顯示報告
-        setTimeout(() => {
-            showDetailReport(diseaseType);
-        }, 500);
+        setTimeout(() => { showDetailReport(diseaseType); }, 500);
         
     } catch (error) {
         console.error('查詢失敗:', error);
         if (statusElement) {
-            statusElement.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> 失敗</span>';
+            statusElement.innerHTML = `<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> ${error.message || '失敗'}</span>`;
         }
     } finally {
         if (btn) {
@@ -212,30 +226,10 @@ async function executeAllCQL() {
 }
 
 // 查詢疾病資料
-// ========== CQL邏輯查詢函數 ==========
-// CQL來源: 傳染病統計資料CQL1119文件夾
-// 
-// CQL文件映射:
-// - covid19: InfectiousDisease_COVID19_Surveillance.cql
-// - influenza: InfectiousDisease_Influenza_Surveillance.cql  
-// - conjunctivitis: InfectiousDisease_AcuteConjunctivitis_Surveillance.cql
-// - enterovirus: InfectiousDisease_Enterovirus_Surveillance.cql
-// - diarrhea: InfectiousDisease_AcuteDiarrhea_Surveillance.cql
-//
-// CQL定義內容:
-// - 完整ICD-9/ICD-10/SNOMED CT診斷代碼
-// - LOINC實驗室檢驗代碼
-// - 時間範圍: 2年內資料
-// - 患者隱私: 不顯示個資,僅統計彙總
-//
-// JavaScript實現:
-// - 查詢Condition(診斷記錄) + Observation(檢驗結果)
-// - 過濾2年內資料
-// - 統計: 總人數、年齡分佈、性別分佈、就醫類型、病毒類型、居住地
+// ========== API版 CQL Engine 查詢 ==========
 
-async function queryDiseaseData(diseaseType, conn) {
-    console.log(`📋 CQL查詢: ${diseaseType}`);
-    console.log(`   CQL來源: InfectiousDisease_${capitalize(diseaseType)}_Surveillance.cql`);
+async function queryDiseaseData(diseaseType) {
+    console.log(`📋 CQL Engine 查詢: ${diseaseType}`);
     
     const demoMode = localStorage.getItem('demoMode') === 'true';
     if (demoMode) {
@@ -243,150 +237,102 @@ async function queryDiseaseData(diseaseType, conn) {
         return generateDemoDataDisease(diseaseType);
     }
     
-    // 疾病代碼映射 - 支援text搜尋（emr-smart相容）和code搜尋（HAPI相容）
-    const diseaseSearchTerms = {
-        'covid19': {
-            text: ['COVID', 'COVID-19'],
-            codes: [
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'U07.1' },
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'U07.2' }
-            ]
-        },
-        'influenza': {
-            text: ['Influenza', 'flu', '流感'],
-            codes: [
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'J09' },
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'J10' },
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'J11' }
-            ]
-        },
-        'conjunctivitis': {
-            text: ['Conjunctivitis', '結膜炎'],
-            codes: [
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'H10' }
-            ]
-        },
-        'enterovirus': {
-            text: ['Enterovirus', '腸病毒'],
-            codes: [
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'B97.1' },
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'B08.4' }
-            ]
-        },
-        'diarrhea': {
-            text: ['Diarrhea', '腹瀉'],
-            codes: [
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'A09' },
-                { system: 'http://hl7.org/fhir/sid/icd-10', code: 'K52' }
-            ]
-        }
+    const cqlFileMap = {
+        'covid19': 'InfectiousDisease_COVID19_Surveillance',
+        'influenza': 'InfectiousDisease_Influenza_Surveillance',
+        'conjunctivitis': 'InfectiousDisease_AcuteConjunctivitis_Surveillance',
+        'enterovirus': 'InfectiousDisease_Enterovirus_Surveillance',
+        'diarrhea': 'InfectiousDisease_AcuteDiarrhea_Surveillance'
     };
     
-    const searchConfig = diseaseSearchTerms[diseaseType] || { text: [], codes: [] };
+    const cqlFile = cqlFileMap[diseaseType];
+    if (!cqlFile) throw new Error(`未知的疾病類型: ${diseaseType}`);
     
-    // ========== CQL時間過濾: 2年內資料 ==========
-    const twoYearsAgo = new Date();
-    twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);
-    const dateFilter = twoYearsAgo.toISOString().split('T')[0];
+    const backendUrl = getBackendUrl();
+    const fhirServerUrl = getFHIRServerUrl();
+    const options = getCardQueryOptions(diseaseType);
     
-    console.log(`   ⏰ 時間範圍: ${dateFilter} 至今 (符合CQL 2年要求)`);
+    console.log(`   Backend: ${backendUrl}`);
+    console.log(`   FHIR: ${fhirServerUrl}`);
+    console.log(`   Options:`, options);
     
-    let allConditions = [];
-    let allEncounters = [];
+    const requestBody = {
+        cqlFile: cqlFile,
+        fhirServerUrl: fhirServerUrl
+    };
+    if (options.startDate) requestBody.startDate = options.startDate;
+    if (options.endDate) requestBody.endDate = options.endDate;
+    if (options.maxRecords) requestBody.maxRecords = options.maxRecords;
     
-    // ========== 優先使用 text 搜尋（emr-smart 相容） ==========
-    for (const textTerm of searchConfig.text) {
-        try {
-            console.log(`   🔍 查詢 (text): ${textTerm}`);
-            
-            const conditions = await conn.query('Condition', {
-                'code:text': textTerm,
-                'onset-date': `ge${dateFilter}`,
-                _count: 1000
-            });
-            
-            if (conditions.entry) {
-                console.log(`   ✅ Condition "${textTerm}": ${conditions.entry.length} 筆`);
-                allConditions.push(...conditions.entry.map(e => e.resource));
-            }
-        } catch (error) {
-            console.warn(`   ⚠️ 查詢 "${textTerm}" 錯誤:`, error.message);
-        }
+    const response = await fetch(`${backendUrl}/api/execute-cql`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(requestBody)
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API 錯誤 ${response.status}: ${errorText}`);
     }
     
-    // ========== 如果 text 搜尋沒結果，嘗試 code 搜尋（HAPI 相容） ==========
-    if (allConditions.length === 0) {
-        console.log('   📌 text 搜尋無結果，嘗試 code 搜尋...');
-        for (const term of searchConfig.codes) {
-            try {
-                const codeParam = `${term.system}|${term.code}`;
-                console.log(`   🔍 查詢 (code): ${codeParam}`);
-                
-                const conditions = await conn.query('Condition', {
-                    'code': codeParam,
-                    'onset-date': `ge${dateFilter}`,
-                    _count: 1000
-                });
-                
-                if (conditions.entry) {
-                    console.log(`   ✅ Condition "${term.code}": ${conditions.entry.length} 筆`);
-                    allConditions.push(...conditions.entry.map(e => e.resource));
-                }
-            } catch (error) {
-                console.warn(`   ⚠️ 查詢 "${term.code}" 錯誤:`, error.message);
-            }
-        }
-    }
-    
-    // ========== CQL去重邏輯: 根據資源ID去重 ==========
-    const uniqueConditions = Array.from(new Map(allConditions.map(c => [c.id, c])).values());
-    const uniqueEncounters = Array.from(new Map(allEncounters.map(e => [e.id, e])).values());
-    
-    console.log(`   📊 結果: ${uniqueConditions.length} 個診斷, ${uniqueEncounters.length} 個就診`);
-    
-    // 計算唯一患者數 (CQL: Count(distinct Patient))
-    const patientSet = new Set();
-    uniqueConditions.forEach(c => {
-        const ref = c.subject?.reference?.split('/').pop();
-        if (ref) patientSet.add(ref);
-    });
-    uniqueEncounters.forEach(e => {
-        const ref = e.subject?.reference?.split('/').pop();
-        if (ref) patientSet.add(ref);
-    });
-    console.log(`   👥 唯一患者數: ${patientSet.size} 人`);
+    const data = await response.json();
+    console.log(`   ✅ CQL Engine 回傳:`, data);
     
     return {
-        conditions: uniqueConditions,
-        encounters: uniqueEncounters,
+        cqlEngine: true,
+        cqlFile: cqlFile,
+        backendUrl: backendUrl,
+        fhirServerUrl: fhirServerUrl,
+        queryOptions: options,
+        results: data.results || [],
+        metadata: data.metadata || {},
+        executionTime: data.metadata?.executionTime,
+        patientCount: data.metadata?.patientCount || 0,
+        encounterCount: 0,
+        conditions: [],
+        encounters: [],
         observations: []
     };
 }
 
-// 更新卡片顯示
+// 更新卡片顯示 (API版 - 支援 CQL Engine 結果)
 function updateCard(diseaseType, results) {
-    // 計算唯一患者數
-    let uniquePatients = new Set();
+    let patientCount = 0;
+    let encounterCount = 0;
     
-    if (results.conditions && results.conditions.length > 0) {
-        results.conditions.forEach(condition => {
-            const patientRef = condition.subject?.reference;
-            if (patientRef) {
-                uniquePatients.add(patientRef.split('/').pop());
-            }
-        });
+    if (results.cqlEngine) {
+        // CQL Engine 結果
+        patientCount = results.patientCount || 0;
+        encounterCount = results.encounterCount || 0;
+        if (patientCount === 0 && results.results && results.results.length > 0) {
+            const patientIds = new Set();
+            results.results.forEach(r => {
+                const id = r.patientId || r['患者ID'] || r.PatientID;
+                if (id) patientIds.add(id);
+            });
+            patientCount = patientIds.size || results.results.length;
+        }
+    } else {
+        // 原始/Demo 模式結果
+        let uniquePatients = new Set();
+        if (results.conditions && results.conditions.length > 0) {
+            results.conditions.forEach(c => {
+                const ref = c.subject?.reference;
+                if (ref) uniquePatients.add(ref.split('/').pop());
+            });
+        }
+        if (uniquePatients.size === 0 && results.encounters && results.encounters.length > 0) {
+            results.encounters.forEach(e => {
+                const ref = e.subject?.reference;
+                if (ref) uniquePatients.add(ref.split('/').pop());
+            });
+        }
+        patientCount = (results.demoMode && results.total) ? results.total : uniquePatients.size;
+        encounterCount = (results.demoMode && results.encounters) 
+            ? results.encounters.length 
+            : (results.encounters ? results.encounters.length : 0);
     }
     
-    if (uniquePatients.size === 0 && results.encounters && results.encounters.length > 0) {
-        results.encounters.forEach(encounter => {
-            const patientRef = encounter.subject?.reference;
-            if (patientRef) {
-                uniquePatients.add(patientRef.split('/').pop());
-            }
-        });
-    }
-    
-    // 更新病患數
     const patientMap = {
         'covid19': 'covidPatients',
         'influenza': 'fluPatients',
@@ -395,7 +341,6 @@ function updateCard(diseaseType, results) {
         'diarrhea': 'diarrheaPatients'
     };
     
-    // 更新就診數
     const encounterMap = {
         'covid19': 'covidEncounters',
         'influenza': 'fluEncounters',
@@ -403,11 +348,6 @@ function updateCard(diseaseType, results) {
         'enterovirus': 'enteroEncounters',
         'diarrhea': 'diarrheaEncounters'
     };
-
-    const patientCount = (results.demoMode && results.total) ? results.total : uniquePatients.size;
-    const encounterCount = (results.demoMode && results.encounters) 
-        ? results.encounters.length 
-        : (results.encounters ? results.encounters.length : 0);
 
     const patientEl = document.getElementById(patientMap[diseaseType]);
     if (patientEl) {
@@ -434,6 +374,13 @@ function showDetailReport(diseaseType) {
     }
     
     const results = currentResults[diseaseType];
+    
+    // CQL Engine 結果 → 專用報告
+    if (results.cqlEngine) {
+        showCQLEngineReport(diseaseType, results);
+        return;
+    }
+    
     const diseaseNames = {
         'covid19': 'COVID-19',
         'influenza': '流感',
@@ -966,6 +913,129 @@ function showDetailReport(diseaseType) {
         document.body.appendChild(modal);
     }
     
+    modal.innerHTML = reportHTML;
+    modal.style.display = 'flex';
+}
+
+// ========== CQL Engine 專用報告 ==========
+function showCQLEngineReport(diseaseType, results) {
+    const diseaseNames = {
+        'covid19': 'COVID-19',
+        'influenza': '流感',
+        'conjunctivitis': '急性結膜炎',
+        'enterovirus': '腸病毒',
+        'diarrhea': '急性腹瀉'
+    };
+    
+    const meta = results.metadata || {};
+    const cqlResults = results.results || [];
+    
+    // 計算統計
+    const patientIds = new Set();
+    cqlResults.forEach(r => {
+        const id = r.patientId || r['患者ID'] || r.PatientID;
+        if (id) patientIds.add(id);
+    });
+    const patientCount = patientIds.size || results.patientCount || 0;
+    const resultCount = cqlResults.length;
+    
+    // 判斷是否有錯誤
+    const hasError = cqlResults.some(r => r['執行狀態'] && r['執行狀態'].includes('錯誤'));
+    
+    // 構建結果表格
+    let tableHTML = '';
+    if (cqlResults.length > 0 && !hasError) {
+        const keys = Object.keys(cqlResults[0]);
+        tableHTML = `
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                <thead>
+                    <tr>${keys.map(k => `<th style="background: #1e293b; color: white; padding: 0.5rem 0.75rem; text-align: left; white-space: nowrap;">${k}</th>`).join('')}</tr>
+                </thead>
+                <tbody>
+                    ${cqlResults.slice(0, 100).map((row, i) => `
+                        <tr style="background: ${i % 2 === 0 ? '#f8fafc' : 'white'};">
+                            ${keys.map(k => `<td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e2e8f0; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${row[k] ?? 'N/A'}</td>`).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            ${cqlResults.length > 100 ? `<div style="padding: 0.5rem; color: #64748b; text-align: center;">僅顯示前 100 筆 (共 ${cqlResults.length} 筆)</div>` : ''}
+        `;
+    } else if (hasError) {
+        tableHTML = `
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                <thead><tr><th style="background: #1e293b; color: white; padding: 0.5rem;">執行狀態</th><th style="background: #1e293b; color: white; padding: 0.5rem;">錯誤訊息</th></tr></thead>
+                <tbody>
+                    ${cqlResults.map(r => `<tr><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">${r['執行狀態'] || ''}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">${r['錯誤訊息'] || r['說明'] || ''}</td></tr>`).join('')}
+                </tbody>
+            </table>
+        `;
+    } else {
+        tableHTML = '<div style="padding: 1rem; color: #64748b; text-align: center;">無符合條件的結果</div>';
+    }
+
+    const reportHTML = `
+        <div style="background: white; padding: 2rem; border-radius: 16px; max-width: 1000px; max-height: 85vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2 style="margin: 0; color: #1e293b; font-size: 1.4rem;">
+                    <i class="fas fa-cogs"></i> ${diseaseNames[diseaseType]} CQL Engine 報告
+                </h2>
+                <button onclick="closeDetailReport()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div style="background: #f0f4ff; padding: 1.2rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6;">
+                <h3 style="margin: 0 0 0.8rem 0; color: #1e40af; font-size: 1rem;">🏛  CQL Engine 執行資訊</h3>
+                <div style="color: #334155; font-size: 0.9rem; line-height: 1.8;">
+                    • <strong>ELM Library:</strong> ${results.cqlFile || 'N/A'}<br>
+                    • <strong>引擎:</strong> cql-execution v2.4.0<br>
+                    • <strong>FHIR 版本:</strong> FHIR 4.0.1<br>
+                    • <strong>執行時間:</strong> ${meta.executionTime || 'N/A'}ms<br>
+                    • <strong>查詢日期範圍:</strong> ${results.queryOptions?.startDate || 'N/A'} ~ ${results.queryOptions?.endDate || 'N/A'}<br>
+                    • <strong>最大筆數:</strong> ${results.queryOptions?.maxRecords || 200}<br>
+                    • <strong>執行時間戳:</strong> ${meta.timestamp || new Date().toISOString()}
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 1.2rem; border-radius: 12px; color: white;">
+                    <div style="font-size: 0.85rem; opacity: 0.9;">病患數</div>
+                    <div style="font-size: 2rem; font-weight: 700;">${patientCount}</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">CQL Engine 計算</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #f093fb, #f5576c); padding: 1.2rem; border-radius: 12px; color: white;">
+                    <div style="font-size: 0.85rem; opacity: 0.9;">就診數</div>
+                    <div style="font-size: 2rem; font-weight: 700;">${results.encounterCount || 0}</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">CQL Engine 計算</div>
+                </div>
+                <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); padding: 1.2rem; border-radius: 12px; color: white;">
+                    <div style="font-size: 0.85rem; opacity: 0.9;">結果筆數</div>
+                    <div style="font-size: 2rem; font-weight: 700;">${resultCount}</div>
+                    <div style="font-size: 0.75rem; opacity: 0.7;">CQL 定義輸出</div>
+                </div>
+            </div>
+            
+            <h3 style="margin: 0 0 1rem 0; color: #1e293b;"><i class="fas fa-th"></i> 完整查詢結果</h3>
+            <div style="overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+                ${tableHTML}
+            </div>
+            
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+                <button onclick="closeDetailReport()" style="padding: 0.75rem 1.5rem; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-times"></i> 關閉
+                </button>
+            </div>
+        </div>
+    `;
+    
+    let modal = document.getElementById('detailReportModal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'detailReportModal';
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; padding: 2rem;';
+        document.body.appendChild(modal);
+    }
     modal.innerHTML = reportHTML;
     modal.style.display = 'flex';
 }
