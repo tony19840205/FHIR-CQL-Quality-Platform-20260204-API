@@ -43,6 +43,68 @@ function isIndicatorCQL(cqlFile) {
     return cqlFile && cqlFile.includes('Indicator_');
 }
 
+// ==================== 從 ELM 自動建構 CodeService ====================
+function buildCodeServiceFromELM(elm) {
+    const vsDefs = elm.library?.valueSets?.def || [];
+    if (vsDefs.length === 0) return null;
+
+    const codeDefs = elm.library?.codes?.def || [];
+    const csDefs = elm.library?.codeSystems?.def || [];
+    const stmtDefs = elm.library?.statements?.def || [];
+
+    // codeSystem name -> URL
+    const csMap = {};
+    csDefs.forEach(cs => { csMap[cs.name] = cs.id; });
+
+    // code name -> { code, system }
+    const codeMap = {};
+    codeDefs.forEach(cd => {
+        codeMap[cd.name] = { code: cd.id, system: csMap[cd.codeSystem?.name] || '' };
+    });
+
+    // For each valueset, find the corresponding "Code List" statement that has CodeRef elements
+    // and extract which codes belong to which valueset
+    const vsNameToUrl = {};
+    vsDefs.forEach(vs => { vsNameToUrl[vs.name] = vs.id; });
+
+    // Build: valueset URL -> codes array
+    const valueSetsJson = {};
+
+    // Strategy: match valueset names to code list statements by keyword pattern
+    // e.g. "Acute Conjunctivitis ICD9 Codes" (valueset) -> "ICD9 Code List" (statement with CodeRefs)
+    // Also look at Retrieve expressions that reference ValueSetRef and trace the Union operands
+    for (const vs of vsDefs) {
+        const vsUrl = vs.id;
+        const codesForVs = [];
+
+        // Extract keyword from valueset name: e.g. "ICD9", "ICD10", "SNOMED", "Lab"
+        const vsNameLower = vs.name.toLowerCase();
+
+        // Find all codes whose codeSystem matches this valueset's category
+        for (const cd of codeDefs) {
+            const csName = cd.codeSystem?.name || '';
+            const codeName = cd.name.toLowerCase();
+
+            if (vsNameLower.includes('icd9') && csName === 'ICD-9-CM') {
+                codesForVs.push({ code: cd.id, system: csMap[csName] });
+            } else if (vsNameLower.includes('icd10') && csName === 'ICD-10-CM') {
+                codesForVs.push({ code: cd.id, system: csMap[csName] });
+            } else if (vsNameLower.includes('snomed') && csName === 'SNOMEDCT') {
+                codesForVs.push({ code: cd.id, system: csMap[csName] });
+            } else if (vsNameLower.includes('lab') && csName === 'LOINC') {
+                codesForVs.push({ code: cd.id, system: csMap[csName] });
+            }
+        }
+
+        if (codesForVs.length > 0) {
+            valueSetsJson[vsUrl] = { '': codesForVs };
+            console.log(`   📋 ValueSet ${vs.name}: ${codesForVs.length} codes`);
+        }
+    }
+
+    return Object.keys(valueSetsJson).length > 0 ? new cql.CodeService(valueSetsJson) : null;
+}
+
 // ==================== 執行 CQL (使用 CQL Execution Engine) ====================
 async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
     const { startDate, endDate, maxRecords = 200 } = options;
@@ -56,10 +118,11 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
     const fhirHelpersContent = await fs.readFile(fhirHelpersPath, 'utf-8');
     const fhirHelpersElm = JSON.parse(fhirHelpersContent);
 
-    // 步驟 2: 建立 Repository + Library + Executor
+    // 步驟 2: 建立 Repository + Library + CodeService + Executor
     const repository = new cql.Repository({ FHIRHelpers: fhirHelpersElm });
     const library = new cql.Library(elm, repository);
-    const executor = new cql.Executor(library);
+    const codeService = buildCodeServiceFromELM(elm);
+    const executor = new cql.Executor(library, codeService);
 
     // 步驟 3: 從 FHIR Server 取得資料
     console.log('📥 從 FHIR Server 取得資料...');
