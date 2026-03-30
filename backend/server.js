@@ -408,7 +408,7 @@ app.post('/api/gradle/convert-single', async (req, res) => {
 });
 
 // ========== 啟動伺服器 ==========
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log('');
     console.log('╔════════════════════════════════════════════════════╗');
     console.log('║   醫療品質指標後端 API - 已啟動                   ║');
