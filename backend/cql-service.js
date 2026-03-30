@@ -217,50 +217,83 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
     const { maxRecords = 200 } = options;
 
     try {
-        const conditionsResponse = await axios.get(`${fhirServerUrl}/Condition`, {
-            params: { _count: maxRecords, _sort: '-recorded-date' },
-            timeout: 60000
-        });
+        // 同時抓取 Condition、Encounter、Observation
+        const [conditionsResponse, encountersResponse, observationsResponse] = await Promise.all([
+            axios.get(`${fhirServerUrl}/Condition`, {
+                params: { _count: maxRecords, _sort: '-recorded-date' },
+                timeout: 60000
+            }).catch(() => ({ data: { entry: [] } })),
+            axios.get(`${fhirServerUrl}/Encounter`, {
+                params: { _count: maxRecords, _sort: '-date' },
+                timeout: 60000
+            }).catch(() => ({ data: { entry: [] } })),
+            axios.get(`${fhirServerUrl}/Observation`, {
+                params: { _count: maxRecords, _sort: '-date', category: 'laboratory' },
+                timeout: 60000
+            }).catch(() => ({ data: { entry: [] } }))
+        ]);
 
-        if (!conditionsResponse.data?.entry) {
+        const conditionEntries = conditionsResponse.data?.entry || [];
+        const encounterEntries = encountersResponse.data?.entry || [];
+        const observationEntries = observationsResponse.data?.entry || [];
+
+        if (conditionEntries.length === 0 && encounterEntries.length === 0 && observationEntries.length === 0) {
             return [{ resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] }];
         }
 
+        // 收集所有 Patient ID
         const patientIds = new Set();
-        conditionsResponse.data.entry.forEach(entry => {
-            const patientRef = entry.resource?.subject?.reference;
-            if (patientRef) {
-                const id = patientRef.split('/')[1];
+        const extractPatientId = (entry) => {
+            const ref = entry.resource?.subject?.reference || entry.resource?.patient?.reference;
+            if (ref) {
+                const id = ref.split('/').pop();
                 if (id) patientIds.add(id);
             }
-        });
+        };
+        conditionEntries.forEach(extractPatientId);
+        encounterEntries.forEach(extractPatientId);
+        observationEntries.forEach(extractPatientId);
 
+        console.log(`   📊 Condition: ${conditionEntries.length}, Encounter: ${encounterEntries.length}, Observation: ${observationEntries.length}, Patients: ${patientIds.size}`);
+
+        // 為每位 Patient 建立 Bundle
         const patientBundles = [];
         for (const patientId of Array.from(patientIds)) {
             try {
                 const patientResponse = await axios.get(`${fhirServerUrl}/Patient/${patientId}`, { timeout: 10000 });
                 if (!patientResponse.data) continue;
 
-                const patientConditions = conditionsResponse.data.entry.filter(entry => {
-                    const subject = entry.resource?.subject?.reference;
-                    return subject && (subject === `Patient/${patientId}` || subject.endsWith(`/${patientId}`));
+                const matchPatient = (entry) => {
+                    const ref = entry.resource?.subject?.reference || entry.resource?.patient?.reference;
+                    return ref && (ref === `Patient/${patientId}` || ref.endsWith(`/${patientId}`));
+                };
+
+                const entries = [
+                    { resource: patientResponse.data, fullUrl: `${fhirServerUrl}/Patient/${patientId}` }
+                ];
+
+                conditionEntries.filter(matchPatient).forEach(e => {
+                    entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Condition/${e.resource.id}` });
+                });
+                encounterEntries.filter(matchPatient).forEach(e => {
+                    entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Encounter/${e.resource.id}` });
+                });
+                observationEntries.filter(matchPatient).forEach(e => {
+                    entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Observation/${e.resource.id}` });
                 });
 
                 patientBundles.push({
                     resourceType: 'Bundle',
                     type: 'collection',
                     id: patientId,
-                    entry: [
-                        { resource: patientResponse.data, fullUrl: `${fhirServerUrl}/Patient/${patientId}` },
-                        ...patientConditions
-                    ]
+                    entry: entries
                 });
             } catch {
                 console.log(`   ⚠️ 無法取得 Patient ${patientId}`);
             }
         }
 
-        console.log(`   ✅ 建立 ${patientBundles.length} 個 Patient Bundle`);
+        console.log(`   ✅ 建立 ${patientBundles.length} 個 Patient Bundle (含 Condition+Encounter+Observation)`);
         return patientBundles;
 
     } catch (error) {
@@ -453,7 +486,10 @@ function formatCQLResults(results, cqlFile) {
     const formattedResults = [];
     const cqlFileLower = cqlFile ? cqlFile.toLowerCase() : '';
     const mainResultKey = cqlFileLower.includes('covid') ? 'COVID19 Surveillance Results' :
-        cqlFileLower.includes('influenza') || cqlFileLower.includes('flu') ? 'Influenza Surveillance Results' : null;
+        cqlFileLower.includes('influenza') || cqlFileLower.includes('flu') ? 'Influenza Surveillance Results' :
+        cqlFileLower.includes('conjunctivitis') ? 'Acute Conjunctivitis Surveillance Results' :
+        cqlFileLower.includes('enterovirus') ? 'Enterovirus Surveillance Results' :
+        cqlFileLower.includes('diarrhea') ? 'Acute Diarrhea Surveillance Results' : null;
 
     // 嘗試從 unfilteredResults 取得 Population context 結果
     if (mainResultKey && results.unfilteredResults?.[mainResultKey]) {
