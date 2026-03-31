@@ -1592,12 +1592,38 @@
                      "type" : "Tuple",
                      "annotation" : [ ],
                      "element" : [ {
+                        "name" : "patientId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "id",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "name" : "Patient",
+                                 "type" : "ExpressionRef",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     }, {
                         "name" : "episodeDate",
                         "value" : {
-                           "path" : "episodeStartDate",
-                           "scope" : "Episode",
-                           "type" : "Property",
-                           "annotation" : [ ]
+                           "type" : "ToString",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : {
+                              "path" : "episodeStartDate",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }
                         }
                      }, {
                         "name" : "age",
@@ -1659,10 +1685,242 @@
                      }, {
                         "name" : "diagnosisCode",
                         "value" : {
-                           "path" : "code",
-                           "scope" : "Episode",
-                           "type" : "Property",
-                           "annotation" : [ ]
+                           "type" : "If",
+                           "annotation" : [ ],
+                           "condition" : {
+                              "type" : "IsNull",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : {
+                                 "path" : "code",
+                                 "scope" : "Episode",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "N/A",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           },
+                           "else" : {
+                              "type" : "If",
+                              "annotation" : [ ],
+                              "condition" : {
+                                 "type" : "Not",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : {
+                                    "type" : "Exists",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    } ],
+                                    "operand" : {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "Episode",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }
+                                 }
+                              },
+                              "then" : {
+                                 "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                 "value" : "N/A",
+                                 "type" : "Literal",
+                                 "annotation" : [ ]
+                              },
+                              "else" : {
+                                 "type" : "Coalesce",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 }, {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "name" : "ToString",
+                                    "libraryName" : "FHIRHelpers",
+                                    "type" : "FunctionRef",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "name" : "{http://hl7.org/fhir}string",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "code",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "type" : "First",
+                                          "annotation" : [ ],
+                                          "signature" : [ {
+                                             "type" : "ListTypeSpecifier",
+                                             "annotation" : [ ],
+                                             "elementType" : {
+                                                "name" : "{http://hl7.org/fhir}Coding",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             }
+                                          } ],
+                                          "source" : {
+                                             "path" : "coding",
+                                             "type" : "Property",
+                                             "annotation" : [ ],
+                                             "source" : {
+                                                "path" : "code",
+                                                "scope" : "Episode",
+                                                "type" : "Property",
+                                                "annotation" : [ ]
+                                             }
+                                          }
+                                       }
+                                    } ]
+                                 }, {
+                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                    "value" : "Unknown",
+                                    "type" : "Literal",
+                                    "annotation" : [ ]
+                                 } ]
+                              }
+                           }
+                        }
+                     }, {
+                        "name" : "diagnosisName",
+                        "value" : {
+                           "type" : "If",
+                           "annotation" : [ ],
+                           "condition" : {
+                              "type" : "IsNull",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : {
+                                 "path" : "code",
+                                 "scope" : "Episode",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "N/A",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           },
+                           "else" : {
+                              "type" : "If",
+                              "annotation" : [ ],
+                              "condition" : {
+                                 "type" : "Not",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : {
+                                    "type" : "Exists",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    } ],
+                                    "operand" : {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "Episode",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }
+                                 }
+                              },
+                              "then" : {
+                                 "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                 "value" : "N/A",
+                                 "type" : "Literal",
+                                 "annotation" : [ ]
+                              },
+                              "else" : {
+                                 "type" : "Coalesce",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 }, {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "name" : "ToString",
+                                    "libraryName" : "FHIRHelpers",
+                                    "type" : "FunctionRef",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "name" : "{http://hl7.org/fhir}string",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "display",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "type" : "First",
+                                          "annotation" : [ ],
+                                          "signature" : [ {
+                                             "type" : "ListTypeSpecifier",
+                                             "annotation" : [ ],
+                                             "elementType" : {
+                                                "name" : "{http://hl7.org/fhir}Coding",
+                                                "type" : "NamedTypeSpecifier",
+                                                "annotation" : [ ]
+                                             }
+                                          } ],
+                                          "source" : {
+                                             "path" : "coding",
+                                             "type" : "Property",
+                                             "annotation" : [ ],
+                                             "source" : {
+                                                "path" : "code",
+                                                "scope" : "Episode",
+                                                "type" : "Property",
+                                                "annotation" : [ ]
+                                             }
+                                          }
+                                       }
+                                    } ]
+                                 }, {
+                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                    "value" : "Unknown",
+                                    "type" : "Literal",
+                                    "annotation" : [ ]
+                                 } ]
+                              }
+                           }
                         }
                      } ]
                   }

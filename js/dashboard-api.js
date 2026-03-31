@@ -1,7 +1,7 @@
 // ========== 疾管儀表板邏輯 - API版 ==========
 // 透過後端 CQL Engine 執行查詢
 // BUILD_VERSION: 20260331b - 修正雙重計算
-console.log('📌 dashboard-api.js BUILD_VERSION: 20260331b');
+console.log('📌 dashboard-api.js BUILD_VERSION: 20260331c');
 
 let currentResults = {};
 window.diseaseResults = currentResults;  // ★ 供 data-exporter 存取
@@ -993,6 +993,19 @@ function showCQLEngineReport(diseaseType, results) {
     let totalEpisodes = 0;
 
 
+    // 輔助：安全提取字串值（處理物件 {value: "..."} 或含引號的字串）
+    const extractStr = (v) => {
+        if (!v) return null;
+        if (typeof v === 'string') return v.replace(/^"|"$/g, '');
+        if (typeof v === 'object') {
+            if (v.value !== undefined) return extractStr(v.value);
+            if (v.code) return extractStr(v.code);
+            if (v.coding && v.coding[0]) return extractStr(v.coding[0].code || v.coding[0].display);
+            if (v.text) return extractStr(v.text);
+        }
+        return String(v);
+    };
+
     cqlResults.forEach(row => {
         // 性別與就診類型統一從 Surveillance Results episode 逐筆統計（避免與 CQL 聚合數據重複計算）
 
@@ -1005,10 +1018,11 @@ function showCQLEngineReport(diseaseType, results) {
         const survResults = survKey ? row[survKey] : null;
         if (Array.isArray(survResults)) {
             survResults.forEach(ep => {
-                // 時間分佈
-                const eventDate = ep.EventDate || ep.eventDate || ep.episodeDate;
-                if (eventDate) {
-                    const dateStr = String(eventDate).substring(0, 10);
+                // 時間分佈 — 處理日期物件或含引號的字串
+                const rawDate = ep.EventDate || ep.eventDate || ep.episodeDate;
+                const eventDate = extractStr(rawDate);
+                if (eventDate && /^\d{4}/.test(eventDate)) {
+                    const dateStr = eventDate.substring(0, 10);
                     const ym = dateStr.substring(0, 7);
                     const y = dateStr.substring(0, 4);
                     stats.monthly[ym] = (stats.monthly[ym] || 0) + 1;
@@ -1021,15 +1035,15 @@ function showCQLEngineReport(diseaseType, results) {
                     encType = encTypeMap[encType] || encType;
                     stats.encounterType[encType] = (stats.encounterType[encType] || 0) + 1;
                 }
-                // 診斷代碼
-                const dCode = ep.DiagnosisCode || ep.diagnosisCode;
-                const dName = ep.DiagnosisName || ep.diagnosisName || dCode;
-                if (dCode && dCode !== 'N/A') stats.diagCode[dCode] = { count: (stats.diagCode[dCode]?.count || 0) + 1, name: dName };
+                // 診斷代碼 — 處理物件型態（{value:"J09"} 或 CodeableConcept）
+                const dCode = extractStr(ep.DiagnosisCode || ep.diagnosisCode);
+                const dName = extractStr(ep.DiagnosisName || ep.diagnosisName) || dCode;
+                if (dCode && dCode !== 'N/A' && dCode !== 'Unknown') stats.diagCode[dCode] = { count: (stats.diagCode[dCode]?.count || 0) + 1, name: dName };
                 // 事件類型
                 const eType = ep.EventType || ep.eventType;
                 if (eType) stats.eventType[eType] = (stats.eventType[eType] || 0) + 1;
                 // 病毒類型 (由 DiagnosisName 或 VirusType 判斷)
-                const vType = ep.VirusType || ep.virusType || ep.DiagnosisName || ep.diagnosisName;
+                const vType = extractStr(ep.VirusType || ep.virusType || ep.DiagnosisName || ep.diagnosisName);
                 if (vType && vType !== 'N/A') {
                     // 收集唯一病患 per virusType
                     const pid = ep.PatientID || ep.patientId || '';
@@ -1227,7 +1241,7 @@ function showCQLEngineReport(diseaseType, results) {
         const virusColors = ['#6366f1', '#8b5cf6', '#a855f7', '#c084fc', '#d8b4fe'];
         const items = entries.map(([name, data], i) => {
             const c = virusColors[i % virusColors.length];
-            const patientCount = data.patients ? data.patients.size : data.count;
+            const patientCount = (data.patients && data.patients.size > 0) ? data.patients.size : data.count;
             return `<div style="display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1rem; background: ${c}08; border-left: 4px solid ${c}; border-radius: 0 8px 8px 0; margin-bottom: 0.5rem;">
                 <div style="flex: 1;">
                     <div style="font-size: 0.88rem; font-weight: 600; color: #1e293b;">${name}</div>

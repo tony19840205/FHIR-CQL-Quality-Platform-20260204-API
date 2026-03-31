@@ -149,11 +149,19 @@ define function "DetermineVirusType"(codeParam FHIR.CodeableConcept):
 define "Final Result":
   "Unique Influenza Episodes" Episode
     return Tuple {
-      episodeDate: Episode.episodeStartDate,
+      patientId: Patient.id.value,
+      episodeDate: ToString(Episode.episodeStartDate),
       age: "CalculateAgeAtEvent"(Episode.episodeStartDate),
       gender: "Patient Gender",
       encounterType: "GetEncounterType"(Episode.encounter),
       virusType: "DetermineVirusType"(Episode.code),
       eventType: Episode.eventType,
-      diagnosisCode: Episode.code
+      diagnosisCode:
+        if Episode.code is null then 'N/A'
+        else if not exists(Episode.code.coding) then 'N/A'
+        else Coalesce(First(Episode.code.coding).code, 'Unknown'),
+      diagnosisName:
+        if Episode.code is null then 'N/A'
+        else if not exists(Episode.code.coding) then 'N/A'
+        else Coalesce(First(Episode.code.coding).display, 'Unknown')
     }

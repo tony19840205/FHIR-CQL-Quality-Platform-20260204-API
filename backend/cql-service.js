@@ -166,10 +166,26 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
         return formatIndicatorResults(results, cqlFile);
     }
 
-    // 步驟 8: 提取 Patient 地址資料 (供前端地區分佈統計)
-    const regionStats = extractPatientAddresses(fhirData);
-
+    // 步驟 8: 格式化結果
     const formattedResults = formatCQLResults(results, cqlFile);
+
+    // 步驟 9: 提取 episode 中的 patient IDs (限縮地區統計範圍)
+    const episodePatientIds = new Set();
+    const rows = Array.isArray(formattedResults) ? formattedResults : [];
+    rows.forEach(row => {
+        const survKey = Object.keys(row).find(k => k.includes('Surveillance Results'));
+        const survArr = survKey ? row[survKey] : null;
+        if (Array.isArray(survArr)) {
+            survArr.forEach(ep => {
+                const pid = ep.PatientID || ep.patientId || ep.patientID;
+                if (pid) episodePatientIds.add(pid);
+            });
+        }
+    });
+
+    // 步驟 10: 提取 Patient 地址資料 (僅統計有 episode 的患者)
+    const regionStats = extractPatientAddresses(fhirData, episodePatientIds.size > 0 ? episodePatientIds : null);
+
     return { _data: formattedResults, _regionStats: regionStats };
 }
 
@@ -724,7 +740,7 @@ function formatIndicatorResults(results, cqlFile) {
 }
 
 // ==================== 提取 Patient 地址資料 ====================
-function extractPatientAddresses(fhirBundles) {
+function extractPatientAddresses(fhirBundles, filterPatientIds = null) {
     const regionCount = {};  // city -> count
     const districtCount = {}; // "city+district" -> count
     const seen = new Set();
@@ -736,6 +752,8 @@ function extractPatientAddresses(fhirBundles) {
         entries.forEach(e => {
             const res = e.resource;
             if (res && res.resourceType === 'Patient' && !seen.has(res.id)) {
+                // 如果有過濾清單，只統計出現在 episodes 中的患者
+                if (filterPatientIds && !filterPatientIds.has(res.id)) return;
                 seen.add(res.id);
                 const addr = Array.isArray(res.address) && res.address.length > 0 ? res.address[0] : null;
                 if (addr) {
@@ -871,7 +889,15 @@ function formatValue(value, fieldName = '') {
 
     // CQL DateTime / FHIRObject with value property → 提取為字串
     if (typeof value === 'object' && value.value !== undefined && !value.coding && !value.resourceType) {
-        return formatValue(value.value, fieldName);
+        const extracted = formatValue(value.value, fieldName);
+        // 清除可能的多餘引號（CQL DateTime 有時產生 '"2026-03-26"' 格式）
+        if (typeof extracted === 'string') return extracted.replace(/^"|"$/g, '');
+        return extracted;
+    }
+
+    // 字串值清理：去掉首尾多餘引號
+    if (typeof value === 'string' && value.startsWith('"') && value.endsWith('"')) {
+        return value.slice(1, -1);
     }
 
     // 保留 Surveillance Results 陣列的完整資料供前端統計
@@ -888,10 +914,35 @@ function formatValue(value, fieldName = '') {
     if (Array.isArray(value)) return value.length;
 
     if (typeof value === 'object') {
-        // FHIR CodeableConcept → 取出 coding[0].code (Influenza diagnosisCode 為此型態)
-        if ((fieldName.includes('diagnosisCode') || fieldName.includes('DiagnosisCode')) && (value.coding || value.text)) {
-            const coding = Array.isArray(value.coding) && value.coding.length > 0 ? value.coding[0] : null;
-            return coding ? (coding.code || coding.display || value.text || 'N/A') : (value.text || 'N/A');
+        // FHIR CodeableConcept → 取出 coding[0].code
+        if ((fieldName.includes('diagnosisCode') || fieldName.includes('DiagnosisCode'))) {
+            // 處理 FHIR CodeableConcept（含 .coding 陣列或 .text）
+            if (value.coding || value.text) {
+                const codingArr = value.coding;
+                const firstCoding = codingArr && typeof codingArr[Symbol.iterator] === 'function'
+                    ? Array.from(codingArr)[0] : null;
+                if (firstCoding) {
+                    const code = firstCoding.code?.value || firstCoding.code;
+                    return code || firstCoding.display?.value || firstCoding.display || value.text || 'N/A';
+                }
+                return value.text?.value || value.text || 'N/A';
+            }
+            // CQL Code 物件 (.code 屬性)
+            if (value.code) return value.code.value || value.code;
+            return 'N/A';
+        }
+        if ((fieldName.includes('diagnosisName') || fieldName.includes('DiagnosisName'))) {
+            if (value.coding || value.text) {
+                const codingArr = value.coding;
+                const firstCoding = codingArr && typeof codingArr[Symbol.iterator] === 'function'
+                    ? Array.from(codingArr)[0] : null;
+                if (firstCoding) {
+                    return firstCoding.display?.value || firstCoding.display || firstCoding.code?.value || firstCoding.code || 'N/A';
+                }
+                return value.text?.value || value.text || 'N/A';
+            }
+            if (value.display) return value.display.value || value.display;
+            return 'N/A';
         }
         // 保留統計 Tuple 為物件（Episode Count By Gender, Episode Count By Encounter Type）
         if (fieldName.includes('Episode Count') || fieldName.includes('Count By')) {
