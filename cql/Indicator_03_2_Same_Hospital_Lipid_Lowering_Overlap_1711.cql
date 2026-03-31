@@ -34,36 +34,36 @@ define function IsLipidLoweringOralDrug(atcCode String, drugCode String):
   // 醫令代碼第8碼不為1 (排除注射劑)
   (Length(drugCode) >= 8 and Substring(drugCode, 7, 1) != '1')
 
+// Helper function: 取兩日期較大者
+define function MaxDate(d1 DateTime, d2 DateTime):
+  if d1 > d2 then d1 else d2
+
+// Helper function: 取兩日期較小者
+define function MinDate(d1 DateTime, d2 DateTime):
+  if d1 < d2 then d1 else d2
+
 // Helper function: 計算兩個日期區間的重疊天數
-define function CalculateOverlapDays(start1 Date, end1 Date, start2 Date, end2 Date):
+define function CalculateOverlapDays(start1 DateTime, end1 DateTime, start2 DateTime, end2 DateTime):
   if start1 is null or end1 is null or start2 is null or end2 is null then
     0
+  else if MaxDate(start1, start2) <= MinDate(end1, end2) then
+    days between MaxDate(start1, start2) and MinDate(end1, end2) + 1
   else
-    let overlapStart: if start1 > start2 then start1 else start2,
-        overlapEnd: if end1 < end2 then end1 else end2,
-        overlapDays: days between overlapStart and overlapEnd + 1
-    in
-      if overlapStart <= overlapEnd then overlapDays else 0
+    0
 
 // 1. 同醫院門診降血脂藥品處方
 define "Lipid Lowering Prescriptions":
   [MedicationRequest] MR
     where MR.status.value = 'completed'
-    and exists (
-      MR.medicationCodeableConcept.coding MC
-        where MC.system.value = 'http://www.whocc.no/atc'
-        and exists (
-          MR.contained C
-            where C is FHIR.Medication
-            and IsLipidLoweringOralDrug(MC.code.value, C.code.coding[0].code.value)
-        )
+    and IsLipidLoweringOralDrug(
+      First((MR.medication as FHIR.CodeableConcept).coding).code.value,
+      First((MR.medication as FHIR.CodeableConcept).coding).code.value
     )
     and exists (
       [Encounter] E
         where E.id.value = Last(Split(MR.encounter.reference.value, '/'))
         and E.class.code.value = 'AMB'
         and E.status.value = 'finished'
-        // 排除代辦案件
         and not exists (E.type T where exists (T.coding C where C.code.value = 'AGENCY'))
     )
 
@@ -71,25 +71,26 @@ define "Lipid Lowering Prescriptions":
 define "Drug Overlap Days":
   flatten (
     "Lipid Lowering Prescriptions" P1
-      let 
-        patientRef: P1.subject.reference.value,
-        organizationRef: P1.requester.reference.value,
-        start1: P1.dispenseRequest.validityPeriod.start.value,
-        end1: P1.dispenseRequest.validityPeriod.end.value
       return
         "Lipid Lowering Prescriptions" P2
-          where P2.subject.reference.value = patientRef
-          and P2.requester.reference.value = organizationRef
+          where P2.subject.reference.value = P1.subject.reference.value
+          and P2.requester.reference.value = P1.requester.reference.value
           and P2.id.value != P1.id.value
-          let
-            start2: P2.dispenseRequest.validityPeriod.start.value,
-            end2: P2.dispenseRequest.validityPeriod.end.value,
-            overlap: CalculateOverlapDays(start1, end1, start2, end2)
-          where overlap > 0
+          and CalculateOverlapDays(
+                P1.dispenseRequest.validityPeriod.start.value,
+                P1.dispenseRequest.validityPeriod.end.value,
+                P2.dispenseRequest.validityPeriod.start.value,
+                P2.dispenseRequest.validityPeriod.end.value
+              ) > 0
           return {
             prescription1: P1.id.value,
             prescription2: P2.id.value,
-            overlapDays: overlap
+            overlapDays: CalculateOverlapDays(
+              P1.dispenseRequest.validityPeriod.start.value,
+              P1.dispenseRequest.validityPeriod.end.value,
+              P2.dispenseRequest.validityPeriod.start.value,
+              P2.dispenseRequest.validityPeriod.end.value
+            )
           }
   )
 

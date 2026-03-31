@@ -77,7 +77,7 @@ function getCardQueryOptions(diseaseType) {
     return {
         startDate: startEl ? startEl.value : '',
         endDate: endEl ? endEl.value : '',
-        maxRecords: maxEl ? parseInt(maxEl.value) : 200
+        maxRecords: maxEl ? (parseInt(maxEl.value) || 0) : 200
     };
 }
 
@@ -890,7 +890,7 @@ function showDetailReport(diseaseType) {
                     <div><strong>FHIR 伺服器:</strong> ${window.fhirConnection?.serverUrl || 'N/A'}</div>
                     <div><strong>查詢時間:</strong> ${new Date().toLocaleString('zh-TW')}</div>
                     <div><strong>資料範圍:</strong> 所有可用資料</div>
-                    <div><strong>查詢上限:</strong> 1000筆</div>
+                    <div><strong>查詢上限:</strong> ${(results.queryOptions?.maxRecords || 0) === 0 ? '不設限' : (results.queryOptions?.maxRecords || '不設限') + '筆'}</div>
                     <div><strong>除錯:</strong> 急診${emergencyCount} / 住院${inpatientCount} / 門診${outpatientCount} / 其他${otherCount}</div>
                 </div>
             </div>
@@ -943,6 +943,15 @@ function showCQLEngineReport(diseaseType, results) {
     const hasError = cqlResults.some(r => r['執行狀態'] && r['執行狀態'].includes('錯誤'));
     
     // 構建結果表格
+    const formatCellValue = (val) => {
+        if (val === null || val === undefined) return 'N/A';
+        if (typeof val === 'object') {
+            if (Array.isArray(val)) return val.length + ' 筆';
+            try { return JSON.stringify(val); } catch(e) { return String(val); }
+        }
+        return String(val);
+    };
+    
     let tableHTML = '';
     if (cqlResults.length > 0 && !hasError) {
         const keys = Object.keys(cqlResults[0]);
@@ -954,7 +963,7 @@ function showCQLEngineReport(diseaseType, results) {
                 <tbody>
                     ${cqlResults.slice(0, 100).map((row, i) => `
                         <tr style="background: ${i % 2 === 0 ? '#f8fafc' : 'white'};">
-                            ${keys.map(k => `<td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e2e8f0; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${row[k] ?? 'N/A'}</td>`).join('')}
+                            ${keys.map(k => `<td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e2e8f0; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${formatCellValue(row[k])}</td>`).join('')}
                         </tr>
                     `).join('')}
                 </tbody>
@@ -993,7 +1002,7 @@ function showCQLEngineReport(diseaseType, results) {
                     • <strong>FHIR 版本:</strong> FHIR 4.0.1<br>
                     • <strong>執行時間:</strong> ${meta.executionTime || 'N/A'}ms<br>
                     • <strong>查詢日期範圍:</strong> ${results.queryOptions?.startDate || 'N/A'} ~ ${results.queryOptions?.endDate || 'N/A'}<br>
-                    • <strong>最大筆數:</strong> ${results.queryOptions?.maxRecords || 200}<br>
+                    • <strong>最大筆數:</strong> ${(results.queryOptions?.maxRecords || 0) === 0 ? '不設限' : results.queryOptions?.maxRecords}<br>
                     • <strong>執行時間戳:</strong> ${meta.timestamp || new Date().toISOString()}
                 </div>
             </div>

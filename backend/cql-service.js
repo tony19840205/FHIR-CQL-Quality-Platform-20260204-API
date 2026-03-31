@@ -278,20 +278,21 @@ async function fetchIndicatorFHIRData(fhirServerUrl, options = {}) {
 // ==================== 一般 FHIR 資料抓取（傳染病監測用） ====================
 async function fetchFHIRData(fhirServerUrl, options = {}) {
     const { maxRecords = 200 } = options;
+    const fetchCount = maxRecords > 0 ? maxRecords : 10000;
 
     try {
         // 同時抓取 Condition、Encounter、Observation
         const [conditionsResponse, encountersResponse, observationsResponse] = await Promise.all([
             axios.get(`${fhirServerUrl}/Condition`, {
-                params: { _count: maxRecords, _sort: '-recorded-date' },
+                params: { _count: fetchCount, _sort: '-recorded-date' },
                 timeout: 60000
             }).catch(() => ({ data: { entry: [] } })),
             axios.get(`${fhirServerUrl}/Encounter`, {
-                params: { _count: maxRecords, _sort: '-date' },
+                params: { _count: fetchCount, _sort: '-date' },
                 timeout: 60000
             }).catch(() => ({ data: { entry: [] } })),
             axios.get(`${fhirServerUrl}/Observation`, {
-                params: { _count: maxRecords, _sort: '-date', category: 'laboratory' },
+                params: { _count: fetchCount, _sort: '-date', category: 'laboratory' },
                 timeout: 60000
             }).catch(() => ({ data: { entry: [] } }))
         ]);

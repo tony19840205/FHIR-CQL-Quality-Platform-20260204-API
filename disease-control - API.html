@@ -154,7 +154,7 @@
                     <div class="card-content">
                         <h3>COVID-19</h3>
                         <p class="card-code">InfectiousDisease_COVID19_Surveillance</p>
-                        <p class="card-description-text">查詢 COVID-19 確診病例、急診就診、住院資料<br><small style="color: #94a3b8;">（最多查詢1000筆）</small></p>
+                        <p class="card-description-text">查詢 COVID-19 確診病例、急診就診、住院資料</p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
                                 <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
@@ -169,18 +169,23 @@
                         <button class="btn-card-mini" onclick="executeCQL('covid19')" id="btnCovid">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
-                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:12px;">
-                            <label style="color:#94a3b8;">開始日期</label>
-                            <input type="date" id="startDateCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">結束日期</label>
-                            <input type="date" id="endDateCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">筆數</label>
-                            <select id="maxRecordsCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                <option value="100">100筆</option>
-                                <option value="200" selected>200筆</option>
-                                <option value="500">500筆</option>
-                                <option value="1000">1000筆</option>
-                            </select>
+                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <input type="date" id="startDateCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <input type="date" id="endDateCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                            </div>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
+                                <select id="maxRecordsCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
+                                    <option value="0">不設限</option>
+                                    <option value="100">100筆</option>
+                                    <option value="200" selected>200筆</option>
+                                    <option value="500">500筆</option>
+                                    <option value="1000">1000筆</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="card-status" id="statusCovid"></div>
@@ -194,7 +199,7 @@
                     <div class="card-content">
                         <h3>流感</h3>
                         <p class="card-code">InfectiousDisease_Influenza_Surveillance</p>
-                        <p class="card-description-text">追蹤流感病例、疫苗接種、重症案例<br><small style="color: #94a3b8;">（最多查詢1000筆）</small></p>
+                        <p class="card-description-text">追蹤流感病例、疫苗接種、重症案例</p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
                                 <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
@@ -209,18 +214,23 @@
                         <button class="btn-card-mini" onclick="executeCQL('influenza')" id="btnInfluenza">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
-                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:12px;">
-                            <label style="color:#94a3b8;">開始日期</label>
-                            <input type="date" id="startDateInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">結束日期</label>
-                            <input type="date" id="endDateInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">筆數</label>
-                            <select id="maxRecordsInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                <option value="100">100筆</option>
-                                <option value="200" selected>200筆</option>
-                                <option value="500">500筆</option>
-                                <option value="1000">1000筆</option>
-                            </select>
+                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <input type="date" id="startDateInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <input type="date" id="endDateInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                            </div>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
+                                <select id="maxRecordsInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
+                                    <option value="0">不設限</option>
+                                    <option value="100">100筆</option>
+                                    <option value="200" selected>200筆</option>
+                                    <option value="500">500筆</option>
+                                    <option value="1000">1000筆</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="card-status" id="statusInfluenza"></div>
@@ -234,7 +244,7 @@
                     <div class="card-content">
                         <h3>急性結膜炎</h3>
                         <p class="card-code">InfectiousDisease_AcuteConjunctivitis_Surveillance</p>
-                        <p class="card-description-text">急性結膜炎發病監控、紅眼症聚落偵測<br><small style="color: #94a3b8;">（最多查詢1000筆）</small></p>
+                        <p class="card-description-text">急性結膜炎發病監控、紅眼症聚落偵測</p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
                                 <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
@@ -249,18 +259,23 @@
                         <button class="btn-card-mini" onclick="executeCQL('conjunctivitis')" id="btnConjunctivitis">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
-                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:12px;">
-                            <label style="color:#94a3b8;">開始日期</label>
-                            <input type="date" id="startDateConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">結束日期</label>
-                            <input type="date" id="endDateConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">筆數</label>
-                            <select id="maxRecordsConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                <option value="100">100筆</option>
-                                <option value="200" selected>200筆</option>
-                                <option value="500">500筆</option>
-                                <option value="1000">1000筆</option>
-                            </select>
+                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <input type="date" id="startDateConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <input type="date" id="endDateConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                            </div>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
+                                <select id="maxRecordsConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
+                                    <option value="0">不設限</option>
+                                    <option value="100">100筆</option>
+                                    <option value="200" selected>200筆</option>
+                                    <option value="500">500筆</option>
+                                    <option value="1000">1000筆</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="card-status" id="statusConjunctivitis"></div>
@@ -274,7 +289,7 @@
                     <div class="card-content">
                         <h3>腸病毒</h3>
                         <p class="card-code">InfectiousDisease_Enterovirus_Surveillance</p>
-                        <p class="card-description-text">腸病毒疫情、手足口症、疱疹性咽峽炎<br><small style="color: #94a3b8;">（最多查詢1000筆）</small></p>
+                        <p class="card-description-text">腸病毒疫情、手足口症、疱疹性咽峽炎</p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
                                 <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
@@ -289,18 +304,23 @@
                         <button class="btn-card-mini" onclick="executeCQL('enterovirus')" id="btnEnterovirus">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
-                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:12px;">
-                            <label style="color:#94a3b8;">開始日期</label>
-                            <input type="date" id="startDateEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">結束日期</label>
-                            <input type="date" id="endDateEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">筆數</label>
-                            <select id="maxRecordsEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                <option value="100">100筆</option>
-                                <option value="200" selected>200筆</option>
-                                <option value="500">500筆</option>
-                                <option value="1000">1000筆</option>
-                            </select>
+                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <input type="date" id="startDateEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <input type="date" id="endDateEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                            </div>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
+                                <select id="maxRecordsEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
+                                    <option value="0">不設限</option>
+                                    <option value="100">100筆</option>
+                                    <option value="200" selected>200筆</option>
+                                    <option value="500">500筆</option>
+                                    <option value="1000">1000筆</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="card-status" id="statusEnterovirus"></div>
@@ -314,7 +334,7 @@
                     <div class="card-content">
                         <h3>腹瀉群聚</h3>
                         <p class="card-code">InfectiousDisease_AcuteDiarrhea_Surveillance</p>
-                        <p class="card-description-text">腹瀉疫情、諾羅病毒、輪狀病毒監測<br><small style="color: #94a3b8;">（最多查詢1000筆）</small></p>
+                        <p class="card-description-text">腹瀉疫情、諾羅病毒、輪狀病毒監測</p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
                                 <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
@@ -329,18 +349,23 @@
                         <button class="btn-card-mini" onclick="executeCQL('diarrhea')" id="btnDiarrhea">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
-                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; align-items:center; font-size:12px;">
-                            <label style="color:#94a3b8;">開始日期</label>
-                            <input type="date" id="startDateDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">結束日期</label>
-                            <input type="date" id="endDateDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                            <label style="color:#94a3b8;">筆數</label>
-                            <select id="maxRecordsDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                <option value="100">100筆</option>
-                                <option value="200" selected>200筆</option>
-                                <option value="500">500筆</option>
-                                <option value="1000">1000筆</option>
-                            </select>
+                        <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <input type="date" id="startDateDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <input type="date" id="endDateDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                            </div>
+                            <div style="display:flex; gap:6px; align-items:center;">
+                                <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
+                                <select id="maxRecordsDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
+                                    <option value="0">不設限</option>
+                                    <option value="100">100筆</option>
+                                    <option value="200" selected>200筆</option>
+                                    <option value="500">500筆</option>
+                                    <option value="1000">1000筆</option>
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="card-status" id="statusDiarrhea"></div>
