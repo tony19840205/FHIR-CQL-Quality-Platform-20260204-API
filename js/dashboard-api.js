@@ -942,45 +942,126 @@ function showCQLEngineReport(diseaseType, results) {
     // 判斷是否有錯誤
     const hasError = cqlResults.some(r => r['執行狀態'] && r['執行狀態'].includes('錯誤'));
     
-    // 構建結果表格
+    // 解析病患資訊
+    const parsePatientInfo = (val) => {
+        if (!val) return null;
+        if (typeof val === 'object' && !Array.isArray(val) && val.name) return val;
+        if (typeof val === 'string') {
+            try { const p = JSON.parse(val); if (p && p.name) return p; } catch(e) {}
+        }
+        return null;
+    };
+
+    // 格式化儲存格值（用於非 Patient 欄位）
     const formatCellValue = (val) => {
-        if (val === null || val === undefined) return 'N/A';
+        if (val === null || val === undefined || val === 'N/A') return null;
+        if (typeof val === 'number') return val;
         if (typeof val === 'object') {
-            if (Array.isArray(val)) return val.length + ' 筆';
+            if (Array.isArray(val)) return val.length;
             try { return JSON.stringify(val); } catch(e) { return String(val); }
         }
         return String(val);
     };
-    
+
+    // 配色方案
+    const metricColors = [
+        { bg: '#eff6ff', border: '#3b82f6', text: '#1e40af' },
+        { bg: '#f0fdf4', border: '#22c55e', text: '#166534' },
+        { bg: '#fefce8', border: '#eab308', text: '#854d0e' },
+        { bg: '#fdf2f8', border: '#ec4899', text: '#9d174d' },
+        { bg: '#f5f3ff', border: '#8b5cf6', text: '#5b21b6' },
+        { bg: '#fff7ed', border: '#f97316', text: '#9a3412' },
+        { bg: '#ecfeff', border: '#06b6d4', text: '#155e75' },
+        { bg: '#fef2f2', border: '#ef4444', text: '#991b1b' }
+    ];
+
     let tableHTML = '';
     if (cqlResults.length > 0 && !hasError) {
         const keys = Object.keys(cqlResults[0]);
+        const patientKey = keys.find(k => k === 'Patient' || k === '病患');
+        const idKey = keys.find(k => k === '患者ID' || k === 'patientId' || k === 'PatientID');
+        const metricKeys = keys.filter(k => k !== patientKey && k !== idKey);
+
+        const cards = cqlResults.slice(0, 100).map((row, idx) => {
+            const patientInfo = patientKey ? parsePatientInfo(row[patientKey]) : null;
+            const patientId = idKey ? row[idKey] : (patientInfo?.id || `#${idx + 1}`);
+
+            // 病患資訊區
+            let patientSection = '';
+            if (patientInfo) {
+                const genderIcon = patientInfo.gender === '男' ? '👨' : patientInfo.gender === '女' ? '👩' : '🧑';
+                const genderColor = patientInfo.gender === '男' ? '#3b82f6' : patientInfo.gender === '女' ? '#ec4899' : '#6b7280';
+                patientSection = `
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, ${genderColor}22, ${genderColor}44); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
+                            ${genderIcon}
+                        </div>
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: 700; color: #1e293b; font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${patientInfo.name || 'N/A'}</div>
+                            <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.3rem;">
+                                <span style="font-size: 0.78rem; color: #64748b;"><i class="fas fa-id-card" style="margin-right: 3px;"></i>${patientId}</span>
+                                <span style="font-size: 0.78rem; color: #64748b;"><i class="fas fa-birthday-cake" style="margin-right: 3px;"></i>${patientInfo.birthDate || 'N/A'}</span>
+                                <span style="font-size: 0.78rem; color: ${genderColor}; font-weight: 600;">${patientInfo.gender || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>`;
+            } else {
+                patientSection = `
+                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid #e2e8f0;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #94a3b8; flex-shrink: 0;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div style="font-weight: 700; color: #1e293b; font-size: 1rem;">患者 ${patientId}</div>
+                        </div>
+                    </div>`;
+            }
+
+            // 指標數據區
+            const metrics = metricKeys.map((k, mi) => {
+                const val = formatCellValue(row[k]);
+                const color = metricColors[mi % metricColors.length];
+                const displayVal = val === null || val === 0 || val === '0' ? '0' : val;
+                const isZero = displayVal === '0' || displayVal === 0;
+                return `
+                    <div style="background: ${isZero ? '#f8fafc' : color.bg}; border-left: 3px solid ${isZero ? '#cbd5e1' : color.border}; border-radius: 8px; padding: 0.6rem 0.8rem; min-width: 0;">
+                        <div style="font-size: 0.72rem; color: ${isZero ? '#94a3b8' : color.text}; margin-bottom: 0.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${k}">${k}</div>
+                        <div style="font-size: 1.3rem; font-weight: 700; color: ${isZero ? '#cbd5e1' : color.text};">${displayVal}</div>
+                    </div>`;
+            }).join('');
+
+            return `
+                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: box-shadow 0.2s;"
+                     onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.06)'">
+                    ${patientSection}
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.5rem;">
+                        ${metrics}
+                    </div>
+                </div>`;
+        }).join('');
+
         tableHTML = `
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-                <thead>
-                    <tr>${keys.map(k => `<th style="background: #1e293b; color: white; padding: 0.5rem 0.75rem; text-align: left; white-space: nowrap;">${k}</th>`).join('')}</tr>
-                </thead>
-                <tbody>
-                    ${cqlResults.slice(0, 100).map((row, i) => `
-                        <tr style="background: ${i % 2 === 0 ? '#f8fafc' : 'white'};">
-                            ${keys.map(k => `<td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e2e8f0; max-width: 200px; overflow: hidden; text-overflow: ellipsis;">${formatCellValue(row[k])}</td>`).join('')}
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
-            ${cqlResults.length > 100 ? `<div style="padding: 0.5rem; color: #64748b; text-align: center;">僅顯示前 100 筆 (共 ${cqlResults.length} 筆)</div>` : ''}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem;">
+                ${cards}
+            </div>
+            ${cqlResults.length > 100 ? `<div style="padding: 0.8rem; color: #64748b; text-align: center; margin-top: 0.5rem; font-size: 0.85rem;">僅顯示前 100 筆 (共 ${cqlResults.length} 筆)</div>` : ''}
         `;
     } else if (hasError) {
         tableHTML = `
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-                <thead><tr><th style="background: #1e293b; color: white; padding: 0.5rem;">執行狀態</th><th style="background: #1e293b; color: white; padding: 0.5rem;">錯誤訊息</th></tr></thead>
-                <tbody>
-                    ${cqlResults.map(r => `<tr><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">${r['執行狀態'] || ''}</td><td style="padding: 0.5rem; border-bottom: 1px solid #e2e8f0;">${r['錯誤訊息'] || r['說明'] || ''}</td></tr>`).join('')}
-                </tbody>
-            </table>
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 1.5rem;">
+                ${cqlResults.map(r => `
+                    <div style="display: flex; gap: 0.8rem; align-items: flex-start; margin-bottom: 0.8rem;">
+                        <span style="color: #ef4444; font-size: 1.2rem;">⚠️</span>
+                        <div>
+                            <div style="font-weight: 600; color: #991b1b;">${r['執行狀態'] || '錯誤'}</div>
+                            <div style="color: #b91c1c; font-size: 0.85rem; margin-top: 0.2rem;">${r['錯誤訊息'] || r['說明'] || ''}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
         `;
     } else {
-        tableHTML = '<div style="padding: 1rem; color: #64748b; text-align: center;">無符合條件的結果</div>';
+        tableHTML = '<div style="padding: 2rem; color: #64748b; text-align: center; font-size: 1rem;"><i class="fas fa-inbox" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>無符合條件的結果</div>';
     }
 
     const reportHTML = `
@@ -1025,8 +1106,8 @@ function showCQLEngineReport(diseaseType, results) {
                 </div>
             </div>
             
-            <h3 style="margin: 0 0 1rem 0; color: #1e293b;"><i class="fas fa-th"></i> 完整查詢結果</h3>
-            <div style="overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <h3 style="margin: 0 0 1rem 0; color: #1e293b;"><i class="fas fa-th-large"></i> 完整查詢結果</h3>
+            <div style="overflow-x: auto;">
                 ${tableHTML}
             </div>
             

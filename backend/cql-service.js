@@ -622,30 +622,40 @@ function formatValue(value, fieldName = '') {
     return value;
 }
 
+// ==================== 安全取字串值 ====================
+function safeStr(val) {
+    if (val === null || val === undefined) return '';
+    if (typeof val === 'string') return val;
+    if (typeof val === 'number' || typeof val === 'boolean') return String(val);
+    if (typeof val === 'object' && val.value !== undefined) return safeStr(val.value);
+    try { const s = JSON.stringify(val); return s.length > 100 ? s.substring(0, 100) : s; } catch(e) { return ''; }
+}
+
 // ==================== 格式化病患資訊 ====================
 function formatPatientInfo(patient) {
-    const parts = [];
+    const info = { name: 'N/A', birthDate: 'N/A', gender: 'N/A', id: '' };
 
     if (patient.name && patient.name.length > 0) {
         const name = patient.name[0];
-        if (name.text) parts.push(String(name.text));
-        else {
-            const family = name.family ? String(name.family) : '';
-            const given = Array.isArray(name.given) ? name.given.map(String).join(' ') : '';
-            parts.push([family, given].filter(x => x).join(' ') || 'N/A');
+        const text = safeStr(name.text);
+        if (text) {
+            info.name = text;
+        } else {
+            const family = safeStr(name.family);
+            const given = Array.isArray(name.given) ? name.given.map(g => safeStr(g)).filter(x => x).join(' ') : '';
+            info.name = [family, given].filter(x => x).join(' ') || 'N/A';
         }
-    } else {
-        parts.push('N/A');
     }
 
-    parts.push(patient.birthDate ? String(patient.birthDate) : 'N/A');
+    info.birthDate = safeStr(patient.birthDate) || 'N/A';
 
     const genderMap = { 'male': '男', 'female': '女', 'other': '其他', 'unknown': '未知' };
-    parts.push(genderMap[patient.gender] || patient.gender || 'N/A');
+    const genderStr = safeStr(patient.gender);
+    info.gender = genderMap[genderStr] || genderStr || 'N/A';
 
-    if (patient.id) parts.push(`ID:${patient.id}`);
+    if (patient.id) info.id = safeStr(patient.id);
 
-    return parts.join(' / ');
+    return JSON.stringify(info);
 }
 
 // ==================== 導出 ====================
