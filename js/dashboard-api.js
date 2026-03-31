@@ -954,7 +954,7 @@ function showCQLEngineReport(diseaseType, results) {
     };
 
     // 從 CQL 結果聚合統計
-    const stats = { gender: {}, encounterType: {}, monthly: {}, yearly: {}, diagCode: {}, eventType: {} };
+    const stats = { gender: {}, encounterType: {}, monthly: {}, yearly: {}, diagCode: {}, eventType: {}, virusType: {} };
     let totalEpisodes = 0;
 
     cqlResults.forEach(row => {
@@ -1011,6 +1011,15 @@ function showCQLEngineReport(diseaseType, results) {
                 // 事件類型
                 const eType = ep.EventType || ep.eventType;
                 if (eType) stats.eventType[eType] = (stats.eventType[eType] || 0) + 1;
+                // 病毒類型 (由 DiagnosisName 或 VirusType 判斷)
+                const vType = ep.VirusType || ep.virusType || ep.DiagnosisName || ep.diagnosisName;
+                if (vType && vType !== 'N/A') {
+                    // 收集唯一病患 per virusType
+                    const pid = ep.PatientID || ep.patientId || '';
+                    if (!stats.virusType[vType]) stats.virusType[vType] = { count: 0, patients: new Set() };
+                    stats.virusType[vType].count += 1;
+                    if (pid) stats.virusType[vType].patients.add(pid);
+                }
                 // 性別 (from surveillance)
                 const g2 = ep.Gender || ep.gender;
                 if (g2) {
@@ -1190,6 +1199,35 @@ function showCQLEngineReport(diseaseType, results) {
         </div>`;
     };
 
+    // 病毒明細卡片
+    const buildVirusCard = (virusData) => {
+        const entries = Object.entries(virusData).sort((a, b) => b[1].count - a[1].count);
+        if (entries.length === 0) return '';
+        const virusColors = ['#6366f1', '#8b5cf6', '#a855f7', '#c084fc', '#d8b4fe'];
+        const items = entries.map(([name, data], i) => {
+            const c = virusColors[i % virusColors.length];
+            const patientCount = data.patients ? data.patients.size : data.count;
+            return `<div style="display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1rem; background: ${c}08; border-left: 4px solid ${c}; border-radius: 0 8px 8px 0; margin-bottom: 0.5rem;">
+                <div style="flex: 1;">
+                    <div style="font-size: 0.88rem; font-weight: 600; color: #1e293b;">${name}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div style="display: flex; align-items: center; gap: 0.4rem;">
+                        <span style="font-size: 0.75rem; color: #64748b;">👥 病人數</span>
+                        <span style="font-size: 1.3rem; font-weight: 700; color: ${c};">${patientCount}</span>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+        return `<div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.1rem;">⚙️</span>
+                <h4 style="margin: 0; color: #1e293b; font-size: 0.95rem;">病毒明細</h4>
+            </div>
+            ${items}
+        </div>`;
+    };
+
     let statsHTML = '';
     if (cqlResults.length > 0 && !hasError) {
         const blueSet = ['#3b82f6', '#60a5fa', '#93c5fd'];
@@ -1199,11 +1237,12 @@ function showCQLEngineReport(diseaseType, results) {
         const encCard = buildCountCards('🏥', '就診類型分布', stats.encounterType, warmSet);
         const genderCard = buildDistCard('👥', '性別分佈', stats.gender, pinkSet, 'FHIR 實際數據');
         const eventCard = buildDistCard('🔬', '事件類型', stats.eventType, blueSet);
+        const virusCard = buildVirusCard(stats.virusType);
         const monthCard = buildMonthlyCard(stats.monthly, stats.yearly);
         const diagCard = buildDiagCodeCard(stats.diagCode);
         const regionCard = buildRegionCard(results.regionStats);
 
-        const allCards = [encCard, genderCard, eventCard, regionCard, monthCard, diagCard].filter(c => c);
+        const allCards = [encCard, genderCard, virusCard, eventCard, regionCard, monthCard, diagCard].filter(c => c);
         
         if (allCards.length > 0) {
             statsHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">${allCards.join('')}</div>`;
