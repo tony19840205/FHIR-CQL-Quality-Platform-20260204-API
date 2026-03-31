@@ -121,6 +121,13 @@ async function executeCQL(diseaseType) {
         currentResults[diseaseType] = results;
         updateCard(diseaseType, results);
         
+        // 自動勾選地圖 checkbox（有資料就打勾）
+        const mapCheckId = `map${capitalize(diseaseType)}`;
+        const mapCheck = document.getElementById(mapCheckId);
+        if (mapCheck && !mapCheck.checked) {
+            mapCheck.checked = true;
+        }
+        
         // 自動更新地圖（若已開啟）
         if (isMapMode && typeof updateMapDisplay === 'function') {
             try { updateMapDisplay(); } catch(e) { console.warn('地圖更新失敗:', e); }
