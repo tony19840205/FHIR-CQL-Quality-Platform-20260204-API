@@ -399,6 +399,34 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
 
         console.log(`   📊 Condition (code): ${codeEntries.length}, Condition (text): ${textEntries.length}, 合併去重: ${allConditionEntries.length}, Observation: ${observationEntries.length}`);
 
+        // 🔧 為缺少 coding 的 Condition 注入 ICD-10 代碼（讓 CQL Engine 的 code 匹配能成功）
+        if (diseaseCodes && diseaseCodes.icd10.length > 0) {
+            const primaryCode = diseaseCodes.icd10[0]; // 主要 ICD-10 代碼
+            let injectedCount = 0;
+            allConditionEntries.forEach(entry => {
+                const cond = entry.resource;
+                if (!cond) return;
+                // 檢查是否已有可被 CQL 匹配的 coding
+                const hasCoding = cond.code?.coding?.some(c =>
+                    diseaseCodes.icd10.includes(c.code) || diseaseCodes.snomed.includes(c.code)
+                );
+                if (!hasCoding) {
+                    // 注入主要 ICD-10 代碼
+                    if (!cond.code) cond.code = {};
+                    if (!cond.code.coding) cond.code.coding = [];
+                    cond.code.coding.push({
+                        system: 'http://hl7.org/fhir/sid/icd-10-cm',
+                        code: primaryCode,
+                        display: cond.code.text || diseaseCodes.textTerms[0]
+                    });
+                    injectedCount++;
+                }
+            });
+            if (injectedCount > 0) {
+                console.log(`   💉 已為 ${injectedCount} 個缺少 coding 的 Condition 注入 ICD-10 代碼 (${primaryCode})`);
+            }
+        }
+
         // 從 Condition + Observation 收集 Patient IDs
         const patientIds = new Set();
         const extractPatientId = (entry) => {
@@ -441,6 +469,9 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
                     { resource: patientResponse.data, fullUrl: `${fhirServerUrl}/Patient/${patientId}` }
                 ];
 
+                // 先取得 Encounter 資料（後面 Condition/Observation 自動連結需要）
+                const patEncEntries = patEncounters.data?.entry || [];
+
                 allConditionEntries.filter(matchPatient).forEach(e => {
                     const cond = e.resource;
                     // 自動補上 encounter reference (如果 Condition 沒有關聯 Encounter)
@@ -466,7 +497,6 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
                 });
 
                 // 加入該病患的所有 Encounter (用於 CQL 判斷就診類型)
-                const patEncEntries = patEncounters.data?.entry || [];
                 patEncEntries.forEach(e => {
                     entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Encounter/${e.resource.id}` });
                 });
