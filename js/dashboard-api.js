@@ -983,31 +983,9 @@ function showCQLEngineReport(diseaseType, results) {
     const stats = { gender: {}, encounterType: {}, monthly: {}, yearly: {}, diagCode: {}, eventType: {}, virusType: {} };
     let totalEpisodes = 0;
 
-    cqlResults.forEach(row => {
-        // 聚合 Episode Count By Gender
-        const genderData = row['Episode Count By Gender'];
-        if (genderData && typeof genderData === 'object') {
-            const gd = typeof genderData === 'string' ? (() => { try { return JSON.parse(genderData); } catch(e) { return {}; } })() : genderData;
-            if (gd.Male) stats.gender['男'] = (stats.gender['男'] || 0) + (Number(gd.Male) || 0);
-            if (gd.Female) stats.gender['女'] = (stats.gender['女'] || 0) + (Number(gd.Female) || 0);
-            if (gd.Unknown) stats.gender['未知'] = (stats.gender['未知'] || 0) + (Number(gd.Unknown) || 0);
-        } else {
-            // fallback: use PatientGender
-            const g = row['PatientGender'] || row['Gender'];
-            if (g) {
-                const gLabel = g === 'male' ? '男' : g === 'female' ? '女' : g;
-                stats.gender[gLabel] = (stats.gender[gLabel] || 0) + 1;
-            }
-        }
 
-        // 聚合 Episode Count By Encounter Type
-        const encData = row['Episode Count By Encounter Type'];
-        if (encData && typeof encData === 'object') {
-            const ed = typeof encData === 'string' ? (() => { try { return JSON.parse(encData); } catch(e) { return {}; } })() : encData;
-            if (ed.Outpatient) stats.encounterType['門診'] = (stats.encounterType['門診'] || 0) + (Number(ed.Outpatient) || 0);
-            if (ed.Emergency) stats.encounterType['急診'] = (stats.encounterType['急診'] || 0) + (Number(ed.Emergency) || 0);
-            if (ed.Inpatient) stats.encounterType['住院'] = (stats.encounterType['住院'] || 0) + (Number(ed.Inpatient) || 0);
-        }
+    cqlResults.forEach(row => {
+        // 性別與就診類型統一從 Surveillance Results episode 逐筆統計（避免與 CQL 聚合數據重複計算）
 
         // Total Unique Episodes
         const te = row['Total Unique Episodes'];
@@ -1027,7 +1005,7 @@ function showCQLEngineReport(diseaseType, results) {
                     stats.monthly[ym] = (stats.monthly[ym] || 0) + 1;
                     stats.yearly[y] = (stats.yearly[y] || 0) + 1;
                 }
-                // 就診類型 (統一中英文標籤)
+                // 就診類型 (從 episode 逐筆統計，包含所有類型)
                 const encTypeMap = { 'Outpatient': '門診', 'AMB': '門診', 'Emergency': '急診', 'EMER': '急診', 'Inpatient': '住院', 'IMP': '住院', 'Other': '其他' };
                 let encType = ep.EncounterType || ep.encounterType;
                 if (encType) {
@@ -1050,7 +1028,7 @@ function showCQLEngineReport(diseaseType, results) {
                     stats.virusType[vType].count += 1;
                     if (pid) stats.virusType[vType].patients.add(pid);
                 }
-                // 性別 (from surveillance)
+                // 性別 (從 episode 逐筆統計)
                 const g2 = ep.Gender || ep.gender;
                 if (g2) {
                     const gLabel2 = g2 === 'male' ? '男' : g2 === 'female' ? '女' : g2;
