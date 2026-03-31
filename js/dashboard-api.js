@@ -942,112 +942,220 @@ function showCQLEngineReport(diseaseType, results) {
     // 判斷是否有錯誤
     const hasError = cqlResults.some(r => r['執行狀態'] && r['執行狀態'].includes('錯誤'));
     
-    // 解析病患資訊
-    const parsePatientInfo = (val) => {
-        if (!val) return null;
-        if (typeof val === 'object' && !Array.isArray(val) && val.name) return val;
-        if (typeof val === 'string') {
-            try { const p = JSON.parse(val); if (p && p.name) return p; } catch(e) {}
-        }
-        return null;
+    // ========== 統計分析 ==========
+    const safeVal = (v) => {
+        if (v === null || v === undefined || v === 'N/A') return null;
+        if (typeof v === 'number') return v;
+        if (typeof v === 'string') { const n = Number(v); return isNaN(n) ? v : n; }
+        if (typeof v === 'object' && !Array.isArray(v)) return v;
+        if (Array.isArray(v)) return v.length;
+        return String(v);
     };
 
-    // 格式化儲存格值（用於非 Patient 欄位）
-    const formatCellValue = (val) => {
-        if (val === null || val === undefined || val === 'N/A') return null;
-        if (typeof val === 'number') return val;
-        if (typeof val === 'object') {
-            if (Array.isArray(val)) return val.length;
-            try { return JSON.stringify(val); } catch(e) { return String(val); }
-        }
-        return String(val);
-    };
+    // 從 CQL 結果聚合統計
+    const stats = { gender: {}, encounterType: {}, monthly: {}, yearly: {}, diagCode: {}, eventType: {} };
+    let totalEpisodes = 0;
 
-    // 配色方案
-    const metricColors = [
-        { bg: '#eff6ff', border: '#3b82f6', text: '#1e40af' },
-        { bg: '#f0fdf4', border: '#22c55e', text: '#166534' },
-        { bg: '#fefce8', border: '#eab308', text: '#854d0e' },
-        { bg: '#fdf2f8', border: '#ec4899', text: '#9d174d' },
-        { bg: '#f5f3ff', border: '#8b5cf6', text: '#5b21b6' },
-        { bg: '#fff7ed', border: '#f97316', text: '#9a3412' },
-        { bg: '#ecfeff', border: '#06b6d4', text: '#155e75' },
-        { bg: '#fef2f2', border: '#ef4444', text: '#991b1b' }
-    ];
-
-    let tableHTML = '';
-    if (cqlResults.length > 0 && !hasError) {
-        const keys = Object.keys(cqlResults[0]);
-        const patientKey = keys.find(k => k === 'Patient' || k === '病患');
-        const idKey = keys.find(k => k === '患者ID' || k === 'patientId' || k === 'PatientID');
-        const metricKeys = keys.filter(k => k !== patientKey && k !== idKey);
-
-        const cards = cqlResults.slice(0, 100).map((row, idx) => {
-            const patientInfo = patientKey ? parsePatientInfo(row[patientKey]) : null;
-            const patientId = idKey ? row[idKey] : (patientInfo?.id || `#${idx + 1}`);
-
-            // 病患資訊區
-            let patientSection = '';
-            if (patientInfo) {
-                const genderIcon = patientInfo.gender === '男' ? '👨' : patientInfo.gender === '女' ? '👩' : '🧑';
-                const genderColor = patientInfo.gender === '男' ? '#3b82f6' : patientInfo.gender === '女' ? '#ec4899' : '#6b7280';
-                patientSection = `
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid #e2e8f0;">
-                        <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, ${genderColor}22, ${genderColor}44); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0;">
-                            ${genderIcon}
-                        </div>
-                        <div style="flex: 1; min-width: 0;">
-                            <div style="font-weight: 700; color: #1e293b; font-size: 1rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${patientInfo.name || 'N/A'}</div>
-                            <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.3rem;">
-                                <span style="font-size: 0.78rem; color: #64748b;"><i class="fas fa-id-card" style="margin-right: 3px;"></i>${patientId}</span>
-                                <span style="font-size: 0.78rem; color: #64748b;"><i class="fas fa-birthday-cake" style="margin-right: 3px;"></i>${patientInfo.birthDate || 'N/A'}</span>
-                                <span style="font-size: 0.78rem; color: ${genderColor}; font-weight: 600;">${patientInfo.gender || 'N/A'}</span>
-                            </div>
-                        </div>
-                    </div>`;
-            } else {
-                patientSection = `
-                    <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem; padding-bottom: 0.8rem; border-bottom: 1px solid #e2e8f0;">
-                        <div style="width: 48px; height: 48px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #94a3b8; flex-shrink: 0;">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div>
-                            <div style="font-weight: 700; color: #1e293b; font-size: 1rem;">患者 ${patientId}</div>
-                        </div>
-                    </div>`;
+    cqlResults.forEach(row => {
+        // 聚合 Episode Count By Gender
+        const genderData = row['Episode Count By Gender'];
+        if (genderData && typeof genderData === 'object') {
+            const gd = typeof genderData === 'string' ? (() => { try { return JSON.parse(genderData); } catch(e) { return {}; } })() : genderData;
+            if (gd.Male) stats.gender['男'] = (stats.gender['男'] || 0) + (Number(gd.Male) || 0);
+            if (gd.Female) stats.gender['女'] = (stats.gender['女'] || 0) + (Number(gd.Female) || 0);
+            if (gd.Unknown) stats.gender['未知'] = (stats.gender['未知'] || 0) + (Number(gd.Unknown) || 0);
+        } else {
+            // fallback: use PatientGender
+            const g = row['PatientGender'] || row['Gender'];
+            if (g) {
+                const gLabel = g === 'male' ? '男' : g === 'female' ? '女' : g;
+                stats.gender[gLabel] = (stats.gender[gLabel] || 0) + 1;
             }
+        }
 
-            // 指標數據區
-            const metrics = metricKeys.map((k, mi) => {
-                const val = formatCellValue(row[k]);
-                const color = metricColors[mi % metricColors.length];
-                const displayVal = val === null || val === 0 || val === '0' ? '0' : val;
-                const isZero = displayVal === '0' || displayVal === 0;
-                return `
-                    <div style="background: ${isZero ? '#f8fafc' : color.bg}; border-left: 3px solid ${isZero ? '#cbd5e1' : color.border}; border-radius: 8px; padding: 0.6rem 0.8rem; min-width: 0;">
-                        <div style="font-size: 0.72rem; color: ${isZero ? '#94a3b8' : color.text}; margin-bottom: 0.2rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${k}">${k}</div>
-                        <div style="font-size: 1.3rem; font-weight: 700; color: ${isZero ? '#cbd5e1' : color.text};">${displayVal}</div>
-                    </div>`;
-            }).join('');
+        // 聚合 Episode Count By Encounter Type
+        const encData = row['Episode Count By Encounter Type'];
+        if (encData && typeof encData === 'object') {
+            const ed = typeof encData === 'string' ? (() => { try { return JSON.parse(encData); } catch(e) { return {}; } })() : encData;
+            if (ed.Outpatient) stats.encounterType['門診'] = (stats.encounterType['門診'] || 0) + (Number(ed.Outpatient) || 0);
+            if (ed.Emergency) stats.encounterType['急診'] = (stats.encounterType['急診'] || 0) + (Number(ed.Emergency) || 0);
+            if (ed.Inpatient) stats.encounterType['住院'] = (stats.encounterType['住院'] || 0) + (Number(ed.Inpatient) || 0);
+        }
 
-            return `
-                <div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.06); transition: box-shadow 0.2s;"
-                     onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.06)'">
-                    ${patientSection}
-                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.5rem;">
-                        ${metrics}
-                    </div>
-                </div>`;
+        // Total Unique Episodes
+        const te = row['Total Unique Episodes'];
+        if (typeof te === 'number') totalEpisodes += te;
+
+        // 收集 COVID19 Surveillance Results 或類似結果
+        const survKey = Object.keys(row).find(k => k.includes('Surveillance Results'));
+        const survResults = survKey ? row[survKey] : null;
+        if (Array.isArray(survResults)) {
+            survResults.forEach(ep => {
+                // 時間分佈
+                const eventDate = ep.EventDate || ep.eventDate;
+                if (eventDate) {
+                    const dateStr = String(eventDate).substring(0, 10);
+                    const ym = dateStr.substring(0, 7);
+                    const y = dateStr.substring(0, 4);
+                    stats.monthly[ym] = (stats.monthly[ym] || 0) + 1;
+                    stats.yearly[y] = (stats.yearly[y] || 0) + 1;
+                }
+                // 就診類型
+                const encType = ep.EncounterType || ep.encounterType;
+                if (encType) stats.encounterType[encType] = (stats.encounterType[encType] || 0) + 1;
+                // 診斷代碼
+                const dCode = ep.DiagnosisCode || ep.diagnosisCode;
+                const dName = ep.DiagnosisName || ep.diagnosisName || dCode;
+                if (dCode && dCode !== 'N/A') stats.diagCode[dCode] = { count: (stats.diagCode[dCode]?.count || 0) + 1, name: dName };
+                // 事件類型
+                const eType = ep.EventType || ep.eventType;
+                if (eType) stats.eventType[eType] = (stats.eventType[eType] || 0) + 1;
+                // 性別 (from surveillance)
+                const g2 = ep.Gender || ep.gender;
+                if (g2) {
+                    const gLabel2 = g2 === 'male' ? '男' : g2 === 'female' ? '女' : g2;
+                    stats.gender[gLabel2] = (stats.gender[gLabel2] || 0) + 1;
+                }
+            });
+        }
+    });
+
+    // 如果沒有從 Surveillance Results 取到時間，嘗試備用
+    if (Object.keys(stats.monthly).length === 0) {
+        cqlResults.forEach(row => {
+            const keys = Object.keys(row);
+            keys.forEach(k => {
+                const v = row[k];
+                if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) && (k.includes('Date') || k.includes('date'))) {
+                    const ym = v.substring(0, 7);
+                    const y = v.substring(0, 4);
+                    stats.monthly[ym] = (stats.monthly[ym] || 0) + 1;
+                    stats.yearly[y] = (stats.yearly[y] || 0) + 1;
+                }
+            });
+        });
+    }
+
+    // ========== 構建統計卡片 ==========
+    const buildDistCard = (icon, title, data, colorSet, subtitle) => {
+        const entries = Object.entries(data).filter(([k,v]) => v > 0).sort((a,b) => b[1] - a[1]);
+        const total = entries.reduce((s, [,v]) => s + v, 0);
+        if (entries.length === 0) return '';
+        const bars = entries.map(([label, count], i) => {
+            const pct = total > 0 ? Math.round(count / total * 100) : 0;
+            const c = colorSet[i % colorSet.length];
+            return `<div style="margin-bottom: 0.6rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                    <span style="font-size: 0.85rem; color: #334155; font-weight: 500;">${label}</span>
+                    <span style="font-size: 0.85rem; font-weight: 700; color: ${c};">${count}</span>
+                </div>
+                <div style="background: #f1f5f9; border-radius: 6px; height: 8px; overflow: hidden;">
+                    <div style="background: ${c}; height: 100%; width: ${pct}%; border-radius: 6px; transition: width 0.5s;"></div>
+                </div>
+            </div>`;
         }).join('');
-
-        tableHTML = `
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem;">
-                ${cards}
+        return `<div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.1rem;">${icon}</span>
+                <h4 style="margin: 0; color: #1e293b; font-size: 0.95rem;">${title}</h4>
+                ${subtitle ? `<span style="font-size: 0.72rem; color: #94a3b8; margin-left: auto;">${subtitle}</span>` : ''}
             </div>
-            ${cqlResults.length > 100 ? `<div style="padding: 0.8rem; color: #64748b; text-align: center; margin-top: 0.5rem; font-size: 0.85rem;">僅顯示前 100 筆 (共 ${cqlResults.length} 筆)</div>` : ''}
-        `;
+            ${bars}
+        </div>`;
+    };
+
+    const buildCountCards = (icon, title, data, colorSet) => {
+        const entries = Object.entries(data).filter(([k,v]) => v > 0).sort((a,b) => b[1] - a[1]);
+        if (entries.length === 0) return '';
+        const total = entries.reduce((s, [,v]) => s + v, 0);
+        const items = entries.map(([label, count], i) => {
+            const c = colorSet[i % colorSet.length];
+            return `<div style="background: ${c}11; border: 1px solid ${c}33; border-radius: 10px; padding: 0.8rem; text-align: center; min-width: 100px;">
+                <div style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.3rem;">${label}</div>
+                <div style="font-size: 1.6rem; font-weight: 700; color: ${c};">${count}</div>
+            </div>`;
+        }).join('');
+        return `<div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.1rem;">${icon}</span>
+                <h4 style="margin: 0; color: #1e293b; font-size: 0.95rem;">${title}</h4>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+                ${items}
+            </div>
+        </div>`;
+    };
+
+    const buildMonthlyCard = (monthly, yearly) => {
+        const monthEntries = Object.entries(monthly).sort((a,b) => b[0].localeCompare(a[0])).slice(0, 12);
+        const yearEntries = Object.entries(yearly).sort((a,b) => b[0].localeCompare(a[0]));
+        if (monthEntries.length === 0 && yearEntries.length === 0) return '';
+        const monthColors = ['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4','#f97316','#6366f1','#14b8a6','#e11d48','#a855f7'];
+        const yearItems = yearEntries.map(([y, c]) => 
+            `<div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.5rem 1rem; text-align: center;">
+                <span style="font-size: 0.85rem; color: #475569;">${y}年:</span>
+                <span style="font-size: 1rem; font-weight: 700; color: #f59e0b; margin-left: 0.3rem;">${c}筆</span>
+            </div>`
+        ).join('');
+        const monthItems = monthEntries.map(([ym, c], i) => {
+            const color = monthColors[i % monthColors.length];
+            return `<div style="background: ${color}0D; border: 1px solid ${color}33; border-radius: 8px; padding: 0.5rem 0.7rem; text-align: center; min-width: 80px;">
+                <div style="font-size: 0.78rem; color: #64748b;">${ym}</div>
+                <div style="font-size: 1.1rem; font-weight: 700; color: ${color};">${c}</div>
+            </div>`;
+        }).join('');
+        return `<div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.1rem;">📅</span>
+                <h4 style="margin: 0; color: #1e293b; font-size: 0.95rem;">時間分佈</h4>
+            </div>
+            ${yearEntries.length > 0 ? `<div style="margin-bottom: 0.8rem;"><div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem;">年度統計：</div><div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">${yearItems}</div></div>` : ''}
+            ${monthEntries.length > 0 ? `<div><div style="font-size: 0.8rem; color: #64748b; margin-bottom: 0.5rem;">月份統計 (最近12個月)：</div><div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">${monthItems}</div></div>` : ''}
+        </div>`;
+    };
+
+    const buildDiagCodeCard = (diagData) => {
+        const entries = Object.entries(diagData).sort((a,b) => b[1].count - a[1].count).slice(0, 10);
+        if (entries.length === 0) return '';
+        const rows = entries.map(([code, {count, name}], i) => {
+            const colors = ['#3b82f6','#22c55e','#f59e0b','#ef4444','#8b5cf6'];
+            const c = colors[i % colors.length];
+            return `<div style="display: flex; align-items: center; gap: 0.8rem; padding: 0.5rem 0; border-bottom: 1px solid #f1f5f9;">
+                <div style="background: ${c}15; color: ${c}; font-weight: 700; font-size: 0.78rem; padding: 0.3rem 0.6rem; border-radius: 6px; font-family: monospace; white-space: nowrap;">${code}</div>
+                <div style="flex: 1; font-size: 0.82rem; color: #475569; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${name}</div>
+                <div style="font-weight: 700; color: ${c}; font-size: 0.95rem;">${count}</div>
+            </div>`;
+        }).join('');
+        return `<div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.1rem;">🏷️</span>
+                <h4 style="margin: 0; color: #1e293b; font-size: 0.95rem;">診斷代碼分佈</h4>
+            </div>
+            ${rows}
+        </div>`;
+    };
+
+    let statsHTML = '';
+    if (cqlResults.length > 0 && !hasError) {
+        const blueSet = ['#3b82f6', '#60a5fa', '#93c5fd'];
+        const warmSet = ['#f59e0b', '#ef4444', '#22c55e', '#8b5cf6'];
+        const pinkSet = ['#3b82f6', '#ec4899', '#94a3b8'];
+
+        const encCard = buildCountCards('🏥', '就診類型分布', stats.encounterType, warmSet);
+        const genderCard = buildDistCard('👥', '性別分佈', stats.gender, pinkSet, 'FHIR 實際數據');
+        const eventCard = buildDistCard('🔬', '事件類型', stats.eventType, blueSet);
+        const monthCard = buildMonthlyCard(stats.monthly, stats.yearly);
+        const diagCard = buildDiagCodeCard(stats.diagCode);
+
+        const allCards = [encCard, genderCard, eventCard, monthCard, diagCard].filter(c => c);
+        
+        if (allCards.length > 0) {
+            statsHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">${allCards.join('')}</div>`;
+        } else {
+            statsHTML = '<div style="padding: 2rem; color: #64748b; text-align: center;">查詢完成，但無法產生統計資訊（可能 FHIR 資料中無符合的 Condition/Observation）</div>';
+        }
     } else if (hasError) {
-        tableHTML = `
+        statsHTML = `
             <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 1.5rem;">
                 ${cqlResults.map(r => `
                     <div style="display: flex; gap: 0.8rem; align-items: flex-start; margin-bottom: 0.8rem;">
@@ -1058,33 +1166,28 @@ function showCQLEngineReport(diseaseType, results) {
                         </div>
                     </div>
                 `).join('')}
-            </div>
-        `;
+            </div>`;
     } else {
-        tableHTML = '<div style="padding: 2rem; color: #64748b; text-align: center; font-size: 1rem;"><i class="fas fa-inbox" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>無符合條件的結果</div>';
+        statsHTML = '<div style="padding: 2rem; color: #64748b; text-align: center; font-size: 1rem;"><i class="fas fa-inbox" style="font-size: 2rem; display: block; margin-bottom: 0.5rem; opacity: 0.5;"></i>無符合條件的結果</div>';
     }
 
     const reportHTML = `
-        <div style="background: white; padding: 2rem; border-radius: 16px; max-width: 1000px; max-height: 85vh; overflow-y: auto;">
+        <div style="background: #f8fafc; padding: 2rem; border-radius: 16px; max-width: 1100px; max-height: 85vh; overflow-y: auto;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2 style="margin: 0; color: #1e293b; font-size: 1.4rem;">
-                    <i class="fas fa-cogs"></i> ${diseaseNames[diseaseType]} CQL Engine 報告
+                    <i class="fas fa-chart-bar"></i> ${diseaseNames[diseaseType]} 統計分析報告
                 </h2>
                 <button onclick="closeDetailReport()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div style="background: #f0f4ff; padding: 1.2rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6;">
-                <h3 style="margin: 0 0 0.8rem 0; color: #1e40af; font-size: 1rem;">🏛  CQL Engine 執行資訊</h3>
-                <div style="color: #334155; font-size: 0.9rem; line-height: 1.8;">
-                    • <strong>ELM Library:</strong> ${results.cqlFile || 'N/A'}<br>
-                    • <strong>引擎:</strong> cql-execution v2.4.0<br>
-                    • <strong>FHIR 版本:</strong> FHIR 4.0.1<br>
-                    • <strong>執行時間:</strong> ${meta.executionTime || 'N/A'}ms<br>
-                    • <strong>查詢日期範圍:</strong> ${results.queryOptions?.startDate || 'N/A'} ~ ${results.queryOptions?.endDate || 'N/A'}<br>
-                    • <strong>最大筆數:</strong> ${(results.queryOptions?.maxRecords || 0) === 0 ? '不設限' : results.queryOptions?.maxRecords}<br>
-                    • <strong>執行時間戳:</strong> ${meta.timestamp || new Date().toISOString()}
+            <div style="background: white; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6; border: 1px solid #e2e8f0;">
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; color: #64748b;">
+                    <span><i class="fas fa-database" style="margin-right: 4px;"></i> ${results.cqlFile || 'N/A'}</span>
+                    <span><i class="fas fa-clock" style="margin-right: 4px;"></i> ${meta.executionTime || 'N/A'}ms</span>
+                    <span><i class="fas fa-calendar" style="margin-right: 4px;"></i> ${results.queryOptions?.startDate || 'N/A'} ~ ${results.queryOptions?.endDate || 'N/A'}</span>
+                    <span><i class="fas fa-cog" style="margin-right: 4px;"></i> cql-execution v2.4.0</span>
                 </div>
             </div>
             
@@ -1092,24 +1195,18 @@ function showCQLEngineReport(diseaseType, results) {
                 <div style="background: linear-gradient(135deg, #667eea, #764ba2); padding: 1.2rem; border-radius: 12px; color: white;">
                     <div style="font-size: 0.85rem; opacity: 0.9;">病患數</div>
                     <div style="font-size: 2rem; font-weight: 700;">${patientCount}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.7;">CQL Engine 計算</div>
                 </div>
                 <div style="background: linear-gradient(135deg, #f093fb, #f5576c); padding: 1.2rem; border-radius: 12px; color: white;">
-                    <div style="font-size: 0.85rem; opacity: 0.9;">就診數</div>
-                    <div style="font-size: 2rem; font-weight: 700;">${results.encounterCount || 0}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.7;">CQL Engine 計算</div>
+                    <div style="font-size: 0.85rem; opacity: 0.9;">事件數 (Episodes)</div>
+                    <div style="font-size: 2rem; font-weight: 700;">${totalEpisodes || resultCount}</div>
                 </div>
                 <div style="background: linear-gradient(135deg, #4facfe, #00f2fe); padding: 1.2rem; border-radius: 12px; color: white;">
-                    <div style="font-size: 0.85rem; opacity: 0.9;">結果筆數</div>
+                    <div style="font-size: 0.85rem; opacity: 0.9;">資料筆數</div>
                     <div style="font-size: 2rem; font-weight: 700;">${resultCount}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.7;">CQL 定義輸出</div>
                 </div>
             </div>
             
-            <h3 style="margin: 0 0 1rem 0; color: #1e293b;"><i class="fas fa-th-large"></i> 完整查詢結果</h3>
-            <div style="overflow-x: auto;">
-                ${tableHTML}
-            </div>
+            ${statsHTML}
             
             <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
                 <button onclick="closeDetailReport()" style="padding: 0.75rem 1.5rem; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">

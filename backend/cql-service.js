@@ -610,9 +610,30 @@ function formatValue(value, fieldName = '') {
     if (value === null || value === undefined) return 'N/A';
     if (typeof value === 'boolean') return value ? '是' : '否';
     if (value instanceof Date) return value.toISOString().split('T')[0];
+
+    // 保留 Surveillance Results 陣列的完整資料供前端統計
+    if (Array.isArray(value) && fieldName.includes('Surveillance Results')) {
+        return value.map(item => {
+            if (typeof item !== 'object') return item;
+            const row = {};
+            for (const [k, v] of Object.entries(item)) {
+                row[k] = formatValue(v, k);
+            }
+            return row;
+        });
+    }
     if (Array.isArray(value)) return value.length;
 
     if (typeof value === 'object') {
+        // 保留統計 Tuple 為物件（Episode Count By Gender, Episode Count By Encounter Type）
+        if (fieldName.includes('Episode Count') || fieldName.includes('Count By')) {
+            const obj = {};
+            for (const [k, v] of Object.entries(value)) {
+                if (k.startsWith('_')) continue;
+                obj[k] = (typeof v === 'number' || typeof v === 'string') ? v : formatValue(v, k);
+            }
+            return obj;
+        }
         if (value.resourceType === 'Patient' || ((fieldName === 'Patient' || fieldName === '病患') && (value.name || value.birthDate))) {
             return formatPatientInfo(value);
         }
