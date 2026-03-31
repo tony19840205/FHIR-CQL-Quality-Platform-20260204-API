@@ -121,6 +121,11 @@ async function executeCQL(diseaseType) {
         currentResults[diseaseType] = results;
         updateCard(diseaseType, results);
         
+        // 自動更新地圖（若已開啟）
+        if (isMapMode && typeof updateMapDisplay === 'function') {
+            try { updateMapDisplay(); } catch(e) { console.warn('地圖更新失敗:', e); }
+        }
+        
         if (statusElement) {
             statusElement.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 完成</span>';
             setTimeout(() => { statusElement.innerHTML = ''; }, 3000);
@@ -1216,7 +1221,9 @@ function showCQLEngineReport(diseaseType, results) {
             <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
                 <span style="font-size: 1.1rem;">🗺️</span>
                 <h4 style="margin: 0; color: #1e293b; font-size: 0.95rem;">地區分佈</h4>
-                <span style="font-size: 0.72rem; color: #94a3b8; margin-left: auto;">點擊開啟 Google Maps</span>
+                <button onclick="closeDetailReport(); if(!isMapMode) toggleMapMode();" style="margin-left: auto; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; border-radius: 6px; padding: 0.3rem 0.7rem; font-size: 0.72rem; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                    <i class="fas fa-map-marked-alt"></i> 開啟地圖
+                </button>
             </div>
             <div style="margin-bottom: 0.8rem;">${regionRows}</div>
             ${districtItems ? `<div style="border-top: 1px solid #f1f5f9; padding-top: 0.8rem; margin-top: 0.3rem;">
@@ -1758,15 +1765,24 @@ const cityCoordinates = {
     '新北市': [25.0116, 121.4648],
     '桃園市': [24.9936, 121.3010],
     '新竹市': [24.8138, 120.9675],
+    '新竹縣': [24.8390, 121.0042],
+    '苗栗縣': [24.5602, 120.8214],
     '基隆市': [25.1276, 121.7392],
+    '宜蘭縣': [24.7570, 121.7533],
     '台中市': [24.1477, 120.6736],
     '彰化縣': [24.0518, 120.5161],
     '南投縣': [23.9609, 120.9719],
+    '雲林縣': [23.7092, 120.4313],
+    '嘉義市': [23.4800, 120.4491],
+    '嘉義縣': [23.4518, 120.2551],
     '台南市': [22.9998, 120.2269],
     '高雄市': [22.6273, 120.3014],
     '屏東縣': [22.5519, 120.5487],
     '花蓮縣': [23.9871, 121.6015],
-    '台東縣': [22.7583, 121.1444]
+    '台東縣': [22.7583, 121.1444],
+    '澎湖縣': [23.5711, 119.5793],
+    '金門縣': [24.4493, 118.3767],
+    '連江縣': [26.1505, 119.9499]
 };
 
 // 疾病顏色配置
@@ -1876,8 +1892,13 @@ function updateMapDisplay() {
         if (results && results.demoMode && results.detailedData) {
             // 示範模式：從 detailedData 獲取城市數據
             addDiseaseMarkers(disease, results.detailedData);
+        } else if (results && results.regionStats && results.regionStats.regions && results.regionStats.regions.length > 0) {
+            // CQL Engine 模式：從 regionStats 獲取真實地區分佈
+            const cityData = results.regionStats.regions.map(r => ({ city: r.name, cases: r.count }));
+            addDiseaseMarkers(disease, cityData);
+            console.log(`   🗺️ ${disease}: 使用 regionStats (${cityData.length} 個地區)`);
         } else if (results && results.conditions) {
-            // 真實模式：從 conditions 分析城市分佈（簡化處理）
+            // 備用：從 conditions 分析城市分佈
             const cityData = analyzeCityDistribution(results.conditions);
             addDiseaseMarkers(disease, cityData);
         }
