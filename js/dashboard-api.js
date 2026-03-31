@@ -310,6 +310,15 @@ function updateCard(diseaseType, results) {
             results.results.forEach(r => {
                 const id = r.patientId || r['患者ID'] || r.PatientID;
                 if (id) patientIds.add(id);
+                // 從內嵌 Surveillance Results 陣列取
+                const survKey = Object.keys(r).find(k => k.includes('Surveillance Results'));
+                const survArr = survKey ? r[survKey] : null;
+                if (Array.isArray(survArr)) {
+                    survArr.forEach(ep => {
+                        const pid = ep.PatientID || ep.patientId;
+                        if (pid) patientIds.add(pid);
+                    });
+                }
             });
             patientCount = patientIds.size || results.results.length;
         }
@@ -931,14 +940,26 @@ function showCQLEngineReport(diseaseType, results) {
     const meta = results.metadata || {};
     const cqlResults = results.results || [];
     
-    // 計算統計
+    // 計算統計 — 從 Surveillance Results 陣列或 row 層面取 patient IDs
     const patientIds = new Set();
+    let episodeCount = 0;
     cqlResults.forEach(r => {
+        // 直接 row 層面
         const id = r.patientId || r['患者ID'] || r.PatientID;
         if (id) patientIds.add(id);
+        // 從內嵌的 Surveillance Results 陣列取
+        const survKey = Object.keys(r).find(k => k.includes('Surveillance Results'));
+        const survArr = survKey ? r[survKey] : null;
+        if (Array.isArray(survArr)) {
+            episodeCount += survArr.length;
+            survArr.forEach(ep => {
+                const pid = ep.PatientID || ep.patientId;
+                if (pid) patientIds.add(pid);
+            });
+        }
     });
     const patientCount = patientIds.size || results.patientCount || 0;
-    const resultCount = cqlResults.length;
+    const resultCount = episodeCount || cqlResults.length;
     
     // 判斷是否有錯誤
     const hasError = cqlResults.some(r => r['執行狀態'] && r['執行狀態'].includes('錯誤'));
@@ -1036,7 +1057,9 @@ function showCQLEngineReport(diseaseType, results) {
             const keys = Object.keys(row);
             keys.forEach(k => {
                 const v = row[k];
-                if (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v) && (k.includes('Date') || k.includes('date'))) {
+                // 只計算事件日期，排除 EpisodeEndDate 等結束日期避免重複計算
+                const isEventDate = (k === 'EventDate' || k === 'eventDate' || k === 'episodeDate');
+                if (isEventDate && typeof v === 'string' && /^\d{4}-\d{2}-\d{2}/.test(v)) {
                     const ym = v.substring(0, 7);
                     const y = v.substring(0, 4);
                     stats.monthly[ym] = (stats.monthly[ym] || 0) + 1;

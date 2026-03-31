@@ -700,6 +700,13 @@ function formatCQLResults(results, cqlFile) {
     const formattedResults = [];
     const cqlFileLower = cqlFile ? cqlFile.toLowerCase() : '';
     const mainResultKey = cqlFileLower.includes('covid') ? 'COVID19 Surveillance Results' :
+        cqlFileLower.includes('influenza') || cqlFileLower.includes('flu') ? 'Final Result' :
+        cqlFileLower.includes('conjunctivitis') ? 'Acute Conjunctivitis Surveillance Results' :
+        cqlFileLower.includes('enterovirus') ? 'Enterovirus Surveillance Results' :
+        cqlFileLower.includes('diarrhea') ? 'Acute Diarrhea Surveillance Results' : null;
+
+    // 統一輸出 key 名稱 (前端只認含 "Surveillance Results" 的 key)
+    const outputSurvKey = cqlFileLower.includes('covid') ? 'COVID19 Surveillance Results' :
         cqlFileLower.includes('influenza') || cqlFileLower.includes('flu') ? 'Influenza Surveillance Results' :
         cqlFileLower.includes('conjunctivitis') ? 'Acute Conjunctivitis Surveillance Results' :
         cqlFileLower.includes('enterovirus') ? 'Enterovirus Surveillance Results' :
@@ -709,19 +716,28 @@ function formatCQLResults(results, cqlFile) {
     if (mainResultKey && results.unfilteredResults?.[mainResultKey]) {
         const survResults = results.unfilteredResults[mainResultKey];
         if (Array.isArray(survResults) && survResults.length > 0) {
-            survResults.forEach(episode => {
-                const row = {};
-                for (const [key, value] of Object.entries(episode)) {
-                    row[key] = formatValue(value, key);
-                }
-                formattedResults.push(row);
+            // 建立摘要行 (含完整 Surveillance Results 陣列供前端統計)
+            const summaryRow = {};
+            summaryRow[outputSurvKey] = survResults.map(ep => {
+                const r = {};
+                for (const [k, v] of Object.entries(ep)) r[k] = formatValue(v, k);
+                return r;
             });
+            // 加入其他統計欄位
+            for (const [key, value] of Object.entries(results.unfilteredResults)) {
+                if (key === mainResultKey) continue;
+                summaryRow[key] = formatValue(value, key);
+            }
+            formattedResults.push(summaryRow);
             return formattedResults;
         }
     }
 
     // Patient context 結果
     if (mainResultKey && results.patientResults) {
+        const allEpisodes = [];
+        const countAgg = {};  // 聚合計數欄位
+
         for (const [patientId, patientResult] of Object.entries(results.patientResults)) {
             const survResults = patientResult[mainResultKey];
             if (Array.isArray(survResults) && survResults.length > 0) {
@@ -730,11 +746,34 @@ function formatCQLResults(results, cqlFile) {
                     for (const [key, value] of Object.entries(episode)) {
                         row[key] = formatValue(value, key);
                     }
-                    formattedResults.push(row);
+                    allEpisodes.push(row);
                 });
             }
+            // 收集計數欄位 (Episode Count By Gender, etc.)
+            for (const [key, value] of Object.entries(patientResult)) {
+                if (key === mainResultKey || key.startsWith('_')) continue;
+                if (key.includes('Episode') || key.includes('Count') || key === 'PatientGender' || key === 'Patient Gender') {
+                    const fv = formatValue(value, key);
+                    if (typeof fv === 'object' && !Array.isArray(fv)) {
+                        // 聚合物件型統計 (如 Episode Count By Gender: {Male:5, Female:3})
+                        if (!countAgg[key]) countAgg[key] = {};
+                        for (const [k, v] of Object.entries(fv)) {
+                            countAgg[key][k] = (countAgg[key][k] || 0) + (Number(v) || 0);
+                        }
+                    } else if (typeof fv === 'number') {
+                        countAgg[key] = (countAgg[key] || 0) + fv;
+                    }
+                }
+            }
         }
-        if (formattedResults.length > 0) return formattedResults;
+
+        if (allEpisodes.length > 0) {
+            // 建立摘要行
+            const summaryRow = { ...countAgg };
+            summaryRow[outputSurvKey] = allEpisodes;
+            formattedResults.push(summaryRow);
+            return formattedResults;
+        }
     }
 
     // 備用：所有定義
@@ -761,6 +800,11 @@ function formatValue(value, fieldName = '') {
     if (typeof value === 'boolean') return value ? '是' : '否';
     if (value instanceof Date) return value.toISOString().split('T')[0];
 
+    // CQL DateTime / FHIRObject with value property → 提取為字串
+    if (typeof value === 'object' && value.value !== undefined && !value.coding && !value.resourceType) {
+        return formatValue(value.value, fieldName);
+    }
+
     // 保留 Surveillance Results 陣列的完整資料供前端統計
     if (Array.isArray(value) && fieldName.includes('Surveillance Results')) {
         return value.map(item => {
@@ -775,6 +819,11 @@ function formatValue(value, fieldName = '') {
     if (Array.isArray(value)) return value.length;
 
     if (typeof value === 'object') {
+        // FHIR CodeableConcept → 取出 coding[0].code (Influenza diagnosisCode 為此型態)
+        if ((fieldName.includes('diagnosisCode') || fieldName.includes('DiagnosisCode')) && (value.coding || value.text)) {
+            const coding = Array.isArray(value.coding) && value.coding.length > 0 ? value.coding[0] : null;
+            return coding ? (coding.code || coding.display || value.text || 'N/A') : (value.text || 'N/A');
+        }
         // 保留統計 Tuple 為物件（Episode Count By Gender, Episode Count By Encounter Type）
         if (fieldName.includes('Episode Count') || fieldName.includes('Count By')) {
             const obj = {};
