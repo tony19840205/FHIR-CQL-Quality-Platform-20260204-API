@@ -285,6 +285,7 @@ async function queryDiseaseData(diseaseType) {
         fhirServerUrl: fhirServerUrl,
         queryOptions: options,
         results: data.results || [],
+        regionStats: data.regionStats || null,
         metadata: data.metadata || {},
         executionTime: data.metadata?.executionTime,
         patientCount: data.metadata?.patientCount || 0,
@@ -1135,6 +1136,60 @@ function showCQLEngineReport(diseaseType, results) {
         </div>`;
     };
 
+    // 地區分佈卡片 (連結 Google Maps)
+    const buildRegionCard = (regionStats) => {
+        if (!regionStats) return '';
+        const regions = regionStats.regions || [];
+        const districts = regionStats.districts || [];
+        if (regions.length === 0) return '';
+        const total = regions.reduce((s, r) => s + r.count, 0);
+        const mapColors = ['#ef4444','#f59e0b','#22c55e','#3b82f6','#8b5cf6','#ec4899','#06b6d4','#f97316'];
+        
+        const regionRows = regions.map((r, i) => {
+            const pct = total > 0 ? Math.round(r.count / total * 100) : 0;
+            const c = mapColors[i % mapColors.length];
+            const mapUrl = `https://www.google.com/maps/search/${encodeURIComponent(r.name + ' 台灣')}`;
+            return `<div style="margin-bottom: 0.6rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                    <a href="${mapUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.85rem; color: #334155; font-weight: 500; text-decoration: none; display: flex; align-items: center; gap: 4px; cursor: pointer;" title="在 Google Maps 上查看 ${r.name}">
+                        <span style="color: ${c};">📍</span> ${r.name}
+                        <i class="fas fa-external-link-alt" style="font-size: 0.6rem; color: #94a3b8; margin-left: 2px;"></i>
+                    </a>
+                    <span style="font-size: 0.85rem; font-weight: 700; color: ${c};">${r.count} <span style="font-size: 0.7rem; font-weight: 400; color: #94a3b8;">(${pct}%)</span></span>
+                </div>
+                <div style="background: #f1f5f9; border-radius: 6px; height: 8px; overflow: hidden;">
+                    <div style="background: ${c}; height: 100%; width: ${pct}%; border-radius: 6px; transition: width 0.5s;"></div>
+                </div>
+            </div>`;
+        }).join('');
+        
+        // 鄉鎮區明細 (顯示前 8 個)
+        const topDistricts = districts.slice(0, 8);
+        const districtItems = topDistricts.length > 0 ? topDistricts.map((d, i) => {
+            const c = mapColors[i % mapColors.length];
+            const mapUrl = `https://www.google.com/maps/search/${encodeURIComponent(d.name + ' 台灣')}`;
+            return `<a href="${mapUrl}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                <div style="background: ${c}0D; border: 1px solid ${c}33; border-radius: 8px; padding: 0.4rem 0.7rem; text-align: center; min-width: 80px; cursor: pointer; transition: transform 0.15s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    <div style="font-size: 0.72rem; color: #64748b;">${d.name}</div>
+                    <div style="font-size: 1rem; font-weight: 700; color: ${c};">${d.count}</div>
+                </div>
+            </a>`;
+        }).join('') : '';
+
+        return `<div style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+                <span style="font-size: 1.1rem;">🗺️</span>
+                <h4 style="margin: 0; color: #1e293b; font-size: 0.95rem;">地區分佈</h4>
+                <span style="font-size: 0.72rem; color: #94a3b8; margin-left: auto;">點擊開啟 Google Maps</span>
+            </div>
+            <div style="margin-bottom: 0.8rem;">${regionRows}</div>
+            ${districtItems ? `<div style="border-top: 1px solid #f1f5f9; padding-top: 0.8rem; margin-top: 0.3rem;">
+                <div style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.5rem;">鄉鎮區明細：</div>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">${districtItems}</div>
+            </div>` : ''}
+        </div>`;
+    };
+
     let statsHTML = '';
     if (cqlResults.length > 0 && !hasError) {
         const blueSet = ['#3b82f6', '#60a5fa', '#93c5fd'];
@@ -1146,8 +1201,9 @@ function showCQLEngineReport(diseaseType, results) {
         const eventCard = buildDistCard('🔬', '事件類型', stats.eventType, blueSet);
         const monthCard = buildMonthlyCard(stats.monthly, stats.yearly);
         const diagCard = buildDiagCodeCard(stats.diagCode);
+        const regionCard = buildRegionCard(results.regionStats);
 
-        const allCards = [encCard, genderCard, eventCard, monthCard, diagCard].filter(c => c);
+        const allCards = [encCard, genderCard, eventCard, regionCard, monthCard, diagCard].filter(c => c);
         
         if (allCards.length > 0) {
             statsHTML = `<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem;">${allCards.join('')}</div>`;

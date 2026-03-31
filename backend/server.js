@@ -325,14 +325,24 @@ app.post('/api/execute-cql', async (req, res) => {
         }
 
         const startTime = Date.now();
-        const results = await cqlService.executeCQL(elm, fhirServerUrl, cqlFile, {
+        const rawResults = await cqlService.executeCQL(elm, fhirServerUrl, cqlFile, {
             startDate, endDate, maxRecords: maxRecords || 200
         });
         const executionTime = Date.now() - startTime;
 
+        // executeCQL 可能回傳 { _data, _regionStats } 或直接回傳陣列/物件
+        let results, regionStats;
+        if (rawResults && rawResults._data) {
+            results = rawResults._data;
+            regionStats = rawResults._regionStats || null;
+        } else {
+            results = rawResults;
+            regionStats = null;
+        }
+
         const isIndicator = results && results._type === 'indicator';
 
-        res.json({
+        const response = {
             success: true,
             results: results,
             resultType: isIndicator ? 'indicator' : 'standard',
@@ -344,7 +354,10 @@ app.post('/api/execute-cql', async (req, res) => {
                 fhirVersion: 'FHIR 4.0.1',
                 timestamp: new Date().toISOString()
             }
-        });
+        };
+        if (regionStats) response.regionStats = regionStats;
+
+        res.json(response);
     } catch (error) {
         console.error('❌ CQL 執行失敗:', error.message);
         res.status(500).json({ success: false, error: error.message });

@@ -165,7 +165,12 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
     if (isIndicator) {
         return formatIndicatorResults(results, cqlFile);
     }
-    return formatCQLResults(results, cqlFile);
+
+    // 步驟 8: 提取 Patient 地址資料 (供前端地區分佈統計)
+    const regionStats = extractPatientAddresses(fhirData);
+
+    const formattedResults = formatCQLResults(results, cqlFile);
+    return { _data: formattedResults, _regionStats: regionStats };
 }
 
 // ==================== 品質指標 FHIR 資料抓取 ====================
@@ -647,6 +652,47 @@ function formatIndicatorResults(results, cqlFile) {
         _engine: 'cql-execution',
         _engineNote: `CQL Engine 逐病人執行（${patientIds.length} 位病人），平台端聚合結果`
     };
+}
+
+// ==================== 提取 Patient 地址資料 ====================
+function extractPatientAddresses(fhirBundles) {
+    const regionCount = {};  // city -> count
+    const districtCount = {}; // "city+district" -> count
+    const seen = new Set();
+
+    if (!Array.isArray(fhirBundles)) return { regions: [], districts: [] };
+
+    fhirBundles.forEach(bundle => {
+        const entries = bundle.entry || [];
+        entries.forEach(e => {
+            const res = e.resource;
+            if (res && res.resourceType === 'Patient' && !seen.has(res.id)) {
+                seen.add(res.id);
+                const addr = Array.isArray(res.address) && res.address.length > 0 ? res.address[0] : null;
+                if (addr) {
+                    const city = addr.city || addr.state || '';
+                    const district = addr.district || '';
+                    if (city) {
+                        regionCount[city] = (regionCount[city] || 0) + 1;
+                        if (district) {
+                            const key = `${city}${district}`;
+                            districtCount[key] = (districtCount[key] || 0) + 1;
+                        }
+                    }
+                }
+            }
+        });
+    });
+
+    const regions = Object.entries(regionCount)
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => ({ name, count }));
+    const districts = Object.entries(districtCount)
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => ({ name, count }));
+
+    console.log(`   📍 地區統計: ${regions.length} 個縣市, ${districts.length} 個鄉鎮區`);
+    return { regions, districts };
 }
 
 // ==================== 格式化一般 CQL 結果（傳染病監測等） ====================
