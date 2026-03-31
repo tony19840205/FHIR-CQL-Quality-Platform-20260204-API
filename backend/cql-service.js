@@ -130,7 +130,7 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
     if (isIndicator) {
         fhirData = await fetchIndicatorFHIRData(fhirServerUrl, { startDate, endDate, maxRecords: maxRecords || 500 });
     } else {
-        fhirData = await fetchFHIRData(fhirServerUrl, { startDate, endDate, maxRecords });
+        fhirData = await fetchFHIRData(fhirServerUrl, { startDate, endDate, maxRecords, cqlFile });
     }
 
     // 步驟 4: 建立 Patient Source
@@ -276,36 +276,125 @@ async function fetchIndicatorFHIRData(fhirServerUrl, options = {}) {
 }
 
 // ==================== 一般 FHIR 資料抓取（傳染病監測用） ====================
+// ==================== 疾病代碼對照表 ====================
+const DISEASE_CODE_MAP = {
+    'covid19': {
+        textTerms: ['COVID-19', 'COVID', 'SARS-CoV-2'],
+        icd10: ['U07.1', 'U07.2'],
+        snomed: ['840539006', '840544004', '882784691000119100', '1240581000000104', '1240751000000100', '870588003', '1119302008'],
+        labLoinc: ['94500-6', '94559-2', '94845-3', '97097-0', '94558-4', '94563-4', '94564-2', '94762-2', '94533-7', '94640-0', '94645-9', '94315-9', '94531-1', '94764-8', '94745-7']
+    },
+    'influenza': {
+        textTerms: ['Influenza', '流感'],
+        icd10: ['J09', 'J10', 'J10.0', 'J10.1', 'J10.8', 'J11', 'J11.0', 'J11.1'],
+        snomed: ['6142004', '24662006', '442696006'],
+        labLoinc: ['76080-1', '80382-5', '80383-3', '92141-1', '92142-9']
+    },
+    'conjunctivitis': {
+        textTerms: ['Conjunctivitis', '結膜炎'],
+        icd10: ['H10', 'H10.0', 'H10.1', 'H10.2', 'H10.3', 'B30'],
+        snomed: ['9826008', '231857006'],
+        labLoinc: []
+    },
+    'enterovirus': {
+        textTerms: ['Enterovirus', '腸病毒'],
+        icd10: ['B97.1', 'B08.4', 'B08.5', 'A08.3'],
+        snomed: ['243615000', '186659004'],
+        labLoinc: []
+    },
+    'diarrhea': {
+        textTerms: ['Diarrhea', '腹瀉'],
+        icd10: ['A09', 'K52', 'K52.9', 'A09.0', 'A09.9'],
+        snomed: ['62315008', '409966000'],
+        labLoinc: []
+    }
+};
+
+function detectDiseaseType(cqlFile) {
+    if (!cqlFile) return null;
+    const lower = cqlFile.toLowerCase();
+    if (lower.includes('covid')) return 'covid19';
+    if (lower.includes('influenza') || lower.includes('flu')) return 'influenza';
+    if (lower.includes('conjunctivitis')) return 'conjunctivitis';
+    if (lower.includes('enterovirus')) return 'enterovirus';
+    if (lower.includes('diarrhea')) return 'diarrhea';
+    return null;
+}
+
 async function fetchFHIRData(fhirServerUrl, options = {}) {
-    const { maxRecords = 200 } = options;
+    const { maxRecords = 200, cqlFile } = options;
     const fetchCount = maxRecords > 0 ? maxRecords : 10000;
 
+    // 根據 CQL 檔案判斷疾病類型，加上疾病代碼過濾
+    const diseaseType = detectDiseaseType(cqlFile);
+    const diseaseCodes = diseaseType ? DISEASE_CODE_MAP[diseaseType] : null;
+
     try {
-        // 同時抓取 Condition、Encounter、Observation
-        const [conditionsResponse, encountersResponse, observationsResponse] = await Promise.all([
-            axios.get(`${fhirServerUrl}/Condition`, {
-                params: { _count: fetchCount, _sort: '-recorded-date' },
-                timeout: 60000
-            }).catch(() => ({ data: { entry: [] } })),
-            axios.get(`${fhirServerUrl}/Encounter`, {
-                params: { _count: fetchCount, _sort: '-date' },
-                timeout: 60000
-            }).catch(() => ({ data: { entry: [] } })),
-            axios.get(`${fhirServerUrl}/Observation`, {
-                params: { _count: fetchCount, _sort: '-date', category: 'laboratory' },
-                timeout: 60000
-            }).catch(() => ({ data: { entry: [] } }))
-        ]);
-
-        const conditionEntries = conditionsResponse.data?.entry || [];
-        const encounterEntries = encountersResponse.data?.entry || [];
-        const observationEntries = observationsResponse.data?.entry || [];
-
-        if (conditionEntries.length === 0 && encounterEntries.length === 0 && observationEntries.length === 0) {
-            return [{ resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] }];
+        // 構建 Condition 查詢參數
+        const conditionParams = { _count: fetchCount, _sort: '-recorded-date' };
+        
+        if (diseaseCodes) {
+            // 合併 ICD-10 + SNOMED 代碼為 code 查詢
+            const allCodes = [
+                ...diseaseCodes.icd10.map(c => `http://hl7.org/fhir/sid/icd-10-cm|${c}`),
+                ...diseaseCodes.snomed.map(c => `http://snomed.info/sct|${c}`)
+            ];
+            conditionParams.code = allCodes.join(',');
+            console.log(`   🎯 疾病過濾: ${diseaseType} (${diseaseCodes.icd10.length} ICD-10 + ${diseaseCodes.snomed.length} SNOMED 代碼)`);
+        } else {
+            console.log(`   ⚠️ 無疾病過濾 (cqlFile: ${cqlFile})`);
         }
 
-        // 收集所有 Patient ID
+        // 構建 Observation 查詢參數
+        const obsParams = { _count: fetchCount, _sort: '-date', category: 'laboratory' };
+        if (diseaseCodes && diseaseCodes.labLoinc.length > 0) {
+            obsParams.code = diseaseCodes.labLoinc.map(c => `http://loinc.org|${c}`).join(',');
+        }
+
+        // 先查 Condition (有疾病過濾)
+        const conditionsPromise = axios.get(`${fhirServerUrl}/Condition`, {
+            params: conditionParams,
+            timeout: 60000
+        }).catch(() => ({ data: { entry: [] } }));
+
+        // 也嘗試 text 搜尋 (某些 FHIR Server 不支援 code 搜尋)
+        let textConditionsPromise = Promise.resolve({ data: { entry: [] } });
+        if (diseaseCodes) {
+            const textTerm = diseaseCodes.textTerms[0];
+            textConditionsPromise = axios.get(`${fhirServerUrl}/Condition`, {
+                params: { 'code:text': textTerm, _count: fetchCount, _sort: '-recorded-date' },
+                timeout: 60000
+            }).catch(() => ({ data: { entry: [] } }));
+        }
+
+        // Observation 查詢 (有疾病實驗室代碼過濾)
+        const observationsPromise = axios.get(`${fhirServerUrl}/Observation`, {
+            params: obsParams,
+            timeout: 60000
+        }).catch(() => ({ data: { entry: [] } }));
+
+        const [conditionsResponse, textConditionsResponse, observationsResponse] = await Promise.all([
+            conditionsPromise, textConditionsPromise, observationsPromise
+        ]);
+
+        // 合併 code 搜尋和 text 搜尋結果 (去重)
+        const codeEntries = conditionsResponse.data?.entry || [];
+        const textEntries = textConditionsResponse.data?.entry || [];
+        const seenIds = new Set();
+        const allConditionEntries = [];
+        [...codeEntries, ...textEntries].forEach(e => {
+            const id = e.resource?.id;
+            if (id && !seenIds.has(id)) {
+                seenIds.add(id);
+                allConditionEntries.push(e);
+            }
+        });
+
+        const observationEntries = observationsResponse.data?.entry || [];
+
+        console.log(`   📊 Condition (code): ${codeEntries.length}, Condition (text): ${textEntries.length}, 合併去重: ${allConditionEntries.length}, Observation: ${observationEntries.length}`);
+
+        // 從 Condition + Observation 收集 Patient IDs
         const patientIds = new Set();
         const extractPatientId = (entry) => {
             const ref = entry.resource?.subject?.reference || entry.resource?.patient?.reference;
@@ -314,17 +403,28 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
                 if (id) patientIds.add(id);
             }
         };
-        conditionEntries.forEach(extractPatientId);
-        encounterEntries.forEach(extractPatientId);
+        allConditionEntries.forEach(extractPatientId);
         observationEntries.forEach(extractPatientId);
 
-        console.log(`   📊 Condition: ${conditionEntries.length}, Encounter: ${encounterEntries.length}, Observation: ${observationEntries.length}, Patients: ${patientIds.size}`);
+        if (patientIds.size === 0) {
+            console.log(`   ⚠️ 無符合疾病條件的 Patient`);
+            return [{ resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] }];
+        }
 
-        // 為每位 Patient 建立 Bundle
+        console.log(`   👥 找到 ${patientIds.size} 位相關病患，查詢完整就診資料...`);
+
+        // 為每位 Patient 查詢其所有 Encounter
         const patientBundles = [];
         for (const patientId of Array.from(patientIds)) {
             try {
-                const patientResponse = await axios.get(`${fhirServerUrl}/Patient/${patientId}`, { timeout: 10000 });
+                const [patientResponse, patEncounters] = await Promise.all([
+                    axios.get(`${fhirServerUrl}/Patient/${patientId}`, { timeout: 10000 }),
+                    axios.get(`${fhirServerUrl}/Encounter`, {
+                        params: { patient: patientId, _count: 200, _sort: '-date' },
+                        timeout: 15000
+                    }).catch(() => ({ data: { entry: [] } }))
+                ]);
+
                 if (!patientResponse.data) continue;
 
                 const matchPatient = (entry) => {
@@ -336,12 +436,16 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
                     { resource: patientResponse.data, fullUrl: `${fhirServerUrl}/Patient/${patientId}` }
                 ];
 
-                conditionEntries.filter(matchPatient).forEach(e => {
+                allConditionEntries.filter(matchPatient).forEach(e => {
                     entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Condition/${e.resource.id}` });
                 });
-                encounterEntries.filter(matchPatient).forEach(e => {
+
+                // 加入該病患的所有 Encounter (用於 CQL 判斷就診類型)
+                const patEncEntries = patEncounters.data?.entry || [];
+                patEncEntries.forEach(e => {
                     entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Encounter/${e.resource.id}` });
                 });
+
                 observationEntries.filter(matchPatient).forEach(e => {
                     entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Observation/${e.resource.id}` });
                 });
@@ -357,7 +461,7 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
             }
         }
 
-        console.log(`   ✅ 建立 ${patientBundles.length} 個 Patient Bundle (含 Condition+Encounter+Observation)`);
+        console.log(`   ✅ 建立 ${patientBundles.length} 個 Patient Bundle (疾病過濾: ${diseaseType || '無'})`);
         return patientBundles;
 
     } catch (error) {
