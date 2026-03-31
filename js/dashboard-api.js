@@ -1,5 +1,7 @@
 // ========== 疾管儀表板邏輯 - API版 ==========
 // 透過後端 CQL Engine 執行查詢
+// BUILD_VERSION: 20260331b - 修正雙重計算
+console.log('📌 dashboard-api.js BUILD_VERSION: 20260331b');
 
 let currentResults = {};
 window.diseaseResults = currentResults;  // ★ 供 data-exporter 存取

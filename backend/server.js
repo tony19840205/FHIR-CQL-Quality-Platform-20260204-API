@@ -11,8 +11,16 @@ const gradleConverter = require('./gradle-converter');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 提供靜態前端檔案（HTML/CSS/JS）
-app.use(express.static(path.join(__dirname, '..')));
+// 提供靜態前端檔案（HTML/CSS/JS）— 禁止CDN快取JS/HTML以確保更新即時生效
+app.use(express.static(path.join(__dirname, '..'), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.js') || filePath.endsWith('.html')) {
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.setHeader('Pragma', 'no-cache');
+            res.setHeader('Expires', '0');
+        }
+    }
+}));
 
 // 允許跨域（前端才能呼叫）
 app.use((req, res, next) => {
