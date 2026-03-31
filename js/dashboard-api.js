@@ -1014,7 +1014,7 @@ function showCQLEngineReport(diseaseType, results) {
         if (Array.isArray(survResults)) {
             survResults.forEach(ep => {
                 // 時間分佈
-                const eventDate = ep.EventDate || ep.eventDate;
+                const eventDate = ep.EventDate || ep.eventDate || ep.episodeDate;
                 if (eventDate) {
                     const dateStr = String(eventDate).substring(0, 10);
                     const ym = dateStr.substring(0, 7);
@@ -1022,9 +1022,13 @@ function showCQLEngineReport(diseaseType, results) {
                     stats.monthly[ym] = (stats.monthly[ym] || 0) + 1;
                     stats.yearly[y] = (stats.yearly[y] || 0) + 1;
                 }
-                // 就診類型
-                const encType = ep.EncounterType || ep.encounterType;
-                if (encType) stats.encounterType[encType] = (stats.encounterType[encType] || 0) + 1;
+                // 就診類型 (統一中英文標籤)
+                const encTypeMap = { 'Outpatient': '門診', 'AMB': '門診', 'Emergency': '急診', 'EMER': '急診', 'Inpatient': '住院', 'IMP': '住院', 'Other': '其他' };
+                let encType = ep.EncounterType || ep.encounterType;
+                if (encType) {
+                    encType = encTypeMap[encType] || encType;
+                    stats.encounterType[encType] = (stats.encounterType[encType] || 0) + 1;
+                }
                 // 診斷代碼
                 const dCode = ep.DiagnosisCode || ep.diagnosisCode;
                 const dName = ep.DiagnosisName || ep.diagnosisName || dCode;

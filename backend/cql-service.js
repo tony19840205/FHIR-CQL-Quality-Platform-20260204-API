@@ -442,7 +442,27 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
                 ];
 
                 allConditionEntries.filter(matchPatient).forEach(e => {
-                    entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Condition/${e.resource.id}` });
+                    const cond = e.resource;
+                    // 自動補上 encounter reference (如果 Condition 沒有關聯 Encounter)
+                    if (cond && (!cond.encounter || !cond.encounter.reference) && patEncEntries.length > 0) {
+                        const condDate = cond.onsetDateTime || cond.recordedDate || '';
+                        const condTime = condDate ? new Date(condDate).getTime() : 0;
+                        // 找最近日期的 Encounter
+                        let bestEnc = null;
+                        let bestDiff = Infinity;
+                        patEncEntries.forEach(pe => {
+                            const enc = pe.resource;
+                            if (!enc || !enc.id) return;
+                            const encStart = enc.period?.start || '';
+                            const encTime = encStart ? new Date(encStart).getTime() : 0;
+                            const diff = condTime && encTime ? Math.abs(condTime - encTime) : Infinity;
+                            if (diff < bestDiff) { bestDiff = diff; bestEnc = enc; }
+                        });
+                        if (bestEnc) {
+                            cond.encounter = { reference: `Encounter/${bestEnc.id}` };
+                        }
+                    }
+                    entries.push({ resource: cond, fullUrl: e.fullUrl || `${fhirServerUrl}/Condition/${cond.id}` });
                 });
 
                 // 加入該病患的所有 Encounter (用於 CQL 判斷就診類型)
@@ -452,7 +472,26 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
                 });
 
                 observationEntries.filter(matchPatient).forEach(e => {
-                    entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Observation/${e.resource.id}` });
+                    const obs = e.resource;
+                    // 自動補上 encounter reference (如果 Observation 沒有關聯 Encounter)
+                    if (obs && (!obs.encounter || !obs.encounter.reference) && patEncEntries.length > 0) {
+                        const obsDate = obs.effectiveDateTime || obs.issued || '';
+                        const obsTime = obsDate ? new Date(obsDate).getTime() : 0;
+                        let bestEnc = null;
+                        let bestDiff = Infinity;
+                        patEncEntries.forEach(pe => {
+                            const enc = pe.resource;
+                            if (!enc || !enc.id) return;
+                            const encStart = enc.period?.start || '';
+                            const encTime = encStart ? new Date(encStart).getTime() : 0;
+                            const diff = obsTime && encTime ? Math.abs(obsTime - encTime) : Infinity;
+                            if (diff < bestDiff) { bestDiff = diff; bestEnc = enc; }
+                        });
+                        if (bestEnc) {
+                            obs.encounter = { reference: `Encounter/${bestEnc.id}` };
+                        }
+                    }
+                    entries.push({ resource: obs, fullUrl: e.fullUrl || `${fhirServerUrl}/Observation/${obs.id}` });
                 });
 
                 patientBundles.push({
