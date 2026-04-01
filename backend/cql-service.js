@@ -577,7 +577,11 @@ function computeMedicationIndicator(data, cqlFile) {
             return antibioticKeywords.some(kw => medText.includes(kw) || medCode.includes(kw) || medCodeVal.includes(kw));
         }).length;
     } else if (cqlFile.includes('_03_')) {
-        // 藥品重疊指標: 依藥品類別篩選，再計算同一病人重複用藥
+        // 藥品重疊指標: 依藥品類別篩選，區分同院/跨院
+        const isCrossHospital = cqlFile.includes('_03_9_') || cqlFile.includes('_03_10_') ||
+            cqlFile.includes('_03_11_') || cqlFile.includes('_03_12_') || cqlFile.includes('_03_13_') ||
+            cqlFile.includes('_03_14_') || cqlFile.includes('_03_15_') || cqlFile.includes('_03_16_');
+
         const drugCategoryKeywords = getDrugCategoryKeywords(cqlFile);
         const categoryMeds = drugCategoryKeywords.length > 0
             ? meds.filter(m => {
@@ -589,15 +593,43 @@ function computeMedicationIndicator(data, cqlFile) {
             })
             : meds;
 
-        // 計算同一病人該類藥品有多張處方（日期重疊 = 潛在重複用藥）
-        const patientMedCount = {};
-        categoryMeds.forEach(m => {
-            const ref = m.subject?.reference || '';
-            const pid = ref.split('/').pop();
-            if (pid) patientMedCount[pid] = (patientMedCount[pid] || 0) + 1;
-        });
-        numerator = Object.values(patientMedCount).filter(c => c > 1).length;
-        denominator = Object.keys(patientMedCount).length || totalPatients;
+        if (isCrossHospital) {
+            // 跨院重疊: 同一病人在不同機構有該類藥品處方
+            const patientOrgs = {};
+            categoryMeds.forEach(m => {
+                const pid = (m.subject?.reference || '').split('/').pop();
+                const org = m.requester?.reference || m.performer?.[0]?.reference
+                    || m.contained?.[0]?.name || m.meta?.source || 'unknown';
+                if (pid) {
+                    if (!patientOrgs[pid]) patientOrgs[pid] = new Set();
+                    patientOrgs[pid].add(org);
+                }
+            });
+            denominator = Object.keys(patientOrgs).length || totalPatients;
+            numerator = Object.values(patientOrgs).filter(orgs => orgs.size > 1).length;
+        } else {
+            // 同院重疊: 同一病人在同一機構有多張該類藥品處方
+            const patientOrgCount = {};
+            categoryMeds.forEach(m => {
+                const pid = (m.subject?.reference || '').split('/').pop();
+                const org = m.requester?.reference || m.performer?.[0]?.reference
+                    || m.contained?.[0]?.name || m.meta?.source || 'default';
+                if (pid) {
+                    const key = `${pid}|${org}`;
+                    patientOrgCount[key] = (patientOrgCount[key] || 0) + 1;
+                }
+            });
+            // 取得不重複病人數
+            const uniquePatients = new Set();
+            const overlapPatients = new Set();
+            Object.entries(patientOrgCount).forEach(([key, count]) => {
+                const pid = key.split('|')[0];
+                uniquePatients.add(pid);
+                if (count > 1) overlapPatients.add(pid);
+            });
+            denominator = uniquePatients.size || totalPatients;
+            numerator = overlapPatients.size;
+        }
     }
 
     const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
