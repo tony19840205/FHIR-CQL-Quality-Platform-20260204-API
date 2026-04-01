@@ -221,37 +221,22 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
             // 疫苗接種: 根據 CQL 類型用特定疫苗代碼查詢 Immunization
             const isCovid = cqlFile.toLowerCase().includes('covid');
             
-            // COVID-19 疫苗代碼
-            const covidSnomedCodes = ['840539006', '840534001', '1119305005', '1119349007'];
-            const covidCvxCodes = ['207', '208', '210', '211', '212', '213', '217', '218', '219'];
+            // COVID-19 疫苗 CVX 代碼
+            const covidCodes = ['207', '208', '210', '211', '212', '213', '217', '218', '219'];
+            // 流感疫苗 CVX 代碼
+            const fluCodes = ['16', '140', '141', '150', '161', '185'];
             
-            // 流感疫苗代碼
-            const fluSnomedCodes = ['6142004', '1181000221105'];
-            const fluCvxCodes = ['16', '141', '150', '161'];
+            const vaccineCodes = isCovid ? covidCodes : fluCodes;
             
-            const snomedCodes = isCovid ? covidSnomedCodes : fluSnomedCodes;
-            const cvxCodes = isCovid ? covidCvxCodes : fluCvxCodes;
+            console.log(`   🎯 ${isCovid ? 'COVID-19' : '流感'}疫苗代碼查詢 (${vaccineCodes.length} 個代碼)`);
             
-            console.log(`   🎯 ${isCovid ? 'COVID-19' : '流感'}疫苗代碼查詢 (SNOMED: ${snomedCodes.length}, CVX: ${cvxCodes.length})`);
-            
-            // 逐一查詢各疫苗代碼 (與 non-API 版本相同策略)
-            const allPromises = [];
-            for (const code of snomedCodes) {
-                allPromises.push(
-                    axios.get(`${fhirServerUrl}/Immunization`, {
-                        params: { 'vaccine-code': `http://snomed.info/sct|${code}`, _count: fetchCount },
-                        timeout: 60000
-                    }).catch(() => ({ data: { entry: [] } }))
-                );
-            }
-            for (const code of cvxCodes) {
-                allPromises.push(
-                    axios.get(`${fhirServerUrl}/Immunization`, {
-                        params: { 'vaccine-code': `http://hl7.org/fhir/sid/cvx|${code}`, _count: fetchCount },
-                        timeout: 60000
-                    }).catch(() => ({ data: { entry: [] } }))
-                );
-            }
+            // 逐一查詢各疫苗代碼 (不帶 system prefix，相容此 FHIR Server)
+            const allPromises = vaccineCodes.map(code =>
+                axios.get(`${fhirServerUrl}/Immunization`, {
+                    params: { 'vaccine-code': code, _count: fetchCount },
+                    timeout: 60000
+                }).catch(() => ({ data: { entry: [] } }))
+            );
             
             const responses = await Promise.all(allPromises);
             const seenIds = new Set();
@@ -268,13 +253,14 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
             console.log(`   💉 Immunization (去重後): ${primaryEntries.length} 筆`);
         } else if (isHypertension) {
             // 高血壓: 抓取 Condition (I10-I16) + Observation (血壓) + MedicationRequest
+            // 不帶 system prefix，此 FHIR Server 的 code 查詢較可靠
             const hypertensionICD10 = ['I10', 'I11', 'I12', 'I13', 'I14', 'I15', 'I16'];
             const bpLoincCodes = ['85354-9', '8480-6', '8462-4']; // BP panel, systolic, diastolic
 
             const [condResponse, obsResponse, medResponse] = await Promise.all([
                 axios.get(`${fhirServerUrl}/Condition`, {
                     params: {
-                        code: hypertensionICD10.map(c => `http://hl7.org/fhir/sid/icd-10-cm|${c}`).join(','),
+                        code: hypertensionICD10.join(','),
                         _count: fetchCount,
                         _sort: '-recorded-date'
                     },
@@ -282,7 +268,7 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
                 }).catch(() => ({ data: { entry: [] } })),
                 axios.get(`${fhirServerUrl}/Observation`, {
                     params: {
-                        code: bpLoincCodes.map(c => `http://loinc.org|${c}`).join(','),
+                        code: bpLoincCodes.join(','),
                         _count: fetchCount,
                         _sort: '-date'
                     },
