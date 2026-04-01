@@ -746,8 +746,12 @@ function computeOutpatientIndicator(data, cqlFile) {
         const pid = (e.subject?.reference || '').split('/').pop();
         if (pid) patientIds.add(pid);
     });
-    const totalPatients = patientIds.size || encounters.length;
-    if (totalPatients === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+    meds.forEach(m => {
+        const pid = (m.subject?.reference || '').split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
+    const totalPatients = data._totalEncounters || patientIds.size || encounters.length;
+    if (totalPatients === 0 && meds.length === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
 
     let numerator = 0, denominator = totalPatients;
 
