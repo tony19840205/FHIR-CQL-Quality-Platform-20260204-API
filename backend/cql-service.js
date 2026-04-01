@@ -50,6 +50,13 @@ function isPublicHealthCQL(cqlFile) {
     return lower.includes('vaccination') || lower.includes('hypertensionactive');
 }
 
+// ==================== 判斷是否為 ESG CQL ====================
+function isESGCQL(cqlFile) {
+    if (!cqlFile) return false;
+    const lower = cqlFile.toLowerCase();
+    return lower.includes('antibiotic') || lower.includes('ehr_adoption') || lower.includes('waste');
+}
+
 // ==================== 從 ELM 自動建構 CodeService ====================
 function buildCodeServiceFromELM(elm) {
     const vsDefs = elm.library?.valueSets?.def || [];
@@ -141,6 +148,10 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
         // 直接從 FHIR 資料計算統計結果（與 non-API 前端版本邏輯一致）
         fhirData = await fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, { startDate, endDate, maxRecords: maxRecords || 500 });
         return computePublicHealthResults(fhirData, cqlFile);
+    } else if (isESGCQL(cqlFile)) {
+        // ESG 指標: 直接從 FHIR 資料計算（與 non-API 前端版本邏輯一致）
+        fhirData = await fetchESGFHIRData(fhirServerUrl, cqlFile, { startDate, endDate, maxRecords: maxRecords || 500 });
+        return computeESGResults(fhirData, cqlFile);
     } else {
         fhirData = await fetchFHIRData(fhirServerUrl, { startDate, endDate, maxRecords, cqlFile });
     }
@@ -953,6 +964,276 @@ function extractPatientAddresses(fhirBundles, filterPatientIds = null) {
 
     console.log(`   📍 地區統計: ${regions.length} 個縣市, ${districts.length} 個鄉鎮區`);
     return { regions, districts };
+}
+
+// ==================== ESG FHIR 資料取得 ====================
+async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
+    const { maxRecords = 500 } = options;
+    const fetchCount = maxRecords > 0 ? maxRecords : 10000;
+    const cqlLower = cqlFile.toLowerCase();
+    const bundles = [];
+
+    console.log(`📥 [ESG] 取得 FHIR 資料: ${cqlFile}`);
+
+    try {
+        if (cqlLower.includes('antibiotic')) {
+            // 抗生素: MedicationAdministration + MedicationRequest + Encounter
+            const antibioticNames = ['Amoxicillin', 'Doxycycline', 'Ceftriaxone', 'Ciprofloxacin', 'Vancomycin', 'Meropenem', 'Azithromycin', 'Levofloxacin'];
+
+            // 嘗試 text 搜尋
+            for (const name of antibioticNames) {
+                try {
+                    const resp = await axios.get(`${fhirServerUrl}/MedicationAdministration`, {
+                        params: { 'code:text': name, status: 'completed', _count: fetchCount },
+                        timeout: 30000
+                    });
+                    if (resp.data?.entry?.length) {
+                        bundles.push(resp.data);
+                        console.log(`   ✅ MedicationAdministration "${name}": ${resp.data.entry.length}`);
+                    }
+                } catch (e) { /* skip */ }
+            }
+
+            // 也嘗試 MedicationRequest
+            for (const name of antibioticNames.slice(0, 4)) {
+                try {
+                    const resp = await axios.get(`${fhirServerUrl}/MedicationRequest`, {
+                        params: { 'code:text': name, _count: fetchCount },
+                        timeout: 30000
+                    });
+                    if (resp.data?.entry?.length) {
+                        bundles.push(resp.data);
+                        console.log(`   ✅ MedicationRequest "${name}": ${resp.data.entry.length}`);
+                    }
+                } catch (e) { /* skip */ }
+            }
+
+            // ATC code 搜尋
+            try {
+                const resp = await axios.get(`${fhirServerUrl}/MedicationAdministration`, {
+                    params: { 'medication-code': 'J01', status: 'completed', _count: fetchCount },
+                    timeout: 30000
+                });
+                if (resp.data?.entry?.length) {
+                    bundles.push(resp.data);
+                    console.log(`   ✅ MedicationAdministration (ATC J01): ${resp.data.entry.length}`);
+                }
+            } catch (e) { /* skip */ }
+
+            // Encounter (計算總病人數)
+            try {
+                const resp = await axios.get(`${fhirServerUrl}/Encounter`, {
+                    params: { status: 'finished', _count: fetchCount },
+                    timeout: 30000
+                });
+                if (resp.data?.entry?.length) bundles.push(resp.data);
+                console.log(`   ✅ Encounter: ${resp.data?.entry?.length || 0}`);
+            } catch (e) { /* skip */ }
+
+        } else if (cqlLower.includes('ehr_adoption') || cqlLower.includes('ehr-adoption')) {
+            // 電子病歷: Patient + DocumentReference
+            try {
+                const [patResp, docResp] = await Promise.all([
+                    axios.get(`${fhirServerUrl}/Patient`, { params: { _count: fetchCount }, timeout: 30000 }),
+                    axios.get(`${fhirServerUrl}/DocumentReference`, { params: { _count: fetchCount }, timeout: 30000 })
+                ]);
+                if (patResp.data?.entry?.length) bundles.push(patResp.data);
+                if (docResp.data?.entry?.length) bundles.push(docResp.data);
+                console.log(`   ✅ Patient: ${patResp.data?.entry?.length || 0}, DocumentReference: ${docResp.data?.entry?.length || 0}`);
+            } catch (e) {
+                console.warn('   ⚠️ EHR query error:', e.message);
+            }
+
+        } else if (cqlLower.includes('waste')) {
+            // 廢棄物: Observation (waste-related)
+            const wasteTypes = ['General Waste', 'Infectious Waste', 'Recyclable Waste'];
+            for (const wt of wasteTypes) {
+                try {
+                    const resp = await axios.get(`${fhirServerUrl}/Observation`, {
+                        params: { 'code:text': wt, _count: fetchCount },
+                        timeout: 30000
+                    });
+                    if (resp.data?.entry?.length) {
+                        bundles.push(resp.data);
+                        console.log(`   ✅ Observation "${wt}": ${resp.data.entry.length}`);
+                    }
+                } catch (e) { /* skip */ }
+            }
+            // 也試無過濾的 waste observation
+            try {
+                const resp = await axios.get(`${fhirServerUrl}/Observation`, {
+                    params: { 'code:text': 'waste', _count: fetchCount },
+                    timeout: 30000
+                });
+                if (resp.data?.entry?.length) {
+                    bundles.push(resp.data);
+                    console.log(`   ✅ Observation "waste": ${resp.data.entry.length}`);
+                }
+            } catch (e) { /* skip */ }
+        }
+    } catch (error) {
+        console.error('   ❌ ESG FHIR 取得失敗:', error.message);
+    }
+
+    if (bundles.length === 0) {
+        bundles.push({ resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] });
+    }
+
+    return bundles;
+}
+
+// ==================== ESG 直接計算 ====================
+function computeESGResults(fhirBundles, cqlFile) {
+    const cqlLower = cqlFile.toLowerCase();
+
+    // 從 bundles 提取各類資源
+    const byType = {};
+    fhirBundles.forEach(bundle => {
+        (bundle.entry || []).forEach(e => {
+            if (e.resource) {
+                const t = e.resource.resourceType;
+                if (!byType[t]) byType[t] = [];
+                byType[t].push(e.resource);
+            }
+        });
+    });
+
+    // 去重 (by id)
+    Object.keys(byType).forEach(t => {
+        byType[t] = Array.from(new Map(byType[t].map(r => [r.id, r])).values());
+    });
+
+    console.log(`📊 [ESG] 直接計算 - 資源:`, Object.entries(byType).map(([k, v]) => `${k}:${v.length}`).join(', '));
+
+    if (cqlLower.includes('antibiotic')) {
+        return computeAntibioticResults(byType);
+    } else if (cqlLower.includes('ehr_adoption') || cqlLower.includes('ehr-adoption')) {
+        return computeEHRResults(byType);
+    } else if (cqlLower.includes('waste')) {
+        return computeWasteResults(byType);
+    }
+
+    return { _data: [{ '說明': '未知的 ESG 指標類型' }], _regionStats: { regions: [], districts: [] } };
+}
+
+// ===== 抗生素使用率 =====
+function computeAntibioticResults(byType) {
+    const medAdmins = byType['MedicationAdministration'] || [];
+    const medRequests = byType['MedicationRequest'] || [];
+    const encounters = byType['Encounter'] || [];
+
+    // 使用抗生素的病患
+    const antibioticPatientIds = new Set();
+    [...medAdmins, ...medRequests].forEach(r => {
+        const ref = r.subject?.reference || r.patient?.reference;
+        if (ref) antibioticPatientIds.add(ref.split('/').pop());
+    });
+
+    // 所有就醫病患
+    const allPatientIds = new Set();
+    encounters.forEach(enc => {
+        const ref = enc.subject?.reference;
+        if (ref) allPatientIds.add(ref.split('/').pop());
+    });
+    // 也加入抗生素病患 (可能沒有 Encounter 資料)
+    antibioticPatientIds.forEach(id => allPatientIds.add(id));
+
+    const totalPatients = allPatientIds.size;
+    const antibioticPatients = antibioticPatientIds.size;
+    const utilizationRate = totalPatients > 0 ? ((antibioticPatients / totalPatients) * 100).toFixed(2) : '0.00';
+
+    console.log(`✅ [Antibiotic] 總病人: ${totalPatients}, 抗生素使用: ${antibioticPatients}, 使用率: ${utilizationRate}%`);
+
+    return {
+        _data: [{
+            totalPatients,
+            antibioticPatients,
+            utilizationRate,
+            noData: totalPatients === 0,
+            isRealData: true
+        }],
+        _regionStats: { regions: [], districts: [] }
+    };
+}
+
+// ===== 電子病歷採用率 =====
+function computeEHRResults(byType) {
+    const patients = byType['Patient'] || [];
+    const documents = byType['DocumentReference'] || [];
+
+    const totalPatients = patients.length;
+
+    // 有 DocumentReference 的病患
+    const patientsWithDoc = new Set();
+    documents.forEach(doc => {
+        const ref = doc.subject?.reference;
+        if (ref) patientsWithDoc.add(ref.split('/').pop());
+    });
+    const ehrAdopted = patientsWithDoc.size;
+    const adoptionRate = totalPatients > 0 ? ((ehrAdopted / totalPatients) * 100).toFixed(2) : '0.00';
+
+    // 文件類型統計
+    const documentTypes = {};
+    documents.forEach(doc => {
+        const typeCode = doc.type?.coding?.[0]?.display || doc.type?.text || 'Unknown';
+        documentTypes[typeCode] = (documentTypes[typeCode] || 0) + 1;
+    });
+
+    console.log(`✅ [EHR] 總病人: ${totalPatients}, 有電子病歷: ${ehrAdopted}, 採用率: ${adoptionRate}%`);
+
+    return {
+        _data: [{
+            totalPatients,
+            ehrAdopted,
+            adoptionRate,
+            documentTypes,
+            noData: totalPatients === 0,
+            isRealData: true
+        }],
+        _regionStats: { regions: [], districts: [] }
+    };
+}
+
+// ===== 廢棄物管理 =====
+function computeWasteResults(byType) {
+    const observations = byType['Observation'] || [];
+
+    let generalWaste = 0;
+    let infectiousWaste = 0;
+    let recycledWaste = 0;
+
+    observations.forEach(obs => {
+        const codeText = (obs.code?.coding?.[0]?.display || obs.code?.text || '').toLowerCase();
+        const value = obs.valueQuantity?.value || 0;
+
+        if (codeText.includes('general') || codeText.includes('一般')) {
+            generalWaste += value;
+        } else if (codeText.includes('infectious') || codeText.includes('infect') || codeText.includes('感染')) {
+            infectiousWaste += value;
+        } else if (codeText.includes('recycl') || codeText.includes('回收')) {
+            recycledWaste += value;
+        } else if (codeText.includes('waste') || codeText.includes('廢棄')) {
+            generalWaste += value;
+        }
+    });
+
+    const totalWaste = parseFloat((generalWaste + infectiousWaste + recycledWaste).toFixed(2));
+    const recycleRate = totalWaste > 0 ? ((recycledWaste / totalWaste) * 100).toFixed(2) : '0.00';
+
+    console.log(`✅ [Waste] 總量: ${totalWaste} kg, 一般: ${generalWaste}, 感染: ${infectiousWaste}, 回收: ${recycledWaste}, 回收率: ${recycleRate}%`);
+
+    return {
+        _data: [{
+            totalWaste,
+            generalWaste: parseFloat(generalWaste.toFixed(2)),
+            infectiousWaste: parseFloat(infectiousWaste.toFixed(2)),
+            recycledWaste: parseFloat(recycledWaste.toFixed(2)),
+            recycleRate,
+            noData: totalWaste === 0,
+            isRealData: true
+        }],
+        _regionStats: { regions: [], districts: [] }
+    };
 }
 
 // ==================== 國民健康直接計算 (bypass CQL Engine) ====================
