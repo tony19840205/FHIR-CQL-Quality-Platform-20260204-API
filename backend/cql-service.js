@@ -175,6 +175,11 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
         return formatIndicatorResults(results, cqlFile);
     }
 
+    // 步驟 7b: 國民健康指標格式化 (疫苗/高血壓)
+    if (isPublicHealthCQL(cqlFile)) {
+        return formatPublicHealthResults(results, cqlFile);
+    }
+
     // 步驟 8: 格式化結果
     const formattedResults = formatCQLResults(results, cqlFile);
 
@@ -213,13 +218,54 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
         let medicationEntries = [];
 
         if (isVaccination) {
-            // 疫苗接種: 抓取 Immunization 資源
-            const immunizationResponse = await axios.get(`${fhirServerUrl}/Immunization`, {
-                params: { _count: fetchCount, _sort: '-date', status: 'completed' },
-                timeout: 60000
-            }).catch(() => ({ data: { entry: [] } }));
-            primaryEntries = immunizationResponse.data?.entry || [];
-            console.log(`   💉 Immunization: ${primaryEntries.length} 筆`);
+            // 疫苗接種: 根據 CQL 類型用特定疫苗代碼查詢 Immunization
+            const isCovid = cqlFile.toLowerCase().includes('covid');
+            
+            // COVID-19 疫苗代碼
+            const covidSnomedCodes = ['840539006', '840534001', '1119305005', '1119349007'];
+            const covidCvxCodes = ['207', '208', '210', '211', '212', '213', '217', '218', '219'];
+            
+            // 流感疫苗代碼
+            const fluSnomedCodes = ['6142004', '1181000221105'];
+            const fluCvxCodes = ['16', '141', '150', '161'];
+            
+            const snomedCodes = isCovid ? covidSnomedCodes : fluSnomedCodes;
+            const cvxCodes = isCovid ? covidCvxCodes : fluCvxCodes;
+            
+            console.log(`   🎯 ${isCovid ? 'COVID-19' : '流感'}疫苗代碼查詢 (SNOMED: ${snomedCodes.length}, CVX: ${cvxCodes.length})`);
+            
+            // 逐一查詢各疫苗代碼 (與 non-API 版本相同策略)
+            const allPromises = [];
+            for (const code of snomedCodes) {
+                allPromises.push(
+                    axios.get(`${fhirServerUrl}/Immunization`, {
+                        params: { 'vaccine-code': `http://snomed.info/sct|${code}`, _count: fetchCount },
+                        timeout: 60000
+                    }).catch(() => ({ data: { entry: [] } }))
+                );
+            }
+            for (const code of cvxCodes) {
+                allPromises.push(
+                    axios.get(`${fhirServerUrl}/Immunization`, {
+                        params: { 'vaccine-code': `http://hl7.org/fhir/sid/cvx|${code}`, _count: fetchCount },
+                        timeout: 60000
+                    }).catch(() => ({ data: { entry: [] } }))
+                );
+            }
+            
+            const responses = await Promise.all(allPromises);
+            const seenIds = new Set();
+            responses.forEach(resp => {
+                const entries = resp.data?.entry || [];
+                entries.forEach(e => {
+                    const id = e.resource?.id;
+                    if (id && !seenIds.has(id)) {
+                        seenIds.add(id);
+                        primaryEntries.push(e);
+                    }
+                });
+            });
+            console.log(`   💉 Immunization (去重後): ${primaryEntries.length} 筆`);
         } else if (isHypertension) {
             // 高血壓: 抓取 Condition (I10-I16) + Observation (血壓) + MedicationRequest
             const hypertensionICD10 = ['I10', 'I11', 'I12', 'I13', 'I14', 'I15', 'I16'];
@@ -918,6 +964,70 @@ function extractPatientAddresses(fhirBundles, filterPatientIds = null) {
 
     console.log(`   📍 地區統計: ${regions.length} 個縣市, ${districts.length} 個鄉鎮區`);
     return { regions, districts };
+}
+
+// ==================== 格式化國民健康結果 (疫苗接種/高血壓) ====================
+function formatPublicHealthResults(results, cqlFile) {
+    const uf = results.unfilteredResults || {};
+    const pr = results.patientResults || {};
+    const cqlLower = cqlFile.toLowerCase();
+    const isVaccination = cqlLower.includes('vaccination');
+
+    console.log('📊 [PublicHealth] 格式化結果...');
+    console.log('   unfilteredResults keys:', Object.keys(uf));
+    console.log('   patientResults count:', Object.keys(pr).length);
+
+    const formatted = {};
+
+    // 提取所有 unfiltered 結果
+    for (const [key, value] of Object.entries(uf)) {
+        if (key.startsWith('_')) continue;
+        formatted[key] = extractValue(value);
+    }
+
+    // 提取 patient-level 結果
+    const patientCount = Object.keys(pr).length;
+    formatted._patientCount = patientCount;
+
+    // 嘗試從 Statistics All / Statistics 結果中讀取聚合數據
+    if (isVaccination) {
+        const statsAll = uf['Statistics All'] || uf['Full Report'];
+        if (statsAll) {
+            const stats = extractValue(statsAll);
+            formatted._statisticsAll = stats;
+            console.log('   📈 Statistics All:', JSON.stringify(stats).substring(0, 200));
+        }
+        // 也取各年齡層
+        for (const ageGroup of ['12+', '18+', '65+', 'All']) {
+            const sk = `Statistics ${ageGroup}`;
+            if (uf[sk]) formatted[sk] = extractValue(uf[sk]);
+        }
+    }
+
+    return { _data: [formatted], _regionStats: { regions: [], districts: [] } };
+}
+
+// 遞迴提取 CQL 值 (處理 Tuple / FHIRObject / DateTime 等)
+function extractValue(value) {
+    if (value === null || value === undefined) return null;
+    if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'string') return value;
+    if (value instanceof Date) return value.toISOString().split('T')[0];
+    if (typeof value === 'object' && value.value !== undefined && !value.coding && !value.resourceType) {
+        return extractValue(value.value);
+    }
+    if (Array.isArray(value)) {
+        return value.map(item => extractValue(item));
+    }
+    if (typeof value === 'object') {
+        // Check if it's a FHIR resource or CQL tuple
+        const result = {};
+        for (const [k, v] of Object.entries(value)) {
+            if (k.startsWith('_')) continue;
+            result[k] = extractValue(v);
+        }
+        return result;
+    }
+    return value;
 }
 
 // ==================== 格式化一般 CQL 結果（傳染病監測等） ====================
