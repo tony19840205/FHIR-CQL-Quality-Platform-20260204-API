@@ -464,20 +464,48 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             console.log(`   MedicationRequest: ${resources.MedicationRequest.length}, Encounter(AMB): ${resources.Encounter.length}`);
 
         } else if (category === 'outpatient') {
-            // 門診品質指標: Encounter(門診) + MedicationRequest + Observation
-            // 使用多頁抓取以突破單頁限制 (最多10頁=5000筆)
-            const pageSize = Math.min(count, 500);
-            const maxPages = count > 500 ? Math.min(Math.ceil(count / 500), 10) : 1;
-            const usePaging = count > 500;
-            const [encResult, medResult, obsResult] = await Promise.all([
-                usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${pageSize}${dateParam}`, maxPages) : axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                usePaging ? fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${pageSize}${dateParam.replace(/date=/g, 'authoredon=')}`, maxPages) : axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                usePaging ? fetchAllPages(`${fhirServerUrl}/Observation?_count=${pageSize}${dateParam}`, maxPages) : axios.get(`${fhirServerUrl}/Observation?_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
-            ]);
-            resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.MedicationRequest = Array.isArray(medResult) ? medResult : (medResult.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.Observation = Array.isArray(obsResult) ? obsResult : (obsResult.data?.entry || []).map(e => e.resource).filter(Boolean);
-            console.log(`   Encounter(AMB): ${resources.Encounter.length}, MedicationRequest: ${resources.MedicationRequest.length}, Observation: ${resources.Observation.length}`);
+            // 門診品質指標: 針對不同指標使用不同查詢策略
+            
+            if (cqlFile.includes('_05_')) {
+                // 05 處方10種以上藥品率: 需要取得足夠的 MedicationRequest 來分析每位病人的藥品數
+                // 先取總數做分母, 再用多頁抓取盡量取得完整資料
+                const [encCountResp, medResult] = await Promise.all([
+                    axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_summary=count${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { total: 0 } })),
+                    fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=500${dateParam.replace(/date=/g, 'authoredon=')}`, 10)
+                ]);
+                resources._totalEncounters = encCountResp.data?.total || 0;
+                resources.MedicationRequest = Array.isArray(medResult) ? medResult : [];
+                resources.Encounter = [];
+                resources.Observation = [];
+                console.log(`   05: totalEncounters=${resources._totalEncounters}, MedicationRequest: ${resources.MedicationRequest.length}`);
+
+            } else if (cqlFile.includes('_06_')) {
+                // 06 小兒氣喘急診率: 搜尋氣喘 reasonCode 的 Encounter
+                const [encCountResp, asthmaResp] = await Promise.all([
+                    axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_summary=count${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { total: 0 } })),
+                    axios.get(`${fhirServerUrl}/Encounter?reason-code=J45.20,J45.21,J45.22,J45.30,J45.31,J45.40,J45.41,J45.50,J45.51,J45.901,J45.902,J45.909,J45.990,J45.998&_count=500${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources._totalEncounters = encCountResp.data?.total || 0;
+                resources.Encounter = (asthmaResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.MedicationRequest = [];
+                resources.Observation = [];
+                console.log(`   06: totalEncounters=${resources._totalEncounters}, asthmaEncounters: ${resources.Encounter.length}`);
+
+            } else {
+                // 04, 07, 08 等其他門診指標: 使用多頁抓取
+                const pageSize = Math.min(count, 500);
+                const maxPages = count > 500 ? Math.min(Math.ceil(count / 500), 10) : 1;
+                const usePaging = count > 500;
+                const [encResult, medResult, obsResult] = await Promise.all([
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${pageSize}${dateParam}`, maxPages) : axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${pageSize}${dateParam.replace(/date=/g, 'authoredon=')}`, maxPages) : axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/Observation?_count=${pageSize}${dateParam}`, maxPages) : axios.get(`${fhirServerUrl}/Observation?_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.MedicationRequest = Array.isArray(medResult) ? medResult : (medResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Observation = Array.isArray(obsResult) ? obsResult : (obsResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   Encounter(AMB): ${resources.Encounter.length}, MedicationRequest: ${resources.MedicationRequest.length}, Observation: ${resources.Observation.length}`);
+            }
 
         } else if (category === 'inpatient') {
             // 住院品質指標: Encounter(住院) + Encounter(急診)
@@ -742,7 +770,7 @@ function computeOutpatientIndicator(data, cqlFile) {
         numerator = Object.values(patientDrugs).filter(s => s.size >= 10).length;
     } else if (cqlFile.includes('_06_')) {
         // 小兒氣喘急診率: 氣喘相關急診/全部急診
-        denominator = encounters.length || totalPatients;
+        denominator = data._totalEncounters || encounters.length || totalPatients;
         numerator = encounters.filter(e => {
             const reasons = e.reasonCode || [];
             return reasons.some(r => {
@@ -751,6 +779,8 @@ function computeOutpatientIndicator(data, cqlFile) {
                 return text.includes('asthma') || text.includes('氣喘') || code.startsWith('J45');
             });
         }).length;
+        // 如果用了 _totalEncounters 做分母, encounters 已經是只有氣喘的
+        if (data._totalEncounters) numerator = encounters.length;
     } else if (cqlFile.includes('_07_')) {
         // 糖尿病HbA1c檢驗率: 有HbA1c檢驗的糖尿病患者/全部糖尿病患者
         const hba1cPatients = new Set();
