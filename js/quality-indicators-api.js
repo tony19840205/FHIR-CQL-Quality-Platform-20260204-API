@@ -190,6 +190,22 @@ function parseIndicatorResults(data, indicatorId) {
     const results = data.results || [];
     const metadata = data.executionMetadata || {};
 
+    // 直接計算結果 (bypass CQL Engine): 後端回傳聚合數據
+    if (results.length === 1 && results[0].totalPatients !== undefined) {
+        const r = results[0];
+        return {
+            cqlEngine: true, isRealData: r.isRealData !== false,
+            totalPatients: r.totalPatients || 0,
+            numerator: r.numerator || 0,
+            denominator: r.denominator || r.totalPatients || 0,
+            rate: r.rate || '0.00',
+            noData: r.noData || false,
+            metric: ind.metric,
+            rawResults: results,
+            fhirServerUrl: getFHIRServerUrl()
+        };
+    }
+
     // CQL Engine 回傳格式: results 是 per-patient 結果陣列
     let totalPatients = metadata.patientCount || results.length || 0;
     let numerator = 0;

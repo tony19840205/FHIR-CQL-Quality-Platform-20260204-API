@@ -142,7 +142,15 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
     console.log('📥 從 FHIR Server 取得資料...');
     let fhirData;
     if (isIndicator) {
-        fhirData = await fetchIndicatorFHIRData(fhirServerUrl, { startDate, endDate, maxRecords: maxRecords || 500 });
+        // 剖腹產指標(11-1~11-4): 使用既有 CQL Engine 路徑
+        const isCesarean = cqlFile && (cqlFile.includes('11_1') || cqlFile.includes('11_2') || cqlFile.includes('11_3') || cqlFile.includes('11_4'));
+        if (isCesarean) {
+            fhirData = await fetchIndicatorFHIRData(fhirServerUrl, { startDate, endDate, maxRecords: maxRecords || 500 });
+        } else {
+            // 其他品質指標: 直接從 FHIR 資料計算（避免 fetchIndicatorFHIRData 只查剖腹產資料導致 502）
+            const indicatorData = await fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, { startDate, endDate, maxRecords: maxRecords || 500 });
+            return computeQualityIndicatorResults(indicatorData, cqlFile);
+        }
     } else if (isPublicHealthCQL(cqlFile)) {
         // 國民健康指標: CQL 使用 Unfiltered context，cql-execution 不支援
         // 直接從 FHIR 資料計算統計結果（與 non-API 前端版本邏輯一致）
@@ -373,7 +381,485 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
     }
 }
 
-// ==================== 品質指標 FHIR 資料抓取 ====================
+// ==================== 品質指標 通用 FHIR 資料抓取（非剖腹產） ====================
+function getIndicatorCategory(cqlFile) {
+    if (!cqlFile) return 'unknown';
+    if (cqlFile.includes('_01_') || cqlFile.includes('_02_') || cqlFile.includes('_03_')) return 'medication';
+    if (cqlFile.includes('_04_') || cqlFile.includes('_05_') || cqlFile.includes('_06_') || cqlFile.includes('_07_') || cqlFile.includes('_08_')) return 'outpatient';
+    if (cqlFile.includes('_09_') || cqlFile.includes('_10_')) return 'inpatient';
+    if (cqlFile.includes('_12_') || cqlFile.includes('_13_') || cqlFile.includes('_14_') || cqlFile.includes('_15_') || cqlFile.includes('_16_') || cqlFile.includes('_19_')) return 'surgery';
+    if (cqlFile.includes('_17_') || cqlFile.includes('_18_')) return 'outcome';
+    return 'unknown';
+}
+
+async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {}) {
+    const { startDate, endDate, maxRecords = 500 } = options;
+    const category = getIndicatorCategory(cqlFile);
+    console.log(`📥 [QualityIndicator] 類型=${category}, CQL=${cqlFile}`);
+
+    const resources = {};
+    const count = Math.min(maxRecords, 500);
+
+    // 日期參數
+    let dateParam = '';
+    if (startDate && endDate) dateParam = `&date=ge${startDate}&date=le${endDate}`;
+    else if (startDate) dateParam = `&date=ge${startDate}`;
+    else if (endDate) dateParam = `&date=le${endDate}`;
+
+    try {
+        if (category === 'medication') {
+            // 用藥安全指標: MedicationRequest + Encounter(門診)
+            const [medResp, encResp] = await Promise.all([
+                axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+            ]);
+            resources.MedicationRequest = (medResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            console.log(`   MedicationRequest: ${resources.MedicationRequest.length}, Encounter(AMB): ${resources.Encounter.length}`);
+
+        } else if (category === 'outpatient') {
+            // 門診品質指標: Encounter(門診) + MedicationRequest + Observation
+            const [encResp, medResp, obsResp] = await Promise.all([
+                axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/Observation?_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+            ]);
+            resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.MedicationRequest = (medResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Observation = (obsResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            console.log(`   Encounter(AMB): ${resources.Encounter.length}, MedicationRequest: ${resources.MedicationRequest.length}, Observation: ${resources.Observation.length}`);
+
+        } else if (category === 'inpatient') {
+            // 住院品質指標: Encounter(住院) + Encounter(急診)
+            const [impResp, emerResp] = await Promise.all([
+                axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+            ]);
+            resources.EncounterIMP = (impResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.EncounterEMER = (emerResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            console.log(`   Encounter(IMP): ${resources.EncounterIMP.length}, Encounter(EMER): ${resources.EncounterEMER.length}`);
+
+        } else if (category === 'surgery') {
+            // 手術品質指標: Procedure + Encounter(住院) + MedicationAdministration
+            const [procResp, encResp, medAdmResp] = await Promise.all([
+                axios.get(`${fhirServerUrl}/Procedure?_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/MedicationAdministration?_count=${count}${dateParam.replace(/date=/g, 'effective-time=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+            ]);
+            resources.Procedure = (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.MedicationAdministration = (medAdmResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            console.log(`   Procedure: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}, MedicationAdmin: ${resources.MedicationAdministration.length}`);
+
+        } else if (category === 'outcome') {
+            // 結果品質指標: Encounter(住院) + Condition + Patient
+            const [encResp, condResp, patResp] = await Promise.all([
+                axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/Condition?_count=${count}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/Patient?_count=${count}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+            ]);
+            resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Condition = (condResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Patient = (patResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            console.log(`   Encounter(IMP): ${resources.Encounter.length}, Condition: ${resources.Condition.length}, Patient: ${resources.Patient.length}`);
+
+        } else {
+            // 未知類別: 抓基本資源
+            const [encResp, patResp] = await Promise.all([
+                axios.get(`${fhirServerUrl}/Encounter?_count=${count}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/Patient?_count=${count}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+            ]);
+            resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Patient = (patResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+        }
+
+        resources._category = category;
+        return resources;
+
+    } catch (error) {
+        console.error(`❌ [QualityIndicator] FHIR 資料抓取失敗:`, error.message);
+        return { _category: category };
+    }
+}
+
+// ==================== 品質指標 直接計算結果（非剖腹產） ====================
+function computeQualityIndicatorResults(data, cqlFile) {
+    const category = data._category || getIndicatorCategory(cqlFile);
+    console.log(`📊 [QualityIndicator] 計算結果, 類型=${category}, CQL=${cqlFile}`);
+
+    let result;
+    try {
+        if (category === 'medication') result = computeMedicationIndicator(data, cqlFile);
+        else if (category === 'outpatient') result = computeOutpatientIndicator(data, cqlFile);
+        else if (category === 'inpatient') result = computeInpatientIndicator(data, cqlFile);
+        else if (category === 'surgery') result = computeSurgeryIndicator(data, cqlFile);
+        else if (category === 'outcome') result = computeOutcomeIndicator(data, cqlFile);
+        else result = { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+    } catch (err) {
+        console.error(`❌ [QualityIndicator] 計算錯誤:`, err.message);
+        result = { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+    }
+
+    result.isRealData = true;
+    result._type = 'indicator';
+
+    return { _data: [result], _regionStats: { regions: [], districts: [] } };
+}
+
+// --- 用藥安全指標計算 ---
+function computeMedicationIndicator(data, cqlFile) {
+    const meds = data.MedicationRequest || [];
+    const encounters = data.Encounter || [];
+    // 取得所有病人 ID
+    const patientIds = new Set();
+    encounters.forEach(e => {
+        const ref = e.subject?.reference || '';
+        const pid = ref.split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
+    meds.forEach(m => {
+        const ref = m.subject?.reference || '';
+        const pid = ref.split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
+    const totalPatients = patientIds.size || meds.length || encounters.length;
+
+    if (totalPatients === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+
+    let numerator = 0, denominator = totalPatients;
+
+    if (cqlFile.includes('_01_')) {
+        // 門診注射劑使用率: 含注射路徑的處方/全部門診處方
+        denominator = meds.length || totalPatients;
+        numerator = meds.filter(m => {
+            const route = (m.dosageInstruction?.[0]?.route?.coding?.[0]?.code || '').toLowerCase();
+            const routeText = (m.dosageInstruction?.[0]?.route?.text || '').toLowerCase();
+            return route.includes('inject') || routeText.includes('inject') || routeText.includes('注射')
+                || route === 'IV' || route === 'IM' || routeText.includes('iv') || routeText.includes('im');
+        }).length;
+    } else if (cqlFile.includes('_02_')) {
+        // 門診抗生素使用率: 含抗生素的處方/全部門診處方
+        denominator = meds.length || totalPatients;
+        const antibioticKeywords = ['cillin', 'mycin', 'oxacin', 'cef', 'sulfa', 'metro', 'vanco', '抗生素', 'antibiotic', 'azithro', 'amoxi', 'doxy', 'cipro', 'levo'];
+        numerator = meds.filter(m => {
+            const medText = (m.medicationCodeableConcept?.text || '').toLowerCase();
+            const medCode = (m.medicationCodeableConcept?.coding?.[0]?.display || '').toLowerCase();
+            return antibioticKeywords.some(kw => medText.includes(kw) || medCode.includes(kw));
+        }).length;
+    } else if (cqlFile.includes('_03_')) {
+        // 同院/跨院藥品重疊: 同類藥品有日期重疊的處方數/全部該類處方
+        denominator = meds.length || totalPatients;
+        // 簡化計算: 同一病人同類藥品超過1張處方 = 可能重疊
+        const patientMedCount = {};
+        meds.forEach(m => {
+            const ref = m.subject?.reference || '';
+            const pid = ref.split('/').pop();
+            if (pid) patientMedCount[pid] = (patientMedCount[pid] || 0) + 1;
+        });
+        numerator = Object.values(patientMedCount).filter(c => c > 1).length;
+        denominator = Object.keys(patientMedCount).length || totalPatients;
+    }
+
+    const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
+    return { totalPatients, numerator, denominator, rate };
+}
+
+// --- 門診品質指標計算 ---
+function computeOutpatientIndicator(data, cqlFile) {
+    const encounters = data.Encounter || [];
+    const meds = data.MedicationRequest || [];
+    const obs = data.Observation || [];
+
+    const patientIds = new Set();
+    encounters.forEach(e => {
+        const pid = (e.subject?.reference || '').split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
+    const totalPatients = patientIds.size || encounters.length;
+    if (totalPatients === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+
+    let numerator = 0, denominator = totalPatients;
+
+    if (cqlFile.includes('_04_')) {
+        // 慢性病連處籤使用率: 有 refill 的處方/全部處方
+        denominator = meds.length || totalPatients;
+        numerator = meds.filter(m => m.dispenseRequest?.numberOfRepeatsAllowed > 0).length;
+    } else if (cqlFile.includes('_05_')) {
+        // 處方10種以上藥品率: 每位病人的藥品數
+        const patientDrugs = {};
+        meds.forEach(m => {
+            const pid = (m.subject?.reference || '').split('/').pop();
+            const drug = m.medicationCodeableConcept?.coding?.[0]?.code || m.medicationCodeableConcept?.text || 'unknown';
+            if (pid) {
+                if (!patientDrugs[pid]) patientDrugs[pid] = new Set();
+                patientDrugs[pid].add(drug);
+            }
+        });
+        denominator = Object.keys(patientDrugs).length || totalPatients;
+        numerator = Object.values(patientDrugs).filter(s => s.size >= 10).length;
+    } else if (cqlFile.includes('_06_')) {
+        // 小兒氣喘急診率: 氣喘相關急診/全部急診
+        denominator = encounters.length || totalPatients;
+        numerator = encounters.filter(e => {
+            const reasons = e.reasonCode || [];
+            return reasons.some(r => {
+                const text = (r.text || '').toLowerCase();
+                const code = r.coding?.[0]?.code || '';
+                return text.includes('asthma') || text.includes('氣喘') || code.startsWith('J45');
+            });
+        }).length;
+    } else if (cqlFile.includes('_07_')) {
+        // 糖尿病HbA1c檢驗率: 有HbA1c檢驗的糖尿病患者/全部糖尿病患者
+        const hba1cPatients = new Set();
+        obs.forEach(o => {
+            const code = o.code?.coding?.[0]?.code || '';
+            const text = (o.code?.text || '').toLowerCase();
+            if (code === '4548-4' || code === '17856-6' || text.includes('hba1c') || text.includes('糖化血色素')) {
+                const pid = (o.subject?.reference || '').split('/').pop();
+                if (pid) hba1cPatients.add(pid);
+            }
+        });
+        denominator = totalPatients;
+        numerator = hba1cPatients.size;
+    } else if (cqlFile.includes('_08_')) {
+        // 同日同院同疾病再就診率: 同一病人同日多次就診
+        const patientDateVisits = {};
+        encounters.forEach(e => {
+            const pid = (e.subject?.reference || '').split('/').pop();
+            const date = (e.period?.start || '').substring(0, 10);
+            if (pid && date) {
+                const key = `${pid}_${date}`;
+                patientDateVisits[key] = (patientDateVisits[key] || 0) + 1;
+            }
+        });
+        denominator = encounters.length || totalPatients;
+        numerator = Object.values(patientDateVisits).filter(c => c > 1).reduce((sum, c) => sum + c, 0);
+    }
+
+    const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
+    return { totalPatients, numerator, denominator, rate };
+}
+
+// --- 住院品質指標計算 ---
+function computeInpatientIndicator(data, cqlFile) {
+    const impEnc = data.EncounterIMP || [];
+    const emerEnc = data.EncounterEMER || [];
+
+    const patientIds = new Set();
+    impEnc.forEach(e => {
+        const pid = (e.subject?.reference || '').split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
+    const totalPatients = patientIds.size || impEnc.length;
+    if (totalPatients === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+
+    let numerator = 0, denominator = impEnc.length || totalPatients;
+
+    if (cqlFile.includes('_09_')) {
+        // 14天內非計畫再入院率
+        const patientDischarges = {};
+        impEnc.forEach(e => {
+            const pid = (e.subject?.reference || '').split('/').pop();
+            const endDate = e.period?.end;
+            if (pid && endDate) {
+                if (!patientDischarges[pid]) patientDischarges[pid] = [];
+                patientDischarges[pid].push(new Date(endDate));
+            }
+        });
+        // 檢查同一病人的入院日期是否在前次出院14天內
+        Object.values(patientDischarges).forEach(dates => {
+            dates.sort((a, b) => a - b);
+            for (let i = 1; i < dates.length; i++) {
+                const daysDiff = (dates[i] - dates[i - 1]) / (1000 * 60 * 60 * 24);
+                if (daysDiff <= 14) numerator++;
+            }
+        });
+    } else if (cqlFile.includes('_10_')) {
+        // 出院後3天內急診率
+        const discharges = [];
+        impEnc.forEach(e => {
+            const pid = (e.subject?.reference || '').split('/').pop();
+            const endDate = e.period?.end;
+            if (pid && endDate) discharges.push({ pid, date: new Date(endDate) });
+        });
+        const emerVisits = [];
+        emerEnc.forEach(e => {
+            const pid = (e.subject?.reference || '').split('/').pop();
+            const startDate = e.period?.start;
+            if (pid && startDate) emerVisits.push({ pid, date: new Date(startDate) });
+        });
+        discharges.forEach(d => {
+            const hasEmer = emerVisits.some(ev =>
+                ev.pid === d.pid && ev.date >= d.date && (ev.date - d.date) / (1000 * 60 * 60 * 24) <= 3
+            );
+            if (hasEmer) numerator++;
+        });
+    }
+
+    const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
+    return { totalPatients, numerator, denominator, rate };
+}
+
+// --- 手術品質指標計算 ---
+function computeSurgeryIndicator(data, cqlFile) {
+    const procedures = data.Procedure || [];
+    const encounters = data.Encounter || [];
+    const medAdmin = data.MedicationAdministration || [];
+
+    const patientIds = new Set();
+    procedures.forEach(p => {
+        const pid = (p.subject?.reference || '').split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
+    encounters.forEach(e => {
+        const pid = (e.subject?.reference || '').split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
+    const totalPatients = patientIds.size || procedures.length || encounters.length;
+    if (totalPatients === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+
+    let numerator = 0, denominator = procedures.length || totalPatients;
+
+    if (cqlFile.includes('_12_')) {
+        // 清淨手術抗生素超3天率: 有手術的病人中, 抗生素使用超3天的比例
+        const surgeryPatients = new Set();
+        procedures.forEach(p => {
+            const pid = (p.subject?.reference || '').split('/').pop();
+            if (pid) surgeryPatients.add(pid);
+        });
+        denominator = surgeryPatients.size || totalPatients;
+        // 計算每位手術病人的抗生素使用天數
+        const patientAbDays = {};
+        medAdmin.forEach(ma => {
+            const pid = (ma.subject?.reference || '').split('/').pop();
+            const date = (ma.effectiveDateTime || ma.effectivePeriod?.start || '').substring(0, 10);
+            if (pid && surgeryPatients.has(pid) && date) {
+                if (!patientAbDays[pid]) patientAbDays[pid] = new Set();
+                patientAbDays[pid].add(date);
+            }
+        });
+        numerator = Object.values(patientAbDays).filter(days => days.size > 3).length;
+    } else if (cqlFile.includes('_13_')) {
+        // 體外震波碎石平均利用次數
+        const eswlPatients = {};
+        procedures.forEach(p => {
+            const pid = (p.subject?.reference || '').split('/').pop();
+            const codeText = (p.code?.text || '').toLowerCase();
+            const codeCode = p.code?.coding?.[0]?.code || '';
+            if (codeText.includes('lithotripsy') || codeText.includes('碎石') || codeCode.includes('ESWL')) {
+                eswlPatients[pid] = (eswlPatients[pid] || 0) + 1;
+            }
+        });
+        const counts = Object.values(eswlPatients);
+        const avgTimes = counts.length > 0 ? (counts.reduce((s, c) => s + c, 0) / counts.length).toFixed(2) : '0.00';
+        return { totalPatients, numerator: counts.length, denominator: totalPatients, rate: avgTimes };
+    } else if (cqlFile.includes('_14_') || cqlFile.includes('_15_') || cqlFile.includes('_16_') || cqlFile.includes('_19_')) {
+        // 術後再入院/感染率: 手術後有併發症的比例
+        denominator = procedures.length || totalPatients;
+        // 簡化: 檢查手術病人是否在短期內有再次住院
+        const surgeryPatientDates = {};
+        procedures.forEach(p => {
+            const pid = (p.subject?.reference || '').split('/').pop();
+            const date = p.performedDateTime || p.performedPeriod?.end || '';
+            if (pid && date) {
+                if (!surgeryPatientDates[pid]) surgeryPatientDates[pid] = [];
+                surgeryPatientDates[pid].push(new Date(date));
+            }
+        });
+        const encDates = {};
+        encounters.forEach(e => {
+            const pid = (e.subject?.reference || '').split('/').pop();
+            const start = e.period?.start;
+            if (pid && start) {
+                if (!encDates[pid]) encDates[pid] = [];
+                encDates[pid].push(new Date(start));
+            }
+        });
+        Object.entries(surgeryPatientDates).forEach(([pid, sDates]) => {
+            const eDates = encDates[pid] || [];
+            const threshold = cqlFile.includes('_15_') ? 90 : 14;
+            sDates.forEach(sd => {
+                const hasReadmission = eDates.some(ed => ed > sd && (ed - sd) / (1000 * 60 * 60 * 24) <= threshold);
+                if (hasReadmission) numerator++;
+            });
+        });
+    }
+
+    const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
+    return { totalPatients, numerator, denominator, rate };
+}
+
+// --- 結果品質指標計算 ---
+function computeOutcomeIndicator(data, cqlFile) {
+    const encounters = data.Encounter || [];
+    const conditions = data.Condition || [];
+    const patients = data.Patient || [];
+
+    const patientIds = new Set();
+    encounters.forEach(e => {
+        const pid = (e.subject?.reference || '').split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
+    const totalPatients = patientIds.size || encounters.length;
+    if (totalPatients === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+
+    let numerator = 0, denominator = totalPatients;
+
+    if (cqlFile.includes('_17_')) {
+        // 急性心肌梗塞死亡率
+        const amiPatients = new Set();
+        conditions.forEach(c => {
+            const code = c.code?.coding?.[0]?.code || '';
+            const text = (c.code?.text || '').toLowerCase();
+            if (code.startsWith('I21') || code.startsWith('I22') || text.includes('myocardial infarction') || text.includes('心肌梗塞')) {
+                const pid = (c.subject?.reference || '').split('/').pop();
+                if (pid) amiPatients.add(pid);
+            }
+        });
+        denominator = amiPatients.size || totalPatients;
+        // 檢查死亡
+        const deceasedPatients = new Set();
+        patients.forEach(p => {
+            if (p.deceasedBoolean === true || p.deceasedDateTime) deceasedPatients.add(p.id);
+        });
+        encounters.forEach(e => {
+            if (e.hospitalization?.dischargeDisposition?.coding?.[0]?.code === 'exp') {
+                const pid = (e.subject?.reference || '').split('/').pop();
+                if (pid) deceasedPatients.add(pid);
+            }
+        });
+        numerator = [...amiPatients].filter(pid => deceasedPatients.has(pid)).length;
+    } else if (cqlFile.includes('_18_')) {
+        // 失智症安寧療護利用率
+        const dementiaPatients = new Set();
+        conditions.forEach(c => {
+            const code = c.code?.coding?.[0]?.code || '';
+            const text = (c.code?.text || '').toLowerCase();
+            if (code.startsWith('F00') || code.startsWith('F01') || code.startsWith('F02') || code.startsWith('F03') || code.startsWith('G30')
+                || text.includes('dementia') || text.includes('alzheimer') || text.includes('失智')) {
+                const pid = (c.subject?.reference || '').split('/').pop();
+                if (pid) dementiaPatients.add(pid);
+            }
+        });
+        denominator = dementiaPatients.size || totalPatients;
+        // 檢查安寧療護 (hospice) encounter
+        const hospicePatients = new Set();
+        encounters.forEach(e => {
+            const type = (e.type?.[0]?.text || '').toLowerCase();
+            const code = e.type?.[0]?.coding?.[0]?.code || '';
+            if (type.includes('hospice') || type.includes('palliative') || type.includes('安寧') || code.includes('hospice')) {
+                const pid = (e.subject?.reference || '').split('/').pop();
+                if (pid) hospicePatients.add(pid);
+            }
+        });
+        numerator = [...dementiaPatients].filter(pid => hospicePatients.has(pid)).length;
+    }
+
+    const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
+    return { totalPatients, numerator, denominator, rate };
+}
+
+// ==================== 品質指標 FHIR 資料抓取（剖腹產專用） ====================
 async function fetchIndicatorFHIRData(fhirServerUrl, options = {}) {
     const { maxRecords = 500 } = options;
     console.log('📥 [Indicator] 抓取 Encounter + Procedure + Patient 資料...');
