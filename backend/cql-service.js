@@ -506,6 +506,35 @@ function computeQualityIndicatorResults(data, cqlFile) {
     return { _data: [result], _regionStats: { regions: [], districts: [] } };
 }
 
+// --- 藥品類別關鍵字對照 (03-1 ~ 03-16) ---
+function getDrugCategoryKeywords(cqlFile) {
+    // 03-1/03-9: 降血壓 Antihypertensive (ATC: C02/C03/C07/C08/C09)
+    if (cqlFile.includes('_03_1_') || cqlFile.includes('_03_9_'))
+        return ['antihypertensive', '降血壓', 'amlodipine', 'valsartan', 'losartan', 'enalapril', 'lisinopril', 'nifedipine', 'atenolol', 'metoprolol', 'hydrochlorothiazide', 'c02', 'c03', 'c07', 'c08', 'c09'];
+    // 03-2/03-10: 降血脂 Lipid-lowering (ATC: C10)
+    if (cqlFile.includes('_03_2_') || cqlFile.includes('_03_10_'))
+        return ['lipid', '降血脂', 'statin', 'atorvastatin', 'rosuvastatin', 'simvastatin', 'pravastatin', 'fluvastatin', 'fenofibrate', 'gemfibrozil', 'ezetimibe', 'c10'];
+    // 03-3/03-11: 降血糖 Antidiabetic (ATC: A10)
+    if (cqlFile.includes('_03_3_') || cqlFile.includes('_03_11_'))
+        return ['antidiabetic', '降血糖', 'metformin', 'glimepiride', 'gliclazide', 'glipizide', 'insulin', 'sitagliptin', 'empagliflozin', 'dapagliflozin', 'pioglitazone', 'a10'];
+    // 03-4/03-12: 抗思覺失調 Antipsychotic (ATC: N05A)
+    if (cqlFile.includes('_03_4_') || cqlFile.includes('_03_12_'))
+        return ['antipsychotic', '抗思覺失調', 'risperidone', 'olanzapine', 'quetiapine', 'aripiprazole', 'haloperidol', 'clozapine', 'paliperidone', 'ziprasidone', 'n05a'];
+    // 03-5/03-13: 抗憂鬱 Antidepressant (ATC: N06A)
+    if (cqlFile.includes('_03_5_') || cqlFile.includes('_03_13_'))
+        return ['antidepressant', '抗憂鬱', 'fluoxetine', 'sertraline', 'paroxetine', 'escitalopram', 'citalopram', 'venlafaxine', 'duloxetine', 'mirtazapine', 'bupropion', 'n06a'];
+    // 03-6/03-14: 安眠鎮靜 Sedative/Hypnotic (ATC: N05B/N05C)
+    if (cqlFile.includes('_03_6_') || cqlFile.includes('_03_14_'))
+        return ['sedative', 'hypnotic', '安眠', '鎮靜', 'zolpidem', 'zopiclone', 'eszopiclone', 'diazepam', 'lorazepam', 'alprazolam', 'clonazepam', 'triazolam', 'midazolam', 'n05b', 'n05c'];
+    // 03-7/03-15: 抗血栓 Antithrombotic (ATC: B01)
+    if (cqlFile.includes('_03_7_') || cqlFile.includes('_03_15_'))
+        return ['antithrombotic', 'anticoagulant', 'antiplatelet', '抗血栓', 'warfarin', 'heparin', 'enoxaparin', 'rivaroxaban', 'apixaban', 'dabigatran', 'clopidogrel', 'aspirin', 'ticagrelor', 'b01'];
+    // 03-8/03-16: 前列腺 Prostate (ATC: G04C)
+    if (cqlFile.includes('_03_8_') || cqlFile.includes('_03_16_'))
+        return ['prostate', '前列腺', 'tamsulosin', 'alfuzosin', 'doxazosin', 'finasteride', 'dutasteride', 'silodosin', 'g04c'];
+    return [];
+}
+
 // --- 用藥安全指標計算 ---
 function computeMedicationIndicator(data, cqlFile) {
     const meds = data.MedicationRequest || [];
@@ -544,14 +573,25 @@ function computeMedicationIndicator(data, cqlFile) {
         numerator = meds.filter(m => {
             const medText = (m.medicationCodeableConcept?.text || '').toLowerCase();
             const medCode = (m.medicationCodeableConcept?.coding?.[0]?.display || '').toLowerCase();
-            return antibioticKeywords.some(kw => medText.includes(kw) || medCode.includes(kw));
+            const medCodeVal = (m.medicationCodeableConcept?.coding?.[0]?.code || '').toLowerCase();
+            return antibioticKeywords.some(kw => medText.includes(kw) || medCode.includes(kw) || medCodeVal.includes(kw));
         }).length;
     } else if (cqlFile.includes('_03_')) {
-        // 同院/跨院藥品重疊: 同類藥品有日期重疊的處方數/全部該類處方
-        denominator = meds.length || totalPatients;
-        // 簡化計算: 同一病人同類藥品超過1張處方 = 可能重疊
+        // 藥品重疊指標: 依藥品類別篩選，再計算同一病人重複用藥
+        const drugCategoryKeywords = getDrugCategoryKeywords(cqlFile);
+        const categoryMeds = drugCategoryKeywords.length > 0
+            ? meds.filter(m => {
+                const medText = (m.medicationCodeableConcept?.text || '').toLowerCase();
+                const medCode = (m.medicationCodeableConcept?.coding?.[0]?.display || '').toLowerCase();
+                const medCodeVal = (m.medicationCodeableConcept?.coding?.[0]?.code || '').toLowerCase();
+                const atc = (m.medicationCodeableConcept?.coding?.find(c => c.system?.includes('atc'))?.code || '').toLowerCase();
+                return drugCategoryKeywords.some(kw => medText.includes(kw) || medCode.includes(kw) || medCodeVal.includes(kw) || atc.includes(kw));
+            })
+            : meds;
+
+        // 計算同一病人該類藥品有多張處方（日期重疊 = 潛在重複用藥）
         const patientMedCount = {};
-        meds.forEach(m => {
+        categoryMeds.forEach(m => {
             const ref = m.subject?.reference || '';
             const pid = ref.split('/').pop();
             if (pid) patientMedCount[pid] = (patientMedCount[pid] || 0) + 1;
