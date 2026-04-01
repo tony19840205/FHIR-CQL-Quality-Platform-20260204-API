@@ -532,27 +532,35 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             console.log(`   Procedure: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}, MedicationAdmin: ${resources.MedicationAdministration.length}`);
 
         } else if (category === 'outcome') {
-            // 結果品質指標: Encounter(住院) + Condition + Patient + Procedure(for indicator 18)
-            const fetchList = [
-                axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                axios.get(`${fhirServerUrl}/Condition?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                axios.get(`${fhirServerUrl}/Patient?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
-            ];
-            // 指標18需要安寧療護 Procedure
             if (cqlFile.includes('_18_')) {
+                // 指標18: 失智症安寧療護 - 用targeted searches
+                const dementiaCodes = 'F00,F01,F02,F03,G30,G30.0,G30.1,G30.8,G30.9,G31,F1027,F1097,F1327,F1397,F1827,F1897,F1927,F1997';
                 const hospiceCodes = '05601K,05602A,05603B,P4401B,P4402B,P4403B,05312C,05316C,05323C,05327C,05336C,05341C,05362C,05374C';
-                fetchList.push(
-                    axios.get(`${fhirServerUrl}/Procedure?code=${hospiceCodes}&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
-                );
+                const [condResp, procResp, encResp] = await Promise.all([
+                    axios.get(`${fhirServerUrl}/Condition?code=${dementiaCodes}&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Procedure?code=${hospiceCodes}&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.Condition = (condResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Procedure = (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Patient = [];
+                // 存入targeted data供計算使用
+                resources._dementiaConditions = resources.Condition;
+                resources._hospiceProcedures = resources.Procedure;
+                console.log(`   [Indicator18] Dementia Conditions: ${resources.Condition.length}, Hospice Procedures: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}`);
+            } else {
+                // 其他結果品質指標: Encounter(住院) + Condition + Patient
+                const [encResp, condResp, patResp] = await Promise.all([
+                    axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Condition?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Patient?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Condition = (condResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Patient = (patResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   Encounter(IMP): ${resources.Encounter.length}, Condition: ${resources.Condition.length}, Patient: ${resources.Patient.length}`);
             }
-            const results = await Promise.all(fetchList);
-            resources.Encounter = (results[0].data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.Condition = (results[1].data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.Patient = (results[2].data?.entry || []).map(e => e.resource).filter(Boolean);
-            if (results[3]) {
-                resources.Procedure = (results[3].data?.entry || []).map(e => e.resource).filter(Boolean);
-            }
-            console.log(`   Encounter(IMP): ${resources.Encounter.length}, Condition: ${resources.Condition.length}, Patient: ${resources.Patient.length}${resources.Procedure ? ', Procedure(hospice): ' + resources.Procedure.length : ''}`);
 
         } else {
             // 未知類別: 抓基本資源
@@ -988,8 +996,13 @@ function computeOutcomeIndicator(data, cqlFile) {
         const pid = (e.subject?.reference || '').split('/').pop();
         if (pid) patientIds.add(pid);
     });
+    // For indicator 18, also count patients from conditions
+    conditions.forEach(c => {
+        const pid = (c.subject?.reference || '').split('/').pop();
+        if (pid) patientIds.add(pid);
+    });
     const totalPatients = patientIds.size || encounters.length;
-    if (totalPatients === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+    if (totalPatients === 0 && conditions.length === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
 
     let numerator = 0, denominator = totalPatients;
 
