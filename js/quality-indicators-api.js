@@ -121,15 +121,12 @@ async function executeQuery(indicatorId) {
     const maxRecords = maxRecordsEl ? parseInt(maxRecordsEl.value) : 200;
 
     // 找到查詢按鈕並變成 loading 狀態
-    const card = statusEl ? statusEl.closest('.overview-card') : null;
-    const btn = card ? card.querySelector('.btn-card-mini') : null;
+    const card = statusEl ? statusEl.closest('.overview-card') : document.querySelector(`[onclick*="'${indicatorId}'"]`)?.closest('.overview-card');
+    const btn = card ? card.querySelector('.btn-card-mini') : document.querySelector(`button[onclick*="executeQuery('${indicatorId}')"]`);
     const btnOrigHTML = btn ? btn.innerHTML : '';
     if (btn) {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CQL Engine 執行中...';
-        btn.style.background = 'linear-gradient(135deg, #6366f1, #818cf8)';
-        btn.style.color = '#fff';
-        btn.style.pointerEvents = 'none';
-        btn.style.opacity = '0.85';
+        btn.style.cssText = 'background:linear-gradient(135deg,#6366f1,#818cf8)!important;color:#fff!important;pointer-events:none;opacity:0.9;';
     }
     if (statusEl) statusEl.innerHTML = '<span style="color:#2563eb;"><i class="fas fa-spinner fa-spin"></i> 查詢中...</span>';
     if (rateEl) rateEl.textContent = '...';
@@ -149,10 +146,8 @@ async function executeQuery(indicatorId) {
 
         if (btn) {
             btn.innerHTML = '<i class="fas fa-check-circle"></i> 查詢完成';
-            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            btn.style.pointerEvents = '';
-            btn.style.opacity = '';
-            setTimeout(() => { btn.innerHTML = btnOrigHTML; btn.style.background = ''; btn.style.color = ''; }, 3000);
+            btn.style.cssText = 'background:linear-gradient(135deg,#10b981,#059669)!important;color:#fff!important;';
+            setTimeout(() => { btn.innerHTML = btnOrigHTML; btn.style.cssText = ''; }, 3000);
         }
         if (statusEl) {
             statusEl.innerHTML = '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> 完成</span>';
@@ -166,10 +161,8 @@ async function executeQuery(indicatorId) {
         console.error(`指標 ${indicatorId} 查詢失敗:`, error);
         if (btn) {
             btn.innerHTML = '<i class="fas fa-times-circle"></i> 查詢失敗';
-            btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-            btn.style.pointerEvents = '';
-            btn.style.opacity = '';
-            setTimeout(() => { btn.innerHTML = btnOrigHTML; btn.style.background = ''; btn.style.color = ''; }, 5000);
+            btn.style.cssText = 'background:linear-gradient(135deg,#ef4444,#dc2626)!important;color:#fff!important;';
+            setTimeout(() => { btn.innerHTML = btnOrigHTML; btn.style.cssText = ''; }, 5000);
         }
         if (statusEl) statusEl.innerHTML = `<span style="color:#ef4444;"><i class="fas fa-times-circle"></i> ${error.message || '失敗'}</span>`;
         if (rateEl) rateEl.textContent = '--';

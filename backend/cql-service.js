@@ -392,6 +392,29 @@ function getIndicatorCategory(cqlFile) {
     return 'unknown';
 }
 
+// --- 多頁抓取 FHIR Bundle (用於 01/02 需要全部 MedicationRequest) ---
+async function fetchAllPages(url, maxPages = 3) {
+    const allResources = [];
+    let currentUrl = url;
+    let page = 0;
+    while (currentUrl && page < maxPages) {
+        try {
+            const resp = await axios.get(currentUrl, { timeout: 25000 });
+            const entries = resp.data?.entry || [];
+            entries.forEach(e => { if (e.resource) allResources.push(e.resource); });
+            console.log(`   📄 Page ${page + 1}: ${entries.length} entries (total: ${allResources.length})`);
+            // 找下一頁 link
+            const nextLink = (resp.data?.link || []).find(l => l.relation === 'next');
+            currentUrl = nextLink ? nextLink.url : null;
+            page++;
+        } catch (err) {
+            console.error(`   ❌ Page ${page + 1} failed:`, err.message);
+            break;
+        }
+    }
+    return allResources;
+}
+
 async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {}) {
     const { startDate, endDate, maxRecords = 500 } = options;
     const category = getIndicatorCategory(cqlFile);
@@ -409,28 +432,32 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
     try {
         if (category === 'medication') {
             // 用藥安全指標: MedicationRequest + Encounter(門診)
-            // 03-x 藥品重疊: 用 code:text 做精準藥品搜尋（FHIR 伺服器有 1300+ 筆，通用 _count 抓不到）
-            let medQuery = `${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
+            // 03-x 藥品重疊: 用 code:text 做精準藥品搜尋
+            let medPromise;
             if (cqlFile.includes('_03_')) {
                 const drugSearchTerms = getDrugSearchTerms(cqlFile);
                 if (drugSearchTerms) {
-                    medQuery = `${fhirServerUrl}/MedicationRequest?code:text=${encodeURIComponent(drugSearchTerms)}&_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
+                    const medQuery = `${fhirServerUrl}/MedicationRequest?code:text=${encodeURIComponent(drugSearchTerms)}&_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
                     console.log(`   🔍 藥品搜尋: code:text=${drugSearchTerms}`);
+                    medPromise = axios.get(medQuery, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }));
+                } else {
+                    medPromise = axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }));
                 }
-            } else if (cqlFile.includes('_01_')) {
-                // 注射劑: 搜尋含 injection/注射 的藥品
-                medQuery = `${fhirServerUrl}/MedicationRequest?code:text=injection,inject,%E6%B3%A8%E5%B0%84&_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
-                console.log(`   🔍 注射劑搜尋`);
-            } else if (cqlFile.includes('_02_')) {
-                // 抗生素: 搜尋抗生素藥品
-                medQuery = `${fhirServerUrl}/MedicationRequest?code:text=cillin,mycin,oxacin,cef,azithro,amoxi,doxy,cipro,levo,vanco,%E6%8A%97%E7%94%9F%E7%B4%A0&_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
-                console.log(`   🔍 抗生素搜尋`);
+            } else {
+                // 01 注射 / 02 抗生素: 需要抓全部 MedicationRequest 再本地過濾
+                // 用多頁抓取確保能拿到所有資料
+                medPromise = fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=500${dateParam.replace(/date=/g, 'authoredon=')}`, 3);
             }
-            const [medResp, encResp] = await Promise.all([
-                axios.get(medQuery, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+            const [medResult, encResp] = await Promise.all([
+                medPromise,
                 axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
             ]);
-            resources.MedicationRequest = (medResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            // medResult 可能是 axios response 或已合併的陣列
+            if (Array.isArray(medResult)) {
+                resources.MedicationRequest = medResult;
+            } else {
+                resources.MedicationRequest = (medResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+            }
             resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
             console.log(`   MedicationRequest: ${resources.MedicationRequest.length}, Encounter(AMB): ${resources.Encounter.length}`);
 
@@ -596,14 +623,29 @@ function computeMedicationIndicator(data, cqlFile) {
     let numerator = 0, denominator = totalPatients;
 
     if (cqlFile.includes('_01_')) {
-        // 門診注射劑使用率: 已經用 code:text 搜尋注射藥品，所有回傳都是注射劑
-        // numerator = 注射藥品數, denominator = 門診 Encounter 數
+        // 門診注射劑使用率: 含注射路徑或藥名含 injection/注射 的處方
         denominator = encounters.length || totalPatients;
-        numerator = meds.length;
+        numerator = meds.filter(m => {
+            const route = (m.dosageInstruction?.[0]?.route?.coding?.[0]?.code || '').toLowerCase();
+            const routeText = (m.dosageInstruction?.[0]?.route?.text || '').toLowerCase();
+            const medText = (m.medicationCodeableConcept?.text || '').toLowerCase();
+            const medDisplay = (m.medicationCodeableConcept?.coding?.[0]?.display || '').toLowerCase();
+            const isInjectionRoute = route.includes('inject') || routeText.includes('inject') || routeText.includes('注射')
+                || route === 'iv' || route === 'im' || routeText.includes('iv') || routeText.includes('im');
+            const isInjectionName = medText.includes('injection') || medText.includes('inj') || medText.includes('注射')
+                || medDisplay.includes('injection') || medDisplay.includes('inj') || medDisplay.includes('注射');
+            return isInjectionRoute || isInjectionName;
+        }).length;
     } else if (cqlFile.includes('_02_')) {
-        // 門診抗生素使用率: 已經用 code:text 搜尋抗生素，所有回傳都是抗生素
+        // 門診抗生素使用率: 含抗生素的處方
         denominator = encounters.length || totalPatients;
-        numerator = meds.length;
+        const antibioticKeywords = ['cillin', 'mycin', 'oxacin', 'cef', 'sulfa', 'metro', 'vanco', '抗生素', 'antibiotic', 'azithro', 'amoxi', 'doxy', 'cipro', 'levo'];
+        numerator = meds.filter(m => {
+            const medText = (m.medicationCodeableConcept?.text || '').toLowerCase();
+            const medCode = (m.medicationCodeableConcept?.coding?.[0]?.display || '').toLowerCase();
+            const medCodeVal = (m.medicationCodeableConcept?.coding?.[0]?.code || '').toLowerCase();
+            return antibioticKeywords.some(kw => medText.includes(kw) || medCode.includes(kw) || medCodeVal.includes(kw));
+        }).length;
     } else if (cqlFile.includes('_03_')) {
         // 藥品重疊指標: 依藥品類別篩選，區分同院/跨院
         const isCrossHospital = cqlFile.includes('_03_9_') || cqlFile.includes('_03_10_') ||
