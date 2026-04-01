@@ -147,7 +147,8 @@
         <section class="overview-section" id="overviewSection">
             <div class="overview-grid">
                 <!-- COVID-19 -->
-                <div class="overview-card covid">
+                <div class="overview-card covid" onclick="showDetailReport('covid19')" style="cursor:pointer;">
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
                     <div class="card-icon">
                         <i class="fas fa-virus"></i>
                     </div>
@@ -166,7 +167,7 @@
                             </div>
                         </div>
                         
-                        <button class="btn-card-mini" onclick="executeCQL('covid19')" id="btnCovid">
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeCQL('covid19')" id="btnCovid">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
@@ -192,7 +193,8 @@
                     </div>
                 </div>
 
-                <div class="overview-card influenza">
+                <div class="overview-card influenza" onclick="showDetailReport('influenza')" style="cursor:pointer;">
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
                     <div class="card-icon">
                         <i class="fas fa-disease"></i>
                     </div>
@@ -211,7 +213,7 @@
                             </div>
                         </div>
                         
-                        <button class="btn-card-mini" onclick="executeCQL('influenza')" id="btnInfluenza">
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeCQL('influenza')" id="btnInfluenza">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
@@ -237,7 +239,8 @@
                     </div>
                 </div>
 
-                <div class="overview-card conjunctivitis">
+                <div class="overview-card conjunctivitis" onclick="showDetailReport('conjunctivitis')" style="cursor:pointer;">
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
                     <div class="card-icon">
                         <i class="fas fa-eye"></i>
                     </div>
@@ -256,7 +259,7 @@
                             </div>
                         </div>
                         
-                        <button class="btn-card-mini" onclick="executeCQL('conjunctivitis')" id="btnConjunctivitis">
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeCQL('conjunctivitis')" id="btnConjunctivitis">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
@@ -282,7 +285,8 @@
                     </div>
                 </div>
 
-                <div class="overview-card enterovirus">
+                <div class="overview-card enterovirus" onclick="showDetailReport('enterovirus')" style="cursor:pointer;">
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
                     <div class="card-icon">
                         <i class="fas fa-hand-dots"></i>
                     </div>
@@ -301,7 +305,7 @@
                             </div>
                         </div>
                         
-                        <button class="btn-card-mini" onclick="executeCQL('enterovirus')" id="btnEnterovirus">
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeCQL('enterovirus')" id="btnEnterovirus">
                             <i class="fas fa-play"></i> 執行查詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
@@ -327,7 +331,8 @@
                     </div>
                 </div>
 
-                <div class="overview-card diarrhea">
+                <div class="overview-card diarrhea" onclick="showDetailReport('diarrhea')" style="cursor:pointer;">
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
                     <div class="card-icon">
                         <i class="fas fa-bacteria"></i>
                     </div>
@@ -388,7 +393,7 @@
         <div class="detail-modal-content">
             <div class="detail-modal-header">
                 <h2 id="modalTitle"><i class="fas fa-virus"></i> COVID-19 詳細數據</h2>
-                <button class="modal-close-btn" onclick="closeDetailModal()">
+                <button class="modal-close-btn" onclick="closeDetailReport()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
