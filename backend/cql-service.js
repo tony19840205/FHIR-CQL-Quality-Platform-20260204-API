@@ -532,16 +532,27 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             console.log(`   Procedure: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}, MedicationAdmin: ${resources.MedicationAdministration.length}`);
 
         } else if (category === 'outcome') {
-            // 結果品質指標: Encounter(住院) + Condition + Patient
-            const [encResp, condResp, patResp] = await Promise.all([
+            // 結果品質指標: Encounter(住院) + Condition + Patient + Procedure(for indicator 18)
+            const fetchList = [
                 axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
                 axios.get(`${fhirServerUrl}/Condition?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
                 axios.get(`${fhirServerUrl}/Patient?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
-            ]);
-            resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.Condition = (condResp.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.Patient = (patResp.data?.entry || []).map(e => e.resource).filter(Boolean);
-            console.log(`   Encounter(IMP): ${resources.Encounter.length}, Condition: ${resources.Condition.length}, Patient: ${resources.Patient.length}`);
+            ];
+            // 指標18需要安寧療護 Procedure
+            if (cqlFile.includes('_18_')) {
+                const hospiceCodes = '05601K,05602A,05603B,P4401B,P4402B,P4403B,05312C,05316C,05323C,05327C,05336C,05341C,05362C,05374C';
+                fetchList.push(
+                    axios.get(`${fhirServerUrl}/Procedure?code=${hospiceCodes}&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                );
+            }
+            const results = await Promise.all(fetchList);
+            resources.Encounter = (results[0].data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Condition = (results[1].data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Patient = (results[2].data?.entry || []).map(e => e.resource).filter(Boolean);
+            if (results[3]) {
+                resources.Procedure = (results[3].data?.entry || []).map(e => e.resource).filter(Boolean);
+            }
+            console.log(`   Encounter(IMP): ${resources.Encounter.length}, Condition: ${resources.Condition.length}, Patient: ${resources.Patient.length}${resources.Procedure ? ', Procedure(hospice): ' + resources.Procedure.length : ''}`);
 
         } else {
             // 未知類別: 抓基本資源
@@ -1019,8 +1030,20 @@ function computeOutcomeIndicator(data, cqlFile) {
             }
         });
         denominator = dementiaPatients.size || totalPatients;
-        // 檢查安寧療護 (hospice) encounter
+        // 檢查安寧療護 - 從 Procedure (NHI安寧醫令) 和 Encounter type
+        const hospiceCodes = new Set(['05601K','05602A','05603B','P4401B','P4402B','P4403B','05312C','05316C','05323C','05327C','05336C','05341C','05362C','05374C']);
         const hospicePatients = new Set();
+        // 從 Procedure 檢查安寧醫令
+        const procedures = data.Procedure || [];
+        procedures.forEach(p => {
+            const code = p.code?.coding?.[0]?.code || '';
+            const text = (p.code?.text || '').toLowerCase();
+            if (hospiceCodes.has(code) || text.includes('安寧') || text.includes('hospice') || text.includes('palliative')) {
+                const pid = (p.subject?.reference || '').split('/').pop();
+                if (pid) hospicePatients.add(pid);
+            }
+        });
+        // 也從 Encounter type 檢查
         encounters.forEach(e => {
             const type = (e.type?.[0]?.text || '').toLowerCase();
             const code = e.type?.[0]?.coding?.[0]?.code || '';
