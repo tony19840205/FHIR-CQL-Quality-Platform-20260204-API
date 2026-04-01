@@ -409,8 +409,25 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
     try {
         if (category === 'medication') {
             // 用藥安全指標: MedicationRequest + Encounter(門診)
+            // 03-x 藥品重疊: 用 code:text 做精準藥品搜尋（FHIR 伺服器有 1300+ 筆，通用 _count 抓不到）
+            let medQuery = `${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
+            if (cqlFile.includes('_03_')) {
+                const drugSearchTerms = getDrugSearchTerms(cqlFile);
+                if (drugSearchTerms) {
+                    medQuery = `${fhirServerUrl}/MedicationRequest?code:text=${encodeURIComponent(drugSearchTerms)}&_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
+                    console.log(`   🔍 藥品搜尋: code:text=${drugSearchTerms}`);
+                }
+            } else if (cqlFile.includes('_01_')) {
+                // 注射劑: 搜尋含 injection/注射 的藥品
+                medQuery = `${fhirServerUrl}/MedicationRequest?code:text=injection,inject,%E6%B3%A8%E5%B0%84&_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
+                console.log(`   🔍 注射劑搜尋`);
+            } else if (cqlFile.includes('_02_')) {
+                // 抗生素: 搜尋抗生素藥品
+                medQuery = `${fhirServerUrl}/MedicationRequest?code:text=cillin,mycin,oxacin,cef,azithro,amoxi,doxy,cipro,levo,vanco,%E6%8A%97%E7%94%9F%E7%B4%A0&_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`;
+                console.log(`   🔍 抗生素搜尋`);
+            }
             const [medResp, encResp] = await Promise.all([
-                axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                axios.get(medQuery, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
                 axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
             ]);
             resources.MedicationRequest = (medResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -506,6 +523,27 @@ function computeQualityIndicatorResults(data, cqlFile) {
     return { _data: [result], _regionStats: { regions: [], districts: [] } };
 }
 
+// --- 藥品 FHIR code:text 搜尋詞 (用於精準抓取) ---
+function getDrugSearchTerms(cqlFile) {
+    if (cqlFile.includes('_03_1_') || cqlFile.includes('_03_9_'))
+        return 'amlodipine,valsartan,losartan,enalapril,lisinopril,nifedipine,atenolol,metoprolol,hydrochlorothiazide,cozaar';
+    if (cqlFile.includes('_03_2_') || cqlFile.includes('_03_10_'))
+        return 'atorvastatin,rosuvastatin,simvastatin,pravastatin,fluvastatin,fenofibrate,gemfibrozil,ezetimibe';
+    if (cqlFile.includes('_03_3_') || cqlFile.includes('_03_11_'))
+        return 'metformin,glimepiride,gliclazide,glipizide,insulin,sitagliptin,empagliflozin,dapagliflozin,pioglitazone,januvia';
+    if (cqlFile.includes('_03_4_') || cqlFile.includes('_03_12_'))
+        return 'olanzapine,risperidone,quetiapine,aripiprazole,haloperidol,clozapine,paliperidone,ziprasidone';
+    if (cqlFile.includes('_03_5_') || cqlFile.includes('_03_13_'))
+        return 'sertraline,escitalopram,fluoxetine,paroxetine,venlafaxine,duloxetine,mirtazapine,bupropion,citalopram';
+    if (cqlFile.includes('_03_6_') || cqlFile.includes('_03_14_'))
+        return 'zolpidem,zopiclone,diazepam,lorazepam,alprazolam,clonazepam,triazolam,midazolam';
+    if (cqlFile.includes('_03_7_') || cqlFile.includes('_03_15_'))
+        return 'warfarin,heparin,enoxaparin,rivaroxaban,apixaban,dabigatran,clopidogrel,aspirin,ticagrelor,plavix,bokey';
+    if (cqlFile.includes('_03_8_') || cqlFile.includes('_03_16_'))
+        return 'tamsulosin,alfuzosin,doxazosin,finasteride,dutasteride,silodosin';
+    return null;
+}
+
 // --- 藥品類別關鍵字對照 (03-1 ~ 03-16) ---
 function getDrugCategoryKeywords(cqlFile) {
     // 03-1/03-9: 降血壓 Antihypertensive (ATC: C02/C03/C07/C08/C09)
@@ -558,40 +596,23 @@ function computeMedicationIndicator(data, cqlFile) {
     let numerator = 0, denominator = totalPatients;
 
     if (cqlFile.includes('_01_')) {
-        // 門診注射劑使用率: 含注射路徑的處方/全部門診處方
-        denominator = meds.length || totalPatients;
-        numerator = meds.filter(m => {
-            const route = (m.dosageInstruction?.[0]?.route?.coding?.[0]?.code || '').toLowerCase();
-            const routeText = (m.dosageInstruction?.[0]?.route?.text || '').toLowerCase();
-            return route.includes('inject') || routeText.includes('inject') || routeText.includes('注射')
-                || route === 'IV' || route === 'IM' || routeText.includes('iv') || routeText.includes('im');
-        }).length;
+        // 門診注射劑使用率: 已經用 code:text 搜尋注射藥品，所有回傳都是注射劑
+        // numerator = 注射藥品數, denominator = 門診 Encounter 數
+        denominator = encounters.length || totalPatients;
+        numerator = meds.length;
     } else if (cqlFile.includes('_02_')) {
-        // 門診抗生素使用率: 含抗生素的處方/全部門診處方
-        denominator = meds.length || totalPatients;
-        const antibioticKeywords = ['cillin', 'mycin', 'oxacin', 'cef', 'sulfa', 'metro', 'vanco', '抗生素', 'antibiotic', 'azithro', 'amoxi', 'doxy', 'cipro', 'levo'];
-        numerator = meds.filter(m => {
-            const medText = (m.medicationCodeableConcept?.text || '').toLowerCase();
-            const medCode = (m.medicationCodeableConcept?.coding?.[0]?.display || '').toLowerCase();
-            const medCodeVal = (m.medicationCodeableConcept?.coding?.[0]?.code || '').toLowerCase();
-            return antibioticKeywords.some(kw => medText.includes(kw) || medCode.includes(kw) || medCodeVal.includes(kw));
-        }).length;
+        // 門診抗生素使用率: 已經用 code:text 搜尋抗生素，所有回傳都是抗生素
+        denominator = encounters.length || totalPatients;
+        numerator = meds.length;
     } else if (cqlFile.includes('_03_')) {
         // 藥品重疊指標: 依藥品類別篩選，區分同院/跨院
         const isCrossHospital = cqlFile.includes('_03_9_') || cqlFile.includes('_03_10_') ||
             cqlFile.includes('_03_11_') || cqlFile.includes('_03_12_') || cqlFile.includes('_03_13_') ||
             cqlFile.includes('_03_14_') || cqlFile.includes('_03_15_') || cqlFile.includes('_03_16_');
 
-        const drugCategoryKeywords = getDrugCategoryKeywords(cqlFile);
-        const categoryMeds = drugCategoryKeywords.length > 0
-            ? meds.filter(m => {
-                const medText = (m.medicationCodeableConcept?.text || '').toLowerCase();
-                const medCode = (m.medicationCodeableConcept?.coding?.[0]?.display || '').toLowerCase();
-                const medCodeVal = (m.medicationCodeableConcept?.coding?.[0]?.code || '').toLowerCase();
-                const atc = (m.medicationCodeableConcept?.coding?.find(c => c.system?.includes('atc'))?.code || '').toLowerCase();
-                return drugCategoryKeywords.some(kw => medText.includes(kw) || medCode.includes(kw) || medCodeVal.includes(kw) || atc.includes(kw));
-            })
-            : meds;
+        // 已經用 code:text 精準搜尋，所有回傳都是該類藥品
+        const categoryMeds = meds;
+        console.log(`   📊 03-x 藥品重疊計算: categoryMeds=${categoryMeds.length}, isCross=${isCrossHospital}`);
 
         if (isCrossHospital) {
             // 跨院重疊: 同一病人在不同機構有該類藥品處方
