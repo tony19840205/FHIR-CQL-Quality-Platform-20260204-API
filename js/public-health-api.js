@@ -4,7 +4,7 @@
 // - COVID-19疫苗接種率: COVID19VaccinationCoverage
 // - 流感疫苗接種率: InfluenzaVaccinationCoverage
 // - 高血壓活動個案: HypertensionActiveCases
-console.log('📌 public-health-api.js BUILD_VERSION: 20260401a');
+console.log('📌 public-health-api.js BUILD_VERSION: 20260401b');
 
 let currentResults = {};
 window.healthResults = currentResults;
@@ -90,6 +90,14 @@ async function executeQuery(indicatorType) {
     const btn = document.getElementById(`btn${elementId}`);
     const statusElement = document.getElementById(`status${elementId}`);
 
+    // 讀取日期範圍和筆數設定
+    const startDateEl = document.getElementById(`startDate${elementId}`);
+    const endDateEl = document.getElementById(`endDate${elementId}`);
+    const maxRecordsEl = document.getElementById(`maxRecords${elementId}`);
+    const startDate = startDateEl ? startDateEl.value : '';
+    const endDate = endDateEl ? endDateEl.value : '';
+    const maxRecords = maxRecordsEl ? parseInt(maxRecordsEl.value) : 200;
+
     if (btn && btn.disabled) return;
 
     if (btn) {
@@ -107,7 +115,7 @@ async function executeQuery(indicatorType) {
         if (demoMode) {
             results = generateDemoData(indicatorType);
         } else {
-            results = await queryViaCQLEngine(cqlFile, indicatorType);
+            results = await queryViaCQLEngine(cqlFile, indicatorType, { startDate, endDate, maxRecords });
         }
 
         currentResults[indicatorType] = results;
@@ -142,22 +150,30 @@ async function executeQuery(indicatorType) {
 }
 
 // ========== 透過後端 CQL Engine 查詢 ==========
-async function queryViaCQLEngine(cqlFile, indicatorType) {
+async function queryViaCQLEngine(cqlFile, indicatorType, options = {}) {
+    const { startDate, endDate, maxRecords = 500 } = options;
     const backendUrl = getBackendUrl();
     const fhirServerUrl = getFHIRServerUrl();
 
     console.log(`   Backend: ${backendUrl}`);
     console.log(`   FHIR: ${fhirServerUrl}`);
     console.log(`   CQL: ${cqlFile}`);
+    if (startDate) console.log(`   開始日期: ${startDate}`);
+    if (endDate) console.log(`   結束日期: ${endDate}`);
+    console.log(`   筆數: ${maxRecords || '不設限'}`);
+
+    const requestBody = {
+        cqlFile: cqlFile,
+        fhirServerUrl: fhirServerUrl,
+        maxRecords: maxRecords || 500
+    };
+    if (startDate) requestBody.startDate = startDate;
+    if (endDate) requestBody.endDate = endDate;
 
     const response = await fetch(`${backendUrl}/api/execute-cql`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            cqlFile: cqlFile,
-            fhirServerUrl: fhirServerUrl,
-            maxRecords: 500
-        })
+        body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {

@@ -43,6 +43,13 @@ function isIndicatorCQL(cqlFile) {
     return cqlFile && cqlFile.includes('Indicator_');
 }
 
+// ==================== 判斷是否為國民健康 CQL ====================
+function isPublicHealthCQL(cqlFile) {
+    if (!cqlFile) return false;
+    const lower = cqlFile.toLowerCase();
+    return lower.includes('vaccination') || lower.includes('hypertensionactive');
+}
+
 // ==================== 從 ELM 自動建構 CodeService ====================
 function buildCodeServiceFromELM(elm) {
     const vsDefs = elm.library?.valueSets?.def || [];
@@ -129,6 +136,8 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
     let fhirData;
     if (isIndicator) {
         fhirData = await fetchIndicatorFHIRData(fhirServerUrl, { startDate, endDate, maxRecords: maxRecords || 500 });
+    } else if (isPublicHealthCQL(cqlFile)) {
+        fhirData = await fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, { startDate, endDate, maxRecords: maxRecords || 500 });
     } else {
         fhirData = await fetchFHIRData(fhirServerUrl, { startDate, endDate, maxRecords, cqlFile });
     }
@@ -187,6 +196,135 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
     const regionStats = extractPatientAddresses(fhirData, episodePatientIds.size > 0 ? episodePatientIds : null);
 
     return { _data: formattedResults, _regionStats: regionStats };
+}
+
+// ==================== 國民健康 FHIR 資料抓取 ====================
+async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
+    const { maxRecords = 500 } = options;
+    const isVaccination = cqlFile.toLowerCase().includes('vaccination');
+    const isHypertension = cqlFile.toLowerCase().includes('hypertension');
+
+    console.log(`📥 [PublicHealth] 抓取${isVaccination ? '疫苗接種' : '高血壓'}資料 (max: ${maxRecords})...`);
+
+    try {
+        const fetchCount = maxRecords > 0 ? maxRecords : 10000;
+        let primaryEntries = [];
+        let observationEntries = [];
+        let medicationEntries = [];
+
+        if (isVaccination) {
+            // 疫苗接種: 抓取 Immunization 資源
+            const immunizationResponse = await axios.get(`${fhirServerUrl}/Immunization`, {
+                params: { _count: fetchCount, _sort: '-date', status: 'completed' },
+                timeout: 60000
+            }).catch(() => ({ data: { entry: [] } }));
+            primaryEntries = immunizationResponse.data?.entry || [];
+            console.log(`   💉 Immunization: ${primaryEntries.length} 筆`);
+        } else if (isHypertension) {
+            // 高血壓: 抓取 Condition (I10-I16) + Observation (血壓) + MedicationRequest
+            const hypertensionICD10 = ['I10', 'I11', 'I12', 'I13', 'I14', 'I15', 'I16'];
+            const bpLoincCodes = ['85354-9', '8480-6', '8462-4']; // BP panel, systolic, diastolic
+
+            const [condResponse, obsResponse, medResponse] = await Promise.all([
+                axios.get(`${fhirServerUrl}/Condition`, {
+                    params: {
+                        code: hypertensionICD10.map(c => `http://hl7.org/fhir/sid/icd-10-cm|${c}`).join(','),
+                        _count: fetchCount,
+                        _sort: '-recorded-date'
+                    },
+                    timeout: 60000
+                }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/Observation`, {
+                    params: {
+                        code: bpLoincCodes.map(c => `http://loinc.org|${c}`).join(','),
+                        _count: fetchCount,
+                        _sort: '-date'
+                    },
+                    timeout: 60000
+                }).catch(() => ({ data: { entry: [] } })),
+                axios.get(`${fhirServerUrl}/MedicationRequest`, {
+                    params: { _count: fetchCount, _sort: '-authoredon' },
+                    timeout: 60000
+                }).catch(() => ({ data: { entry: [] } }))
+            ]);
+
+            primaryEntries = condResponse.data?.entry || [];
+            observationEntries = obsResponse.data?.entry || [];
+            medicationEntries = medResponse.data?.entry || [];
+            console.log(`   🩺 Condition: ${primaryEntries.length}, Observation: ${observationEntries.length}, MedicationRequest: ${medicationEntries.length}`);
+        }
+
+        // 收集所有相關的 Patient IDs
+        const patientIds = new Set();
+        const extractPatientId = (entry) => {
+            const ref = entry.resource?.subject?.reference || entry.resource?.patient?.reference;
+            if (ref) {
+                const id = ref.split('/').pop();
+                if (id) patientIds.add(id);
+            }
+        };
+        primaryEntries.forEach(extractPatientId);
+        observationEntries.forEach(extractPatientId);
+        medicationEntries.forEach(extractPatientId);
+
+        if (patientIds.size === 0) {
+            console.log('   ⚠️ 無符合條件的 Patient');
+            return [{ resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] }];
+        }
+
+        console.log(`   👥 找到 ${patientIds.size} 位相關病患，組建 Bundle...`);
+
+        // 為每位 Patient 建立 Bundle
+        const patientBundles = [];
+        for (const patientId of Array.from(patientIds)) {
+            try {
+                const patientResponse = await axios.get(`${fhirServerUrl}/Patient/${patientId}`, {
+                    timeout: 10000
+                });
+                if (!patientResponse.data) continue;
+
+                const matchPatient = (entry) => {
+                    const ref = entry.resource?.subject?.reference || entry.resource?.patient?.reference;
+                    return ref && (ref === `Patient/${patientId}` || ref.endsWith(`/${patientId}`));
+                };
+
+                const entries = [
+                    { resource: patientResponse.data, fullUrl: `${fhirServerUrl}/Patient/${patientId}` }
+                ];
+
+                // 加入該病患相關的資源
+                primaryEntries.filter(matchPatient).forEach(e => {
+                    const r = e.resource;
+                    const type = r.resourceType || 'Resource';
+                    entries.push({ resource: r, fullUrl: e.fullUrl || `${fhirServerUrl}/${type}/${r.id}` });
+                });
+
+                observationEntries.filter(matchPatient).forEach(e => {
+                    entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/Observation/${e.resource.id}` });
+                });
+
+                medicationEntries.filter(matchPatient).forEach(e => {
+                    entries.push({ resource: e.resource, fullUrl: e.fullUrl || `${fhirServerUrl}/MedicationRequest/${e.resource.id}` });
+                });
+
+                patientBundles.push({
+                    resourceType: 'Bundle',
+                    type: 'collection',
+                    id: patientId,
+                    entry: entries
+                });
+            } catch {
+                console.log(`   ⚠️ 無法取得 Patient ${patientId}`);
+            }
+        }
+
+        console.log(`✅ [PublicHealth] 建立 ${patientBundles.length} 個 Patient Bundle`);
+        return patientBundles.length > 0 ? patientBundles :
+            [{ resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] }];
+    } catch (error) {
+        console.error('❌ [PublicHealth] FHIR 資料抓取失敗:', error.message);
+        return [{ resourceType: 'Bundle', type: 'searchset', total: 0, entry: [] }];
+    }
 }
 
 // ==================== 品質指標 FHIR 資料抓取 ====================
