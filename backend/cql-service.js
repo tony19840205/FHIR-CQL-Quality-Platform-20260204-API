@@ -633,7 +633,7 @@ function computeMedicationIndicator(data, cqlFile) {
     }
 
     const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
-    return { totalPatients, numerator, denominator, rate };
+    return { totalPatients: denominator, numerator, denominator, rate };
 }
 
 // --- 門診品質指標計算 ---
@@ -709,7 +709,7 @@ function computeOutpatientIndicator(data, cqlFile) {
     }
 
     const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
-    return { totalPatients, numerator, denominator, rate };
+    return { totalPatients: denominator, numerator, denominator, rate };
 }
 
 // --- 住院品質指標計算 ---
@@ -769,7 +769,7 @@ function computeInpatientIndicator(data, cqlFile) {
     }
 
     const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
-    return { totalPatients, numerator, denominator, rate };
+    return { totalPatients: denominator, numerator, denominator, rate };
 }
 
 // --- 手術品質指標計算 ---
@@ -858,7 +858,7 @@ function computeSurgeryIndicator(data, cqlFile) {
     }
 
     const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
-    return { totalPatients, numerator, denominator, rate };
+    return { totalPatients: denominator, numerator, denominator, rate };
 }
 
 // --- 結果品質指標計算 ---
@@ -928,7 +928,7 @@ function computeOutcomeIndicator(data, cqlFile) {
     }
 
     const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
-    return { totalPatients, numerator, denominator, rate };
+    return { totalPatients: denominator, numerator, denominator, rate };
 }
 
 // ==================== 品質指標 FHIR 資料抓取（剖腹產專用） ====================
