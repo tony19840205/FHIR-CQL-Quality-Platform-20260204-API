@@ -421,7 +421,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
     console.log(`📥 [QualityIndicator] 類型=${category}, CQL=${cqlFile}`);
 
     const resources = {};
-    const count = Math.min(maxRecords, 500);
+    const count = maxRecords;
 
     // 日期參數
     let dateParam = '';
@@ -463,14 +463,17 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
 
         } else if (category === 'outpatient') {
             // 門診品質指標: Encounter(門診) + MedicationRequest + Observation
-            const [encResp, medResp, obsResp] = await Promise.all([
-                axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                axios.get(`${fhirServerUrl}/Observation?_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+            // 使用多頁抓取以突破單頁限制
+            const pageSize = Math.min(count, 500);
+            const maxPages = count > 500 ? Math.ceil(count / 500) : 1;
+            const [encResult, medResult, obsResult] = await Promise.all([
+                count > 500 ? fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${pageSize}${dateParam}`, maxPages) : axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                count > 500 ? fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${pageSize}${dateParam.replace(/date=/g, 'authoredon=')}`, maxPages) : axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                count > 500 ? fetchAllPages(`${fhirServerUrl}/Observation?_count=${pageSize}${dateParam}`, maxPages) : axios.get(`${fhirServerUrl}/Observation?_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
             ]);
-            resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.MedicationRequest = (medResp.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.Observation = (obsResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.MedicationRequest = Array.isArray(medResult) ? medResult : (medResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+            resources.Observation = Array.isArray(obsResult) ? obsResult : (obsResult.data?.entry || []).map(e => e.resource).filter(Boolean);
             console.log(`   Encounter(AMB): ${resources.Encounter.length}, MedicationRequest: ${resources.MedicationRequest.length}, Observation: ${resources.Observation.length}`);
 
         } else if (category === 'inpatient') {
