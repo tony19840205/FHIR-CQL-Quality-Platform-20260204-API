@@ -531,7 +531,8 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
 
         } else if (category === 'surgery') {
             // 手術品質指標: 每個指標用targeted procedure code搜尋
-            const encPromise = fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=500${dateParam}`, 6);
+            const surgeryMaxPages = Math.max(1, Math.ceil(count / 500));
+            const encPromise = fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, surgeryMaxPages);
             
             if (cqlFile.includes('_12_') || cqlFile.includes('_19_')) {
                 // 指標12: 清淨手術抗生素>3天 / 指標19: 清淨手術傷口感染
@@ -580,7 +581,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             } else if (cqlFile.includes('_16_')) {
                 // 指標16: 住院手術傷口感染
                 const [procResp, encResult] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500`, 6),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=${singlePageCount}`, surgeryMaxPages),
                     encPromise
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
