@@ -530,16 +530,74 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             }
 
         } else if (category === 'surgery') {
-            // 手術品質指標: Procedure + Encounter(住院) + MedicationAdministration
-            const [procResp, encResp, medAdmResp] = await Promise.all([
-                axios.get(`${fhirServerUrl}/Procedure?_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                axios.get(`${fhirServerUrl}/MedicationAdministration?_count=${singlePageCount}${dateParam.replace(/date=/g, 'effective-time=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
-            ]);
-            resources.Procedure = (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.MedicationAdministration = (medAdmResp.data?.entry || []).map(e => e.resource).filter(Boolean);
-            console.log(`   Procedure: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}, MedicationAdmin: ${resources.MedicationAdministration.length}`);
+            // 手術品質指標: 每個指標用targeted procedure code搜尋
+            const encPromise = fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=500${dateParam}`, 6);
+            
+            if (cqlFile.includes('_12_') || cqlFile.includes('_19_')) {
+                // 指標12: 清淨手術抗生素>3天 / 指標19: 清淨手術傷口感染
+                const cleanSurgeryCodes = '75607C,75610B,75613C,75614C,75615C,88029C,64162B,64164B,64169B,64170B';
+                const [procResp, encResult, maResp] = await Promise.all([
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${cleanSurgeryCodes}&_count=500`, 3),
+                    encPromise,
+                    fetchAllPages(`${fhirServerUrl}/MedicationAdministration?_count=500`, 3)
+                ]);
+                resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.MedicationAdministration = Array.isArray(maResp) ? maResp : (maResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   CleanSurgery Proc: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}, MedicationAdmin: ${resources.MedicationAdministration.length}`);
+            } else if (cqlFile.includes('_13_')) {
+                // 指標13: ESWL碎石術
+                const eswlCodes = '50023A,50024A,50025A,50026A';
+                const [procResp, encResult] = await Promise.all([
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${eswlCodes}&_count=500`, 3),
+                    encPromise
+                ]);
+                resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   ESWL Proc: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}`);
+            } else if (cqlFile.includes('_14_')) {
+                // 指標14: 子宮肌瘤手術14天再入院
+                const fibroidCodes = '97010K,97011A,97012B,97013B,80402C,80420C,80415B,97013C,80415C,80425C,97025K,97026A,97027B,97020K,97021A,97022B,97035K,97036A,97037B,80403B,80404B,80421B,80416B,80412B,97027C,80404C';
+                const [procResp, encResult, condResp] = await Promise.all([
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${fibroidCodes}&_count=500`, 3),
+                    encPromise,
+                    axios.get(`${fhirServerUrl}/Condition?code=D25,D25.0,D25.1,D25.2,D25.9&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Condition = (condResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   Fibroid Proc: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}, Condition(D25): ${resources.Condition?.length || 0}`);
+            } else if (cqlFile.includes('_15_')) {
+                // 指標15: 人工關節置換術感染 (TKR/THR/Spine)
+                const arthroplastyCodes = '64164B,97805K,97806A,97807B,64169B,64162B,64170B,64053B,64198B';
+                const [procResp, encResult] = await Promise.all([
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${arthroplastyCodes}&_count=500`, 3),
+                    encPromise
+                ]);
+                resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   Arthroplasty Proc: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}`);
+            } else if (cqlFile.includes('_16_')) {
+                // 指標16: 住院手術傷口感染
+                const [procResp, encResult] = await Promise.all([
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500`, 6),
+                    encPromise
+                ]);
+                resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   Surgery Proc: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}`);
+            } else {
+                // 其他手術指標 fallback
+                const [procResp, encResult, maResp] = await Promise.all([
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500`, 3),
+                    encPromise,
+                    axios.get(`${fhirServerUrl}/MedicationAdministration?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.MedicationAdministration = (maResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   Procedure: ${resources.Procedure.length}, Encounter(IMP): ${resources.Encounter.length}, MedicationAdmin: ${(resources.MedicationAdministration || []).length}`);
+            }
 
         } else if (category === 'outcome') {
             if (cqlFile.includes('_18_')) {
@@ -994,87 +1052,193 @@ function computeSurgeryIndicator(data, cqlFile) {
     const procedures = data.Procedure || [];
     const encounters = data.Encounter || [];
     const medAdmin = data.MedicationAdministration || [];
+    const conditions = data.Condition || [];
 
-    const patientIds = new Set();
-    procedures.forEach(p => {
-        const pid = (p.subject?.reference || '').split('/').pop();
-        if (pid) patientIds.add(pid);
-    });
-    encounters.forEach(e => {
-        const pid = (e.subject?.reference || '').split('/').pop();
-        if (pid) patientIds.add(pid);
-    });
-    const totalPatients = patientIds.size || procedures.length || encounters.length;
-    if (totalPatients === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+    if (procedures.length === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
 
-    let numerator = 0, denominator = procedures.length || totalPatients;
+    let numerator = 0, denominator = 0;
 
-    if (cqlFile.includes('_12_')) {
-        // 清淨手術抗生素超3天率: 有手術的病人中, 抗生素使用超3天的比例
+    if (cqlFile.includes('_12_') || cqlFile.includes('_19_')) {
+        // 指標12: 清淨手術抗生素>3天率 / 指標19: 清淨手術傷口感染
+        // Fetch already returns targeted clean surgery procedures
         const surgeryPatients = new Set();
         procedures.forEach(p => {
             const pid = (p.subject?.reference || '').split('/').pop();
             if (pid) surgeryPatients.add(pid);
         });
-        denominator = surgeryPatients.size || totalPatients;
-        // 計算每位手術病人的抗生素使用天數
-        const patientAbDays = {};
-        medAdmin.forEach(ma => {
-            const pid = (ma.subject?.reference || '').split('/').pop();
-            const date = (ma.effectiveDateTime || ma.effectivePeriod?.start || '').substring(0, 10);
-            if (pid && surgeryPatients.has(pid) && date) {
-                if (!patientAbDays[pid]) patientAbDays[pid] = new Set();
-                patientAbDays[pid].add(date);
-            }
-        });
-        numerator = Object.values(patientAbDays).filter(days => days.size > 3).length;
+        denominator = surgeryPatients.size;
+
+        if (cqlFile.includes('_12_')) {
+            // 計算每位手術病人的抗生素使用天數
+            const patientAbDays = {};
+            medAdmin.forEach(ma => {
+                const pid = (ma.subject?.reference || '').split('/').pop();
+                const date = (ma.effectiveDateTime || ma.effectivePeriod?.start || '').substring(0, 10);
+                if (pid && surgeryPatients.has(pid) && date) {
+                    if (!patientAbDays[pid]) patientAbDays[pid] = new Set();
+                    patientAbDays[pid].add(date);
+                }
+            });
+            numerator = Object.values(patientAbDays).filter(days => days.size > 3).length;
+        } else {
+            // 指標19: 清淨手術傷口感染 = readmission within 14 days
+            const surgeryDates = {};
+            procedures.forEach(p => {
+                const pid = (p.subject?.reference || '').split('/').pop();
+                const date = p.performedDateTime || p.performedPeriod?.start || '';
+                if (pid && date) {
+                    if (!surgeryDates[pid]) surgeryDates[pid] = [];
+                    surgeryDates[pid].push(new Date(date));
+                }
+            });
+            const encByPatient = {};
+            encounters.forEach(e => {
+                const pid = (e.subject?.reference || '').split('/').pop();
+                const start = e.period?.start;
+                if (pid && start) {
+                    if (!encByPatient[pid]) encByPatient[pid] = [];
+                    encByPatient[pid].push(new Date(start));
+                }
+            });
+            Object.entries(surgeryDates).forEach(([pid, sDates]) => {
+                const eDates = encByPatient[pid] || [];
+                sDates.forEach(sd => {
+                    if (eDates.some(ed => ed > sd && (ed - sd) / 86400000 <= 14)) numerator++;
+                });
+            });
+        }
     } else if (cqlFile.includes('_13_')) {
-        // 體外震波碎石平均利用次數
+        // 指標13: ESWL平均利用次數 - fetch已回傳targeted ESWL procedures
         const eswlPatients = {};
         procedures.forEach(p => {
             const pid = (p.subject?.reference || '').split('/').pop();
-            const codeText = (p.code?.text || '').toLowerCase();
-            const codeCode = p.code?.coding?.[0]?.code || '';
-            if (codeText.includes('lithotripsy') || codeText.includes('碎石') || codeCode.includes('ESWL')) {
+            if (pid) {
                 eswlPatients[pid] = (eswlPatients[pid] || 0) + 1;
             }
         });
-        const counts = Object.values(eswlPatients);
-        const avgTimes = counts.length > 0 ? (counts.reduce((s, c) => s + c, 0) / counts.length).toFixed(2) : '0.00';
-        return { totalPatients, numerator: counts.length, denominator: totalPatients, rate: avgTimes };
-    } else if (cqlFile.includes('_14_') || cqlFile.includes('_15_') || cqlFile.includes('_16_') || cqlFile.includes('_19_')) {
-        // 術後再入院/感染率: 手術後有併發症的比例
-        denominator = procedures.length || totalPatients;
-        // 簡化: 檢查手術病人是否在短期內有再次住院
-        const surgeryPatientDates = {};
+        const patientCount = Object.keys(eswlPatients).length;
+        const totalESWL = procedures.length;
+        const avgTimes = patientCount > 0 ? (totalESWL / patientCount).toFixed(2) : '0.00';
+        return { totalPatients: patientCount, numerator: totalESWL, denominator: patientCount, rate: avgTimes };
+    } else if (cqlFile.includes('_14_')) {
+        // 指標14: 子宮肌瘤手術14天再入院率
+        // Fetch already returns targeted fibroid procedures + D25 conditions
+        // Denominator: patients with fibroid surgery (non-cancer)
+        const fibroidPatients = new Set();
+        const fibroidDates = {};
         procedures.forEach(p => {
             const pid = (p.subject?.reference || '').split('/').pop();
-            const date = p.performedDateTime || p.performedPeriod?.end || '';
-            if (pid && date) {
-                if (!surgeryPatientDates[pid]) surgeryPatientDates[pid] = [];
-                surgeryPatientDates[pid].push(new Date(date));
+            const date = p.performedDateTime || p.performedPeriod?.start || '';
+            if (pid) {
+                fibroidPatients.add(pid);
+                if (date) {
+                    if (!fibroidDates[pid]) fibroidDates[pid] = [];
+                    fibroidDates[pid].push(new Date(date));
+                }
             }
         });
-        const encDates = {};
+        denominator = fibroidPatients.size;
+        // Numerator: readmission within 14 days
+        const encByPatient = {};
+        encounters.forEach(e => {
+            const pid = (e.subject?.reference || '').split('/').pop();
+            const start = e.period?.start;
+            if (pid && fibroidPatients.has(pid) && start) {
+                if (!encByPatient[pid]) encByPatient[pid] = [];
+                encByPatient[pid].push(new Date(start));
+            }
+        });
+        let readmissions = 0;
+        Object.entries(fibroidDates).forEach(([pid, sDates]) => {
+            const eDates = encByPatient[pid] || [];
+            let hasReadmit = false;
+            sDates.forEach(sd => {
+                if (eDates.some(ed => ed > sd && (ed - sd) / 86400000 <= 14)) hasReadmit = true;
+            });
+            if (hasReadmit) readmissions++;
+        });
+        numerator = readmissions;
+    } else if (cqlFile.includes('_15_')) {
+        // 指標15: 人工關節置換術感染率 (90天)
+        const arthroplastyCodes = new Set(['64164B','97805K','97806A','97807B','64169B','64162B','64170B']);
+        const infectionCodes = new Set(['64053B','64198B']);
+        
+        // 分母: arthroplasty procedures
+        const arthroplastyProcs = procedures.filter(p => {
+            const code = p.code?.coding?.[0]?.code || '';
+            return arthroplastyCodes.has(code);
+        });
+        // 分子: infection procedures within 90 days
+        const infectionProcs = procedures.filter(p => {
+            const code = p.code?.coding?.[0]?.code || '';
+            return infectionCodes.has(code);
+        });
+        
+        if (cqlFile.includes('_15_2')) {
+            // 15-2: total knee only (64164B, 97805K, 97806A, 97807B)
+            const tkrCodes = new Set(['64164B','97805K','97806A','97807B']);
+            denominator = arthroplastyProcs.filter(p => tkrCodes.has(p.code?.coding?.[0]?.code || '')).length;
+        } else if (cqlFile.includes('_15_3')) {
+            // 15-3: partial knee only (64169B)
+            denominator = arthroplastyProcs.filter(p => (p.code?.coding?.[0]?.code || '') === '64169B').length;
+        } else {
+            // 15-1: all knee arthroplasty
+            denominator = arthroplastyProcs.length;
+        }
+        
+        // Count infections linked to arthroplasty patients within 90 days
+        const arthrPatientDates = {};
+        arthroplastyProcs.forEach(p => {
+            const pid = (p.subject?.reference || '').split('/').pop();
+            const date = p.performedDateTime || p.performedPeriod?.start || '';
+            if (pid && date) {
+                if (!arthrPatientDates[pid]) arthrPatientDates[pid] = [];
+                arthrPatientDates[pid].push(new Date(date));
+            }
+        });
+        infectionProcs.forEach(p => {
+            const pid = (p.subject?.reference || '').split('/').pop();
+            const infDate = new Date(p.performedDateTime || p.performedPeriod?.start || '');
+            const surgDates = arthrPatientDates[pid] || [];
+            if (surgDates.some(sd => infDate > sd && (infDate - sd) / 86400000 <= 90)) {
+                numerator++;
+            }
+        });
+    } else if (cqlFile.includes('_16_')) {
+        // 指標16: 住院手術傷口感染率
+        denominator = procedures.length;
+        // Check readmission within 14 days as proxy for wound infection
+        const surgDates = {};
+        procedures.forEach(p => {
+            const pid = (p.subject?.reference || '').split('/').pop();
+            const date = p.performedDateTime || p.performedPeriod?.start || '';
+            if (pid && date) {
+                if (!surgDates[pid]) surgDates[pid] = [];
+                surgDates[pid].push(new Date(date));
+            }
+        });
+        const encByPatient = {};
         encounters.forEach(e => {
             const pid = (e.subject?.reference || '').split('/').pop();
             const start = e.period?.start;
             if (pid && start) {
-                if (!encDates[pid]) encDates[pid] = [];
-                encDates[pid].push(new Date(start));
+                if (!encByPatient[pid]) encByPatient[pid] = [];
+                encByPatient[pid].push(new Date(start));
             }
         });
-        Object.entries(surgeryPatientDates).forEach(([pid, sDates]) => {
-            const eDates = encDates[pid] || [];
-            const threshold = cqlFile.includes('_15_') ? 90 : 14;
+        Object.entries(surgDates).forEach(([pid, sDates]) => {
+            const eDates = encByPatient[pid] || [];
             sDates.forEach(sd => {
-                const hasReadmission = eDates.some(ed => ed > sd && (ed - sd) / (1000 * 60 * 60 * 24) <= threshold);
-                if (hasReadmission) numerator++;
+                if (eDates.some(ed => ed > sd && (ed - sd) / 86400000 <= 14)) numerator++;
             });
         });
+    } else {
+        // Fallback
+        denominator = procedures.length;
     }
 
-    const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
+    if (denominator === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+    const rate = ((numerator / denominator) * 100).toFixed(2);
     return { totalPatients: denominator, numerator, denominator, rate };
 }
 
