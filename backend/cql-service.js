@@ -508,8 +508,8 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 const cesareanCodes = '81004C,81005C,81028C,81029C,97009C,97014C';
                 const allDeliveryCodes = naturalCodes + ',' + cesareanCodes;
                 const [procResp, condResp] = await Promise.all([
-                    axios.get(`${fhirServerUrl}/Procedure?code=${allDeliveryCodes}&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                    axios.get(`${fhirServerUrl}/Condition?code=O342&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                    axios.get(`${fhirServerUrl}/Procedure?code=${allDeliveryCodes}&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Condition?code=O342&_count=${singlePageCount}${dateParam.replace(/date=/g, 'onset-date=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.Procedure = (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
                 resources.Condition = (condResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -538,9 +538,9 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 指標12: 清淨手術抗生素>3天 / 指標19: 清淨手術傷口感染
                 const cleanSurgeryCodes = '75607C,75610B,75613C,75614C,75615C,88029C,64162B,64164B,64169B,64170B';
                 const [procResp, encResult, maResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${cleanSurgeryCodes}&_count=500`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${cleanSurgeryCodes}&_count=500${dateParam}`, 3),
                     encPromise,
-                    fetchAllPages(`${fhirServerUrl}/MedicationAdministration?_count=500`, 3)
+                    fetchAllPages(`${fhirServerUrl}/MedicationAdministration?_count=500${dateParam.replace(/date=/g, 'effective-time=')}`, 3)
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
                 resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -550,7 +550,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 指標13: ESWL碎石術
                 const eswlCodes = '50023A,50024A,50025A,50026A';
                 const [procResp, encResult] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${eswlCodes}&_count=500`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${eswlCodes}&_count=500${dateParam}`, 3),
                     encPromise
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -560,9 +560,9 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 指標14: 子宮肌瘤手術14天再入院
                 const fibroidCodes = '97010K,97011A,97012B,97013B,80402C,80420C,80415B,97013C,80415C,80425C,97025K,97026A,97027B,97020K,97021A,97022B,97035K,97036A,97037B,80403B,80404B,80421B,80416B,80412B,97027C,80404C';
                 const [procResp, encResult, condResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${fibroidCodes}&_count=500`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${fibroidCodes}&_count=500${dateParam}`, 3),
                     encPromise,
-                    axios.get(`${fhirServerUrl}/Condition?code=D25,D25.0,D25.1,D25.2,D25.9&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                    axios.get(`${fhirServerUrl}/Condition?code=D25,D25.0,D25.1,D25.2,D25.9&_count=${singlePageCount}${dateParam.replace(/date=/g, 'onset-date=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
                 resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -572,7 +572,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 指標15: 人工關節置換術感染 (TKR/THR/Spine)
                 const arthroplastyCodes = '64164B,97805K,97806A,97807B,64169B,64162B,64170B,64053B,64198B';
                 const [procResp, encResult] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${arthroplastyCodes}&_count=500`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${arthroplastyCodes}&_count=500${dateParam}`, 3),
                     encPromise
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -581,7 +581,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             } else if (cqlFile.includes('_16_')) {
                 // 指標16: 住院手術傷口感染
                 const [procResp, encResult] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=${singlePageCount}`, surgeryMaxPages),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=${singlePageCount}${dateParam}`, surgeryMaxPages),
                     encPromise
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -590,9 +590,9 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             } else {
                 // 其他手術指標 fallback
                 const [procResp, encResult, maResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500${dateParam}`, 3),
                     encPromise,
-                    axios.get(`${fhirServerUrl}/MedicationAdministration?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                    axios.get(`${fhirServerUrl}/MedicationAdministration?_count=${singlePageCount}${dateParam.replace(/date=/g, 'effective-time=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
                 resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -606,8 +606,8 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 const dementiaCodes = 'F00,F01,F02,F03,G30,G30.0,G30.1,G30.8,G30.9,G31,F1027,F1097,F1327,F1397,F1827,F1897,F1927,F1997';
                 const hospiceCodes = '05601K,05602A,05603B,P4401B,P4402B,P4403B,05312C,05316C,05323C,05327C,05336C,05341C,05362C,05374C';
                 const [condResp, procResp, encResp] = await Promise.all([
-                    axios.get(`${fhirServerUrl}/Condition?code=${dementiaCodes}&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                    axios.get(`${fhirServerUrl}/Procedure?code=${hospiceCodes}&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Condition?code=${dementiaCodes}&_count=${singlePageCount}${dateParam.replace(/date=/g, 'onset-date=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Procedure?code=${hospiceCodes}&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
                     axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.Condition = (condResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -622,7 +622,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 其他結果品質指標: Encounter(住院) + Condition + Patient
                 const [encResp, condResp, patResp] = await Promise.all([
                     axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                    axios.get(`${fhirServerUrl}/Condition?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Condition?_count=${singlePageCount}${dateParam.replace(/date=/g, 'onset-date=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
                     axios.get(`${fhirServerUrl}/Patient?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
