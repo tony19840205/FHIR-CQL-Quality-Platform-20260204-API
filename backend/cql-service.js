@@ -142,15 +142,9 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
     console.log('📥 從 FHIR Server 取得資料...');
     let fhirData;
     if (isIndicator) {
-        // 剖腹產指標(11-1~11-4): 使用既有 CQL Engine 路徑
-        const isCesarean = cqlFile && (cqlFile.includes('11_1') || cqlFile.includes('11_2') || cqlFile.includes('11_3') || cqlFile.includes('11_4'));
-        if (isCesarean) {
-            fhirData = await fetchIndicatorFHIRData(fhirServerUrl, { startDate, endDate, maxRecords: maxRecords || 500 });
-        } else {
-            // 其他品質指標: 直接從 FHIR 資料計算（避免 fetchIndicatorFHIRData 只查剖腹產資料導致 502）
-            const indicatorData = await fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, { startDate, endDate, maxRecords: maxRecords || 500 });
-            return computeQualityIndicatorResults(indicatorData, cqlFile);
-        }
+        // 所有品質指標: 直接從 FHIR 資料計算（快速路徑）
+        const indicatorData = await fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, { startDate, endDate, maxRecords: maxRecords || 500 });
+        return computeQualityIndicatorResults(indicatorData, cqlFile);
     } else if (isPublicHealthCQL(cqlFile)) {
         // 國民健康指標: CQL 使用 Unfiltered context，cql-execution 不支援
         // 直接從 FHIR 資料計算統計結果（與 non-API 前端版本邏輯一致）
@@ -386,7 +380,7 @@ function getIndicatorCategory(cqlFile) {
     if (!cqlFile) return 'unknown';
     if (cqlFile.includes('_01_') || cqlFile.includes('_02_') || cqlFile.includes('_03_')) return 'medication';
     if (cqlFile.includes('_04_') || cqlFile.includes('_05_') || cqlFile.includes('_06_') || cqlFile.includes('_07_') || cqlFile.includes('_08_')) return 'outpatient';
-    if (cqlFile.includes('_09_') || cqlFile.includes('_10_')) return 'inpatient';
+    if (cqlFile.includes('_09_') || cqlFile.includes('_10_') || cqlFile.includes('_11_')) return 'inpatient';
     if (cqlFile.includes('_12_') || cqlFile.includes('_13_') || cqlFile.includes('_14_') || cqlFile.includes('_15_') || cqlFile.includes('_16_') || cqlFile.includes('_19_')) return 'surgery';
     if (cqlFile.includes('_17_') || cqlFile.includes('_18_')) return 'outcome';
     return 'unknown';
@@ -508,16 +502,32 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             }
 
         } else if (category === 'inpatient') {
-            // 住院品質指標: Encounter(住院) + Encounter(急診)
-            const usePaging = count > 500;
-            const inpMaxPages = usePaging ? Math.min(Math.ceil(count / 500), 10) : 1;
-            const [impResult, emerResult] = await Promise.all([
-                usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=500${dateParam}`, inpMaxPages) : axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=500${dateParam}`, inpMaxPages) : axios.get(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
-            ]);
-            resources.EncounterIMP = Array.isArray(impResult) ? impResult : (impResult.data?.entry || []).map(e => e.resource).filter(Boolean);
-            resources.EncounterEMER = Array.isArray(emerResult) ? emerResult : (emerResult.data?.entry || []).map(e => e.resource).filter(Boolean);
-            console.log(`   Encounter(IMP): ${resources.EncounterIMP.length}, Encounter(EMER): ${resources.EncounterEMER.length}`);
+            if (cqlFile.includes('_11_')) {
+                // 剖腹產指標 11-1~11-4: targeted Procedure search for delivery codes
+                const naturalCodes = '81017C,81018C,81019C,81024C,81025C,81026C,81034C,97004C,97005D,97934C';
+                const cesareanCodes = '81004C,81005C,81028C,81029C,97009C,97014C';
+                const allDeliveryCodes = naturalCodes + ',' + cesareanCodes;
+                const [procResp, condResp] = await Promise.all([
+                    axios.get(`${fhirServerUrl}/Procedure?code=${allDeliveryCodes}&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    axios.get(`${fhirServerUrl}/Condition?code=O342&_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.Procedure = (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.Condition = (condResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.EncounterIMP = [];
+                resources.EncounterEMER = [];
+                console.log(`   [Cesarean] Delivery Procedures: ${resources.Procedure.length}, O342 Conditions: ${resources.Condition.length}`);
+            } else {
+                // 住院品質指標 09/10: Encounter(住院) + Encounter(急診)
+                const usePaging = count > 500;
+                const inpMaxPages = usePaging ? Math.min(Math.ceil(count / 500), 10) : 1;
+                const [impResult, emerResult] = await Promise.all([
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=500${dateParam}`, inpMaxPages) : axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=500${dateParam}`, inpMaxPages) : axios.get(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.EncounterIMP = Array.isArray(impResult) ? impResult : (impResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                resources.EncounterEMER = Array.isArray(emerResult) ? emerResult : (emerResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   Encounter(IMP): ${resources.EncounterIMP.length}, Encounter(EMER): ${resources.EncounterEMER.length}`);
+            }
 
         } else if (category === 'surgery') {
             // 手術品質指標: Procedure + Encounter(住院) + MedicationAdministration
@@ -838,6 +848,11 @@ function computeOutpatientIndicator(data, cqlFile) {
 
 // --- 住院品質指標計算 ---
 function computeInpatientIndicator(data, cqlFile) {
+    // 11-1~11-4 剖腹產指標: 使用 Procedure 而非 Encounter
+    if (cqlFile.includes('_11_')) {
+        return computeCesareanIndicator(data, cqlFile);
+    }
+
     const impEnc = data.EncounterIMP || [];
     const emerEnc = data.EncounterEMER || [];
 
@@ -901,6 +916,76 @@ function computeInpatientIndicator(data, cqlFile) {
     }
 
     const rate = denominator > 0 ? ((numerator / denominator) * 100).toFixed(2) : '0.00';
+    return { totalPatients: denominator, numerator, denominator, rate };
+}
+
+// --- 剖腹產指標計算 (11-1~11-4) ---
+function computeCesareanIndicator(data, cqlFile) {
+    const procedures = data.Procedure || [];
+    const conditions = data.Condition || [];
+
+    if (procedures.length === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+
+    // NHI procedure codes
+    const naturalCodes = new Set(['81017C','81018C','81019C','81024C','81025C','81026C','81034C','97004C','97005D','97934C']);
+    const cesareanCodes = new Set(['81004C','81005C','81028C','81029C','97009C','97014C']);
+    // Patient-requested cesarean codes (11-2)
+    const patientRequestedCodes = new Set(['97014C']);
+
+    // Classify procedures
+    const naturalProcs = [];
+    const cesareanProcs = [];
+    procedures.forEach(p => {
+        const code = p.code?.coding?.[0]?.code || '';
+        if (naturalCodes.has(code)) naturalProcs.push(p);
+        else if (cesareanCodes.has(code)) cesareanProcs.push(p);
+    });
+
+    const denominator = naturalProcs.length + cesareanProcs.length; // All deliveries
+    if (denominator === 0) return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
+
+    let numerator = 0;
+
+    if (cqlFile.includes('_11_1')) {
+        // 整體剖腹產率: all cesarean / all deliveries
+        numerator = cesareanProcs.length;
+    } else if (cqlFile.includes('_11_2')) {
+        // 產婦要求剖腹產率: patient-requested cesarean (code 97014C) / all deliveries
+        numerator = cesareanProcs.filter(p => {
+            const code = p.code?.coding?.[0]?.code || '';
+            return patientRequestedCodes.has(code);
+        }).length;
+    } else if (cqlFile.includes('_11_3')) {
+        // 有適應症剖腹產率: cesarean WITH indication = all cesarean - patient-requested
+        const patientRequested = cesareanProcs.filter(p => {
+            const code = p.code?.coding?.[0]?.code || '';
+            return patientRequestedCodes.has(code);
+        }).length;
+        numerator = cesareanProcs.length - patientRequested;
+    } else if (cqlFile.includes('_11_4')) {
+        // 初產婦剖腹產率: first-time cesarean with indication
+        // Exclude: patient-requested (97014C) and patients with O342 (previous cesarean)
+        const o342Patients = new Set();
+        conditions.forEach(c => {
+            const code = c.code?.coding?.[0]?.code || '';
+            if (code === 'O342' || code.startsWith('O34.2')) {
+                const pid = (c.subject?.reference || '').split('/').pop();
+                if (pid) o342Patients.add(pid);
+            }
+        });
+        numerator = cesareanProcs.filter(p => {
+            const code = p.code?.coding?.[0]?.code || '';
+            const pid = (p.subject?.reference || '').split('/').pop();
+            // Exclude patient-requested
+            if (patientRequestedCodes.has(code)) return false;
+            // Exclude repeat cesarean (O342)
+            if (o342Patients.has(pid)) return false;
+            // Must be first-time cesarean codes (81004C or 81028C)
+            return code === '81004C' || code === '81028C';
+        }).length;
+    }
+
+    const rate = ((numerator / denominator) * 100).toFixed(2);
     return { totalPatients: denominator, numerator, denominator, rate };
 }
 
