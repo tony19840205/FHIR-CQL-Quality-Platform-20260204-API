@@ -9,6 +9,25 @@
     <link rel="stylesheet" href="css/llm-connection.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        /* ESG 專用: 3 欄等寬 + 按鈕置中統一大小 */
+        .overview-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
+        }
+        .card-actions {
+            text-align: center;
+            padding: 0 1rem;
+        }
+        .btn-card-execute {
+            max-width: 280px;
+            margin: 0 auto;
+        }
+        @media (max-width: 960px) {
+            .overview-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- 導航欄 -->
