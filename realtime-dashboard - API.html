@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>即時看板 - 公共健康數據平台 (API)</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
+        
+        /* Navbar */
+        .public-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226,232,240,0.6); }
+        .public-nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .public-nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .public-nav-logo-icon { width: 36px; height: 36px; border-radius: 12px; background: linear-gradient(135deg, #2563eb, #7c3aed); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+        .public-nav-logo-icon i { color: white; font-size: 18px; }
+        .public-nav-logo-text { display: flex; flex-direction: column; }
+        .public-nav-logo-text .title { font-size: 14px; font-weight: 700; color: #1e293b; line-height: 1.2; }
+        .public-nav-logo-text .subtitle { font-size: 10px; color: #94a3b8; letter-spacing: 2px; line-height: 1.2; }
+        .public-nav-links { display: flex; gap: 4px; }
+        .public-nav-links a { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; color: #64748b; text-decoration: none; transition: all 0.2s; }
+        .public-nav-links a:hover { color: #1e293b; background: #f1f5f9; }
+        .public-nav-links a.active { color: #2563eb; background: #eff6ff; box-shadow: 0 1px 3px rgba(37,99,235,0.1); }
+        .public-nav-links a i { font-size: 14px; }
+        .back-to-control { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; color: #6366f1; background: #eef2ff; text-decoration: none; transition: all 0.2s; border: 1px solid #c7d2fe; }
+        .back-to-control:hover { background: #e0e7ff; }
+
+        /* Content */
+        .content-area { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+        .section-card { background: white; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; padding: 1.5rem; }
+        .section-title { font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+        .section-subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 1.5rem; }
+
+        /* Page Header */
+        .page-header { background: linear-gradient(135deg, #1e3a8a, #2563eb 70%); color: white; padding: 2.5rem 0; }
+        .page-header-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+        .page-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
+        .page-header p { color: rgba(255,255,255,0.7); font-size: 15px; }
+
+        /* Stats row */
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-mini { padding: 1.25rem; border-radius: 12px; background: white; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: all 0.3s; }
+        .stat-mini:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
+        .stat-mini .stat-mini-label { font-size: 13px; color: #94a3b8; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+        .stat-mini .stat-mini-label i { font-size: 14px; }
+        .stat-mini .stat-mini-val { font-size: 1.6rem; font-weight: 700; margin-top: 4px; }
+        .stat-mini .stat-mini-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+        /* Tab strip */
+        .tab-strip { display: flex; gap: 4px; margin-bottom: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0; }
+        .tab-btn { padding: 10px 20px; font-size: 14px; font-weight: 500; color: #94a3b8; background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+        .tab-btn:hover { color: #1e293b; }
+        .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+
+        /* Search/Filter Row */
+        .filter-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .filter-input { padding: 8px 14px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; background: #f8fafc; outline: none; transition: border-color 0.2s; }
+        .filter-input:focus { border-color: #2563eb; }
+        .filter-select { padding: 8px 14px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; background: #f8fafc; outline: none; cursor: pointer; }
+        .filter-select:focus { border-color: #2563eb; }
+
+        /* Table */
+        .data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .data-table th { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px; text-align: left; background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
+        .data-table td { padding: 12px; font-size: 14px; border-bottom: 1px solid #f8fafc; }
+        .data-table tr:hover td { background: #f8fafc; }
+        .data-table .trend-up { color: #dc2626; font-weight: 500; }
+        .data-table .trend-down { color: #059669; font-weight: 500; }
+        .data-table .trend-stable { color: #d97706; font-weight: 500; }
+
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+        /* Gauge */
+        .gauge-card { padding: 1.25rem; border-radius: 12px; border: 1px solid #f1f5f9; background: white; text-align: center; transition: all 0.3s; }
+        .gauge-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
+        .gauge-svg { width: 120px; height: 120px; display: block; margin: 0 auto 12px; }
+        .gauge-name { font-size: 14px; font-weight: 500; color: #1e293b; }
+        .gauge-sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+
+        /* Data source banner */
+        .data-banner { padding: 12px 0; border-bottom: 1px solid; }
+        .data-banner.mock { background: #fffbeb; border-color: #fde68a; }
+        .data-banner.real { background: #ecfdf5; border-color: #a7f3d0; }
+        .data-banner-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .data-banner.mock .data-banner-inner { color: #92400e; }
+        .data-banner.real .data-banner-inner { color: #065f46; }
+
+        /* Refresh button */
+        .refresh-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; cursor: pointer; transition: all 0.2s; }
+        .refresh-btn:hover { background: #dbeafe; }
+        .refresh-btn.spinning i { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+        /* Footer */
+        .public-footer { background: white; border-top: 1px solid #e2e8f0; margin-top: 4rem; padding: 1.5rem 0; text-align: center; font-size: 13px; color: #94a3b8; }
+
+        @media (max-width: 768px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .grid-2 { grid-template-columns: 1fr; }
+            .grid-3 { grid-template-columns: 1fr 1fr; }
+            .public-nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="public-nav">
+        <div class="public-nav-inner">
+            <a href="public-dashboard - API.html" class="public-nav-logo">
+                <div class="public-nav-logo-icon"><i class="fas fa-heartbeat"></i></div>
+                <div class="public-nav-logo-text">
+                    <span class="title">公共健康數據</span>
+                    <span class="subtitle">FHIR OPEN DATA</span>
+                </div>
+            </a>
+            <div class="public-nav-links">
+                <a href="public-dashboard - API.html"><i class="fas fa-home"></i> 首頁</a>
+                <a href="realtime-dashboard - API.html" class="active"><i class="fas fa-chart-line"></i> 即時看板</a>
+                <a href="public-dashboard - API.html#quality"><i class="fas fa-clipboard-check"></i> 品質指標</a>
+                <a href="public-dashboard - API.html#about"><i class="fas fa-info-circle"></i> 關於</a>
+            </div>
+            <a href="index - API.html" class="back-to-control"><i class="fas fa-arrow-left"></i> 返回控制台</a>
+        </div>
+    </header>
+
+    <!-- Data Source Banner -->
+    <div class="data-banner mock" id="dataBanner">
+        <div class="data-banner-inner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span><strong>目前顯示為示範數據</strong> — 待醫療品質控制台執行查詢並匯出後，將自動替換為真實數據</span>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="page-header-inner" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1><i class="fas fa-chart-line" style="margin-right: 12px;"></i>即時看板</h1>
+                <p>整合傳染病趨勢、門診品質與處方管理的即時數據面板</p>
+            </div>
+            <button class="refresh-btn" onclick="refreshData()"><i class="fas fa-sync-alt"></i> 重新整理</button>
+        </div>
+    </section>
+
+    <!-- Stats Summary -->
+    <div class="content-area" style="margin-top: 2rem;">
+        <div class="stats-row">
+            <div class="stat-mini">
+                <div class="stat-mini-label"><i class="fas fa-syringe" style="color: #3b82f6;"></i> 注射率</div>
+                <div class="stat-mini-val" style="color: #1e3a8a;" id="statInjection">18.5%</div>
+                <div class="stat-mini-sub">門診注射比率</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-label"><i class="fas fa-capsules" style="color: #dc2626;"></i> 抗生素使用率</div>
+                <div class="stat-mini-val" style="color: #991b1b;" id="statAntibiotic">24.8%</div>
+                <div class="stat-mini-sub">門診抗生素處方</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-label"><i class="fas fa-hospital" style="color: #059669;"></i> 同院重複</div>
+                <div class="stat-mini-val" style="color: #065f46;" id="statSameOverlap">8.2%</div>
+                <div class="stat-mini-sub">同院藥物重複率</div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini-label"><i class="fas fa-exchange-alt" style="color: #7c3aed;"></i> 跨院重複</div>
+                <div class="stat-mini-val" style="color: #4c1d95;" id="statCrossOverlap">5.7%</div>
+                <div class="stat-mini-sub">跨院藥物重複率</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="content-area">
+        <div class="section-card">
+            <div class="tab-strip">
+                <button class="tab-btn active" onclick="switchTab('disease')"><i class="fas fa-virus" style="margin-right: 6px;"></i>傳染病趨勢</button>
+                <button class="tab-btn" onclick="switchTab('table')"><i class="fas fa-table" style="margin-right: 6px;"></i>疾病統計表</button>
+                <button class="tab-btn" onclick="switchTab('outpatient')"><i class="fas fa-stethoscope" style="margin-right: 6px;"></i>門診品質</button>
+                <button class="tab-btn" onclick="switchTab('prescription')"><i class="fas fa-prescription-bottle-alt" style="margin-right: 6px;"></i>處方管理</button>
+            </div>
+
+            <!-- Tab 1: Disease Trend Chart -->
+            <div class="tab-pane active" id="pane-disease">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <div class="section-title">傳染病趨勢</div>
+                        <div class="section-subtitle">近 9 個月各類傳染病通報數趨勢</div>
+                    </div>
+                    <div class="filter-row" style="margin-bottom: 0;">
+                        <select class="filter-select" id="diseaseFilter" onchange="renderTrendChart()">
+                            <option value="all">全部疾病</option>
+                            <option value="covid">COVID-19</option>
+                            <option value="influenza">流感</option>
+                            <option value="dengue">登革熱</option>
+                            <option value="tb">結核病</option>
+                        </select>
+                    </div>
+                </div>
+                <canvas id="trendChart" height="400"></canvas>
+            </div>
+
+            <!-- Tab 2: Disease Table -->
+            <div class="tab-pane" id="pane-table">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <div class="section-title">疾病統計表</div>
+                        <div class="section-subtitle">各類傳染病通報數量與趨勢</div>
+                    </div>
+                    <div class="filter-row" style="margin-bottom: 0;">
+                        <input class="filter-input" type="text" placeholder="搜尋疾病名稱..." id="tableSearch" oninput="renderDiseaseTable()">
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>疾病名稱</th>
+                            <th>通報類型</th>
+                            <th>本月通報</th>
+                            <th>上月通報</th>
+                            <th>趨勢</th>
+                            <th>致死率</th>
+                        </tr>
+                    </thead>
+                    <tbody id="diseaseTableBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Tab 3: Outpatient Quality -->
+            <div class="tab-pane" id="pane-outpatient">
+                <div class="section-title">門診品質趨勢</div>
+                <div class="section-subtitle">近六季門診注射率、抗生素使用率與藥物重複率趨勢</div>
+                <canvas id="outpatientChart" height="350"></canvas>
+                <div style="margin-top: 2rem;">
+                    <div class="section-title">藥物重複用藥分析</div>
+                    <div class="section-subtitle">同院 vs 跨院重複藥物分布</div>
+                    <div class="grid-2" style="margin-top: 1rem;">
+                        <div>
+                            <h4 style="font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 12px;">同院重複用藥 Top 8</h4>
+                            <canvas id="sameOverlapChart" height="280"></canvas>
+                        </div>
+                        <div>
+                            <h4 style="font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 12px;">跨院重複用藥 Top 8</h4>
+                            <canvas id="crossOverlapChart" height="280"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Prescription Management -->
+            <div class="tab-pane" id="pane-prescription">
+                <div class="section-title">處方管理指標</div>
+                <div class="section-subtitle">門診處方品質監測</div>
+                <div class="grid-3" id="gaugeGrid" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="public-footer">
+        &copy; 2026 FHIR CQL 整合平台 · 即時看板 · 所有數據皆經去識別化處理
+    </footer>
+
+    <script>
+    // ===== Mock Data =====
+    const mockData = {
+        diseaseTrend: [
+            { month: '2025/07', covid: 1250, influenza: 3400, dengue: 89, tb: 42 },
+            { month: '2025/08', covid: 980, influenza: 2800, dengue: 156, tb: 38 },
+            { month: '2025/09', covid: 760, influenza: 2100, dengue: 234, tb: 45 },
+            { month: '2025/10', covid: 1120, influenza: 4200, dengue: 178, tb: 41 },
+            { month: '2025/11', covid: 1580, influenza: 5600, dengue: 95, tb: 37 },
+            { month: '2025/12', covid: 2340, influenza: 7800, dengue: 42, tb: 44 },
+            { month: '2026/01', covid: 3100, influenza: 9200, dengue: 18, tb: 39 },
+            { month: '2026/02', covid: 2680, influenza: 6400, dengue: 12, tb: 43 },
+            { month: '2026/03', covid: 1890, influenza: 4100, dengue: 67, tb: 40 },
+        ],
+        diseaseTable: [
+            { name: 'COVID-19', type: '第五類', current: 1890, prev: 2680, trend: 'down', fatality: '0.02%' },
+            { name: '流感', type: '第四類', current: 4100, prev: 6400, trend: 'down', fatality: '0.01%' },
+            { name: '登革熱', type: '第二類', current: 67, prev: 12, trend: 'up', fatality: '0.5%' },
+            { name: '結核病', type: '第三類', current: 40, prev: 43, trend: 'stable', fatality: '5.0%' },
+            { name: '腸病毒', type: '第三類', current: 523, prev: 412, trend: 'up', fatality: '0.03%' },
+            { name: '百日咳', type: '第三類', current: 15, prev: 18, trend: 'down', fatality: '0.2%' },
+            { name: 'A型肝炎', type: '第二類', current: 8, prev: 12, trend: 'down', fatality: '0.3%' },
+            { name: '日本腦炎', type: '第三類', current: 3, prev: 7, trend: 'down', fatality: '25%' },
+            { name: '梅毒', type: '第三類', current: 186, prev: 192, trend: 'stable', fatality: '-' },
+        ],
+        outpatientTrend: [
+            { quarter: '2024 Q2', injection: 21.5, antibiotic: 26.3, sameOverlap: 9.8, crossOverlap: 7.1 },
+            { quarter: '2024 Q3', injection: 20.8, antibiotic: 25.9, sameOverlap: 9.2, crossOverlap: 6.8 },
+            { quarter: '2024 Q4', injection: 20.1, antibiotic: 25.5, sameOverlap: 9.0, crossOverlap: 6.5 },
+            { quarter: '2025 Q1', injection: 19.5, antibiotic: 25.2, sameOverlap: 8.8, crossOverlap: 6.2 },
+            { quarter: '2025 Q2', injection: 19.0, antibiotic: 25.0, sameOverlap: 8.5, crossOverlap: 5.9 },
+            { quarter: '2025 Q3', injection: 18.5, antibiotic: 24.8, sameOverlap: 8.2, crossOverlap: 5.7 },
+        ],
+        sameHospitalOverlap: [
+            { drug: '降血壓藥', count: 245 },
+            { drug: '降血糖藥', count: 198 },
+            { drug: '降血脂藥', count: 167 },
+            { drug: '質子幫浦', count: 143 },
+            { drug: '非固醇消炎', count: 121 },
+            { drug: '安眠藥', count: 98 },
+            { drug: '抗組織胺', count: 76 },
+            { drug: '鈣離子阻斷', count: 54 },
+        ],
+        crossHospitalOverlap: [
+            { drug: '降血壓藥', count: 156 },
+            { drug: '降血糖藥', count: 134 },
+            { drug: '降血脂藥', count: 112 },
+            { drug: '安眠藥', count: 98 },
+            { drug: '質子幫浦', count: 87 },
+            { drug: '非固醇消炎', count: 76 },
+            { drug: '抗組織胺', count: 54 },
+            { drug: '鈣離子阻斷', count: 32 },
+        ],
+        prescriptionManagement: [
+            { name: '合理處方率', value: 87.5, target: 85, color: '#3b82f6' },
+            { name: '處方完整率', value: 94.2, target: 90, color: '#10b981' },
+            { name: '藥物交互監測', value: 76.8, target: 80, color: '#f59e0b' },
+            { name: '處方集中度', value: 91.3, target: 85, color: '#8b5cf6' },
+        ],
+    };
+
+    let trendChartInstance = null;
+    let outpatientChartInstance = null;
+    let sameOverlapChartInstance = null;
+    let crossOverlapChartInstance = null;
+    let currentData = mockData;
+
+    // ===== Tabs =====
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        const targetEl = document.getElementById('pane-' + tab);
+        targetEl.classList.add('active');
+        const names = ['disease', 'table', 'outpatient', 'prescription'];
+        document.querySelectorAll('.tab-btn')[names.indexOf(tab)].classList.add('active');
+        // Lazy init charts
+        if (tab === 'outpatient' && !outpatientChartInstance) renderOutpatientChart();
+        if (tab === 'prescription' && !document.getElementById('gaugeGrid').children.length) renderGauges();
+    }
+
+    // ===== Disease Trend Chart =====
+    function renderTrendChart() {
+        const filter = document.getElementById('diseaseFilter').value;
+        const data = currentData.diseaseTrend || mockData.diseaseTrend;
+        const labels = data.map(d => d.month);
+        const datasets = [];
+        const dsConfig = [
+            { key: 'covid', label: 'COVID-19', color: '#3b82f6' },
+            { key: 'influenza', label: '流感', color: '#f59e0b' },
+            { key: 'dengue', label: '登革熱', color: '#10b981' },
+            { key: 'tb', label: '結核病', color: '#8b5cf6' },
+        ];
+        for (const ds of dsConfig) {
+            if (filter === 'all' || filter === ds.key) {
+                datasets.push({
+                    label: ds.label,
+                    data: data.map(d => d[ds.key]),
+                    borderColor: ds.color,
+                    backgroundColor: ds.color + '15',
+                    borderWidth: 2.5,
+                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    fill: filter !== 'all',
+                });
+            }
+        }
+        if (trendChartInstance) trendChartInstance.destroy();
+        trendChartInstance = new Chart(document.getElementById('trendChart').getContext('2d'), {
+            type: 'line',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } },
+                scales: { y: { beginAtZero: true } },
+                interaction: { mode: 'nearest', axis: 'x', intersect: false }
+            }
+        });
+    }
+
+    // ===== Disease Table =====
+    function renderDiseaseTable() {
+        const search = (document.getElementById('tableSearch').value || '').toLowerCase();
+        const data = (currentData.diseaseTable || mockData.diseaseTable).filter(d => !search || d.name.toLowerCase().includes(search) || d.type.includes(search));
+        const tbody = document.getElementById('diseaseTableBody');
+        tbody.innerHTML = data.map(d => {
+            const trendIcon = d.trend === 'up' ? '<i class="fas fa-arrow-up"></i> 上升' : d.trend === 'down' ? '<i class="fas fa-arrow-down"></i> 下降' : '<i class="fas fa-minus"></i> 持平';
+            const trendClass = d.trend === 'up' ? 'trend-up' : d.trend === 'down' ? 'trend-down' : 'trend-stable';
+            return `<tr>
+                <td style="font-weight: 500;">${d.name}</td>
+                <td><span style="padding: 2px 8px; border-radius: 999px; background: #f1f5f9; font-size: 12px;">${d.type}</span></td>
+                <td style="font-weight: 600;">${d.current.toLocaleString()}</td>
+                <td>${d.prev.toLocaleString()}</td>
+                <td class="${trendClass}">${trendIcon}</td>
+                <td>${d.fatality}</td>
+            </tr>`;
+        }).join('');
+    }
+
+    // ===== Outpatient Chart =====
+    function renderOutpatientChart() {
+        const data = currentData.outpatientTrend || mockData.outpatientTrend;
+        outpatientChartInstance = new Chart(document.getElementById('outpatientChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: data.map(d => d.quarter),
+                datasets: [
+                    { label: '注射率(%)', data: data.map(d => d.injection), borderColor: '#3b82f6', borderWidth: 2.5, tension: 0.3, pointRadius: 4 },
+                    { label: '抗生素使用率(%)', data: data.map(d => d.antibiotic), borderColor: '#dc2626', borderWidth: 2.5, tension: 0.3, pointRadius: 4 },
+                    { label: '同院重複(%)', data: data.map(d => d.sameOverlap), borderColor: '#059669', borderWidth: 2.5, tension: 0.3, pointRadius: 4 },
+                    { label: '跨院重複(%)', data: data.map(d => d.crossOverlap), borderColor: '#7c3aed', borderWidth: 2.5, tension: 0.3, pointRadius: 4 },
+                ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+        });
+
+        // Drug overlap bar charts
+        renderOverlapChart('sameOverlapChart', currentData.sameHospitalOverlap || mockData.sameHospitalOverlap, '#3b82f6');
+        renderOverlapChart('crossOverlapChart', currentData.crossHospitalOverlap || mockData.crossHospitalOverlap, '#7c3aed');
+    }
+
+    function renderOverlapChart(canvasId, data, color) {
+        const inst = new Chart(document.getElementById(canvasId).getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.drug),
+                datasets: [{ label: '重複人次', data: data.map(d => d.count), backgroundColor: color + 'cc', borderRadius: 6, barPercentage: 0.7 }]
+            },
+            options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
+        });
+        if (canvasId === 'sameOverlapChart') sameOverlapChartInstance = inst;
+        else crossOverlapChartInstance = inst;
+    }
+
+    // ===== Gauges =====
+    function renderGauges() {
+        const data = currentData.prescriptionManagement || mockData.prescriptionManagement;
+        const grid = document.getElementById('gaugeGrid');
+        grid.innerHTML = data.map(item => {
+            const pct = Math.min(item.value / 100, 1);
+            const r = 50, cx = 60, cy = 60;
+            const circumference = 2 * Math.PI * r;
+            const offset = circumference * (1 - pct);
+            const met = item.value >= item.target;
+            return `<div class="gauge-card">
+                <svg class="gauge-svg" viewBox="0 0 120 120">
+                    <circle cx="${cx}" cy="${cy}" r="${r}" stroke="#f1f5f9" stroke-width="10" fill="none" transform="rotate(-90 ${cx} ${cy})"/>
+                    <circle cx="${cx}" cy="${cy}" r="${r}" stroke="${item.color}" stroke-width="10" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round" fill="none" transform="rotate(-90 ${cx} ${cy})" style="transition: stroke-dashoffset 1s ease;"/>
+                    <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="20" font-weight="700" fill="#1e293b">${item.value}%</text>
+                    <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="10" fill="#94a3b8">目標 ${item.target}%</text>
+                </svg>
+                <div class="gauge-name">${item.name}</div>
+                <div class="gauge-sub" style="color: ${met ? '#059669' : '#d97706'};">${met ? '✓ 達標' : '● 待改善'}</div>
+            </div>`;
+        }).join('');
+    }
+
+    // ===== Refresh =====
+    function refreshData() {
+        const btn = document.querySelector('.refresh-btn');
+        btn.classList.add('spinning');
+        loadData().then(data => {
+            currentData = data;
+            renderTrendChart();
+            renderDiseaseTable();
+            // Reset charts
+            if (outpatientChartInstance) { outpatientChartInstance.destroy(); outpatientChartInstance = null; }
+            if (sameOverlapChartInstance) { sameOverlapChartInstance.destroy(); sameOverlapChartInstance = null; }
+            if (crossOverlapChartInstance) { crossOverlapChartInstance.destroy(); crossOverlapChartInstance = null; }
+            document.getElementById('gaugeGrid').innerHTML = '';
+            // Re-render visible tab
+            const activeTab = document.querySelector('.tab-pane.active').id.replace('pane-', '');
+            if (activeTab === 'outpatient') renderOutpatientChart();
+            if (activeTab === 'prescription') renderGauges();
+            setTimeout(() => btn.classList.remove('spinning'), 500);
+        });
+    }
+
+    // ===== Load data =====
+    async function loadData() {
+        try {
+            const res = await fetch('/data/dashboard-data.json');
+            if (res.ok) {
+                const json = await res.json();
+                if (json && json.exportedAt) {
+                    document.getElementById('dataBanner').className = 'data-banner real';
+                    document.getElementById('dataBanner').querySelector('.data-banner-inner').innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse 2s infinite;"></span> <span><strong>真實數據</strong> — 來自醫療品質控制台匯出（' + json.exportedAt + '）</span>';
+                    return json;
+                }
+            }
+        } catch(e) {}
+        return mockData;
+    }
+
+    // ===== Init =====
+    document.addEventListener('DOMContentLoaded', async () => {
+        currentData = await loadData();
+        renderTrendChart();
+        renderDiseaseTable();
+    });
+    </script>
+</body>
+</html>

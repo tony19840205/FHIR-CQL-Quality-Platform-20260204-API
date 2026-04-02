@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公共健康數據平台 - 民眾版 (API)</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Noto Sans TC', 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
+        
+        /* Navbar */
+        .public-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226,232,240,0.6); }
+        .public-nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+        .public-nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .public-nav-logo-icon { width: 36px; height: 36px; border-radius: 12px; background: linear-gradient(135deg, #2563eb, #7c3aed); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+        .public-nav-logo-icon i { color: white; font-size: 18px; }
+        .public-nav-logo-text { display: flex; flex-direction: column; }
+        .public-nav-logo-text .title { font-size: 14px; font-weight: 700; color: #1e293b; line-height: 1.2; }
+        .public-nav-logo-text .subtitle { font-size: 10px; color: #94a3b8; letter-spacing: 2px; line-height: 1.2; }
+        .public-nav-links { display: flex; gap: 4px; }
+        .public-nav-links a { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; color: #64748b; text-decoration: none; transition: all 0.2s; }
+        .public-nav-links a:hover { color: #1e293b; background: #f1f5f9; }
+        .public-nav-links a.active { color: #2563eb; background: #eff6ff; box-shadow: 0 1px 3px rgba(37,99,235,0.1); }
+        .public-nav-links a i { font-size: 14px; }
+        .back-to-control { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; color: #6366f1; background: #eef2ff; text-decoration: none; transition: all 0.2s; border: 1px solid #c7d2fe; }
+        .back-to-control:hover { background: #e0e7ff; }
+
+        /* Hero */
+        .public-hero { background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%); color: white; position: relative; overflow: hidden; }
+        .public-hero::before { content: ''; position: absolute; top: 20px; left: 10px; width: 288px; height: 288px; background: white; border-radius: 50%; filter: blur(80px); opacity: 0.08; }
+        .public-hero::after { content: ''; position: absolute; bottom: 10px; right: 20px; width: 384px; height: 384px; background: #c4b5fd; border-radius: 50%; filter: blur(80px); opacity: 0.08; }
+        .public-hero-inner { max-width: 1280px; margin: 0 auto; padding: 4rem 1.5rem 5rem; position: relative; z-index: 1; }
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); padding: 6px 16px; border-radius: 999px; font-size: 14px; margin-bottom: 1.5rem; }
+        .hero-badge .real-data { margin-left: 8px; padding: 2px 8px; background: rgba(52,211,153,0.25); border-radius: 999px; font-size: 12px; font-weight: 500; display: none; }
+        .public-hero h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 1rem; }
+        .public-hero p { font-size: 1.1rem; color: rgba(255,255,255,0.8); line-height: 1.6; margin-bottom: 2rem; max-width: 700px; }
+        .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-buttons a { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 12px; font-weight: 600; font-size: 15px; text-decoration: none; transition: all 0.2s; }
+        .btn-primary { background: white; color: #2563eb; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .btn-primary:hover { background: #eff6ff; }
+        .btn-secondary { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(8px); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+
+        /* Stats Cards */
+        .stats-grid { max-width: 1280px; margin: -2.5rem auto 0; padding: 0 1.5rem; position: relative; z-index: 10; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .stat-card { border-radius: 16px; padding: 1.25rem; border: 1px solid; transition: all 0.3s; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.08); }
+        .stat-card .stat-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .stat-card .stat-label { font-size: 14px; font-weight: 500; color: #64748b; margin-bottom: 4px; }
+        .stat-card .stat-val { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.5px; }
+        .stat-card .stat-sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        .stat-card .stat-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .stat-blue { background: linear-gradient(135deg, #eff6ff, #dbeafe); border-color: #bfdbfe; }
+        .stat-blue .stat-val { color: #1e3a8a; }
+        .stat-blue .stat-icon { background: #dbeafe; color: #2563eb; }
+        .stat-emerald { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border-color: #a7f3d0; }
+        .stat-emerald .stat-val { color: #065f46; }
+        .stat-emerald .stat-icon { background: #d1fae5; color: #059669; }
+        .stat-amber { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-color: #fde68a; }
+        .stat-amber .stat-val { color: #78350f; }
+        .stat-amber .stat-icon { background: #fef3c7; color: #d97706; }
+        .stat-violet { background: linear-gradient(135deg, #f5f3ff, #ede9fe); border-color: #c4b5fd; }
+        .stat-violet .stat-val { color: #4c1d95; }
+        .stat-violet .stat-icon { background: #ede9fe; color: #7c3aed; }
+
+        /* Section Card */
+        .section-card { background: white; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; padding: 1.5rem; }
+        .section-title { font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
+        .section-subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 1.5rem; }
+
+        /* Content Area */
+        .content-area { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+        /* Quality Indicators */
+        .quality-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .quality-item { padding: 1rem; border-radius: 12px; border: 1px solid; }
+        .quality-item.good { background: #ecfdf5; border-color: #a7f3d0; }
+        .quality-item.warning { background: #fffbeb; border-color: #fde68a; }
+        .quality-item .qi-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .quality-item .qi-name { font-size: 14px; font-weight: 500; color: #475569; }
+        .quality-item .qi-badge { font-size: 11px; padding: 2px 8px; border-radius: 999px; font-weight: 500; }
+        .quality-item.good .qi-badge { background: #d1fae5; color: #065f46; }
+        .quality-item.warning .qi-badge { background: #fef3c7; color: #92400e; }
+        .quality-item .qi-value { font-size: 1.5rem; font-weight: 700; color: #1e293b; }
+        .quality-item .qi-unit { font-size: 14px; color: #94a3b8; margin-left: 4px; }
+        .quality-item .qi-target { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+
+        /* ESG Items */
+        .esg-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-radius: 12px; background: #f8fafc; transition: background 0.2s; }
+        .esg-item:hover { background: #f1f5f9; }
+        .esg-item .esg-name { font-size: 14px; font-weight: 500; color: #1e293b; }
+        .esg-item .esg-unit { font-size: 12px; color: #94a3b8; }
+        .esg-item .esg-value { font-size: 1.1rem; font-weight: 700; color: #1e293b; }
+        .esg-item .esg-change { font-size: 12px; font-weight: 500; }
+        .esg-change.up { color: #059669; }
+        .esg-change.down { color: #2563eb; }
+
+        /* News */
+        .news-item { display: flex; gap: 1rem; padding: 12px; border-radius: 12px; transition: background 0.2s; cursor: pointer; }
+        .news-item:hover { background: #f8fafc; }
+        .news-date { font-size: 12px; color: #94a3b8; width: 80px; flex-shrink: 0; padding-top: 2px; }
+        .news-title { font-size: 14px; font-weight: 500; color: #1e293b; }
+        .news-category { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        .news-badge { font-size: 10px; padding: 2px 6px; border-radius: 999px; font-weight: 500; margin-left: 8px; }
+        .badge-new { background: #fee2e2; color: #991b1b; }
+        .badge-feature { background: #dbeafe; color: #1e40af; }
+        .badge-report { background: #d1fae5; color: #065f46; }
+        .badge-upcoming { background: #ede9fe; color: #5b21b6; }
+
+        /* AI Promo */
+        .ai-promo { border-radius: 16px; background: linear-gradient(135deg, #7c3aed, #2563eb); padding: 1.5rem; color: white; display: flex; flex-direction: column; justify-content: space-between; }
+        .ai-promo-icon { width: 48px; height: 48px; border-radius: 16px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        .ai-promo h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+        .ai-promo p { font-size: 14px; color: rgba(255,255,255,0.8); line-height: 1.5; margin-bottom: 1.5rem; }
+        .ai-promo a { display: inline-flex; align-items: center; gap: 8px; background: white; color: #7c3aed; font-weight: 600; padding: 10px 20px; border-radius: 12px; text-decoration: none; font-size: 14px; transition: background 0.2s; width: fit-content; }
+        .ai-promo a:hover { background: #f5f3ff; }
+
+        /* Grid for news + AI */
+        .grid-news { display: grid; grid-template-columns: 3fr 2fr; gap: 1.5rem; }
+
+        /* Footer */
+        .public-footer { background: white; border-top: 1px solid #e2e8f0; margin-top: 4rem; }
+        .public-footer-inner { max-width: 1280px; margin: 0 auto; padding: 2.5rem 1.5rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .footer-brand { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .footer-brand-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #2563eb, #7c3aed); display: flex; align-items: center; justify-content: center; }
+        .footer-brand-icon i { color: white; font-size: 14px; }
+        .footer-brand span { font-weight: 700; color: #1e293b; }
+        .footer-desc { font-size: 14px; color: #94a3b8; line-height: 1.6; }
+        .footer-title { font-weight: 600; font-size: 14px; color: #1e293b; margin-bottom: 12px; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+        .footer-links a { font-size: 14px; color: #94a3b8; text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: #2563eb; }
+        .footer-info { font-size: 14px; color: #94a3b8; line-height: 1.8; }
+        .footer-bottom { max-width: 1280px; margin: 0 auto; padding: 1.5rem; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #94a3b8; }
+
+        /* Data source banner */
+        .data-banner { padding: 12px 0; border-bottom: 1px solid; }
+        .data-banner.mock { background: #fffbeb; border-color: #fde68a; }
+        .data-banner.real { background: #ecfdf5; border-color: #a7f3d0; }
+        .data-banner-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .data-banner.mock .data-banner-inner { color: #92400e; }
+        .data-banner.real .data-banner-inner { color: #065f46; }
+
+        @media (max-width: 768px) {
+            .stats-grid, .quality-grid { grid-template-columns: repeat(2, 1fr); }
+            .grid-2, .grid-news { grid-template-columns: 1fr; }
+            .public-hero h1 { font-size: 1.8rem; }
+            .public-nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="public-nav">
+        <div class="public-nav-inner">
+            <a href="public-dashboard - API.html" class="public-nav-logo">
+                <div class="public-nav-logo-icon"><i class="fas fa-heartbeat"></i></div>
+                <div class="public-nav-logo-text">
+                    <span class="title">公共健康數據</span>
+                    <span class="subtitle">FHIR OPEN DATA</span>
+                </div>
+            </a>
+            <div class="public-nav-links">
+                <a href="public-dashboard - API.html" class="active"><i class="fas fa-home"></i> 首頁</a>
+                <a href="realtime-dashboard - API.html"><i class="fas fa-chart-line"></i> 即時看板</a>
+                <a href="public-dashboard - API.html#quality"><i class="fas fa-clipboard-check"></i> 品質指標</a>
+                <a href="public-dashboard - API.html#about"><i class="fas fa-info-circle"></i> 關於</a>
+            </div>
+            <a href="index - API.html" class="back-to-control"><i class="fas fa-arrow-left"></i> 返回控制台</a>
+        </div>
+    </header>
+
+    <!-- Data Source Banner -->
+    <div class="data-banner mock" id="dataBanner">
+        <div class="data-banner-inner">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span><strong>目前顯示為示範數據</strong> — 待醫療品質控制台執行查詢並匯出後，將自動替換為真實數據</span>
+        </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="public-hero">
+        <div class="public-hero-inner">
+            <div class="hero-badge">
+                <i class="fas fa-sparkles"></i>
+                <span>即時更新 · 去識別化 · AI 分析</span>
+                <span class="real-data" id="heroRealBadge">● 真實數據</span>
+            </div>
+            <h1>公共健康數據<br>透明開放平台</h1>
+            <p>整合 FHIR 醫療標準數據，提供傳染病趨勢、醫療品質指標與 ESG 永續報告。<br>所有資料皆經去識別化處理，保護病患隱私。</p>
+            <div class="hero-buttons">
+                <a href="realtime-dashboard - API.html" class="btn-primary"><i class="fas fa-chart-bar"></i> 瀏覽數據</a>
+                <a href="#about" class="btn-secondary"><i class="fas fa-comment-dots"></i> 了解更多</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card stat-blue">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-label">監控疾病數</div>
+                    <div class="stat-val" id="statDiseases">9+</div>
+                    <div class="stat-sub">傳染病項目</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+            </div>
+        </div>
+        <div class="stat-card stat-emerald">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-label">品質指標</div>
+                    <div class="stat-val" id="statQuality">20+</div>
+                    <div class="stat-sub">醫療品質量測</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+            </div>
+        </div>
+        <div class="stat-card stat-amber">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-label">更新頻率</div>
+                    <div class="stat-val" id="statFrequency">每日</div>
+                    <div class="stat-sub">資料更新週期</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-clock"></i></div>
+            </div>
+        </div>
+        <div class="stat-card stat-violet">
+            <div class="stat-header">
+                <div>
+                    <div class="stat-label">醫療機構</div>
+                    <div class="stat-val" id="statHospitals">6+</div>
+                    <div class="stat-sub">合作醫院</div>
+                </div>
+                <div class="stat-icon"><i class="fas fa-hospital"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trend Chart -->
+    <div class="content-area" style="margin-top: 3rem;">
+        <div class="section-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <div>
+                    <div class="section-title">傳染病趨勢</div>
+                    <div class="section-subtitle">近 9 個月通報數統計</div>
+                </div>
+                <a href="realtime-dashboard - API.html" style="font-size: 14px; color: #2563eb; text-decoration: none; font-weight: 500;">查看完整數據 <i class="fas fa-arrow-right" style="font-size: 12px;"></i></a>
+            </div>
+            <canvas id="trendChart" height="320"></canvas>
+        </div>
+    </div>
+
+    <!-- Quality + ESG -->
+    <div class="content-area" style="margin-top: 2rem;">
+        <div class="grid-2">
+            <div class="section-card">
+                <div class="section-title">醫療品質指標</div>
+                <div class="section-subtitle">實際值 vs 目標值</div>
+                <canvas id="qualityBarChart" height="320"></canvas>
+            </div>
+            <div class="section-card">
+                <div class="section-title">ESG 永續指標</div>
+                <div class="section-subtitle">環境 · 社會 · 治理</div>
+                <div id="esgList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quality Indicator Mini-list -->
+    <div class="content-area" style="margin-top: 2rem;" id="quality">
+        <div class="section-card">
+            <div class="section-title">品質達標狀態</div>
+            <div class="section-subtitle">主要監測指標達標一覽</div>
+            <div class="quality-grid" id="qualityGrid"></div>
+        </div>
+    </div>
+
+    <!-- News + AI -->
+    <div class="content-area" style="margin-top: 2rem; margin-bottom: 4rem;">
+        <div class="grid-news">
+            <div class="section-card">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem;">
+                    <i class="fas fa-bell" style="color: #2563eb;"></i>
+                    <div class="section-title" style="margin-bottom: 0;">最新消息</div>
+                </div>
+                <div id="newsList" style="display: flex; flex-direction: column; gap: 4px;"></div>
+            </div>
+            <div class="ai-promo">
+                <div>
+                    <div class="ai-promo-icon"><i class="fas fa-comment-dots" style="font-size: 24px;"></i></div>
+                    <h3>AI 健康問答</h3>
+                    <p>輸入健康相關問題，AI 將根據最新的公開統計數據為您分析趨勢、提供衛教資訊。</p>
+                </div>
+                <a href="realtime-dashboard - API.html"><i class="fas fa-arrow-right"></i> 開始瀏覽</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- About -->
+    <div class="content-area" style="margin-bottom: 2rem;" id="about">
+        <div class="section-card">
+            <div class="section-title"><i class="fas fa-heart" style="color: #f43f5e; margin-right: 8px;"></i>關於平台</div>
+            <p style="color: #64748b; line-height: 1.8; margin-top: 12px;">
+                公共健康數據平台是基於 FHIR（Fast Healthcare Interoperability Resources）國際標準建立的開放式醫療數據展示系統。
+                我們相信<strong>資訊透明</strong>是公共健康的基石。透過將醫療機構的統計數據以匿名化、標準化的方式對外公開，
+                讓民眾能即時了解傳染病趨勢、醫療品質以及醫療機構的 ESG 永續表現。
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem;">
+                <div style="display: flex; gap: 12px; align-items: flex-start;">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: #eff6ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="fas fa-database" style="color: #2563eb;"></i></div>
+                    <div><div style="font-weight: 600; font-size: 14px;">FHIR 國際標準</div><div style="font-size: 13px; color: #94a3b8;">HL7 FHIR R4 標準格式</div></div>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: flex-start;">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: #ecfdf5; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="fas fa-shield-alt" style="color: #059669;"></i></div>
+                    <div><div style="font-weight: 600; font-size: 14px;">去識別化處理</div><div style="font-size: 13px; color: #94a3b8;">不包含個人資訊</div></div>
+                </div>
+                <div style="display: flex; gap: 12px; align-items: flex-start;">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: #f5f3ff; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><i class="fas fa-brain" style="color: #7c3aed;"></i></div>
+                    <div><div style="font-weight: 600; font-size: 14px;">AI 智慧分析</div><div style="font-size: 13px; color: #94a3b8;">趨勢分析與健康問答</div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="public-footer">
+        <div class="public-footer-inner">
+            <div>
+                <div class="footer-brand">
+                    <div class="footer-brand-icon"><i class="fas fa-heartbeat"></i></div>
+                    <span>公共健康數據平台</span>
+                </div>
+                <div class="footer-desc">基於 FHIR 標準的開放醫療數據平台，提供匿名化公共健康統計資訊，促進資訊透明與公眾健康意識。</div>
+            </div>
+            <div>
+                <div class="footer-title">快速連結</div>
+                <ul class="footer-links">
+                    <li><a href="realtime-dashboard - API.html">即時看板</a></li>
+                    <li><a href="public-dashboard - API.html#quality">品質指標</a></li>
+                    <li><a href="public-dashboard - API.html#about">關於平台</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-title">資訊</div>
+                <div class="footer-info">
+                    資料來源：FHIR R4 標準格式<br>
+                    更新頻率：每日更新<br>
+                    所有數據皆經去識別化處理
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 FHIR CQL 整合平台 · Made with ❤️ in Taiwan</span>
+            <a href="https://github.com/tony19840205/FHIR-CQL-Quality-Platform-20260204" target="_blank" style="color: #94a3b8; text-decoration: none;"><i class="fab fa-github"></i> GitHub</a>
+        </div>
+    </footer>
+
+    <script>
+    // ===== Mock Data (same as public-site/lib/mock-data.ts) =====
+    const mockData = {
+        diseaseTrend: [
+            { month: '2025/07', covid: 1250, influenza: 3400, dengue: 89, tb: 42 },
+            { month: '2025/08', covid: 980, influenza: 2800, dengue: 156, tb: 38 },
+            { month: '2025/09', covid: 760, influenza: 2100, dengue: 234, tb: 45 },
+            { month: '2025/10', covid: 1120, influenza: 4200, dengue: 178, tb: 41 },
+            { month: '2025/11', covid: 1580, influenza: 5600, dengue: 95, tb: 37 },
+            { month: '2025/12', covid: 2340, influenza: 7800, dengue: 42, tb: 44 },
+            { month: '2026/01', covid: 3100, influenza: 9200, dengue: 18, tb: 39 },
+            { month: '2026/02', covid: 2680, influenza: 6400, dengue: 12, tb: 43 },
+            { month: '2026/03', covid: 1890, influenza: 4100, dengue: 67, tb: 40 },
+        ],
+        qualityBar: [
+            { name: '剖腹產', actual: 32.5, target: 30.0 },
+            { name: '抗生素', actual: 24.8, target: 25.0 },
+            { name: '急診轉住院', actual: 18.2, target: 20.0 },
+            { name: '院內感染', actual: 2.1, target: 2.5 },
+            { name: '再入院', actual: 12.3, target: 10.0 },
+            { name: '等候時間', actual: 28, target: 30 },
+        ],
+        qualityIndicators: [
+            { name: '剖腹產率', value: 32.5, target: 30.0, unit: '%', status: 'warning' },
+            { name: '抗生素使用率', value: 24.8, target: 25.0, unit: '%', status: 'good' },
+            { name: '急診轉住院', value: 18.2, target: 20.0, unit: '%', status: 'good' },
+            { name: '院內感染率', value: 2.1, target: 2.5, unit: '%', status: 'good' },
+            { name: '手術死亡率', value: 0.8, target: 1.0, unit: '%', status: 'good' },
+            { name: '再入院率', value: 12.3, target: 10.0, unit: '%', status: 'warning' },
+            { name: '門診等候時間', value: 28, target: 30, unit: '分鐘', status: 'good' },
+            { name: '病床使用率', value: 85.6, target: 85.0, unit: '%', status: 'warning' },
+        ],
+        esgIndicators: [
+            { category: '碳排放量', value: 4250, unit: '噸CO₂e', change: -8.2, trend: 'down' },
+            { category: '廢棄物回收率', value: 72.5, unit: '%', change: 3.1, trend: 'up' },
+            { category: '綠色採購比', value: 45.8, unit: '%', change: 5.6, trend: 'up' },
+            { category: '員工滿意度', value: 78.3, unit: '%', change: 2.4, trend: 'up' },
+            { category: '社區服務時數', value: 1250, unit: '小時', change: 12.0, trend: 'up' },
+            { category: '能源使用強度', value: 186, unit: 'kWh/m²', change: -4.5, trend: 'down' },
+        ],
+        announcements: [
+            { date: '2026/03/25', title: '2026 Q1 流感趨勢報告已更新', category: '數據更新', badge: 'new' },
+            { date: '2026/03/20', title: '新增 ESG 永續指標監測模組', category: '功能更新', badge: 'feature' },
+            { date: '2026/03/15', title: '醫療品質指標 Q4 2025 報告發布', category: '報告發布', badge: 'report' },
+            { date: '2026/03/10', title: 'AI 健康趨勢分析即將上線', category: '即將推出', badge: 'upcoming' },
+        ],
+    };
+
+    // ===== Render functions =====
+    function renderTrendChart(data) {
+        const ctx = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.map(d => d.month),
+                datasets: [
+                    { label: 'COVID-19', data: data.map(d => d.covid), borderColor: '#3b82f6', borderWidth: 2.5, tension: 0.3, pointRadius: 3 },
+                    { label: '流感', data: data.map(d => d.influenza), borderColor: '#f59e0b', borderWidth: 2.5, tension: 0.3, pointRadius: 3 },
+                    { label: '登革熱', data: data.map(d => d.dengue), borderColor: '#10b981', borderWidth: 2.5, tension: 0.3, pointRadius: 3 },
+                    { label: '結核病', data: data.map(d => d.tb), borderColor: '#8b5cf6', borderWidth: 2.5, tension: 0.3, pointRadius: 3 },
+                ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+        });
+    }
+
+    function renderQualityBar(data) {
+        const ctx = document.getElementById('qualityBarChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.map(d => d.name),
+                datasets: [
+                    { label: '實際值', data: data.map(d => d.actual), backgroundColor: '#3b82f6', borderRadius: 6, barPercentage: 0.6 },
+                    { label: '目標值', data: data.map(d => d.target), backgroundColor: '#e2e8f0', borderRadius: 6, barPercentage: 0.6 },
+                ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+        });
+    }
+
+    function renderESG(data) {
+        const list = document.getElementById('esgList');
+        list.innerHTML = data.map(item => `
+            <div class="esg-item">
+                <div>
+                    <div class="esg-name">${item.category}</div>
+                    <div class="esg-unit">${item.unit}</div>
+                </div>
+                <div style="text-align: right;">
+                    <div class="esg-value">${item.value.toLocaleString()}</div>
+                    <div class="esg-change ${item.trend === 'up' ? 'up' : 'down'}">${item.change > 0 ? '+' : ''}${item.change}%</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function renderQualityGrid(data) {
+        const grid = document.getElementById('qualityGrid');
+        grid.innerHTML = data.map(item => `
+            <div class="quality-item ${item.status}">
+                <div class="qi-header">
+                    <span class="qi-name">${item.name}</span>
+                    <span class="qi-badge">${item.status === 'good' ? '達標' : '待改善'}</span>
+                </div>
+                <span class="qi-value">${item.value}</span><span class="qi-unit">${item.unit}</span>
+                <div class="qi-target">目標：${item.target} ${item.unit}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderNews(data) {
+        const badgeClass = { new: 'badge-new', feature: 'badge-feature', report: 'badge-report', upcoming: 'badge-upcoming' };
+        const badgeText = { new: '新', feature: '功能', report: '報告', upcoming: '即將' };
+        const list = document.getElementById('newsList');
+        list.innerHTML = data.map(item => `
+            <div class="news-item">
+                <div class="news-date">${item.date}</div>
+                <div style="flex: 1;">
+                    <div class="news-title">${item.title}</div>
+                    <div class="news-category">
+                        <i class="fas fa-tag" style="font-size: 10px; margin-right: 4px;"></i>${item.category}
+                        <span class="news-badge ${badgeClass[item.badge]}">${badgeText[item.badge]}</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ===== Load data =====
+    async function loadData() {
+        try {
+            const res = await fetch('/data/dashboard-data.json');
+            if (res.ok) {
+                const json = await res.json();
+                if (json && json.exportedAt) {
+                    document.getElementById('dataBanner').className = 'data-banner real';
+                    document.getElementById('dataBanner').querySelector('.data-banner-inner').innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse 2s infinite;"></span> <span><strong>真實數據</strong> — 來自醫療品質控制台匯出</span>';
+                    document.getElementById('heroRealBadge').style.display = 'inline';
+                    return json;
+                }
+            }
+        } catch(e) {}
+        return mockData;
+    }
+
+    // ===== Init =====
+    document.addEventListener('DOMContentLoaded', async () => {
+        const data = await loadData();
+        renderTrendChart(data.diseaseTrend || data.diseaseTrendData || mockData.diseaseTrend);
+        renderQualityBar(data.qualityBar || data.qualityBarData || mockData.qualityBar);
+        renderESG(data.esgIndicators || mockData.esgIndicators);
+        renderQualityGrid(data.qualityIndicators || mockData.qualityIndicators);
+        renderNews(data.announcements || mockData.announcements);
+        if (data.stats) {
+            if (data.stats.diseases) document.getElementById('statDiseases').textContent = data.stats.diseases + '+';
+            if (data.stats.qualityMetrics) document.getElementById('statQuality').textContent = data.stats.qualityMetrics + '+';
+            if (data.stats.updateFrequency) document.getElementById('statFrequency').textContent = data.stats.updateFrequency;
+            if (data.stats.hospitals) document.getElementById('statHospitals').textContent = data.stats.hospitals + '+';
+        }
+    });
+    </script>
+</body>
+</html>
