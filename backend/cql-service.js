@@ -1164,47 +1164,48 @@ function computeSurgeryIndicator(data, cqlFile) {
         const arthroplastyCodes = new Set(['64164B','97805K','97806A','97807B','64169B','64162B','64170B']);
         const infectionCodes = new Set(['64053B','64198B']);
         
-        // 分母: arthroplasty procedures
-        const arthroplastyProcs = procedures.filter(p => {
-            const code = p.code?.coding?.[0]?.code || '';
-            return arthroplastyCodes.has(code);
-        });
-        // 分子: infection procedures within 90 days
-        const infectionProcs = procedures.filter(p => {
-            const code = p.code?.coding?.[0]?.code || '';
-            return infectionCodes.has(code);
-        });
-        
+        // 分母: arthroplasty procedures (filtered by sub-indicator)
+        let targetCodes;
         if (cqlFile.includes('_15_2')) {
-            // 15-2: total knee only (64164B, 97805K, 97806A, 97807B)
-            const tkrCodes = new Set(['64164B','97805K','97806A','97807B']);
-            denominator = arthroplastyProcs.filter(p => tkrCodes.has(p.code?.coding?.[0]?.code || '')).length;
+            targetCodes = new Set(['64164B','97805K','97806A','97807B']);
         } else if (cqlFile.includes('_15_3')) {
-            // 15-3: partial knee only (64169B)
-            denominator = arthroplastyProcs.filter(p => (p.code?.coding?.[0]?.code || '') === '64169B').length;
+            targetCodes = new Set(['64169B']);
         } else {
-            // 15-1: all knee arthroplasty
-            denominator = arthroplastyProcs.length;
+            targetCodes = arthroplastyCodes;
         }
         
-        // Count infections linked to arthroplasty patients within 90 days
-        const arthrPatientDates = {};
-        arthroplastyProcs.forEach(p => {
+        const targetProcs = procedures.filter(p => targetCodes.has(p.code?.coding?.[0]?.code || ''));
+        // 分子: infection procedures within 90 days
+        const infectionProcs = procedures.filter(p => infectionCodes.has(p.code?.coding?.[0]?.code || ''));
+        
+        // Build patient dates from TARGET procedures only
+        const targetPatients = new Set();
+        const targetPatientDates = {};
+        targetProcs.forEach(p => {
             const pid = (p.subject?.reference || '').split('/').pop();
             const date = p.performedDateTime || p.performedPeriod?.start || '';
-            if (pid && date) {
-                if (!arthrPatientDates[pid]) arthrPatientDates[pid] = [];
-                arthrPatientDates[pid].push(new Date(date));
+            if (pid) {
+                targetPatients.add(pid);
+                if (date) {
+                    if (!targetPatientDates[pid]) targetPatientDates[pid] = [];
+                    targetPatientDates[pid].push(new Date(date));
+                }
             }
         });
+        denominator = targetPatients.size;
+        
+        // Count patients (not procedures) with infection within 90 days of their arthroplasty
+        const infectedPatients = new Set();
         infectionProcs.forEach(p => {
             const pid = (p.subject?.reference || '').split('/').pop();
+            if (!targetPatients.has(pid)) return; // only count infections for target patients
             const infDate = new Date(p.performedDateTime || p.performedPeriod?.start || '');
-            const surgDates = arthrPatientDates[pid] || [];
+            const surgDates = targetPatientDates[pid] || [];
             if (surgDates.some(sd => infDate > sd && (infDate - sd) / 86400000 <= 90)) {
-                numerator++;
+                infectedPatients.add(pid);
             }
         });
+        numerator = infectedPatients.size;
     } else if (cqlFile.includes('_16_')) {
         // 指標16: 住院手術傷口感染率
         denominator = procedures.length;
