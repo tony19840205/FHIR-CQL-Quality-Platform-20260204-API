@@ -3,512 +3,766 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>即時看板 - 公共健康數據平台 (API)</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/dashboard.css">
+    <title>公共健康即時看板 (API)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Noto Sans TC', 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
-        
-        /* Navbar */
-        .public-nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(226,232,240,0.6); }
-        .public-nav-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
-        .public-nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-        .public-nav-logo-icon { width: 36px; height: 36px; border-radius: 12px; background: linear-gradient(135deg, #2563eb, #7c3aed); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
-        .public-nav-logo-icon i { color: white; font-size: 18px; }
-        .public-nav-logo-text { display: flex; flex-direction: column; }
-        .public-nav-logo-text .title { font-size: 14px; font-weight: 700; color: #1e293b; line-height: 1.2; }
-        .public-nav-logo-text .subtitle { font-size: 10px; color: #94a3b8; letter-spacing: 2px; line-height: 1.2; }
-        .public-nav-links { display: flex; gap: 4px; }
-        .public-nav-links a { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; color: #64748b; text-decoration: none; transition: all 0.2s; }
-        .public-nav-links a:hover { color: #1e293b; background: #f1f5f9; }
-        .public-nav-links a.active { color: #2563eb; background: #eff6ff; box-shadow: 0 1px 3px rgba(37,99,235,0.1); }
-        .public-nav-links a i { font-size: 14px; }
-        .back-to-control { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; color: #6366f1; background: #eef2ff; text-decoration: none; transition: all 0.2s; border: 1px solid #c7d2fe; }
-        .back-to-control:hover { background: #e0e7ff; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter','Noto Sans TC',system-ui,sans-serif; background: #020617; color: #e2e8f0; overflow: hidden; }
+        .dashboard { position: fixed; inset: 0; display: flex; flex-direction: column; user-select: none; }
 
-        /* Content */
-        .content-area { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
-        .section-card { background: white; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid #f1f5f9; padding: 1.5rem; }
-        .section-title { font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 4px; }
-        .section-subtitle { font-size: 13px; color: #94a3b8; margin-bottom: 1.5rem; }
-
-        /* Page Header */
-        .page-header { background: linear-gradient(135deg, #1e3a8a, #2563eb 70%); color: white; padding: 2.5rem 0; }
-        .page-header-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
-        .page-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; }
-        .page-header p { color: rgba(255,255,255,0.7); font-size: 15px; }
-
-        /* Stats row */
-        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
-        .stat-mini { padding: 1.25rem; border-radius: 12px; background: white; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: all 0.3s; }
-        .stat-mini:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
-        .stat-mini .stat-mini-label { font-size: 13px; color: #94a3b8; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-        .stat-mini .stat-mini-label i { font-size: 14px; }
-        .stat-mini .stat-mini-val { font-size: 1.6rem; font-weight: 700; margin-top: 4px; }
-        .stat-mini .stat-mini-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+        /* ─── Header ─── */
+        .db-header { display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; height: 64px; background: rgba(15,23,42,0.8); border-bottom: 1px solid rgba(51,65,85,0.6); backdrop-filter: blur(12px); flex-shrink: 0; }
+        .db-brand { display: flex; align-items: center; gap: 12px; }
+        .db-brand-icon { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg,#3b82f6,#06b6d4); display: flex; align-items: center; justify-content: center; }
+        .db-brand-icon i { color: #fff; font-size: 18px; }
+        .db-brand h1 { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.2; }
+        .db-brand small { font-size: 11px; color: #64748b; }
+        .api-tag { display: inline-flex; font-size: 9px; font-weight: 700; background: linear-gradient(135deg,#f59e0b,#ef4444); color: #fff; padding: 2px 6px; border-radius: 4px; margin-left: 6px; letter-spacing: 0.5px; vertical-align: middle; }
 
         /* Tab strip */
-        .tab-strip { display: flex; gap: 4px; margin-bottom: 1.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0; }
-        .tab-btn { padding: 10px 20px; font-size: 14px; font-weight: 500; color: #94a3b8; background: none; border: none; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
-        .tab-btn:hover { color: #1e293b; }
-        .tab-btn.active { color: #2563eb; border-bottom-color: #2563eb; }
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
+        .tab-strip { display: flex; align-items: center; gap: 3px; overflow-x: auto; scrollbar-width: none; }
+        .tab-strip::-webkit-scrollbar { display: none; }
+        .tab-btn { padding: 6px 12px; font-size: 11px; border-radius: 999px; border: none; cursor: pointer; background: transparent; color: #64748b; font-weight: 500; white-space: nowrap; transition: all 0.2s; line-height: 1.3; text-align: center; font-family: inherit; }
+        .tab-btn:hover { color: #e2e8f0; background: rgba(51,65,85,0.5); }
+        .tab-btn.active { background: #2563eb; color: #fff; font-weight: 600; box-shadow: 0 4px 12px rgba(37,99,235,0.3); }
 
-        /* Search/Filter Row */
-        .filter-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
-        .filter-input { padding: 8px 14px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; background: #f8fafc; outline: none; transition: border-color 0.2s; }
-        .filter-input:focus { border-color: #2563eb; }
-        .filter-select { padding: 8px 14px; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 14px; background: #f8fafc; outline: none; cursor: pointer; }
-        .filter-select:focus { border-color: #2563eb; }
+        /* Clock & Controls */
+        .db-right { display: flex; align-items: center; gap: 16px; }
+        .db-clock { text-align: right; }
+        .db-clock .time { font-size: 16px; font-weight: 700; color: #06b6d4; font-variant-numeric: tabular-nums; font-family: 'Inter',monospace; }
+        .db-clock .date { font-size: 11px; color: #64748b; }
+        .db-controls { display: flex; gap: 4px; }
+        .ctrl-btn { width: 36px; height: 36px; border-radius: 8px; border: none; cursor: pointer; background: transparent; color: #64748b; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; }
+        .ctrl-btn:hover { background: rgba(51,65,85,0.5); color: #fff; }
 
-        /* Table */
-        .data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
-        .data-table th { font-size: 12px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; padding: 12px; text-align: left; background: #f8fafc; border-bottom: 1px solid #f1f5f9; }
-        .data-table td { padding: 12px; font-size: 14px; border-bottom: 1px solid #f8fafc; }
-        .data-table tr:hover td { background: #f8fafc; }
-        .data-table .trend-up { color: #dc2626; font-weight: 500; }
-        .data-table .trend-down { color: #059669; font-weight: 500; }
-        .data-table .trend-stable { color: #d97706; font-weight: 500; }
+        /* Progress bar */
+        .progress-bar { height: 2px; background: #1e293b; flex-shrink: 0; position: relative; overflow: hidden; }
+        .progress-fill { position: absolute; inset: 0; background: linear-gradient(90deg,#3b82f6,#06b6d4); }
+        @keyframes progress { from { width: 0; } to { width: 100%; } }
 
-        /* Grid */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-
-        /* Gauge */
-        .gauge-card { padding: 1.25rem; border-radius: 12px; border: 1px solid #f1f5f9; background: white; text-align: center; transition: all 0.3s; }
-        .gauge-card:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(0,0,0,0.06); }
-        .gauge-svg { width: 120px; height: 120px; display: block; margin: 0 auto 12px; }
-        .gauge-name { font-size: 14px; font-weight: 500; color: #1e293b; }
-        .gauge-sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
-
-        /* Data source banner */
-        .data-banner { padding: 12px 0; border-bottom: 1px solid; }
-        .data-banner.mock { background: #fffbeb; border-color: #fde68a; }
-        .data-banner.real { background: #ecfdf5; border-color: #a7f3d0; }
-        .data-banner-inner { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; display: flex; align-items: center; gap: 12px; font-size: 14px; }
-        .data-banner.mock .data-banner-inner { color: #92400e; }
-        .data-banner.real .data-banner-inner { color: #065f46; }
-
-        /* Refresh button */
-        .refresh-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; cursor: pointer; transition: all 0.2s; }
-        .refresh-btn:hover { background: #dbeafe; }
-        .refresh-btn.spinning i { animation: spin 1s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        /* Main content */
+        .db-main { flex: 1; overflow: hidden; position: relative; }
+        .panel { position: absolute; inset: 0; padding: 1.5rem; overflow-y: auto; animation: fadeIn 0.4s ease-out; display: none; }
+        .panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .panel::-webkit-scrollbar { width: 4px; }
+        .panel::-webkit-scrollbar-track { background: transparent; }
+        .panel::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
 
         /* Footer */
-        .public-footer { background: white; border-top: 1px solid #e2e8f0; margin-top: 4rem; padding: 1.5rem 0; text-align: center; font-size: 13px; color: #94a3b8; }
+        .db-footer { display: flex; justify-content: space-between; padding: 6px 1.5rem; background: rgba(15,23,42,0.6); border-top: 1px solid rgba(51,65,85,0.4); font-size: 10px; color: #64748b; flex-shrink: 0; }
+
+        /* ═══ Common Panel Styles ═══ */
+        .panel-header { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; }
+        .panel-header-icon { width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; }
+        .panel-header h2 { font-size: 1.5rem; font-weight: 800; color: #fff; }
+        .panel-header p { font-size: 14px; color: #64748b; }
+        .card { background: rgba(15,23,42,0.6); border: 1px solid rgba(51,65,85,0.5); border-radius: 16px; padding: 1.25rem; transition: border-color 0.2s; }
+        .card:hover { border-color: rgba(100,116,139,0.5); }
+
+        /* Grid helpers */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+
+        /* Signal dot */
+        .signal { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+        .signal.green { background: #10b981; box-shadow: 0 0 6px rgba(16,185,129,0.5); }
+        .signal.yellow { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.5); }
+        .signal.red { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+        .signal.gray { background: #475569; }
+
+        /* Tabular nums */
+        .tn { font-variant-numeric: tabular-nums; }
+
+        /* Overview summary cards */
+        .summary-card { border-radius: 16px; padding: 1.25rem; background: rgba(15,23,42,0.6); border: 1px solid rgba(51,65,85,0.6); }
+        .summary-card .sc-top { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .summary-card .sc-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; }
+        .summary-card .sc-label { font-size: 14px; font-weight: 600; color: #cbd5e1; }
+        .summary-card .sc-val { font-size: 2rem; font-weight: 800; color: #fff; }
+        .summary-card .sc-sub { font-size: 13px; color: #64748b; margin-top: 4px; }
+
+        /* Quality card */
+        .q-card { background: rgba(15,23,42,0.6); border: 1px solid rgba(51,65,85,0.5); border-radius: 12px; padding: 1rem; transition: border-color 0.2s; }
+        .q-card:hover { border-color: rgba(100,116,139,0.5); }
+        .q-card .q-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .q-card .q-num { font-size: 10px; font-family: 'Inter',monospace; padding: 2px 6px; border-radius: 4px; background: rgba(30,41,59,1); color: #94a3b8; }
+        .q-card .q-code { font-size: 10px; color: #475569; }
+        .q-card .q-name { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 12px; line-height: 1.3; }
+        .q-card .q-bottom { display: flex; justify-content: space-between; align-items: flex-end; }
+        .q-card .q-rate { font-size: 1.5rem; font-weight: 800; }
+        .q-card .q-unit { font-size: 12px; color: #475569; margin-left: 2px; }
+        .q-card .q-frac { font-size: 10px; color: #475569; }
+
+        /* Leaflet override */
+        .leaflet-container { background: #0f172a !important; }
+
+        /* Note box */
+        .note-box { background: rgba(15,23,42,0.4); border: 1px solid rgba(51,65,85,0.3); border-radius: 12px; padding: 1rem; display: flex; gap: 12px; align-items: flex-start; margin-top: 1.5rem; }
+        .note-box .note-icon { width: 32px; height: 32px; border-radius: 8px; background: #1e293b; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 14px; flex-shrink: 0; }
+        .note-box .note-title { font-size: 13px; font-weight: 600; color: #cbd5e1; margin-bottom: 4px; }
+        .note-box .note-text { font-size: 12px; color: #475569; line-height: 1.6; }
 
         @media (max-width: 768px) {
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
-            .grid-2 { grid-template-columns: 1fr; }
-            .grid-3 { grid-template-columns: 1fr 1fr; }
-            .public-nav-links { display: none; }
+            .tab-strip { display: none; }
+            .grid-4, .grid-5 { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <header class="public-nav">
-        <div class="public-nav-inner">
-            <a href="public-dashboard - API.html" class="public-nav-logo">
-                <div class="public-nav-logo-icon"><i class="fas fa-heartbeat"></i></div>
-                <div class="public-nav-logo-text">
-                    <span class="title">公共健康數據</span>
-                    <span class="subtitle">FHIR OPEN DATA</span>
-                </div>
-            </a>
-            <div class="public-nav-links">
-                <a href="public-dashboard - API.html"><i class="fas fa-home"></i> 首頁</a>
-                <a href="realtime-dashboard - API.html" class="active"><i class="fas fa-chart-line"></i> 即時看板</a>
-                <a href="public-dashboard - API.html#quality"><i class="fas fa-clipboard-check"></i> 品質指標</a>
-                <a href="public-dashboard - API.html#about"><i class="fas fa-info-circle"></i> 關於</a>
+<div class="dashboard">
+    <!-- ═══ Header ═══ -->
+    <header class="db-header">
+        <div class="db-brand">
+            <div class="db-brand-icon"><i class="fas fa-wave-square"></i></div>
+            <div>
+                <h1>公共健康即時看板 <span class="api-tag">API</span></h1>
+                <small>FHIR CQL Quality Platform · 50 項指標</small>
             </div>
-            <a href="index - API.html" class="back-to-control"><i class="fas fa-arrow-left"></i> 返回控制台</a>
+        </div>
+        <div class="tab-strip" id="tabStrip"></div>
+        <div class="db-right">
+            <div class="db-clock">
+                <div class="time" id="clockTime">--:--:--</div>
+                <div class="date" id="clockDate">--</div>
+            </div>
+            <div class="db-controls">
+                <button class="ctrl-btn" onclick="prevPanel()" title="上一頁"><i class="fas fa-chevron-left"></i></button>
+                <button class="ctrl-btn" id="playBtn" onclick="togglePlay()" title="暫停/播放"><i class="fas fa-pause"></i></button>
+                <button class="ctrl-btn" onclick="nextPanel()" title="下一頁"><i class="fas fa-chevron-right"></i></button>
+                <button class="ctrl-btn" onclick="toggleFullscreen()" title="全螢幕"><i class="fas fa-expand"></i></button>
+                <a href="public-dashboard - API.html" class="ctrl-btn" title="返回民眾頁" style="color:#64748b;text-decoration:none;"><i class="fas fa-home"></i></a>
+            </div>
         </div>
     </header>
 
-    <!-- Data Source Banner -->
-    <div class="data-banner mock" id="dataBanner">
-        <div class="data-banner-inner">
-            <i class="fas fa-exclamation-triangle"></i>
-            <span><strong>目前顯示為示範數據</strong> — 待醫療品質控制台執行查詢並匯出後，將自動替換為真實數據</span>
-        </div>
-    </div>
+    <!-- ═══ Progress ═══ -->
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 
-    <!-- Page Header -->
-    <section class="page-header">
-        <div class="page-header-inner" style="display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <h1><i class="fas fa-chart-line" style="margin-right: 12px;"></i>即時看板</h1>
-                <p>整合傳染病趨勢、門診品質與處方管理的即時數據面板</p>
-            </div>
-            <button class="refresh-btn" onclick="refreshData()"><i class="fas fa-sync-alt"></i> 重新整理</button>
-        </div>
-    </section>
+    <!-- ═══ Main Content ═══ -->
+    <div class="db-main" id="mainContent"></div>
 
-    <!-- Stats Summary -->
-    <div class="content-area" style="margin-top: 2rem;">
-        <div class="stats-row">
-            <div class="stat-mini">
-                <div class="stat-mini-label"><i class="fas fa-syringe" style="color: #3b82f6;"></i> 注射率</div>
-                <div class="stat-mini-val" style="color: #1e3a8a;" id="statInjection">18.5%</div>
-                <div class="stat-mini-sub">門診注射比率</div>
-            </div>
-            <div class="stat-mini">
-                <div class="stat-mini-label"><i class="fas fa-capsules" style="color: #dc2626;"></i> 抗生素使用率</div>
-                <div class="stat-mini-val" style="color: #991b1b;" id="statAntibiotic">24.8%</div>
-                <div class="stat-mini-sub">門診抗生素處方</div>
-            </div>
-            <div class="stat-mini">
-                <div class="stat-mini-label"><i class="fas fa-hospital" style="color: #059669;"></i> 同院重複</div>
-                <div class="stat-mini-val" style="color: #065f46;" id="statSameOverlap">8.2%</div>
-                <div class="stat-mini-sub">同院藥物重複率</div>
-            </div>
-            <div class="stat-mini">
-                <div class="stat-mini-label"><i class="fas fa-exchange-alt" style="color: #7c3aed;"></i> 跨院重複</div>
-                <div class="stat-mini-val" style="color: #4c1d95;" id="statCrossOverlap">5.7%</div>
-                <div class="stat-mini-sub">跨院藥物重複率</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tab Content -->
-    <div class="content-area">
-        <div class="section-card">
-            <div class="tab-strip">
-                <button class="tab-btn active" onclick="switchTab('disease')"><i class="fas fa-virus" style="margin-right: 6px;"></i>傳染病趨勢</button>
-                <button class="tab-btn" onclick="switchTab('table')"><i class="fas fa-table" style="margin-right: 6px;"></i>疾病統計表</button>
-                <button class="tab-btn" onclick="switchTab('outpatient')"><i class="fas fa-stethoscope" style="margin-right: 6px;"></i>門診品質</button>
-                <button class="tab-btn" onclick="switchTab('prescription')"><i class="fas fa-prescription-bottle-alt" style="margin-right: 6px;"></i>處方管理</button>
-            </div>
-
-            <!-- Tab 1: Disease Trend Chart -->
-            <div class="tab-pane active" id="pane-disease">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <div>
-                        <div class="section-title">傳染病趨勢</div>
-                        <div class="section-subtitle">近 9 個月各類傳染病通報數趨勢</div>
-                    </div>
-                    <div class="filter-row" style="margin-bottom: 0;">
-                        <select class="filter-select" id="diseaseFilter" onchange="renderTrendChart()">
-                            <option value="all">全部疾病</option>
-                            <option value="covid">COVID-19</option>
-                            <option value="influenza">流感</option>
-                            <option value="dengue">登革熱</option>
-                            <option value="tb">結核病</option>
-                        </select>
-                    </div>
-                </div>
-                <canvas id="trendChart" height="400"></canvas>
-            </div>
-
-            <!-- Tab 2: Disease Table -->
-            <div class="tab-pane" id="pane-table">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                    <div>
-                        <div class="section-title">疾病統計表</div>
-                        <div class="section-subtitle">各類傳染病通報數量與趨勢</div>
-                    </div>
-                    <div class="filter-row" style="margin-bottom: 0;">
-                        <input class="filter-input" type="text" placeholder="搜尋疾病名稱..." id="tableSearch" oninput="renderDiseaseTable()">
-                    </div>
-                </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>疾病名稱</th>
-                            <th>通報類型</th>
-                            <th>本月通報</th>
-                            <th>上月通報</th>
-                            <th>趨勢</th>
-                            <th>致死率</th>
-                        </tr>
-                    </thead>
-                    <tbody id="diseaseTableBody"></tbody>
-                </table>
-            </div>
-
-            <!-- Tab 3: Outpatient Quality -->
-            <div class="tab-pane" id="pane-outpatient">
-                <div class="section-title">門診品質趨勢</div>
-                <div class="section-subtitle">近六季門診注射率、抗生素使用率與藥物重複率趨勢</div>
-                <canvas id="outpatientChart" height="350"></canvas>
-                <div style="margin-top: 2rem;">
-                    <div class="section-title">藥物重複用藥分析</div>
-                    <div class="section-subtitle">同院 vs 跨院重複藥物分布</div>
-                    <div class="grid-2" style="margin-top: 1rem;">
-                        <div>
-                            <h4 style="font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 12px;">同院重複用藥 Top 8</h4>
-                            <canvas id="sameOverlapChart" height="280"></canvas>
-                        </div>
-                        <div>
-                            <h4 style="font-size: 14px; font-weight: 600; color: #64748b; margin-bottom: 12px;">跨院重複用藥 Top 8</h4>
-                            <canvas id="crossOverlapChart" height="280"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab 4: Prescription Management -->
-            <div class="tab-pane" id="pane-prescription">
-                <div class="section-title">處方管理指標</div>
-                <div class="section-subtitle">門診處方品質監測</div>
-                <div class="grid-3" id="gaugeGrid" style="margin-top: 1rem;"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <footer class="public-footer">
-        &copy; 2026 FHIR CQL 整合平台 · 即時看板 · 所有數據皆經去識別化處理
+    <!-- ═══ Footer ═══ -->
+    <footer class="db-footer">
+        <span>← → 切換 · 空白鍵 暫停/播放 · F 全螢幕</span>
+        <span id="footerInfo">0/50 項已查詢 · 1/17</span>
     </footer>
+</div>
 
-    <script>
-    // ===== Mock Data =====
-    const mockData = {
-        diseaseTrend: [
-            { month: '2025/07', covid: 1250, influenza: 3400, dengue: 89, tb: 42 },
-            { month: '2025/08', covid: 980, influenza: 2800, dengue: 156, tb: 38 },
-            { month: '2025/09', covid: 760, influenza: 2100, dengue: 234, tb: 45 },
-            { month: '2025/10', covid: 1120, influenza: 4200, dengue: 178, tb: 41 },
-            { month: '2025/11', covid: 1580, influenza: 5600, dengue: 95, tb: 37 },
-            { month: '2025/12', covid: 2340, influenza: 7800, dengue: 42, tb: 44 },
-            { month: '2026/01', covid: 3100, influenza: 9200, dengue: 18, tb: 39 },
-            { month: '2026/02', covid: 2680, influenza: 6400, dengue: 12, tb: 43 },
-            { month: '2026/03', covid: 1890, influenza: 4100, dengue: 67, tb: 40 },
-        ],
-        diseaseTable: [
-            { name: 'COVID-19', type: '第五類', current: 1890, prev: 2680, trend: 'down', fatality: '0.02%' },
-            { name: '流感', type: '第四類', current: 4100, prev: 6400, trend: 'down', fatality: '0.01%' },
-            { name: '登革熱', type: '第二類', current: 67, prev: 12, trend: 'up', fatality: '0.5%' },
-            { name: '結核病', type: '第三類', current: 40, prev: 43, trend: 'stable', fatality: '5.0%' },
-            { name: '腸病毒', type: '第三類', current: 523, prev: 412, trend: 'up', fatality: '0.03%' },
-            { name: '百日咳', type: '第三類', current: 15, prev: 18, trend: 'down', fatality: '0.2%' },
-            { name: 'A型肝炎', type: '第二類', current: 8, prev: 12, trend: 'down', fatality: '0.3%' },
-            { name: '日本腦炎', type: '第三類', current: 3, prev: 7, trend: 'down', fatality: '25%' },
-            { name: '梅毒', type: '第三類', current: 186, prev: 192, trend: 'stable', fatality: '-' },
-        ],
-        outpatientTrend: [
-            { quarter: '2024 Q2', injection: 21.5, antibiotic: 26.3, sameOverlap: 9.8, crossOverlap: 7.1 },
-            { quarter: '2024 Q3', injection: 20.8, antibiotic: 25.9, sameOverlap: 9.2, crossOverlap: 6.8 },
-            { quarter: '2024 Q4', injection: 20.1, antibiotic: 25.5, sameOverlap: 9.0, crossOverlap: 6.5 },
-            { quarter: '2025 Q1', injection: 19.5, antibiotic: 25.2, sameOverlap: 8.8, crossOverlap: 6.2 },
-            { quarter: '2025 Q2', injection: 19.0, antibiotic: 25.0, sameOverlap: 8.5, crossOverlap: 5.9 },
-            { quarter: '2025 Q3', injection: 18.5, antibiotic: 24.8, sameOverlap: 8.2, crossOverlap: 5.7 },
-        ],
-        sameHospitalOverlap: [
-            { drug: '降血壓藥', count: 245 },
-            { drug: '降血糖藥', count: 198 },
-            { drug: '降血脂藥', count: 167 },
-            { drug: '質子幫浦', count: 143 },
-            { drug: '非固醇消炎', count: 121 },
-            { drug: '安眠藥', count: 98 },
-            { drug: '抗組織胺', count: 76 },
-            { drug: '鈣離子阻斷', count: 54 },
-        ],
-        crossHospitalOverlap: [
-            { drug: '降血壓藥', count: 156 },
-            { drug: '降血糖藥', count: 134 },
-            { drug: '降血脂藥', count: 112 },
-            { drug: '安眠藥', count: 98 },
-            { drug: '質子幫浦', count: 87 },
-            { drug: '非固醇消炎', count: 76 },
-            { drug: '抗組織胺', count: 54 },
-            { drug: '鈣離子阻斷', count: 32 },
-        ],
-        prescriptionManagement: [
-            { name: '合理處方率', value: 87.5, target: 85, color: '#3b82f6' },
-            { name: '處方完整率', value: 94.2, target: 90, color: '#10b981' },
-            { name: '藥物交互監測', value: 76.8, target: 80, color: '#f59e0b' },
-            { name: '處方集中度', value: 91.3, target: 85, color: '#8b5cf6' },
-        ],
+<script>
+/* ═══════════════════════════════════════════
+   Data
+   ═══════════════════════════════════════════ */
+const DATA = {
+  exportedAt: "2026-03-26T04:53:17.217Z",
+  diseaseItems: [
+    { id:"covid19", name:"COVID-19", cql:"InfectiousDisease_COVID19_Surveillance", patients:30, encounters:0, cityData:{"台北市":8,"新北市":6,"桃園市":3,"新竹市":2,"基隆市":1,"台中市":3,"彰化縣":1,"南投縣":1,"台南市":2,"高雄市":2,"屏東縣":0,"花蓮縣":1,"台東縣":0} },
+    { id:"influenza", name:"流感", cql:"InfectiousDisease_Influenza_Surveillance", patients:33, encounters:0, cityData:{"台北市":9,"新北市":7,"桃園市":3,"新竹市":2,"基隆市":1,"台中市":4,"彰化縣":1,"南投縣":0,"台南市":2,"高雄市":3,"屏東縣":0,"花蓮縣":1,"台東縣":0} },
+    { id:"conjunctivitis", name:"急性結膜炎", cql:"InfectiousDisease_AcuteConjunctivitis_Surveillance", patients:17, encounters:0, cityData:{"台北市":4,"新北市":3,"桃園市":2,"新竹市":1,"基隆市":0,"台中市":2,"彰化縣":1,"南投縣":0,"台南市":1,"高雄市":2,"屏東縣":0,"花蓮縣":1,"台東縣":0} },
+    { id:"enterovirus", name:"腸病毒", cql:"InfectiousDisease_Enterovirus_Surveillance", patients:22, encounters:0, cityData:{"台北市":5,"新北市":4,"桃園市":2,"新竹市":1,"基隆市":1,"台中市":3,"彰化縣":1,"南投縣":0,"台南市":2,"高雄市":2,"屏東縣":0,"花蓮縣":1,"台東縣":0} },
+    { id:"diarrhea", name:"腹瀉群聚", cql:"InfectiousDisease_AcuteDiarrhea_Surveillance", patients:22, encounters:0, cityData:{"台北市":5,"新北市":4,"桃園市":2,"新竹市":1,"基隆市":1,"台中市":2,"彰化縣":1,"南投縣":1,"台南市":2,"高雄市":2,"屏東縣":0,"花蓮縣":1,"台東縣":0} }
+  ],
+  qualityIndicators: [
+    { id:"indicator-01", number:"01", name:"門診注射劑使用率", code:"3127", category:"medication", numerator:38, denominator:948, rate:4.01, unit:"%" },
+    { id:"indicator-02", number:"02", name:"門診抗生素使用率", code:"1140.01", category:"medication", numerator:47, denominator:834, rate:5.64, unit:"%" },
+    { id:"indicator-03-1", number:"03-1", name:"同院降血壓藥重疊", code:"1710", category:"medication", numerator:450, denominator:3816, rate:11.79, unit:"%" },
+    { id:"indicator-03-2", number:"03-2", name:"同院降血脂藥重疊", code:"1711", category:"medication", numerator:238, denominator:4020, rate:5.92, unit:"%" },
+    { id:"indicator-03-3", number:"03-3", name:"同院降血糖藥重疊", code:"1712", category:"medication", numerator:126, denominator:3272, rate:3.85, unit:"%" },
+    { id:"indicator-03-4", number:"03-4", name:"同院抗思覺失調藥重疊", code:"1726", category:"medication", numerator:168, denominator:1860, rate:9.03, unit:"%" },
+    { id:"indicator-03-5", number:"03-5", name:"同院抗憂鬱藥重疊", code:"1727", category:"medication", numerator:70, denominator:1680, rate:4.17, unit:"%" },
+    { id:"indicator-03-6", number:"03-6", name:"同院安眠鎮靜藥重疊", code:"1728", category:"medication", numerator:143, denominator:2100, rate:6.81, unit:"%" },
+    { id:"indicator-03-7", number:"03-7", name:"同院抗血栓藥重疊", code:"3375", category:"medication", numerator:60, denominator:1560, rate:3.85, unit:"%" },
+    { id:"indicator-03-8", number:"03-8", name:"同院前列腺藥重疊", code:"3376", category:"medication", numerator:42, denominator:1320, rate:3.18, unit:"%" },
+    { id:"indicator-03-9", number:"03-9", name:"跨院降血壓藥重疊", code:"1713", category:"medication", numerator:570, denominator:3816, rate:14.94, unit:"%" },
+    { id:"indicator-03-10", number:"03-10", name:"跨院降血脂藥重疊", code:"1714", category:"medication", numerator:308, denominator:4020, rate:7.66, unit:"%" },
+    { id:"indicator-03-11", number:"03-11", name:"跨院降血糖藥重疊", code:"1715", category:"medication", numerator:216, denominator:3272, rate:6.6, unit:"%" },
+    { id:"indicator-03-12", number:"03-12", name:"跨院抗思覺失調藥重疊", code:"1729", category:"medication", numerator:228, denominator:1860, rate:12.26, unit:"%" },
+    { id:"indicator-03-13", number:"03-13", name:"跨院抗憂鬱藥重疊", code:"1730", category:"medication", numerator:175, denominator:1680, rate:10.42, unit:"%" },
+    { id:"indicator-03-14", number:"03-14", name:"跨院安眠鎮靜藥重疊", code:"1731", category:"medication", numerator:218, denominator:2100, rate:10.38, unit:"%" },
+    { id:"indicator-03-15", number:"03-15", name:"跨院抗血栓藥重疊", code:"3377", category:"medication", numerator:85, denominator:1560, rate:5.45, unit:"%" },
+    { id:"indicator-03-16", number:"03-16", name:"跨院前列腺藥重疊", code:"3378", category:"medication", numerator:58, denominator:1320, rate:4.39, unit:"%" },
+    { id:"indicator-04", number:"04", name:"慢性病連續處方箋使用率", code:"1318", category:"outpatient", numerator:15, denominator:716, rate:2.09, unit:"%" },
+    { id:"indicator-05", number:"05", name:"處方10種以上藥品率", code:"3128", category:"outpatient", numerator:7, denominator:119, rate:5.88, unit:"%" },
+    { id:"indicator-06", number:"06", name:"小兒氣喘急診率", code:"1315Q", category:"outpatient", numerator:4, denominator:16, rate:25, unit:"%" },
+    { id:"indicator-07", number:"07", name:"糖尿病HbA1c檢驗率", code:"109.01Q", category:"outpatient", numerator:6, denominator:6, rate:100, unit:"%" },
+    { id:"indicator-08", number:"08", name:"同日同院同疾病再就診率", code:"1322", category:"outpatient", numerator:5, denominator:211, rate:2.37, unit:"%" },
+    { id:"indicator-09", number:"09", name:"14天內非計畫再入院率", code:"1077.01Q", category:"inpatient", numerator:18, denominator:278, rate:6.47, unit:"%" },
+    { id:"indicator-10", number:"10", name:"出院後3天內急診率", code:"108.01", category:"inpatient", numerator:4, denominator:6, rate:66.67, unit:"%" },
+    { id:"indicator-11-1", number:"11-1", name:"整體剖腹產率", code:"1136.01", category:"inpatient", numerator:10, denominator:16, rate:62.5, unit:"%" },
+    { id:"indicator-11-2", number:"11-2", name:"產婦要求剖腹產率", code:"1137.01", category:"inpatient", numerator:11, denominator:11, rate:100, unit:"%" },
+    { id:"indicator-11-3", number:"11-3", name:"有適應症剖腹產率", code:"1138.01", category:"inpatient", numerator:2, denominator:15, rate:13.33, unit:"%" },
+    { id:"indicator-11-4", number:"11-4", name:"初產婦剖腹產率", code:"1075.01", category:"inpatient", numerator:2, denominator:9, rate:22.22, unit:"%" },
+    { id:"indicator-12", number:"12", name:"清淨手術抗生素超3天率", code:"1155", category:"surgery", numerator:4, denominator:20, rate:20, unit:"%" },
+    { id:"indicator-13", number:"13", name:"體外震波碎石平均利用次數", code:"20.01Q", category:"surgery", numerator:19, denominator:19, rate:1, unit:"次" },
+    { id:"indicator-14", number:"14", name:"子宮肌瘤術14天再入院率", code:"473.01", category:"surgery", numerator:1, denominator:2, rate:50, unit:"%" },
+    { id:"indicator-15-1", number:"15-1", name:"膝關節置換90天深部感染率", code:"353.01", category:"surgery", numerator:11, denominator:19, rate:57.89, unit:"%" },
+    { id:"indicator-15-2", number:"15-2", name:"全膝置換90天深部感染率", code:"3249", category:"surgery", numerator:4, denominator:7, rate:57.14, unit:"%" },
+    { id:"indicator-15-3", number:"15-3", name:"部分膝置換90天深部感染率", code:"3250", category:"surgery", numerator:3, denominator:12, rate:25, unit:"%" },
+    { id:"indicator-16", number:"16", name:"住院手術傷口感染率", code:"1658Q", category:"surgery", numerator:6, denominator:15, rate:40, unit:"%" },
+    { id:"indicator-19", number:"19", name:"清淨手術傷口感染率", code:"2524Q", category:"surgery", numerator:4, denominator:15, rate:26.67, unit:"%" },
+    { id:"indicator-17", number:"17", name:"急性心肌梗塞死亡率", code:"1662Q", category:"outcome", numerator:4, denominator:6, rate:66.67, unit:"%" },
+    { id:"indicator-18", number:"18", name:"失智症安寧療護利用率", code:"2795Q", category:"outcome", numerator:8, denominator:19, rate:42.11, unit:"%" }
+  ],
+  healthIndicators: [
+    { id:"covid19-vaccine", name:"COVID-19 疫苗接種率", cql:"COVID19VaccinationCoverage", description:"監測 COVID-19 疫苗接種涵蓋率與劑次完成度", count:22, rate:1.91, countLabel:"接種人數", rateLabel:"接種率", rateUnit:"%" },
+    { id:"influenza-vaccine", name:"流感疫苗接種率", cql:"InfluenzaVaccinationCoverage", description:"追蹤季節性流感疫苗接種涵蓋率", count:40, rate:1, countLabel:"接種人數", rateLabel:"接種率", rateUnit:"%" },
+    { id:"hypertension", name:"高血壓活動個案數", cql:"HypertensionActiveCases", description:"監測高血壓患者的管理與控制情況", count:572, rate:0.35, countLabel:"活動個案", rateLabel:"控制率", rateUnit:"%" }
+  ],
+  esgIndicators: [
+    { id:"antibiotic", name:"抗生素使用率", cql:"Antibiotic_Utilization", description:"監測抗生素合理使用與抗藥性管理", count:38, rate:244.74, unit:"%", countLabel:"病人數", rateLabel:"使用率" },
+    { id:"ehr", name:"電子病歷採用率", cql:"EHR_Adoption_Rate", description:"追蹤病歷資料是否以結構化電子格式完整記錄", count:111, rate:11.1, unit:"%", countLabel:"病人數", rateLabel:"採用率" },
+    { id:"waste", name:"醫療廢棄物管理", cql:"Waste", description:"監測醫療廢棄物產生與處理情況", count:142.8, rate:7.42, unit:"%", countLabel:"廢棄物量", rateLabel:"回收率" }
+  ]
+};
+
+/* ═══ Panel Definitions ═══ */
+const PANELS = [
+  { id:'overview', label:'總覽' },
+  { id:'disease', label:'傳染病' },
+  { id:'disease-map', label:'傳染病地圖' },
+  { id:'health', label:'國民健康' },
+  { id:'health-gauge', label:'健康儀表' },
+  { id:'medication', label:'用藥安全' },
+  { id:'med-gauge', label:'用藥儀表' },
+  { id:'outpatient', label:'門診品質' },
+  { id:'outpatient-gauge', label:'門診儀表' },
+  { id:'inpatient', label:'住院品質' },
+  { id:'inpatient-gauge', label:'住院儀表' },
+  { id:'surgery', label:'手術品質' },
+  { id:'surgery-gauge', label:'手術儀表' },
+  { id:'outcome', label:'結果品質' },
+  { id:'outcome-gauge', label:'結果儀表' },
+  { id:'esg', label:'ESG' },
+  { id:'esg-gauge', label:'ESG 儀表' }
+];
+const ROTATE_MS = 5000;
+const CAT_LABELS = { medication:'用藥安全', outpatient:'門診品質', inpatient:'住院品質', surgery:'手術品質', outcome:'結果品質' };
+const CAT_ICONS = { medication:'fa-pills', outpatient:'fa-stethoscope', inpatient:'fa-bed', surgery:'fa-cut', outcome:'fa-heartbeat' };
+const CAT_COLORS = { medication:'from-emerald-600', outpatient:'from-blue-600', inpatient:'from-violet-600', surgery:'from-amber-600', outcome:'from-rose-600' };
+const CAT_GRAD = { medication:'linear-gradient(135deg,#059669,#14b8a6)', outpatient:'linear-gradient(135deg,#2563eb,#4f46e5)', inpatient:'linear-gradient(135deg,#7c3aed,#9333ea)', surgery:'linear-gradient(135deg,#d97706,#ea580c)', outcome:'linear-gradient(135deg,#e11d48,#ec4899)' };
+const THRESHOLDS = { medication:{g:3,y:8}, outpatient:{g:5,y:15}, inpatient:{g:3,y:8}, surgery:{g:1,y:5}, outcome:{g:2,y:5} };
+const DISEASE_CLR = { covid19:'#ef4444', influenza:'#3b82f6', conjunctivitis:'#f59e0b', enterovirus:'#8b5cf6', diarrhea:'#10b981' };
+
+function getSignal(rate, cat) {
+    if (rate === null) return 'gray';
+    const t = THRESHOLDS[cat]; if (!t) return 'gray';
+    if (rate <= t.g) return 'green'; if (rate <= t.y) return 'yellow'; return 'red';
+}
+function signalDot(s) { return `<span class="signal ${s}"></span>`; }
+function byCat(cat) { return DATA.qualityIndicators.filter(q => q.category === cat); }
+function fmt(v) { return v !== null && v !== undefined ? Number(v).toLocaleString() : '--'; }
+
+/* ─── Computed ─── */
+const qQ = DATA.qualityIndicators.filter(q => q.rate !== null).length;
+const qD = DATA.diseaseItems.filter(d => d.patients !== null).length;
+const qH = DATA.healthIndicators.filter(h => h.count !== null).length;
+const qE = DATA.esgIndicators.filter(e => e.rate !== null).length;
+const totalQueried = qQ + qD + qH + qE;
+const totalPatients = DATA.diseaseItems.reduce((s,d)=>s+(d.patients||0),0);
+
+/* ═══ SVG Helpers ═══ */
+function svgHalfDonut(val, threshold, size, label) {
+    const sw = 12, r = (size-sw)/2, circ = Math.PI*r;
+    const pct = val!==null ? Math.min(val/(threshold*2),1) : 0;
+    const offset = circ*(1-pct);
+    const clr = val===null ? '#475569' : val<=3 ? '#10b981' : val<=8 ? '#f59e0b' : '#ef4444';
+    return `<svg width="${size}" height="${size/2+10}" viewBox="0 0 ${size} ${size/2+10}">
+        <path d="M ${sw/2} ${size/2} A ${r} ${r} 0 0 1 ${size-sw/2} ${size/2}" fill="none" stroke="#1e293b" stroke-width="${sw}" stroke-linecap="round"/>
+        <path d="M ${sw/2} ${size/2} A ${r} ${r} 0 0 1 ${size-sw/2} ${size/2}" fill="none" stroke="${clr}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" style="filter:drop-shadow(0 0 6px ${clr}66);transition:all 1s ease-out"/>
+    </svg>
+    <div style="margin-top:-${size/4}px;text-align:center;font-size:1.5rem;font-weight:800;color:${clr}" class="tn">${val!==null?val+'%':'--'}</div>
+    <div style="text-align:center;font-size:11px;color:#94a3b8;margin-top:4px">${label}</div>`;
+}
+
+function svgRingGauge(val, max, size, color, label) {
+    const sw=12, r=(size-sw)/2, circ=2*Math.PI*r;
+    const pct = Math.min(val/max,1), offset=circ*(1-pct), dpct=Math.round(pct*100);
+    return `<div style="position:relative;display:inline-block">
+    <svg width="${size}" height="${size}" style="transform:rotate(-90deg)">
+        <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#1e293b" stroke-width="${sw}"/>
+        <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="${color}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" style="filter:drop-shadow(0 0 6px ${color}66);transition:all 1s ease-out"/>
+    </svg>
+    <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <span style="font-size:2rem;font-weight:800;color:#fff" class="tn">${dpct}%</span>
+        <span style="font-size:10px;color:#64748b">達成率</span>
+    </div></div>
+    <div style="font-size:12px;color:#64748b;text-align:center;margin-top:8px">${label}</div>`;
+}
+
+function svgSparkline(data, color, w, h) {
+    if (data.length < 2) return '';
+    const max=Math.max(...data), min=Math.min(...data), range=max-min||1;
+    const pts = data.map((v,i)=>`${(i/(data.length-1))*w},${h-4-((v-min)/range)*(h-8)}`).join(' ');
+    const area = `0,${h} ${pts} ${w},${h}`;
+    const cid = color.replace('#','');
+    const last = data[data.length-1];
+    const ly = h-4-((last-min)/range)*(h-8);
+    return `<svg width="${w}" height="${h}">
+        <defs><linearGradient id="sg${cid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity="0.3"/><stop offset="100%" stop-color="${color}" stop-opacity="0.02"/></linearGradient></defs>
+        <polygon points="${area}" fill="url(#sg${cid})"/>
+        <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="${w}" cy="${ly}" r="3" fill="${color}" style="animation:pulse 2s infinite"/>
+    </svg>`;
+}
+
+function horizontalBar(items, maxVal, getTarget, getLowerBetter) {
+    return items.map(q => {
+        const val = q.rate, t = getTarget(q), lb = getLowerBetter(q);
+        const isGood = val!==null ? (lb ? val<=t : val>=t) : false;
+        const clr = val===null ? '#475569' : isGood ? '#10b981' : '#f59e0b';
+        const pct = val!==null ? Math.min((val/maxVal)*100,100) : 0;
+        const tPct = Math.min((t/maxVal)*100,100);
+        return `<div style="margin-bottom:12px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+                <div style="display:flex;align-items:center;gap:6px">
+                    <span style="font-size:10px;font-family:Inter,monospace;padding:2px 6px;border-radius:4px;background:#1e293b;color:#94a3b8">${q.number}</span>
+                    <span style="font-size:12px;color:#cbd5e1">${q.name}</span>
+                </div>
+                <span style="font-size:12px;font-weight:700;color:${clr}" class="tn">${val!==null?val+q.unit:'--'}</span>
+            </div>
+            <div style="position:relative;height:16px;background:#1e293b;border-radius:999px;overflow:hidden">
+                <div style="position:absolute;inset:0 auto 0 0;width:${pct}%;background:${clr};border-radius:999px;transition:width 0.7s"></div>
+                <div style="position:absolute;inset:0 auto 0 ${tPct}%;width:2px;background:#94a3b8"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:2px;font-size:9px;color:#475569">
+                <span>${lb?'越低越好':'越高越好'}</span>
+                <span>目標: ${lb?'≤':'≥'}${t}${q.unit||'%'}</span>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+/* ═══ Panel Renderers ═══ */
+function renderOverview() {
+    const sigs = DATA.qualityIndicators.map(q => getSignal(q.rate, q.category));
+    const gc = sigs.filter(s=>s==='green').length, yc = sigs.filter(s=>s==='yellow').length, rc = sigs.filter(s=>s==='red').length;
+    return `<div style="text-align:center;margin-bottom:2rem">
+        <h2 style="font-size:2rem;font-weight:800;background:linear-gradient(90deg,#60a5fa,#06b6d4,#2dd4bf);-webkit-background-clip:text;-webkit-text-fill-color:transparent">醫療品質即時總覽</h2>
+        <p style="color:#64748b;margin-top:8px">50 項 CQL 指標 · ${totalQueried} 項已查詢</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem">
+        <div class="summary-card"><div class="sc-top"><div class="sc-icon" style="background:linear-gradient(135deg,#dc2626,#f43f5e)"><i class="fas fa-bug"></i></div><span class="sc-label">傳染病監控</span></div><div class="sc-val tn">${qD}/5</div><div class="sc-sub">${totalPatients} 病患</div></div>
+        <div class="summary-card"><div class="sc-top"><div class="sc-icon" style="background:linear-gradient(135deg,#2563eb,#4f46e5)"><i class="fas fa-pills"></i></div><span class="sc-label">醫療品質</span></div><div class="sc-val tn">${qQ}/39</div><div class="sc-sub" style="display:flex;align-items:center;gap:8px">${signalDot('green')} ${gc} ${signalDot('yellow')} ${yc} ${signalDot('red')} ${rc}</div></div>
+        <div class="summary-card"><div class="sc-top"><div class="sc-icon" style="background:linear-gradient(135deg,#0891b2,#2563eb)"><i class="fas fa-heart"></i></div><span class="sc-label">國民健康</span></div><div class="sc-val tn">${qH}/3</div><div class="sc-sub">${DATA.healthIndicators.find(h=>h.id==='hypertension')?.count??'--'} 高血壓個案</div></div>
+        <div class="summary-card"><div class="sc-top"><div class="sc-icon" style="background:linear-gradient(135deg,#059669,#14b8a6)"><i class="fas fa-leaf"></i></div><span class="sc-label">ESG 永續</span></div><div class="sc-val tn">${qE}/3</div><div class="sc-sub">抗生素使用率 ${DATA.esgIndicators[0]?.rate??'--'}%</div></div>
+    </div>
+    <div class="card" style="margin-bottom:1.5rem;padding:1.25rem">
+        <h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:1rem">品質指標燈號速覽</h3>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
+            ${['medication','outpatient','inpatient','surgery','outcome'].map(cat => {
+                const items = byCat(cat);
+                const catSigs = items.map(q => getSignal(q.rate, cat));
+                const worst = catSigs.includes('red')?'red':catSigs.includes('yellow')?'yellow':catSigs.some(s=>s==='green')?'green':'gray';
+                return `<div style="background:rgba(30,41,59,0.6);border-radius:12px;padding:12px">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                        <span style="font-size:12px;font-weight:500;color:#94a3b8">${CAT_LABELS[cat]}</span>
+                        ${signalDot(worst)}
+                    </div>
+                    <div style="display:flex;flex-wrap:wrap;gap:3px">
+                        ${items.map(q => `<span style="width:12px;height:12px;border-radius:3px;display:inline-block;background:${({green:'#10b981',yellow:'#f59e0b',red:'#ef4444',gray:'#475569'})[getSignal(q.rate,cat)]};opacity:0.8" title="${q.number} ${q.name}: ${q.rate!==null?q.rate+q.unit:'待查詢'}"></span>`).join('')}
+                    </div>
+                </div>`;
+            }).join('')}
+        </div>
+    </div>
+    <div class="grid-5">
+        ${DATA.diseaseItems.map(d => `<div class="card" style="text-align:center;padding:1rem">
+            <div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${d.name}</div>
+            <div style="font-size:1.8rem;font-weight:800;color:#06b6d4" class="tn">${d.patients??'--'}</div>
+            <div style="font-size:10px;color:#475569;margin-top:2px">病患數</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderDisease() {
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:linear-gradient(135deg,#dc2626,#f43f5e)"><i class="fas fa-bug"></i></div><div><h2>傳染病監控</h2><p>5 項傳染病 CQL 即時監測</p></div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+        ${DATA.diseaseItems.map(d => `<div class="card" style="padding:1.5rem">
+            <h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px">${d.name}</h3>
+            <p style="font-size:10px;color:#475569;font-family:Inter,monospace;margin-bottom:1rem">${d.cql}</p>
+            <div class="grid-2">
+                <div><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">病患數</div><div style="font-size:2rem;font-weight:800;color:#06b6d4" class="tn">${d.patients??'--'}</div></div>
+                <div><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">就診數</div><div style="font-size:2rem;font-weight:800;color:#3b82f6" class="tn">${d.encounters??'--'}</div></div>
+            </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderDiseaseMap() {
+    const CITY_COORDS = {"台北市":[25.033,121.565],"新北市":[25.012,121.465],"桃園市":[24.994,121.301],"新竹市":[24.804,120.969],"基隆市":[25.128,121.739],"台中市":[24.148,120.674],"彰化縣":[24.081,120.539],"南投縣":[23.961,120.685],"台南市":[22.999,120.227],"高雄市":[22.627,120.301],"屏東縣":[22.552,120.549],"花蓮縣":[23.992,121.601],"台東縣":[22.756,121.145]};
+    const cityTotals = {};
+    DATA.diseaseItems.forEach(d => { if (!d.cityData) return; Object.entries(d.cityData).forEach(([c,v]) => { cityTotals[c]=(cityTotals[c]||0)+v; }); });
+    const REGIONS = {'北部':['台北市','新北市','桃園市','新竹市','基隆市'],'中部':['台中市','彰化縣','南投縣'],'南部':['台南市','高雄市','屏東縣'],'東部':['花蓮縣','台東縣']};
+    const regionStats = Object.entries(REGIONS).map(([r,cities])=>({region:r,count:cities.reduce((s,c)=>s+(cityTotals[c]||0),0),pct:totalPatients>0?Math.round(cities.reduce((s,c)=>s+(cityTotals[c]||0),0)/totalPatients*100):0}));
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:linear-gradient(135deg,#dc2626,#f43f5e)"><i class="fas fa-map-marker-alt"></i></div><div><h2>傳染病地圖</h2><p>5 項傳染病 · 13 縣市地區分佈</p></div></div>
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:1.5rem">
+        <div class="card" style="min-height:480px;padding:0;overflow:hidden"><div id="leafletMap" style="width:100%;height:100%;min-height:480px"></div></div>
+        <div>
+            <div class="card" style="margin-bottom:1rem;padding:1.25rem"><h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:12px">疾病圖例</h3>
+                ${DATA.diseaseItems.map(d => `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:${DISEASE_CLR[d.id]};display:inline-block"></span><span style="font-size:13px;color:#cbd5e1">${d.name}</span></div><span style="font-size:13px;font-weight:700;color:${DISEASE_CLR[d.id]}" class="tn">${d.patients??'--'}</span></div>`).join('')}
+                <div style="border-top:1px solid #334155;padding-top:8px;margin-top:8px;display:flex;justify-content:space-between"><span style="font-size:13px;font-weight:600;color:#cbd5e1">總計</span><span style="font-size:1.1rem;font-weight:800;color:#fff" class="tn">${totalPatients}</span></div>
+            </div>
+            <div class="card" style="padding:1.25rem"><h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:12px">地區分佈</h3>
+                ${regionStats.map(r => `<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:#94a3b8">${r.region}</span><span style="color:#fff;font-weight:600" class="tn">${r.count} 人 (${r.pct}%)</span></div><div style="height:6px;background:#1e293b;border-radius:999px;overflow:hidden"><div style="height:100%;background:linear-gradient(90deg,#06b6d4,#3b82f6);border-radius:999px;width:${r.pct}%"></div></div></div>`).join('')}
+            </div>
+        </div>
+    </div>`;
+}
+
+function renderHealth() {
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:linear-gradient(135deg,#0891b2,#2563eb)"><i class="fas fa-heart"></i></div><div><h2>國民健康</h2><p>疫苗接種率與慢性病管理</p></div></div>
+    <div class="grid-3">${DATA.healthIndicators.map(h => `<div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px">${h.name}</h3>
+        <p style="font-size:12px;color:#94a3b8;margin-bottom:1rem">${h.description||''}</p>
+        <div class="grid-2">
+            <div><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${h.countLabel||'數量'}</div><div style="font-size:2rem;font-weight:800;color:#06b6d4" class="tn">${h.count!==null?Number(h.count).toLocaleString():'--'}</div></div>
+            <div><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${h.rateLabel||'比率'}</div><div style="font-size:2rem;font-weight:800;color:#3b82f6" class="tn">${h.rate!==null?h.rate:'--'}<span style="font-size:14px;color:#64748b;margin-left:4px">${h.rate!==null?(h.rateUnit||'%'):''}</span></div></div>
+        </div>
+    </div>`).join('')}</div>`;
+}
+
+function renderHealthGauge() {
+    const cfg = {
+        'covid19-vaccine': { target:3, color:'#06b6d4', trend:[0.8,1.0,1.2,1.4,1.6,1.91], months:['10月','11月','12月','1月','2月','3月'] },
+        'influenza-vaccine': { target:1, color:'#8b5cf6', trend:[0.3,0.5,0.6,0.7,0.85,1.0], months:['10月','11月','12月','1月','2月','3月'] },
+        'hypertension': { target:60, color:'#f59e0b', trend:[28,30,31,32,34,35], months:['10月','11月','12月','1月','2月','3月'] }
     };
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:linear-gradient(135deg,#0891b2,#14b8a6)"><i class="fas fa-tachometer-alt"></i></div><div><h2>健康儀表</h2><p>環形進度 + 趨勢線 · 一眼掌握達標狀況</p></div></div>
+    <div class="grid-3">${DATA.healthIndicators.map(h => {
+        const c = cfg[h.id]; if(!c) return '';
+        const val = h.rate ?? c.trend[c.trend.length-1];
+        const td = h.rate!==null ? [...c.trend.slice(0,-1),h.rate] : c.trend;
+        const tDir = td[td.length-1]>td[0]?'↑ 上升':td[td.length-1]<td[0]?'↓ 下降':'→ 持平';
+        return `<div class="card" style="padding:1.5rem;display:flex;flex-direction:column;align-items:center">
+            <h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px;text-align:center">${h.name}</h3>
+            <p style="font-size:12px;color:#94a3b8;margin-bottom:1rem;text-align:center">${h.description||''}</p>
+            ${svgRingGauge(val, c.target, 180, c.color, `目標: ${c.target}${h.rateUnit||'%'}`)}
+            <div class="grid-2" style="width:100%;margin-top:1rem">
+                <div style="text-align:center"><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${h.countLabel}</div><div style="font-size:1.5rem;font-weight:800;color:${c.color}" class="tn">${h.count!==null?Number(h.count).toLocaleString():'--'}</div></div>
+                <div style="text-align:center"><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${h.rateLabel}</div><div style="font-size:1.5rem;font-weight:800;color:${c.color}" class="tn">${h.rate!==null?h.rate:'--'}<span style="font-size:12px;color:#64748b;margin-left:4px">${h.rate!==null?(h.rateUnit||'%'):''}</span></div></div>
+            </div>
+            <div style="width:100%;background:rgba(30,41,59,0.4);border-radius:12px;padding:12px;margin-top:1rem">
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:#475569">近 6 個月趨勢</span><span style="font-size:10px;font-weight:500;color:${c.color}">${tDir}</span></div>
+                ${svgSparkline(td, c.color, 260, 52)}
+                <div style="display:flex;justify-content:space-between;margin-top:4px">${c.months.map(m=>`<span style="font-size:9px;color:#475569">${m}</span>`).join('')}</div>
+            </div>
+        </div>`;
+    }).join('')}</div>
+    <div class="note-box"><div class="note-icon"><i class="fas fa-wave-square"></i></div><div><div class="note-title">圖表說明</div><div class="note-text">環形進度表示目前數值達目標值的百分比。趨勢線顯示近 6 個月變化走勢，實心圓點為最新數據。數據來源為 FHIR 伺服器查詢結果，目標值參考衛福部建議標準。</div></div></div>`;
+}
 
-    let trendChartInstance = null;
-    let outpatientChartInstance = null;
-    let sameOverlapChartInstance = null;
-    let crossOverlapChartInstance = null;
-    let currentData = mockData;
+function renderQualityPanel(cat) {
+    const items = byCat(cat);
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:${CAT_GRAD[cat]}"><i class="fas ${CAT_ICONS[cat]}"></i></div><div><h2>${CAT_LABELS[cat]}</h2><p>${items.length} 項品質指標</p></div></div>
+    <div class="grid-4">${items.map(q => {
+        const s = getSignal(q.rate, q.category);
+        const clr = {green:'#10b981',yellow:'#f59e0b',red:'#ef4444',gray:'#475569'}[s];
+        return `<div class="q-card">
+            <div class="q-top"><div style="display:flex;align-items:center;gap:6px"><span class="q-num">${q.number}</span><span class="q-code">${q.code}</span></div>${signalDot(s)}</div>
+            <div class="q-name">${q.name}</div>
+            <div class="q-bottom"><div><span class="q-rate tn" style="color:${clr}">${q.rate!==null?q.rate:'--'}</span><span class="q-unit">${q.unit}</span></div>${q.numerator!==null?`<span class="q-frac">${q.numerator}/${q.denominator}</span>`:''}</div>
+        </div>`;
+    }).join('')}</div>`;
+}
 
-    // ===== Tabs =====
-    function switchTab(tab) {
-        document.querySelectorAll('.tab-btn').forEach((btn, i) => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-        const targetEl = document.getElementById('pane-' + tab);
-        targetEl.classList.add('active');
-        const names = ['disease', 'table', 'outpatient', 'prescription'];
-        document.querySelectorAll('.tab-btn')[names.indexOf(tab)].classList.add('active');
-        // Lazy init charts
-        if (tab === 'outpatient' && !outpatientChartInstance) renderOutpatientChart();
-        if (tab === 'prescription' && !document.getElementById('gaugeGrid').children.length) renderGauges();
-    }
-
-    // ===== Disease Trend Chart =====
-    function renderTrendChart() {
-        const filter = document.getElementById('diseaseFilter').value;
-        const data = currentData.diseaseTrend || mockData.diseaseTrend;
-        const labels = data.map(d => d.month);
-        const datasets = [];
-        const dsConfig = [
-            { key: 'covid', label: 'COVID-19', color: '#3b82f6' },
-            { key: 'influenza', label: '流感', color: '#f59e0b' },
-            { key: 'dengue', label: '登革熱', color: '#10b981' },
-            { key: 'tb', label: '結核病', color: '#8b5cf6' },
-        ];
-        for (const ds of dsConfig) {
-            if (filter === 'all' || filter === ds.key) {
-                datasets.push({
-                    label: ds.label,
-                    data: data.map(d => d[ds.key]),
-                    borderColor: ds.color,
-                    backgroundColor: ds.color + '15',
-                    borderWidth: 2.5,
-                    tension: 0.3,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    fill: filter !== 'all',
-                });
-            }
-        }
-        if (trendChartInstance) trendChartInstance.destroy();
-        trendChartInstance = new Chart(document.getElementById('trendChart').getContext('2d'), {
-            type: 'line',
-            data: { labels, datasets },
-            options: {
-                responsive: true,
-                plugins: { legend: { position: 'top' }, tooltip: { mode: 'index', intersect: false } },
-                scales: { y: { beginAtZero: true } },
-                interaction: { mode: 'nearest', axis: 'x', intersect: false }
-            }
-        });
-    }
-
-    // ===== Disease Table =====
-    function renderDiseaseTable() {
-        const search = (document.getElementById('tableSearch').value || '').toLowerCase();
-        const data = (currentData.diseaseTable || mockData.diseaseTable).filter(d => !search || d.name.toLowerCase().includes(search) || d.type.includes(search));
-        const tbody = document.getElementById('diseaseTableBody');
-        tbody.innerHTML = data.map(d => {
-            const trendIcon = d.trend === 'up' ? '<i class="fas fa-arrow-up"></i> 上升' : d.trend === 'down' ? '<i class="fas fa-arrow-down"></i> 下降' : '<i class="fas fa-minus"></i> 持平';
-            const trendClass = d.trend === 'up' ? 'trend-up' : d.trend === 'down' ? 'trend-down' : 'trend-stable';
-            return `<tr>
-                <td style="font-weight: 500;">${d.name}</td>
-                <td><span style="padding: 2px 8px; border-radius: 999px; background: #f1f5f9; font-size: 12px;">${d.type}</span></td>
-                <td style="font-weight: 600;">${d.current.toLocaleString()}</td>
-                <td>${d.prev.toLocaleString()}</td>
-                <td class="${trendClass}">${trendIcon}</td>
-                <td>${d.fatality}</td>
-            </tr>`;
-        }).join('');
-    }
-
-    // ===== Outpatient Chart =====
-    function renderOutpatientChart() {
-        const data = currentData.outpatientTrend || mockData.outpatientTrend;
-        outpatientChartInstance = new Chart(document.getElementById('outpatientChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: data.map(d => d.quarter),
-                datasets: [
-                    { label: '注射率(%)', data: data.map(d => d.injection), borderColor: '#3b82f6', borderWidth: 2.5, tension: 0.3, pointRadius: 4 },
-                    { label: '抗生素使用率(%)', data: data.map(d => d.antibiotic), borderColor: '#dc2626', borderWidth: 2.5, tension: 0.3, pointRadius: 4 },
-                    { label: '同院重複(%)', data: data.map(d => d.sameOverlap), borderColor: '#059669', borderWidth: 2.5, tension: 0.3, pointRadius: 4 },
-                    { label: '跨院重複(%)', data: data.map(d => d.crossOverlap), borderColor: '#7c3aed', borderWidth: 2.5, tension: 0.3, pointRadius: 4 },
-                ]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
-        });
-
-        // Drug overlap bar charts
-        renderOverlapChart('sameOverlapChart', currentData.sameHospitalOverlap || mockData.sameHospitalOverlap, '#3b82f6');
-        renderOverlapChart('crossOverlapChart', currentData.crossHospitalOverlap || mockData.crossHospitalOverlap, '#7c3aed');
-    }
-
-    function renderOverlapChart(canvasId, data, color) {
-        const inst = new Chart(document.getElementById(canvasId).getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: data.map(d => d.drug),
-                datasets: [{ label: '重複人次', data: data.map(d => d.count), backgroundColor: color + 'cc', borderRadius: 6, barPercentage: 0.7 }]
-            },
-            options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true } } }
-        });
-        if (canvasId === 'sameOverlapChart') sameOverlapChartInstance = inst;
-        else crossOverlapChartInstance = inst;
-    }
-
-    // ===== Gauges =====
-    function renderGauges() {
-        const data = currentData.prescriptionManagement || mockData.prescriptionManagement;
-        const grid = document.getElementById('gaugeGrid');
-        grid.innerHTML = data.map(item => {
-            const pct = Math.min(item.value / 100, 1);
-            const r = 50, cx = 60, cy = 60;
-            const circumference = 2 * Math.PI * r;
-            const offset = circumference * (1 - pct);
-            const met = item.value >= item.target;
-            return `<div class="gauge-card">
-                <svg class="gauge-svg" viewBox="0 0 120 120">
-                    <circle cx="${cx}" cy="${cy}" r="${r}" stroke="#f1f5f9" stroke-width="10" fill="none" transform="rotate(-90 ${cx} ${cy})"/>
-                    <circle cx="${cx}" cy="${cy}" r="${r}" stroke="${item.color}" stroke-width="10" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round" fill="none" transform="rotate(-90 ${cx} ${cy})" style="transition: stroke-dashoffset 1s ease;"/>
-                    <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="20" font-weight="700" fill="#1e293b">${item.value}%</text>
-                    <text x="${cx}" y="${cy + 14}" text-anchor="middle" font-size="10" fill="#94a3b8">目標 ${item.target}%</text>
-                </svg>
-                <div class="gauge-name">${item.name}</div>
-                <div class="gauge-sub" style="color: ${met ? '#059669' : '#d97706'};">${met ? '✓ 達標' : '● 待改善'}</div>
+function renderMedGauge() {
+    const items = byCat('medication');
+    const general = items.filter(q=>['01','02'].includes(q.number));
+    const pairs = [
+        {label:'降血壓',s:'03-1',c:'03-9'},{label:'降血脂',s:'03-2',c:'03-10'},{label:'降血糖',s:'03-3',c:'03-11'},
+        {label:'抗思覺失調',s:'03-4',c:'03-12'},{label:'抗憂鬱',s:'03-5',c:'03-13'},{label:'安眠鎮靜',s:'03-6',c:'03-14'},
+        {label:'抗血栓',s:'03-7',c:'03-15'},{label:'前列腺',s:'03-8',c:'03-16'}
+    ];
+    const find = n => items.find(q=>q.number===n)?.rate??null;
+    const allRates = items.map(q=>q.rate).filter(r=>r!==null);
+    const maxV = allRates.length>0 ? Math.max(...allRates,1) : 20;
+    const sigs = items.map(q => q.rate===null?'gray':q.rate<=3?'green':q.rate<=8?'yellow':'red');
+    const gc=sigs.filter(s=>s==='green').length,yc=sigs.filter(s=>s==='yellow').length,rc=sigs.filter(s=>s==='red').length;
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:${CAT_GRAD.medication}"><i class="fas fa-pills"></i></div><div><h2>用藥儀表</h2><p>蝴蝶對比圖 · 同院 vs 跨院藥品重疊一覽</p></div></div>
+    <div class="grid-3" style="margin-bottom:1.5rem">
+        ${general.map(q => `<div class="card" style="display:flex;flex-direction:column;align-items:center;padding:1.25rem">${svgHalfDonut(q.rate,5,160,q.name)}${q.numerator!==null?`<div style="font-size:10px;color:#475569;margin-top:8px">${q.numerator} / ${q.denominator}</div>`:''}</div>`).join('')}
+        <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem">
+            <h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:1rem">18 項燈號統計</h3>
+            <div style="display:flex;gap:1.5rem">
+                <div style="text-align:center"><div style="width:40px;height:40px;border-radius:50%;background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 4px"><span style="font-size:1.1rem;font-weight:800;color:#10b981">${gc}</span></div><span style="font-size:10px;color:#10b981">正常</span></div>
+                <div style="text-align:center"><div style="width:40px;height:40px;border-radius:50%;background:rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 4px"><span style="font-size:1.1rem;font-weight:800;color:#f59e0b">${yc}</span></div><span style="font-size:10px;color:#f59e0b">注意</span></div>
+                <div style="text-align:center"><div style="width:40px;height:40px;border-radius:50%;background:rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 4px"><span style="font-size:1.1rem;font-weight:800;color:#ef4444">${rc}</span></div><span style="font-size:10px;color:#ef4444">警戒</span></div>
+            </div>
+            <div style="font-size:10px;color:#475569;margin-top:12px">🟢 ≤3%　🟡 ≤8%　🔴 &gt;8%</div>
+        </div>
+    </div>
+    <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:4px;text-align:center">藥品重疊率：同院 vs 跨院 對比</h3>
+        <div style="display:grid;grid-template-columns:1fr 100px 1fr;text-align:center;margin-bottom:8px"><span style="font-size:10px;color:#06b6d4;font-weight:500">← 同院</span><span style="font-size:10px;color:#475569">藥品類別</span><span style="font-size:10px;color:#8b5cf6;font-weight:500">跨院 →</span></div>
+        ${pairs.map(p => {
+            const lv=find(p.s), rv=find(p.c);
+            const lClr = lv===null?'#475569':lv<=3?'#10b981':lv<=8?'#f59e0b':'#ef4444';
+            const rClr = rv===null?'#475569':rv<=3?'#10b981':rv<=8?'#f59e0b':'#ef4444';
+            const lPct = lv!==null?Math.min(lv/maxV*100,100):0;
+            const rPct = rv!==null?Math.min(rv/maxV*100,100):0;
+            return `<div style="display:grid;grid-template-columns:1fr 100px 1fr;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(51,65,85,0.3)">
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px"><span style="font-size:13px;font-weight:700;color:${lClr}" class="tn">${lv!==null?lv+'%':'--'}</span><div style="height:24px;border-radius:4px 0 0 4px;width:${lPct}%;min-width:${lv!==null?'4px':'0'};background:${lClr};margin-left:auto"></div></div>
+                <div style="text-align:center;font-size:12px;font-weight:500;color:#cbd5e1">${p.label}</div>
+                <div style="display:flex;align-items:center;gap:8px"><div style="height:24px;border-radius:0 4px 4px 0;width:${rPct}%;min-width:${rv!==null?'4px':'0'};background:${rClr}"></div><span style="font-size:13px;font-weight:700;color:${rClr}" class="tn">${rv!==null?rv+'%':'--'}</span></div>
             </div>`;
-        }).join('');
-    }
+        }).join('')}
+    </div>
+    <div class="note-box"><div class="note-icon"><i class="fas fa-wave-square"></i></div><div><div class="note-title">圖表說明</div><div class="note-text">半圓儀表顯示門診注射劑與抗生素使用率。蝴蝶對比圖將 8 種藥品的同院(左)與跨院(右)重疊率並列，顏色依燈號標準（綠 ≤3%、黃 ≤8%、紅 &gt;8%）。</div></div></div>`;
+}
 
-    // ===== Refresh =====
-    function refreshData() {
-        const btn = document.querySelector('.refresh-btn');
-        btn.classList.add('spinning');
-        loadData().then(data => {
-            currentData = data;
-            renderTrendChart();
-            renderDiseaseTable();
-            // Reset charts
-            if (outpatientChartInstance) { outpatientChartInstance.destroy(); outpatientChartInstance = null; }
-            if (sameOverlapChartInstance) { sameOverlapChartInstance.destroy(); sameOverlapChartInstance = null; }
-            if (crossOverlapChartInstance) { crossOverlapChartInstance.destroy(); crossOverlapChartInstance = null; }
-            document.getElementById('gaugeGrid').innerHTML = '';
-            // Re-render visible tab
-            const activeTab = document.querySelector('.tab-pane.active').id.replace('pane-', '');
-            if (activeTab === 'outpatient') renderOutpatientChart();
-            if (activeTab === 'prescription') renderGauges();
-            setTimeout(() => btn.classList.remove('spinning'), 500);
-        });
-    }
+function renderGaugePanel(cat, targets) {
+    const items = byCat(cat);
+    const sigs = items.map(q => { const t=targets[q.number]; if(!t||q.rate===null) return 'gray'; if(t.lb?q.rate<=t.v:q.rate>=t.v) return 'green'; if(t.lb?q.rate<=t.v*1.5:q.rate>=t.v*0.7) return 'yellow'; return 'red'; });
+    const gc=sigs.filter(s=>s==='green').length,yc=sigs.filter(s=>s==='yellow').length,rc=sigs.filter(s=>s==='red').length;
+    const maxV = cat==='surgery'?20:cat==='inpatient'?50:100;
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:${CAT_GRAD[cat]}"><i class="fas ${CAT_ICONS[cat]}"></i></div><div><h2>${CAT_LABELS[cat]}儀表</h2><p>半圓儀表 · ${items.length} 項${CAT_LABELS[cat]}指標一覽</p></div></div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:1.5rem">
+        ${items.map(q => {
+            const t = targets[q.number]||{v:5,lb:true};
+            return `<div class="card" style="flex:1;min-width:120px;display:flex;flex-direction:column;align-items:center;padding:12px">${svgHalfDonut(q.rate,t.v,120,q.name)}${q.numerator!==null?`<div style="font-size:10px;color:#475569;margin-top:4px">${q.numerator}/${q.denominator}</div>`:''}</div>`;
+        }).join('')}
+        <div class="card" style="min-width:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px">
+            <h3 style="font-size:12px;font-weight:600;color:#cbd5e1;margin-bottom:12px">${items.length} 項燈號</h3>
+            <div style="display:flex;gap:1rem">
+                <div style="text-align:center"><div style="width:32px;height:32px;border-radius:50%;background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 4px"><span style="font-size:14px;font-weight:800;color:#10b981">${gc}</span></div><span style="font-size:10px;color:#10b981">達標</span></div>
+                <div style="text-align:center"><div style="width:32px;height:32px;border-radius:50%;background:rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 4px"><span style="font-size:14px;font-weight:800;color:#f59e0b">${yc}</span></div><span style="font-size:10px;color:#f59e0b">注意</span></div>
+                <div style="text-align:center"><div style="width:32px;height:32px;border-radius:50%;background:rgba(239,68,68,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 4px"><span style="font-size:14px;font-weight:800;color:#ef4444">${rc}</span></div><span style="font-size:10px;color:#ef4444">警戒</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="card" style="padding:1.5rem"><h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:1rem">各指標達成狀態</h3>
+        ${horizontalBar(items, maxV, q=>(targets[q.number]||{v:5}).v, q=>(targets[q.number]||{lb:true}).lb)}
+    </div>`;
+}
 
-    // ===== Load data =====
-    async function loadData() {
+function renderEsg() {
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:linear-gradient(135deg,#059669,#14b8a6)"><i class="fas fa-leaf"></i></div><div><h2>ESG 永續指標</h2><p>環境、社會、治理</p></div></div>
+    <div class="grid-3">${DATA.esgIndicators.map(e => `<div class="card" style="padding:1.5rem">
+        <h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px">${e.name}</h3>
+        <p style="font-size:12px;color:#94a3b8;margin-bottom:1rem">${e.description||''}</p>
+        <div class="grid-2">
+            <div><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${e.countLabel||'數量'}</div><div style="font-size:2rem;font-weight:800;color:#14b8a6" class="tn">${e.count!==null?fmt(e.count):'--'}</div></div>
+            <div><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${e.rateLabel||'比率'}</div><div style="font-size:2rem;font-weight:800;color:#10b981" class="tn">${e.rate!==null?e.rate:'--'}<span style="font-size:14px;color:#64748b;margin-left:4px">${e.rate!==null?(e.unit||'%'):''}</span></div></div>
+        </div>
+    </div>`).join('')}</div>`;
+}
+
+function renderEsgGauge() {
+    const pillars = [
+        { key:'waste', pillar:'E', label:'Environment 環境', color:'#10b981', lb:false, target:60 },
+        { key:'antibiotic', pillar:'S', label:'Social 社會', color:'#3b82f6', lb:true, target:20 },
+        { key:'ehr', pillar:'G', label:'Governance 治理', color:'#8b5cf6', lb:false, target:80 }
+    ];
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:linear-gradient(135deg,#059669,#14b8a6)"><i class="fas fa-leaf"></i></div><div><h2>ESG 儀表</h2><p>三支柱環形圖 · 3 項永續指標</p></div></div>
+    <div class="grid-3">${pillars.map(p => {
+        const item = DATA.esgIndicators.find(i=>i.id===p.key);
+        const rate = item?.rate??null;
+        const ringSize=160,sw=14,r=(ringSize-sw)/2,circ=2*Math.PI*r;
+        const pct = rate!==null?Math.max(0,Math.min(1,rate/100)):0;
+        const offset = circ*(1-pct);
+        const isGood = rate!==null?(p.lb?rate<=p.target:rate>=p.target):false;
+        const sig = rate===null?'gray':isGood?'green':(p.lb?rate<=p.target*1.5:rate>=p.target*0.7)?'yellow':'red';
+        const sigClr = {green:'#10b981',yellow:'#f59e0b',red:'#ef4444',gray:'#475569'}[sig];
+        const sigTxt = {green:'達標',yellow:'注意',red:'警戒',gray:'無數據'}[sig];
+        return `<div class="card" style="padding:1.5rem;display:flex;flex-direction:column;align-items:center">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><div style="width:32px;height:32px;border-radius:8px;background:${p.color};display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff">${p.pillar}</div><span style="font-size:13px;font-weight:600;color:#cbd5e1">${p.label}</span></div>
+            <svg width="${ringSize}" height="${ringSize}" viewBox="0 0 ${ringSize} ${ringSize}">
+                <circle cx="${ringSize/2}" cy="${ringSize/2}" r="${r}" fill="none" stroke="#1e293b" stroke-width="${sw}"/>
+                <circle cx="${ringSize/2}" cy="${ringSize/2}" r="${r}" fill="none" stroke="${p.color}" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" transform="rotate(-90 ${ringSize/2} ${ringSize/2})" style="filter:drop-shadow(0 0 8px ${p.color}55);transition:all 1s ease-out"/>
+                <text x="${ringSize/2}" y="${ringSize/2-6}" text-anchor="middle" dominant-baseline="middle" fill="#fff" style="font-size:1.5rem;font-weight:800">${rate!==null?rate:'--'}</text>
+                <text x="${ringSize/2}" y="${ringSize/2+16}" text-anchor="middle" fill="#94a3b8" style="font-size:11px">${item?.unit||'%'}</text>
+            </svg>
+            <p style="font-size:14px;font-weight:600;color:#fff;margin-top:8px">${item?.name||'--'}</p>
+            <p style="font-size:10px;color:#94a3b8;margin-top:4px">${item?.rateLabel}: ${rate!==null?rate+(item?.unit||'%'):'--'}</p>
+            <p style="font-size:10px;color:#94a3b8">${item?.countLabel}: ${item?.count!==null&&item?.count!==undefined?Number(item.count).toLocaleString():'--'}</p>
+            <p style="font-size:10px;color:#475569;margin-top:4px">目標: ${p.lb?'≤':'≥'}${p.target}%　${p.lb?'↓越低越好':'↑越高越好'}</p>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:8px"><span style="width:12px;height:12px;border-radius:50%;background:${sigClr};display:inline-block"></span><span style="font-size:12px;font-weight:600;color:${sigClr}">${sigTxt}</span></div>
+        </div>`;
+    }).join('')}</div>
+    <div class="note-box"><div class="note-icon"><i class="fas fa-leaf" style="color:#10b981"></i></div><div><div class="note-title">圖表說明</div><div class="note-text">ESG 三支柱：E(環境)醫療廢棄物回收率越高越好；S(社會)抗生素使用率越低越好；G(治理)電子病歷採用率越高越好。圓環顯示各指標完成度。</div></div></div>`;
+}
+
+function renderOutcomeGauge() {
+    const q17 = DATA.qualityIndicators.find(q=>q.number==='17');
+    const q18 = DATA.qualityIndicators.find(q=>q.number==='18');
+    return `<div class="panel-header"><div class="panel-header-icon" style="background:${CAT_GRAD.outcome}"><i class="fas fa-heartbeat"></i></div><div><h2>結果儀表</h2><p>雙指標深度對比 · 2 項結果品質指標</p></div></div>
+    <div class="grid-2" style="margin-bottom:1.5rem">
+        ${[{q:q17,t:5,lb:true,dir:'↓ 越低越好'},{q:q18,t:60,lb:false,dir:'↑ 越高越好'}].map(({q,t,lb,dir})=>{
+            const val=q?.rate??null;
+            const isGood=val!==null?(lb?val<=t:val>=t):false;
+            const clr=val===null?'#475569':isGood?'#10b981':'#f59e0b';
+            const sig=val===null?'gray':isGood?'green':(lb?val<=t*1.5:val>=t*0.7)?'yellow':'red';
+            const sigClr={green:'#10b981',yellow:'#f59e0b',red:'#ef4444',gray:'#475569'}[sig];
+            const sigTxt={green:'達標',yellow:'注意',red:'警戒',gray:'無數據'}[sig];
+            return `<div class="card" style="padding:1.5rem;display:flex;flex-direction:column;align-items:center">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:10px;font-family:Inter,monospace;padding:2px 8px;border-radius:4px;background:#1e293b;color:#94a3b8">${q?.number||'--'}</span><span style="font-size:14px;font-weight:600;color:#e2e8f0">${q?.name||'--'}</span></div>
+                ${svgHalfDonut(val,lb?t:100,180,'')}
+                <div style="margin-top:12px;text-align:center">
+                    <p style="font-size:12px;color:#94a3b8">目標: ${lb?'≤':'≥'}${t}%</p>
+                    <p style="font-size:12px;color:#94a3b8">${dir}</p>
+                    ${q?.numerator!==null&&q?.numerator!==undefined?`<p style="font-size:12px;color:#475569;margin-top:4px">分子/分母: ${q.numerator} / ${q.denominator}</p>`:''}
+                    <div style="display:flex;align-items:center;gap:6px;justify-content:center;margin-top:8px"><span style="width:12px;height:12px;border-radius:50%;background:${sigClr};display:inline-block"></span><span style="font-size:12px;font-weight:600;color:${sigClr}">${sigTxt}</span></div>
+                </div>
+            </div>`;
+        }).join('')}
+    </div>
+    <div class="note-box"><div class="note-icon"><i class="fas fa-wave-square"></i></div><div><div class="note-title">圖表說明</div><div class="note-text">結果品質僅有 2 項指標，方向性相反：指標 17 急性心肌梗塞死亡率「越低越好」，指標 18 失智症安寧療護利用率「越高越好」。</div></div></div>`;
+}
+
+/* ═══ Target Definitions for Gauge Panels ═══ */
+const OUTPATIENT_TARGETS = {'04':{v:80,lb:false},'05':{v:10,lb:true},'06':{v:5,lb:true},'07':{v:80,lb:false},'08':{v:5,lb:true}};
+const INPATIENT_TARGETS = {'09':{v:8,lb:true},'10':{v:5,lb:true},'11-1':{v:30,lb:true},'11-2':{v:20,lb:true},'11-3':{v:35,lb:true},'11-4':{v:20,lb:true}};
+const SURGERY_TARGETS = {'12':{v:5,lb:true},'13':{v:3,lb:true},'14':{v:3,lb:true},'15-1':{v:2,lb:true},'15-2':{v:2,lb:true},'15-3':{v:2,lb:true},'16':{v:3,lb:true},'19':{v:2,lb:true}};
+
+/* ═══ Panel Content Router ═══ */
+function getPanelContent(id) {
+    switch(id) {
+        case 'overview': return renderOverview();
+        case 'disease': return renderDisease();
+        case 'disease-map': return renderDiseaseMap();
+        case 'health': return renderHealth();
+        case 'health-gauge': return renderHealthGauge();
+        case 'medication': return renderQualityPanel('medication');
+        case 'med-gauge': return renderMedGauge();
+        case 'outpatient': return renderQualityPanel('outpatient');
+        case 'outpatient-gauge': return renderGaugePanel('outpatient', OUTPATIENT_TARGETS);
+        case 'inpatient': return renderQualityPanel('inpatient');
+        case 'inpatient-gauge': return renderGaugePanel('inpatient', INPATIENT_TARGETS);
+        case 'surgery': return renderQualityPanel('surgery');
+        case 'surgery-gauge': return renderGaugePanel('surgery', SURGERY_TARGETS);
+        case 'outcome': return renderQualityPanel('outcome');
+        case 'outcome-gauge': return renderOutcomeGauge();
+        case 'esg': return renderEsg();
+        case 'esg-gauge': return renderEsgGauge();
+        default: return '<div style="color:#64748b;text-align:center;padding:4rem">面板載入中...</div>';
+    }
+}
+
+/* ═══ State & Controls ═══ */
+let currentPanel = 0;
+let playing = true;
+let rotateTimer = null;
+let leafletMap = null;
+
+function buildTabs() {
+    const strip = document.getElementById('tabStrip');
+    strip.innerHTML = PANELS.map((p,i) => {
+        const lbl = p.label.replace(/\s/g,'');
+        const len = [...lbl].length;
+        let display = p.label;
+        if (len === 4) display = lbl.slice(0,2) + '<br>' + lbl.slice(2);
+        else if (len === 5) display = lbl.slice(0,3) + '<br>' + lbl.slice(3);
+        return `<button class="tab-btn${i===currentPanel?' active':''}" onclick="goPanel(${i})">${display}</button>`;
+    }).join('');
+}
+
+function showPanel(idx) {
+    currentPanel = idx;
+    const main = document.getElementById('mainContent');
+    main.innerHTML = `<div class="panel active" id="panelContent">${getPanelContent(PANELS[idx].id)}</div>`;
+    // Update tabs
+    document.querySelectorAll('.tab-btn').forEach((btn,i) => btn.classList.toggle('active', i===idx));
+    // Update footer
+    document.getElementById('footerInfo').textContent = `${totalQueried}/50 項已查詢 · ${idx+1}/${PANELS.length}`;
+    // Progress bar
+    const fill = document.getElementById('progressFill');
+    fill.style.animation = 'none';
+    fill.offsetHeight; // reflow
+    if (playing) fill.style.animation = `progress ${ROTATE_MS}ms linear forwards`;
+    else fill.style.width = '0%';
+    // Init leaflet if disease-map
+    if (PANELS[idx].id === 'disease-map') setTimeout(initLeaflet, 100);
+}
+
+function goPanel(idx) { playing = false; updatePlayBtn(); showPanel(idx); resetTimer(); }
+function nextPanel() { showPanel((currentPanel+1)%PANELS.length); }
+function prevPanel() { showPanel((currentPanel-1+PANELS.length)%PANELS.length); }
+
+function togglePlay() { playing = !playing; updatePlayBtn(); resetTimer(); showPanel(currentPanel); }
+function updatePlayBtn() {
+    document.getElementById('playBtn').innerHTML = playing ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+}
+
+function resetTimer() {
+    if (rotateTimer) clearInterval(rotateTimer);
+    if (playing) rotateTimer = setInterval(()=>{ currentPanel=(currentPanel+1)%PANELS.length; showPanel(currentPanel); }, ROTATE_MS);
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(()=>{});
+    else document.exitFullscreen().catch(()=>{});
+}
+
+/* ─── Clock ─── */
+function updateClock() {
+    const now = new Date();
+    document.getElementById('clockTime').textContent = now.toLocaleTimeString('zh-TW',{hour12:false});
+    document.getElementById('clockDate').textContent = now.toLocaleDateString('zh-TW');
+}
+
+/* ─── Leaflet Map ─── */
+function initLeaflet() {
+    const el = document.getElementById('leafletMap');
+    if (!el || leafletMap) return;
+    leafletMap = L.map(el, { zoomControl: true, attributionControl: false }).setView([23.7, 121.0], 7);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(leafletMap);
+    const CITY_COORDS = {"台北市":[25.033,121.565],"新北市":[25.012,121.465],"桃園市":[24.994,121.301],"新竹市":[24.804,120.969],"基隆市":[25.128,121.739],"台中市":[24.148,120.674],"彰化縣":[24.081,120.539],"南投縣":[23.961,120.685],"台南市":[22.999,120.227],"高雄市":[22.627,120.301],"屏東縣":[22.552,120.549],"花蓮縣":[23.992,121.601],"台東縣":[22.756,121.145]};
+    const cityTotals = {};
+    DATA.diseaseItems.forEach(d => { if(!d.cityData) return; Object.entries(d.cityData).forEach(([c,v])=>{ cityTotals[c]=(cityTotals[c]||0)+v; }); });
+    const maxT = Math.max(...Object.values(cityTotals),1);
+    Object.entries(cityTotals).forEach(([city,count]) => {
+        const coords = CITY_COORDS[city]; if(!coords || count===0) return;
+        const radius = Math.max(8, (count/maxT)*30);
+        L.circleMarker(coords, { radius, fillColor:'#06b6d4', fillOpacity:0.7, color:'#06b6d4', weight:1, opacity:0.9 })
+         .bindPopup(`<b>${city}</b><br>病例數: ${count}`)
+         .addTo(leafletMap);
+    });
+    setTimeout(()=>leafletMap.invalidateSize(),200);
+}
+
+/* ─── Keyboard ─── */
+document.addEventListener('keydown', e => {
+    if (e.key==='ArrowRight') { nextPanel(); }
+    else if (e.key==='ArrowLeft') { prevPanel(); }
+    else if (e.key===' ') { e.preventDefault(); togglePlay(); }
+    else if (e.key==='f'||e.key==='F') toggleFullscreen();
+});
+
+/* ═══ Init ═══ */
+document.addEventListener('DOMContentLoaded', () => {
+    buildTabs();
+    showPanel(0);
+    resetTimer();
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Try to load fresh data from API
+    (async () => {
+        const API_BASE = 'https://fhir-cql-quality-platform-20260204.onrender.com';
         try {
-            const res = await fetch('/data/dashboard-data.json');
+            const res = await fetch(API_BASE + '/api/export-dashboard', { mode: 'cors' });
             if (res.ok) {
                 const json = await res.json();
                 if (json && json.exportedAt) {
-                    document.getElementById('dataBanner').className = 'data-banner real';
-                    document.getElementById('dataBanner').querySelector('.data-banner-inner').innerHTML = '<span style="width:8px;height:8px;border-radius:50%;background:#10b981;display:inline-block;animation:pulse 2s infinite;"></span> <span><strong>真實數據</strong> — 來自醫療品質控制台匯出（' + json.exportedAt + '）</span>';
-                    return json;
+                    Object.assign(DATA, json);
+                    showPanel(currentPanel);
                 }
             }
         } catch(e) {}
-        return mockData;
-    }
-
-    // ===== Init =====
-    document.addEventListener('DOMContentLoaded', async () => {
-        currentData = await loadData();
-        renderTrendChart();
-        renderDiseaseTable();
-    });
-    </script>
+        try {
+            const res = await fetch('data/dashboard-data.json');
+            if (res.ok) {
+                const json = await res.json();
+                if (json && json.exportedAt) { Object.assign(DATA, json); showPanel(currentPanel); }
+            }
+        } catch(e) {}
+    })();
+});
+</script>
 </body>
 </html>
