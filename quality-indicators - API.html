@@ -1154,8 +1154,83 @@
         </div>
     </div>
 
+    <!-- LLM 設定模態框 -->
+    <div id="llmSettingsModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;">
+                <h3><i class="fas fa-tachometer-alt"></i> 公共健康即時看板 - 醫療品質儀表板</h3>
+                <span class="modal-close" onclick="closeLLMSettingsModal()" style="color: white;">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 2rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin: 0; color: #1e293b;">
+                            <i class="fas fa-power-off"></i> 服務控制
+                        </h4>
+                        <div style="display: flex; gap: 0.75rem;">
+                            <button id="uiConnectBtn" onclick="window.open('https://tony19840205.github.io/public-health-dashboard/dashboard/', '_blank')" class="btn-external-service inactive">
+                                <i class="fas fa-external-link-alt"></i> <span>連線 即時看板</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 四節點連接狀態圖 -->
+                    <div class="llm-connection-flow">
+                        <div class="connection-flow-header">
+                            <h5>連接狀態</h5>
+                        </div>
+                        
+                        <div class="connection-nodes-container">
+                            <div class="connection-node node-fhir">
+                                <div class="node-circle"><i class="fas fa-database"></i></div>
+                                <div class="node-label">
+                                    <div class="node-title">FHIR</div>
+                                    <div class="node-subtitle">伺服器</div>
+                                </div>
+                            </div>
+                            <div class="connection-line-wrapper">
+                                <div class="connection-line line-fhir-control connected"></div>
+                            </div>
+                            <div class="connection-node node-control">
+                                <div class="node-circle"><i class="fas fa-desktop"></i></div>
+                                <div class="node-label">
+                                    <div class="node-title">控制網頁</div>
+                                    <div class="node-subtitle">醫護人員</div>
+                                </div>
+                            </div>
+                            <div class="connection-line-wrapper">
+                                <div class="connection-line line-control-public disconnected"></div>
+                            </div>
+                            <a href="https://tony19840205.github.io/public-health-dashboard/" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="開啟民眾版網頁">
+                                <div class="node-circle"><i class="fas fa-users"></i></div>
+                                <div class="node-label">
+                                    <div class="node-title">民眾網頁</div>
+                                    <div class="node-subtitle">公開版</div>
+                                </div>
+                            </a>
+                            <div class="connection-line-wrapper">
+                                <div class="connection-line line-public-llm disconnected"></div>
+                            </div>
+                            <a href="https://tony19840205.github.io/public-health-dashboard/dashboard/" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="開啟公共健康即時看板">
+                                <div class="node-circle"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="node-label">
+                                    <div class="node-title">即時看板</div>
+                                    <div class="node-subtitle">公共健康</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="js/fhir-connection.js"></script>
     <script src="js/quality-indicators-api.js?v=20260401a"></script>
+    <script>
+    function openLLMSettingsModal() { document.getElementById('llmSettingsModal').style.display = 'flex'; }
+    function closeLLMSettingsModal() { document.getElementById('llmSettingsModal').style.display = 'none'; }
+    </script>
 </body>
 </html>
