@@ -852,22 +852,30 @@ function computeInpatientIndicator(data, cqlFile) {
     let numerator = 0, denominator = impEnc.length || totalPatients;
 
     if (cqlFile.includes('_09_')) {
-        // 14天內非計畫再入院率
-        const patientDischarges = {};
+        // 14天內非計畫再入院率 - compare discharge date to next admission start date
+        const patientEncounters = {};
         impEnc.forEach(e => {
             const pid = (e.subject?.reference || '').split('/').pop();
+            const startDate = e.period?.start;
             const endDate = e.period?.end;
-            if (pid && endDate) {
-                if (!patientDischarges[pid]) patientDischarges[pid] = [];
-                patientDischarges[pid].push(new Date(endDate));
+            if (pid && (startDate || endDate)) {
+                if (!patientEncounters[pid]) patientEncounters[pid] = [];
+                patientEncounters[pid].push({
+                    start: startDate ? new Date(startDate) : null,
+                    end: endDate ? new Date(endDate) : null
+                });
             }
         });
-        // 檢查同一病人的入院日期是否在前次出院14天內
-        Object.values(patientDischarges).forEach(dates => {
-            dates.sort((a, b) => a - b);
-            for (let i = 1; i < dates.length; i++) {
-                const daysDiff = (dates[i] - dates[i - 1]) / (1000 * 60 * 60 * 24);
-                if (daysDiff <= 14) numerator++;
+        // 檢查同一病人：前次出院(end) → 下次入院(start) 是否在14天內
+        Object.values(patientEncounters).forEach(encs => {
+            encs.sort((a, b) => (a.start || a.end) - (b.start || b.end));
+            for (let i = 1; i < encs.length; i++) {
+                const prevDischarge = encs[i - 1].end || encs[i - 1].start;
+                const nextAdmit = encs[i].start || encs[i].end;
+                if (prevDischarge && nextAdmit) {
+                    const daysDiff = (nextAdmit - prevDischarge) / (1000 * 60 * 60 * 24);
+                    if (daysDiff > 0 && daysDiff <= 14) numerator++;
+                }
             }
         });
     } else if (cqlFile.includes('_10_')) {
