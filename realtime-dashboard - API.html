@@ -257,13 +257,16 @@ function signalDot(s) { return `<span class="signal ${s}"></span>`; }
 function byCat(cat) { return DATA.qualityIndicators.filter(q => q.category === cat); }
 function fmt(v) { return v !== null && v !== undefined ? Number(v).toLocaleString() : '--'; }
 
-/* ─── Computed ─── */
-const qQ = DATA.qualityIndicators.filter(q => q.rate !== null).length;
-const qD = DATA.diseaseItems.filter(d => d.patients !== null).length;
-const qH = DATA.healthIndicators.filter(h => h.count !== null).length;
-const qE = DATA.esgIndicators.filter(e => e.rate !== null).length;
-const totalQueried = qQ + qD + qH + qE;
-const totalPatients = DATA.diseaseItems.reduce((s,d)=>s+(d.patients||0),0);
+/* ─── Computed (recalculated each render) ─── */
+function getQueryCounts() {
+    const qQ = DATA.qualityIndicators.filter(q => q.rate !== null).length;
+    const qD = DATA.diseaseItems.filter(d => d.patients !== null).length;
+    const qH = DATA.healthIndicators.filter(h => h.count !== null).length;
+    const qE = DATA.esgIndicators.filter(e => e.rate !== null).length;
+    const totalQueried = qQ + qD + qH + qE;
+    const totalPatients = DATA.diseaseItems.reduce((s,d)=>s+(d.patients||0),0);
+    return { qQ, qD, qH, qE, totalQueried, totalPatients };
+}
 
 /* ═══ SVG Helpers ═══ */
 function svgHalfDonut(val, threshold, size, label) {
@@ -339,6 +342,7 @@ function horizontalBar(items, maxVal, getTarget, getLowerBetter) {
 
 /* ═══ Panel Renderers ═══ */
 function renderOverview() {
+    const { qQ, qD, qH, qE, totalQueried, totalPatients } = getQueryCounts();
     const sigs = DATA.qualityIndicators.map(q => getSignal(q.rate, q.category));
     const gc = sigs.filter(s=>s==='green').length, yc = sigs.filter(s=>s==='yellow').length, rc = sigs.filter(s=>s==='red').length;
     return `<div style="text-align:center;margin-bottom:2rem">
