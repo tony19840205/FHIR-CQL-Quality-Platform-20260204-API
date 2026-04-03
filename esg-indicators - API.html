@@ -339,6 +339,14 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 傳送過程紀錄 -->
+                    <div id="transferLog" style="display:none; margin-top: 1rem; background: #0f172a; border-radius: 10px; padding: 1rem 1.25rem; max-height: 220px; overflow-y: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.7; color: #94a3b8;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+                            <span style="color: #38bdf8; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">📋 傳送過程紀錄</span>
+                        </div>
+                        <div id="transferLogContent"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -370,12 +378,39 @@
     function refreshData() { location.reload(); }
     document.addEventListener('DOMContentLoaded', updateDemoModeButton);
 
-    /* ─── 連線民眾網頁：收集數據 → localStorage + BroadcastChannel → 資料流動畫 ─── */
+    /* ─── 連線民眾網頁：收集數據 → 呼叫後端 API 推送至 GitHub → 顯示過程紀錄 ─── */
     var _isSending = false;
+    function _logTransfer(msg, type) {
+        var logWrap = document.getElementById('transferLog');
+        var logContent = document.getElementById('transferLogContent');
+        if (!logWrap || !logContent) return;
+        logWrap.style.display = 'block';
+        var colors = { info: '#94a3b8', step: '#38bdf8', success: '#4ade80', error: '#f87171', data: '#a78bfa' };
+        var icons = { info: 'ℹ️', step: '▶', success: '✅', error: '❌', data: '📦' };
+        var now = new Date();
+        var ts = now.toTimeString().slice(0,8);
+        var line = document.createElement('div');
+        line.style.color = colors[type] || colors.info;
+        line.innerHTML = '<span style="color:#475569">[' + ts + ']</span> ' + (icons[type] || '') + ' ' + msg;
+        logContent.appendChild(line);
+        logWrap.scrollTop = logWrap.scrollHeight;
+    }
+
     function sendToPublicDashboard() {
         if (_isSending) return;
         _isSending = true;
-        /* 1. 收集 & 發送數據 */
+
+        // 清空上一次的紀錄
+        var logContent = document.getElementById('transferLogContent');
+        if (logContent) logContent.innerHTML = '';
+
+        var btn = document.getElementById('uiConnectBtn');
+        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>傳送中...</span>'; }
+
+        _logTransfer('開始傳送流程', 'step');
+
+        /* Step 1: 收集數據 */
+        _logTransfer('收集頁面 ESG 指標數據...', 'step');
         var data;
         if (window.dataExporter && typeof window.dataExporter.collectData === 'function') {
             data = window.dataExporter.collectData();
@@ -383,23 +418,115 @@
             try { data = JSON.parse(localStorage.getItem('fhir_export_cache') || '{}'); } catch(e) { data = {}; }
             data.exportedAt = data.exportedAt || new Date().toISOString();
         }
+
+        // 顯示收集到的 ESG 摘要
+        var esgSummary = (data.esgIndicators || []).map(function(e) {
+            return e.name + ': ' + (e.count != null ? e.count : '-') + ' / ' + (e.rate != null ? e.rate + '%' : '-');
+        }).join('、');
+        _logTransfer('ESG 數據: ' + (esgSummary || '無'), 'data');
+        _logTransfer('匯出時間: ' + data.exportedAt, 'data');
+
+        /* Step 2: 寫入 localStorage + BroadcastChannel（本地備份） */
+        _logTransfer('寫入 localStorage 備份...', 'step');
         try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
         try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.postMessage({ type: 'update-realtime', data: data }); ch.close(); } catch(e) {}
-        /* 2. 按鈕 → 傳送中 */
-        var btn = document.getElementById('uiConnectBtn');
-        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>傳送中...</span>'; }
-        /* 3. 動畫：控制網頁 → 民眾網頁 */
+        _logTransfer('本地備份完成', 'success');
+
+        /* Step 3: 動畫 */
         _animateLine('.line-control-public');
-        /* 4. 1.5 秒後：民眾網頁 → 即時看板 */
-        setTimeout(function() { _animateLine('.line-public-llm'); }, 1500);
-        /* 5. 4 秒後：清除動畫 → 顯示完成 */
-        setTimeout(function() {
-            _clearLine('.line-control-public');
-            _clearLine('.line-public-llm');
-            if (btn) { btn.classList.remove('loading'); btn.classList.add('active'); btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>已連線 民眾網頁</span>'; }
-            _showSentToast();
-            _isSending = false;
-        }, 4000);
+
+        /* Step 4: 呼叫後端 API 推送至 GitHub */
+        _logTransfer('呼叫後端 API /api/export-public-data ...', 'step');
+
+        var exportPromise;
+        if (window.dataExporter && typeof window.dataExporter.exportToPublicSite === 'function') {
+            exportPromise = window.dataExporter.exportToPublicSite();
+        } else {
+            // 直接呼叫後端 API
+            var backendUrl = (window.location.hostname.includes('onrender.com'))
+                ? window.location.origin
+                : (window.location.hostname.includes('github.io'))
+                    ? 'https://fhir-cql-quality-platform-20260204.onrender.com'
+                    : 'http://localhost:3000';
+            exportPromise = fetch(backendUrl + '/api/export-public-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(function(r) { return r.json(); });
+        }
+
+        exportPromise.then(function(result) {
+            _logTransfer('後端回應: ' + JSON.stringify(result.method || result.message || 'ok'), 'success');
+
+            if (result.method === 'github-api') {
+                _logTransfer('已透過 GitHub API 推送至 public-health-dashboard repo', 'success');
+                _logTransfer('GitHub Pages 將在 1-2 分鐘內自動部署更新', 'info');
+            } else if (result.method === 'local-file') {
+                _logTransfer('已寫入本地民眾網頁資料夾: ' + (result.path || ''), 'success');
+            } else if (result.success) {
+                _logTransfer('數據推送成功: ' + (result.message || ''), 'success');
+            }
+
+            _animateLine('.line-public-llm');
+
+            setTimeout(function() {
+                _clearLine('.line-control-public');
+                _clearLine('.line-public-llm');
+                if (btn) { btn.classList.remove('loading'); btn.classList.add('active'); btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>已連線 民眾網頁</span>'; }
+                _logTransfer('傳送流程完成 ✔', 'success');
+                _showSentToast();
+                _isSending = false;
+            }, 2000);
+
+        }).catch(function(err) {
+            _logTransfer('後端 API 錯誤: ' + err.message, 'error');
+            _logTransfer('嘗試瀏覽器端 GitHub API 推送...', 'step');
+
+            // 降級：用 dataExporter 的 GitHub API 直推
+            _tryClientSideGitHubPush(data).then(function() {
+                _animateLine('.line-public-llm');
+                setTimeout(function() {
+                    _clearLine('.line-control-public');
+                    _clearLine('.line-public-llm');
+                    if (btn) { btn.classList.remove('loading'); btn.classList.add('active'); btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>已連線 民眾網頁</span>'; }
+                    _logTransfer('傳送流程完成 ✔', 'success');
+                    _showSentToast();
+                    _isSending = false;
+                }, 2000);
+            }).catch(function(e2) {
+                _logTransfer('所有推送方式均失敗: ' + e2.message, 'error');
+                _clearLine('.line-control-public');
+                if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-window-restore"></i> <span>連線 民眾網頁</span>'; }
+                _isSending = false;
+            });
+        });
+    }
+
+    function _tryClientSideGitHubPush(data) {
+        var token = localStorage.getItem('github_token');
+        if (!token) return Promise.reject(new Error('無 GitHub Token'));
+        var owner = 'tony19840205', repo = 'public-health-dashboard', filePath = 'public/data/dashboard-data.json';
+        var apiUrl = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + filePath;
+        _logTransfer('瀏覽器端推送至 GitHub: ' + owner + '/' + repo, 'step');
+        return fetch(apiUrl, { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } })
+            .then(function(r) { return r.ok ? r.json() : { sha: null }; })
+            .then(function(existing) {
+                var body = {
+                    message: 'data: ESG 控制台匯出 ' + new Date().toISOString().slice(0, 16),
+                    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
+                    branch: 'main'
+                };
+                if (existing.sha) body.sha = existing.sha;
+                return fetch(apiUrl, {
+                    method: 'PUT',
+                    headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+            })
+            .then(function(r) {
+                if (!r.ok) throw new Error('GitHub API 回應 ' + r.status);
+                _logTransfer('瀏覽器端 GitHub 推送成功', 'success');
+            });
     }
     function _animateLine(sel) {
         var line = document.querySelector(sel);
