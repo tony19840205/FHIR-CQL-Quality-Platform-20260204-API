@@ -401,6 +401,7 @@ function renderDiseaseMap() {
     const CITY_COORDS = {"台北市":[25.033,121.565],"新北市":[25.012,121.465],"桃園市":[24.994,121.301],"新竹市":[24.804,120.969],"基隆市":[25.128,121.739],"台中市":[24.148,120.674],"彰化縣":[24.081,120.539],"南投縣":[23.961,120.685],"台南市":[22.999,120.227],"高雄市":[22.627,120.301],"屏東縣":[22.552,120.549],"花蓮縣":[23.992,121.601],"台東縣":[22.756,121.145]};
     const cityTotals = {};
     DATA.diseaseItems.forEach(d => { if (!d.cityData) return; Object.entries(d.cityData).forEach(([c,v]) => { cityTotals[c]=(cityTotals[c]||0)+v; }); });
+    const totalPatients = DATA.diseaseItems.reduce((s,d)=>s+(d.patients||0),0);
     const REGIONS = {'北部':['台北市','新北市','桃園市','新竹市','基隆市'],'中部':['台中市','彰化縣','南投縣'],'南部':['台南市','高雄市','屏東縣'],'東部':['花蓮縣','台東縣']};
     const regionStats = Object.entries(REGIONS).map(([r,cities])=>({region:r,count:cities.reduce((s,c)=>s+(cityTotals[c]||0),0),pct:totalPatients>0?Math.round(cities.reduce((s,c)=>s+(cityTotals[c]||0),0)/totalPatients*100):0}));
     return `<div class="panel-header"><div class="panel-header-icon" style="background:linear-gradient(135deg,#dc2626,#f43f5e)"><i class="fas fa-map-marker-alt"></i></div><div><h2>傳染病地圖</h2><p>5 項傳染病 · 13 縣市地區分佈</p></div></div>
@@ -672,6 +673,7 @@ function showPanel(idx) {
     // Update tabs
     document.querySelectorAll('.tab-btn').forEach((btn,i) => btn.classList.toggle('active', i===idx));
     // Update footer
+    const { totalQueried } = getQueryCounts();
     document.getElementById('footerInfo').textContent = `${totalQueried}/50 項已查詢 · ${idx+1}/${PANELS.length}`;
     // Progress bar
     const fill = document.getElementById('progressFill');
@@ -712,7 +714,9 @@ function updateClock() {
 /* ─── Leaflet Map ─── */
 function initLeaflet() {
     const el = document.getElementById('leafletMap');
-    if (!el || leafletMap) return;
+    if (!el) return;
+    // 如果已存在地圖，清除重建（確保數據刷新）
+    if (leafletMap) { leafletMap.remove(); leafletMap = null; }
     leafletMap = L.map(el, { zoomControl: true, attributionControl: false }).setView([23.7, 121.0], 7);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(leafletMap);
     const CITY_COORDS = {"台北市":[25.033,121.565],"新北市":[25.012,121.465],"桃園市":[24.994,121.301],"新竹市":[24.804,120.969],"基隆市":[25.128,121.739],"台中市":[24.148,120.674],"彰化縣":[24.081,120.539],"南投縣":[23.961,120.685],"台南市":[22.999,120.227],"高雄市":[22.627,120.301],"屏東縣":[22.552,120.549],"花蓮縣":[23.992,121.601],"台東縣":[22.756,121.145]};
@@ -773,27 +777,44 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch(e) {}
     })();
 
-    /* ─── BroadcastChannel：接收民眾網頁轉發的數據 ─── */
+    /* ─── BroadcastChannel：接收控制台 & 民眾網頁的數據（兩種訊息都接收） ─── */
+    function _applyRealtimeData(d) {
+        if (!d || !d.exportedAt) return;
+        // 只在有更新的數據時才刷新（避免舊數據覆蓋新數據）
+        if (DATA.exportedAt && d.exportedAt <= DATA.exportedAt) return;
+        Object.assign(DATA, d);
+        showPanel(currentPanel);
+        console.log('📡 即時看板已接收數據:', d.exportedAt);
+    }
     try {
         var _rtCh = new BroadcastChannel('fhir-api-channel');
         _rtCh.onmessage = function(ev) {
-            if (ev.data && ev.data.type === 'update-realtime' && ev.data.data) {
-                Object.assign(DATA, ev.data.data);
-                showPanel(currentPanel);
-                console.log('📡 即時看板已接收民眾網頁轉發的數據');
+            if (ev.data && ev.data.data && (ev.data.type === 'update-realtime' || ev.data.type === 'update-public')) {
+                _applyRealtimeData(ev.data.data);
             }
         };
     } catch(e) {}
 
-    // localStorage 變更 fallback
+    // localStorage 變更 fallback（跨分頁）
     window.addEventListener('storage', function(ev) {
         if (ev.key === 'fhir-dashboard-api-data' && ev.newValue) {
-            try {
-                var d = JSON.parse(ev.newValue);
-                if (d && d.exportedAt) { Object.assign(DATA, d); showPanel(currentPanel); }
-            } catch(e) {}
+            try { _applyRealtimeData(JSON.parse(ev.newValue)); } catch(e) {}
         }
     });
+
+    // 輪詢 localStorage（3 秒一次，確保 file:// 和 BroadcastChannel 不通時也能收到）
+    var _lastLsCheck = DATA.exportedAt || '';
+    setInterval(function() {
+        try {
+            var raw = localStorage.getItem('fhir-dashboard-api-data');
+            if (!raw) return;
+            var d = JSON.parse(raw);
+            if (d && d.exportedAt && d.exportedAt !== _lastLsCheck) {
+                _lastLsCheck = d.exportedAt;
+                _applyRealtimeData(d);
+            }
+        } catch(e) {}
+    }, 3000);
 });
 </script>
 </body>

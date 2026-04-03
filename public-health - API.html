@@ -379,7 +379,7 @@
             data.exportedAt = data.exportedAt || new Date().toISOString();
         }
         try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
-        try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.close(); } catch(e) {}
+        try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.postMessage({ type: 'update-realtime', data: data }); ch.close(); } catch(e) {}
         /* 2. 按鈕 → 傳送中 */
         var btn = document.getElementById('uiConnectBtn');
         if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>傳送中...</span>'; }
