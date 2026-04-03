@@ -393,7 +393,8 @@ function showDetailReport(diseaseType) {
     console.log('顯示詳細報告:', diseaseType);
     
     if (!currentResults[diseaseType]) {
-        alert('請先執行查詢');
+        // 尚未查詢 → 自動執行查詢
+        executeCQL(diseaseType);
         return;
     }
     
