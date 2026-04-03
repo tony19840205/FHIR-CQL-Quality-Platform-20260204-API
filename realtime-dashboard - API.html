@@ -745,7 +745,13 @@ document.addEventListener('DOMContentLoaded', () => {
     updateClock();
     setInterval(updateClock, 1000);
 
-    // Try to load fresh data from API
+    // 立即從 localStorage 讀取（最快的數據來源）
+    try {
+        var _lsData = JSON.parse(localStorage.getItem('fhir-dashboard-api-data') || 'null');
+        if (_lsData && _lsData.exportedAt) { Object.assign(DATA, _lsData); showPanel(currentPanel); }
+    } catch(e) {}
+
+    // Try to load fresh data from API (async, may be slow)
     (async () => {
         const API_BASE = 'https://fhir-cql-quality-platform-20260204.onrender.com';
         try {
@@ -764,12 +770,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const json = await res.json();
                 if (json && json.exportedAt) { Object.assign(DATA, json); showPanel(currentPanel); }
             }
-        } catch(e) {}
-
-        // 也嘗試從 localStorage 讀取（控制台按鈕寫入的數據）
-        try {
-            var cached = JSON.parse(localStorage.getItem('fhir-dashboard-api-data') || 'null');
-            if (cached && cached.exportedAt) { Object.assign(DATA, cached); showPanel(currentPanel); }
         } catch(e) {}
     })();
 

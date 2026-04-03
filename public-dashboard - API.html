@@ -578,6 +578,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderHealth(data.healthIndicators || EMBEDDED_DATA.healthIndicators);
     renderQuality(data.qualityIndicators || EMBEDDED_DATA.qualityIndicators);
     renderEsg(data.esgIndicators || EMBEDDED_DATA.esgIndicators);
+
+    // 確保 localStorage 有最新數據（供即時看板讀取）
+    if (hasReal) {
+        try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
+        // 轉發至即時看板（若已開啟）
+        try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-realtime', data: data }); ch.close(); } catch(e) {}
+    }
 });
 
 /* ─── BroadcastChannel：接收控制台數據 → 重新渲染 → 轉發至即時看板 ─── */
