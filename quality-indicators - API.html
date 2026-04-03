@@ -1168,8 +1168,8 @@
                             <i class="fas fa-power-off"></i> 服務控制
                         </h4>
                         <div style="display: flex; gap: 0.75rem;">
-                            <button id="uiConnectBtn" onclick="window.open('realtime-dashboard - API.html', '_blank')" class="btn-external-service inactive">
-                                <i class="fas fa-external-link-alt"></i> <span>連線 即時看板</span>
+                            <button id="uiConnectBtn" onclick="sendToPublicDashboard()" class="btn-external-service inactive">
+                                <i class="fas fa-window-restore"></i> <span>連線 民眾網頁</span>
                             </button>
                         </div>
                     </div>
@@ -1229,6 +1229,24 @@
     <script src="js/fhir-connection.js"></script>
     <script src="js/quality-indicators-api.js?v=20260401a"></script>
     <script src="js/llm-service.js"></script>
+    <script src="js/data-exporter.js"></script>
     <script src="js/llm-connection-manager.js"></script>
+    <script>
+    /* ─── 連線民眾網頁：收集數據 → localStorage + BroadcastChannel → 開啟民眾版 ─── */
+    function sendToPublicDashboard() {
+        var data;
+        if (window.dataExporter && typeof window.dataExporter.collectData === 'function') {
+            data = window.dataExporter.collectData();
+        } else {
+            try { data = JSON.parse(localStorage.getItem('fhir_export_cache') || '{}'); } catch(e) { data = {}; }
+            data.exportedAt = data.exportedAt || new Date().toISOString();
+        }
+        try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
+        try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.close(); } catch(e) {}
+        window.open('public-dashboard - API.html', 'api-public-dashboard');
+        var btn = document.getElementById('uiConnectBtn');
+        if (btn) { btn.classList.remove('inactive'); btn.classList.add('active'); btn.querySelector('span').textContent = '已連線 民眾網頁'; }
+    }
+    </script>
 </body>
 </html>

@@ -579,6 +579,51 @@ document.addEventListener('DOMContentLoaded', async () => {
     renderQuality(data.qualityIndicators || EMBEDDED_DATA.qualityIndicators);
     renderEsg(data.esgIndicators || EMBEDDED_DATA.esgIndicators);
 });
+
+/* ─── BroadcastChannel：接收控制台數據 → 重新渲染 → 轉發至即時看板 ─── */
+function _applyDashboardData(d) {
+    if (!d || !d.exportedAt) return;
+    try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(d)); } catch(e) {}
+
+    const hasReal = d.exportedAt && (
+        (d.diseaseItems || []).some(i => i.patients !== null) ||
+        (d.qualityIndicators || []).some(i => i.rate !== null) ||
+        (d.healthIndicators || []).some(i => i.count !== null) ||
+        (d.esgIndicators || []).some(i => i.rate !== null)
+    );
+    if (hasReal) showRealBanner();
+
+    renderDiseases(d.diseaseItems || EMBEDDED_DATA.diseaseItems);
+    renderHealth(d.healthIndicators || EMBEDDED_DATA.healthIndicators);
+    renderQuality(d.qualityIndicators || EMBEDDED_DATA.qualityIndicators);
+    renderEsg(d.esgIndicators || EMBEDDED_DATA.esgIndicators);
+
+    // 轉發至即時看板
+    try {
+        var ch2 = new BroadcastChannel('fhir-api-channel');
+        ch2.postMessage({ type: 'update-realtime', data: d });
+        ch2.close();
+    } catch(e) {}
+    console.log('📡 民眾網頁已接收並轉發數據至即時看板');
+}
+
+(function() {
+    try {
+        var ch = new BroadcastChannel('fhir-api-channel');
+        ch.onmessage = function(ev) {
+            if (ev.data && ev.data.type === 'update-public' && ev.data.data) {
+                _applyDashboardData(ev.data.data);
+            }
+        };
+    } catch(e) {}
+
+    // 也監聽 localStorage 變更（跨分頁 fallback）
+    window.addEventListener('storage', function(ev) {
+        if (ev.key === 'fhir-dashboard-api-data' && ev.newValue) {
+            try { _applyDashboardData(JSON.parse(ev.newValue)); } catch(e) {}
+        }
+    });
+})();
 </script>
 </body>
 </html>

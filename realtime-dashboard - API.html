@@ -761,7 +761,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (json && json.exportedAt) { Object.assign(DATA, json); showPanel(currentPanel); }
             }
         } catch(e) {}
+
+        // 也嘗試從 localStorage 讀取（控制台按鈕寫入的數據）
+        try {
+            var cached = JSON.parse(localStorage.getItem('fhir-dashboard-api-data') || 'null');
+            if (cached && cached.exportedAt) { Object.assign(DATA, cached); showPanel(currentPanel); }
+        } catch(e) {}
     })();
+
+    /* ─── BroadcastChannel：接收民眾網頁轉發的數據 ─── */
+    try {
+        var _rtCh = new BroadcastChannel('fhir-api-channel');
+        _rtCh.onmessage = function(ev) {
+            if (ev.data && ev.data.type === 'update-realtime' && ev.data.data) {
+                Object.assign(DATA, ev.data.data);
+                showPanel(currentPanel);
+                console.log('📡 即時看板已接收民眾網頁轉發的數據');
+            }
+        };
+    } catch(e) {}
+
+    // localStorage 變更 fallback
+    window.addEventListener('storage', function(ev) {
+        if (ev.key === 'fhir-dashboard-api-data' && ev.newValue) {
+            try {
+                var d = JSON.parse(ev.newValue);
+                if (d && d.exportedAt) { Object.assign(DATA, d); showPanel(currentPanel); }
+            } catch(e) {}
+        }
+    });
 });
 </script>
 </body>
