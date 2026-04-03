@@ -365,8 +365,12 @@
     <script src="js/data-exporter.js"></script>
     <script src="js/llm-connection-manager.js"></script>
     <script>
-    /* ─── 連線民眾網頁：收集數據 → localStorage + BroadcastChannel → 開啟民眾版 ─── */
+    /* ─── 連線民眾網頁：收集數據 → localStorage + BroadcastChannel → 資料流動畫 ─── */
+    var _isSending = false;
     function sendToPublicDashboard() {
+        if (_isSending) return;
+        _isSending = true;
+        /* 1. 收集 & 發送數據 */
         var data;
         if (window.dataExporter && typeof window.dataExporter.collectData === 'function') {
             data = window.dataExporter.collectData();
@@ -376,10 +380,39 @@
         }
         try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
         try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.close(); } catch(e) {}
-        window.open('public-dashboard - API.html', 'api-public-dashboard');
+        /* 2. 按鈕 → 傳送中 */
         var btn = document.getElementById('uiConnectBtn');
-        if (btn) { btn.classList.remove('inactive'); btn.classList.add('active'); btn.querySelector('span').textContent = '已連線 民眾網頁'; }
-        _showSentToast();
+        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>傳送中...</span>'; }
+        /* 3. 動畫：控制網頁 → 民眾網頁 */
+        _animateLine('.line-control-public');
+        /* 4. 1.5 秒後：民眾網頁 → 即時看板 */
+        setTimeout(function() { _animateLine('.line-public-llm'); }, 1500);
+        /* 5. 4 秒後：清除動畫 → 顯示完成 */
+        setTimeout(function() {
+            _clearLine('.line-control-public');
+            _clearLine('.line-public-llm');
+            if (btn) { btn.classList.remove('loading'); btn.classList.add('active'); btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>已連線 民眾網頁</span>'; }
+            _showSentToast();
+            _isSending = false;
+        }, 4000);
+    }
+    function _animateLine(sel) {
+        var line = document.querySelector(sel);
+        if (!line) return;
+        line.classList.remove('connected','disconnected');
+        line.classList.add('transferring');
+        for (var i = 0; i < 5; i++) { var p = document.createElement('div'); p.className = 'data-particle'; line.appendChild(p); }
+        var nums = ['123','456','789','1024'];
+        nums.forEach(function(n, idx) {
+            setTimeout(function() { var d = document.createElement('div'); d.className = 'data-number'; d.textContent = n; d.style.left = (20 + idx * 20) + '%'; line.appendChild(d); }, idx * 400);
+        });
+    }
+    function _clearLine(sel) {
+        var line = document.querySelector(sel);
+        if (!line) return;
+        line.classList.remove('transferring');
+        line.classList.add('connected');
+        line.querySelectorAll('.data-particle, .data-number').forEach(function(p) { p.remove(); });
     }
     function _showSentToast() {
         var t = document.createElement('div');
