@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>é†«ç™‚å“è³ªæŒ‡æ¨™å„€è¡¨æ¿ - FHIR CQL Platform (API)</title>
+    <title>?«ç??è³ª?‡æ??€è¡¨æ¿ - FHIR CQL Platform (API)</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/llm-connection.css">
@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <!-- å°èˆªæ¬„ -->
+    <!-- å°èˆªæ¬?-->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -20,534 +20,534 @@
                 <span style="font-size: 0.55em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 6px; letter-spacing: 1px; font-weight: 700; vertical-align: middle;">API</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index - API.html">é¦–é </a></li>
-                <li><a href="disease-control - API.html">å‚³æŸ“ç—…ç®¡åˆ¶</a></li>
-                <li><a href="public-health - API.html">åœ‹æ°‘å¥åº·</a></li>
-                <li><a href="esg-indicators - API.html">ESGæŒ‡æ¨™</a></li>
-                <li><a href="quality-indicators - API.html" class="active">é†«ç™‚å“è³ª</a></li>
+                <li><a href="index - API.html">é¦–é?</a></li>
+                <li><a href="disease-control - API.html">?³æ??…ç®¡??/a></li>
+                <li><a href="public-health - API.html">?‹æ??¥åº·</a></li>
+                <li><a href="esg-indicators - API.html">ESG?‡æ?</a></li>
+                <li><a href="quality-indicators - API.html" class="active">?«ç??è³ª</a></li>
             </ul>
-            <div class="nav-settings" onclick="openLLMSettingsModal()" style="cursor: pointer;" title="LLMè¨­å®š">
+            <div class="nav-settings" onclick="openLLMSettingsModal()" style="cursor: pointer;" title="LLMè¨­å?">
                 <i class="fas fa-cog"></i>
             </div>
         </div>
     </nav>
 
-    <!-- ä¸»è¦å…§å®¹å€ -->
+    <!-- ä¸»è??§å®¹?€ -->
     <main class="main-content">
-        <!-- é é¢æ¨™é¡Œ -->
+        <!-- ?é¢æ¨™é? -->
         <section class="page-header">
             <div class="header-content">
-                <h1><i class="fas fa-award"></i> é†«ç™‚å“è³ªæŒ‡æ¨™å„€è¡¨æ¿ <span style="font-size: 0.4em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 3px 10px; border-radius: 12px; vertical-align: middle; letter-spacing: 1px; font-weight: 600;">API</span></h1>
-                <p>é†«é™¢ç¸½é¡é†«ç™‚å“è³ªè³‡è¨Šå…¬é–‹ç³»çµ± - 39é …æ ¸å¿ƒæŒ‡æ¨™</p>
+                <h1><i class="fas fa-award"></i> ?«ç??è³ª?‡æ??€è¡¨æ¿ <span style="font-size: 0.4em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 3px 10px; border-radius: 12px; vertical-align: middle; letter-spacing: 1px; font-weight: 600;">API</span></h1>
+                <p>?«é™¢ç¸½é??«ç??è³ªè³‡è??¬é?ç³»çµ± - 39?…æ ¸å¿ƒæ?æ¨?/p>
             </div>
             <div class="header-actions" style="position: relative;">
                 <div style="display: flex; flex-direction: column; align-items: center; margin-right: 10px;">
                     <button class="btn btn-secondary" onclick="toggleDemoMode()" id="demoModeBtn">
-                        <i class="fas fa-flask"></i> <span id="demoModeText">å•Ÿç”¨ç¤ºç¯„æ¨¡å¼</span>
+                        <i class="fas fa-flask"></i> <span id="demoModeText">?Ÿç”¨ç¤ºç?æ¨¡å?</span>
                     </button>
                     <div style="font-size: 11px; color: #64748b; margin-top: 4px; text-align: center; line-height: 1.3;">
-                        <span style="color: #10b981; font-weight: 600;">â—</span> ç¶ è‰²ï¼šæ¨¡æ“¬è³‡æ–™<br>
-                        <span style="color: #94a3b8; font-weight: 600;">â—</span> ç°è‰²ï¼šFHIRè³‡æ–™
+                        <span style="color: #10b981; font-weight: 600;">??/span> ç¶ è‰²ï¼šæ¨¡?¬è???br>
+                        <span style="color: #94a3b8; font-weight: 600;">??/span> ?°è‰²ï¼šFHIRè³‡æ?
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="refreshData()">
-                    <i class="fas fa-sync-alt"></i> é‡æ–°æ•´ç†
+                    <i class="fas fa-sync-alt"></i> ?æ–°?´ç?
                 </button>
             </div>
         </section>
 
-        <!-- æŒ‡æ¨™åˆ†é¡æ¨™ç±¤ -->
+        <!-- ?‡æ??†é?æ¨™ç±¤ -->
         <section class="filter-section">
             <div class="filter-tabs">
-                <button class="filter-tab active" onclick="filterCategory('all')">å…¨éƒ¨ (39)</button>
-                <button class="filter-tab" onclick="filterCategory('medication')">ç”¨è—¥å®‰å…¨ (16)</button>
-                <button class="filter-tab" onclick="filterCategory('outpatient')">é–€è¨ºå“è³ª (4)</button>
-                <button class="filter-tab" onclick="filterCategory('inpatient')">ä½é™¢å“è³ª (5)</button>
-                <button class="filter-tab" onclick="filterCategory('surgery')">æ‰‹è¡“å“è³ª (10)</button>
-                <button class="filter-tab" onclick="filterCategory('outcome')">çµæœå“è³ª (4)</button>
+                <button class="filter-tab active" onclick="filterCategory('all')">?¨éƒ¨ (39)</button>
+                <button class="filter-tab" onclick="filterCategory('medication')">?¨è—¥å®‰å…¨ (16)</button>
+                <button class="filter-tab" onclick="filterCategory('outpatient')">?€è¨ºå?è³?(4)</button>
+                <button class="filter-tab" onclick="filterCategory('inpatient')">ä½é™¢?è³ª (5)</button>
+                <button class="filter-tab" onclick="filterCategory('surgery')">?‹è??è³ª (10)</button>
+                <button class="filter-tab" onclick="filterCategory('outcome')">çµæ??è³ª (4)</button>
             </div>
         </section>
 
-        <!-- ç³»çµ±å…¬å‘Š -->
+        <!-- ç³»çµ±?¬å? -->
         <section class="info-banner" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 12px; padding: 16px 24px; margin: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <div class="banner-content" style="display: flex; align-items: center; gap: 16px; color: white;">
                 <i class="fas fa-info-circle" style="font-size: 24px; opacity: 0.9;"></i>
                 <div style="flex: 1;">
                     <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px;">
-                        <i class="fas fa-code-branch"></i> ç³»çµ±é–‹ç™¼èªªæ˜
+                        <i class="fas fa-code-branch"></i> ç³»çµ±?‹ç™¼èªªæ?
                     </div>
                     <div style="font-size: 14px; opacity: 0.95; line-height: 1.6;">
-                        æœ¬ç³»çµ±å·²å®Œæ•´å¯¦ä½œè¡›ç¦éƒ¨å…¬å‘Šä¹‹39é …é†«ç™‚å“è³ªæŒ‡æ¨™CQLè¦ç¯„ï¼Œé€éå¾Œç«¯ CQL Engine API åŸ·è¡ŒæŸ¥è©¢ã€‚å¾…æ”¿åºœæ­£å¼å…¬å‘Š <strong>FHIR Implementation Guide</strong> åŠ <strong>TWCore Profile</strong> å¾Œï¼Œåƒ…éœ€å¾®èª¿CodeSystem URLåŠExtensionå®šç¾©å³å¯å®Œæˆå°æ¥ã€‚
+                        ?¬ç³»çµ±å·²å®Œæ•´å¯¦ä?è¡›ç??¨å…¬?Šä?39?…é†«?‚å?è³ªæ?æ¨™CQLè¦ç?ï¼Œé€é?å¾Œç«¯ CQL Engine API ?·è??¥è©¢?‚å??¿å?æ­???¬å? <strong>FHIR Implementation Guide</strong> ??<strong>TWCore Profile</strong> å¾Œï??…é?å¾®èª¿CodeSystem URL?ŠExtensionå®šç¾©?³å¯å®Œæ?å°æ¥??
                     </div>
                 </div>
                 <button class="btn" onclick="this.parentElement.parentElement.style.display='none'" 
                         style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; cursor: pointer; border-radius: 6px; font-size: 13px; transition: all 0.2s;"
                         onmouseover="this.style.background='rgba(255,255,255,0.3)'"
                         onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-                    <i class="fas fa-times"></i> é—œé–‰
+                    <i class="fas fa-times"></i> ?œé?
                 </button>
             </div>
         </section>
 
-        <!-- ===================== ç”¨è—¥å®‰å…¨æŒ‡æ¨™ ===================== -->
+        <!-- ===================== ?¨è—¥å®‰å…¨?‡æ? ===================== -->
         <section class="overview-section" data-category="medication">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-pills"></i> ç”¨è—¥å®‰å…¨æŒ‡æ¨™</h2>
-                    <p>è—¥å“è™•æ–¹åˆç†æ€§èˆ‡é‡ç–Šç”¨è—¥ç›£æ¸¬</p>
+                    <h2><i class="fas fa-pills"></i> ?¨è—¥å®‰å…¨?‡æ?</h2>
+                    <p>?¥å??•æ–¹?ˆç??§è??ç??¨è—¥??¸¬</p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('medication')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> å…¨éƒ¨å•Ÿå‹•
+                    <i class="fas fa-play-circle"></i> ?¨éƒ¨?Ÿå?
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- æŒ‡æ¨™01 -->
+                <!-- ?‡æ?01 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-01')">
                     <div class="card-badge">01</div>
                     <div class="card-content">
-                        <h3>é–€è¨ºæ³¨å°„åŠ‘ä½¿ç”¨ç‡</h3>
+                        <h3>?€è¨ºæ³¨å°„å?ä½¿ç”¨??/h3>
                         <p class="card-code">3127</p>
                         <p class="card-cql-file">Indicator_01</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">ä½¿ç”¨ç‡</span>
+                            <span class="mini-label">ä½¿ç”¨??/span>
                             <span class="mini-value" id="ind01Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-01')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_01" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™02 -->
+                <!-- ?‡æ?02 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-02')">
                     <div class="card-badge">02</div>
                     <div class="card-content">
-                        <h3>é–€è¨ºæŠ—ç”Ÿç´ ä½¿ç”¨ç‡</h3>
+                        <h3>?€è¨ºæ??Ÿç?ä½¿ç”¨??/h3>
                         <p class="card-code">1140.01</p>
                         <p class="card-cql-file">Indicator_02</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">ä½¿ç”¨ç‡</span>
+                            <span class="mini-label">ä½¿ç”¨??/span>
                             <span class="mini-value" id="ind02Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-02')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_02" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-1 -->
+                <!-- ?‡æ?03-1 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-1')">
                     <div class="card-badge">03-1</div>
                     <div class="card-content">
-                        <h3>åŒé™¢é™è¡€å£“è—¥é‡ç–Š</h3>
+                        <h3>?Œé™¢?è?å£“è—¥?ç?</h3>
                         <p class="card-code">1710</p>
                         <p class="card-cql-file">Indicator_03_1</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_1Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-1')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-2 -->
+                <!-- ?‡æ?03-2 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-2')">
                     <div class="card-badge">03-2</div>
                     <div class="card-content">
-                        <h3>åŒé™¢é™è¡€è„‚è—¥é‡ç–Š</h3>
+                        <h3>?Œé™¢?è??‚è—¥?ç?</h3>
                         <p class="card-code">1711</p>
                         <p class="card-cql-file">Indicator_03_2</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_2Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-2')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-3 -->
+                <!-- ?‡æ?03-3 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-3')">
                     <div class="card-badge">03-3</div>
                     <div class="card-content">
-                        <h3>åŒé™¢é™è¡€ç³–è—¥é‡ç–Š</h3>
+                        <h3>?Œé™¢?è?ç³–è—¥?ç?</h3>
                         <p class="card-code">1712</p>
                         <p class="card-cql-file">Indicator_03_3</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_3Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-3')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-4 -->
+                <!-- ?‡æ?03-4 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-4')">
                     <div class="card-badge">03-4</div>
                     <div class="card-content">
-                        <h3>åŒé™¢æŠ—æ€è¦ºå¤±èª¿è—¥é‡ç–Š</h3>
+                        <h3>?Œé™¢?—æ€è¦ºå¤±èª¿?¥é???/h3>
                         <p class="card-code">1726</p>
                         <p class="card-cql-file">Indicator_03_4</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_4Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-4')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_4" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-5 -->
+                <!-- ?‡æ?03-5 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-5')">
                     <div class="card-badge">03-5</div>
                     <div class="card-content">
-                        <h3>åŒé™¢æŠ—æ†‚é¬±è—¥é‡ç–Š</h3>
+                        <h3>?Œé™¢?—æ?é¬±è—¥?ç?</h3>
                         <p class="card-code">1727</p>
                         <p class="card-cql-file">Indicator_03_5</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_5Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-5')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_5" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-6 -->
+                <!-- ?‡æ?03-6 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-6')">
                     <div class="card-badge">03-6</div>
                     <div class="card-content">
-                        <h3>åŒé™¢å®‰çœ é®éœè—¥é‡ç–Š</h3>
+                        <h3>?Œé™¢å®‰ç??®é??¥é???/h3>
                         <p class="card-code">1728</p>
                         <p class="card-cql-file">Indicator_03_6</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_6Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-6')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_6" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-7 -->
+                <!-- ?‡æ?03-7 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-7')">
                     <div class="card-badge">03-7</div>
                     <div class="card-content">
-                        <h3>åŒé™¢æŠ—è¡€æ “è—¥é‡ç–Š</h3>
+                        <h3>?Œé™¢?—è??“è—¥?ç?</h3>
                         <p class="card-code">3375</p>
                         <p class="card-cql-file">Indicator_03_7</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_7Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-7')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_7" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-8 -->
+                <!-- ?‡æ?03-8 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-8')">
                     <div class="card-badge">03-8</div>
                     <div class="card-content">
-                        <h3>åŒé™¢å‰åˆ—è…ºè—¥é‡ç–Š</h3>
+                        <h3>?Œé™¢?å??ºè—¥?ç?</h3>
                         <p class="card-code">3376</p>
                         <p class="card-cql-file">Indicator_03_8</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_8Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-8')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_8" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- è·¨é™¢æŒ‡æ¨™ 03-9 åˆ° 03-16 -->
-                <!-- æŒ‡æ¨™03-9 -->
+                <!-- è·¨é™¢?‡æ? 03-9 ??03-16 -->
+                <!-- ?‡æ?03-9 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-9')">
                     <div class="card-badge">03-9</div>
                     <div class="card-content">
-                        <h3>è·¨é™¢é™è¡€å£“è—¥é‡ç–Š</h3>
+                        <h3>è·¨é™¢?è?å£“è—¥?ç?</h3>
                         <p class="card-code">1713</p>
                         <p class="card-cql-file">Indicator_03_9</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_9Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-9')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_9" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-10 -->
+                <!-- ?‡æ?03-10 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-10')">
                     <div class="card-badge">03-10</div>
                     <div class="card-content">
-                        <h3>è·¨é™¢é™è¡€è„‚è—¥é‡ç–Š</h3>
+                        <h3>è·¨é™¢?è??‚è—¥?ç?</h3>
                         <p class="card-code">1714</p>
                         <p class="card-cql-file">Indicator_03_10</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_10Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-10')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_10" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-11 -->
+                <!-- ?‡æ?03-11 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-11')">
                     <div class="card-badge">03-11</div>
                     <div class="card-content">
-                        <h3>è·¨é™¢é™è¡€ç³–è—¥é‡ç–Š</h3>
+                        <h3>è·¨é™¢?è?ç³–è—¥?ç?</h3>
                         <p class="card-code">1715</p>
                         <p class="card-cql-file">Indicator_03_11</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_11Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-11')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_11" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-12 -->
+                <!-- ?‡æ?03-12 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-12')">
                     <div class="card-badge">03-12</div>
                     <div class="card-content">
-                        <h3>è·¨é™¢æŠ—æ€è¦ºå¤±èª¿è—¥é‡ç–Š</h3>
+                        <h3>è·¨é™¢?—æ€è¦ºå¤±èª¿?¥é???/h3>
                         <p class="card-code">1729</p>
                         <p class="card-cql-file">Indicator_03_12</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_12Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-12')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_12" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-13 -->
+                <!-- ?‡æ?03-13 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-13')">
                     <div class="card-badge">03-13</div>
                     <div class="card-content">
-                        <h3>è·¨é™¢æŠ—æ†‚é¬±è—¥é‡ç–Š</h3>
+                        <h3>è·¨é™¢?—æ?é¬±è—¥?ç?</h3>
                         <p class="card-code">1730</p>
                         <p class="card-cql-file">Indicator_03_13</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_13Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-13')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_13" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-14 -->
+                <!-- ?‡æ?03-14 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-14')">
                     <div class="card-badge">03-14</div>
                     <div class="card-content">
-                        <h3>è·¨é™¢å®‰çœ é®éœè—¥é‡ç–Š</h3>
+                        <h3>è·¨é™¢å®‰ç??®é??¥é???/h3>
                         <p class="card-code">1731</p>
                         <p class="card-cql-file">Indicator_03_14</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_14Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-14')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_14" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-15 -->
+                <!-- ?‡æ?03-15 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-15')">
                     <div class="card-badge">03-15</div>
                     <div class="card-content">
-                        <h3>è·¨é™¢æŠ—è¡€æ “è—¥é‡ç–Š</h3>
+                        <h3>è·¨é™¢?—è??“è—¥?ç?</h3>
                         <p class="card-code">3377</p>
                         <p class="card-cql-file">Indicator_03_15</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_15Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-15')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_15" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™03-16 -->
+                <!-- ?‡æ?03-16 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-16')">
                     <div class="card-badge">03-16</div>
                     <div class="card-content">
-                        <h3>è·¨é™¢å‰åˆ—è…ºè—¥é‡ç–Š</h3>
+                        <h3>è·¨é™¢?å??ºè—¥?ç?</h3>
                         <p class="card-code">3378</p>
                         <p class="card-cql-file">Indicator_03_16</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">é‡ç–Šç‡</span>
+                            <span class="mini-label">?ç???/span>
                             <span class="mini-value" id="ind03_16Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-16')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_03_16" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -555,139 +555,139 @@
             </div>
         </section>
 
-        <!-- ===================== é–€è¨ºå“è³ªæŒ‡æ¨™ ===================== -->
+        <!-- ===================== ?€è¨ºå?è³ªæ?æ¨?===================== -->
         <section class="overview-section" data-category="outpatient">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-hospital-user"></i> é–€è¨ºå“è³ªæŒ‡æ¨™</h2>
-                    <p>é–€è¨ºç…§è­·å“è³ªèˆ‡è™•æ–¹åˆç†æ€§</p>
+                    <h2><i class="fas fa-hospital-user"></i> ?€è¨ºå?è³ªæ?æ¨?/h2>
+                    <p>?€è¨ºç…§è­·å?è³ªè??•æ–¹?ˆç???/p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('outpatient')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> å…¨éƒ¨å•Ÿå‹•
+                    <i class="fas fa-play-circle"></i> ?¨éƒ¨?Ÿå?
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- æŒ‡æ¨™04 -->
+                <!-- ?‡æ?04 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-04')">
                     <div class="card-badge">04</div>
                     <div class="card-content">
-                        <h3>æ…¢æ€§ç—…é€£è™•ç±¤ä½¿ç”¨ç‡</h3>
+                        <h3>?¢æ€§ç????ç±¤ä½¿?¨ç?</h3>
                         <p class="card-code">1318</p>
                         <p class="card-cql-file">Indicator_04</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">ä½¿ç”¨ç‡</span>
+                            <span class="mini-label">ä½¿ç”¨??/span>
                             <span class="mini-value" id="ind04Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-04')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_04" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™05 -->
+                <!-- ?‡æ?05 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-05')">
                     <div class="card-badge">05</div>
                     <div class="card-content">
-                        <h3>è™•æ–¹10ç¨®ä»¥ä¸Šè—¥å“ç‡</h3>
+                        <h3>?•æ–¹10ç¨®ä»¥ä¸Šè—¥?ç?</h3>
                         <p class="card-code">3128</p>
                         <p class="card-cql-file">Indicator_05</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ¯”ç‡</span>
+                            <span class="mini-label">æ¯”ç?</span>
                             <span class="mini-value" id="ind05Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-05')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_05" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™06 -->
+                <!-- ?‡æ?06 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-06')">
                     <div class="card-badge">06</div>
                     <div class="card-content">
-                        <h3>å°å…’æ°£å–˜æ€¥è¨ºç‡</h3>
+                        <h3>å°å?æ°???¥è¨º??/h3>
                         <p class="card-code">1315Q/1317Y</p>
                         <p class="card-cql-file">Indicator_06</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ€¥è¨ºç‡</span>
+                            <span class="mini-label">?¥è¨º??/span>
                             <span class="mini-value" id="ind06Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-06')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_06" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™07 -->
+                <!-- ?‡æ?07 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-07')">
                     <div class="card-badge">07</div>
                     <div class="card-content">
-                        <h3>ç³–å°¿ç—…HbA1cæª¢é©—ç‡</h3>
+                        <h3>ç³–å°¿?…HbA1cæª¢é???/h3>
                         <p class="card-code">109.01Q/110.01Y</p>
                         <p class="card-cql-file">Indicator_07</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æª¢é©—ç‡</span>
+                            <span class="mini-label">æª¢é???/span>
                             <span class="mini-value" id="ind07Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-07')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_07" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™08 -->
+                <!-- ?‡æ?08 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-08')">
                     <div class="card-badge">08</div>
                     <div class="card-content">
-                        <h3>åŒæ—¥åŒé™¢åŒç–¾ç—…å†å°±è¨ºç‡</h3>
+                        <h3>?Œæ—¥?Œé™¢?Œç–¾?…å?å°±è¨º??/h3>
                         <p class="card-code">1322</p>
                         <p class="card-cql-file">Indicator_08</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">å†å°±è¨ºç‡</span>
+                            <span class="mini-label">?å°±è¨ºç?</span>
                             <span class="mini-value" id="ind08Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-08')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_08" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -695,164 +695,164 @@
             </div>
         </section>
 
-        <!-- ===================== ä½é™¢å“è³ªæŒ‡æ¨™ ===================== -->
+        <!-- ===================== ä½é™¢?è³ª?‡æ? ===================== -->
         <section class="overview-section" data-category="inpatient">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-bed"></i> ä½é™¢å“è³ªæŒ‡æ¨™</h2>
-                    <p>ä½é™¢ç…§è­·å“è³ªèˆ‡å†å…¥é™¢ç‡</p>
+                    <h2><i class="fas fa-bed"></i> ä½é™¢?è³ª?‡æ?</h2>
+                    <p>ä½é™¢?§è­·?è³ª?‡å??¥é™¢??/p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('inpatient')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> å…¨éƒ¨å•Ÿå‹•
+                    <i class="fas fa-play-circle"></i> ?¨éƒ¨?Ÿå?
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- æŒ‡æ¨™09 -->
+                <!-- ?‡æ?09 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-09')">
                     <div class="card-badge">09</div>
                     <div class="card-content">
-                        <h3>14å¤©å…§éè¨ˆç•«å†å…¥é™¢ç‡</h3>
+                        <h3>14å¤©å…§?è??«å??¥é™¢??/h3>
                         <p class="card-code">1077.01Q/1809Y</p>
                         <p class="card-cql-file">Indicator_09</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">å†å…¥é™¢ç‡</span>
+                            <span class="mini-label">?å…¥?¢ç?</span>
                             <span class="mini-value" id="ind09Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-09')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_09" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™10 -->
+                <!-- ?‡æ?10 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-10')">
                     <div class="card-badge">10</div>
                     <div class="card-content">
-                        <h3>å‡ºé™¢å¾Œ3å¤©å…§æ€¥è¨ºç‡</h3>
+                        <h3>?ºé™¢å¾?å¤©å…§?¥è¨º??/h3>
                         <p class="card-code">108.01</p>
                         <p class="card-cql-file">Indicator_10</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ€¥è¨ºç‡</span>
+                            <span class="mini-label">?¥è¨º??/span>
                             <span class="mini-value" id="ind10Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-10')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_10" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™11-1 -->
+                <!-- ?‡æ?11-1 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-11-1')">
                     <div class="card-badge">11-1</div>
                     <div class="card-content">
-                        <h3>æ•´é«”å‰–è…¹ç”¢ç‡</h3>
+                        <h3>?´é??–è…¹?¢ç?</h3>
                         <p class="card-code">1136.01</p>
                         <p class="card-cql-file">Indicator_11_1</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">å‰–è…¹ç”¢ç‡</span>
+                            <span class="mini-label">?–è…¹?¢ç?</span>
                             <span class="mini-value" id="ind11_1Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-11-1')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_11_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™11-2 -->
+                <!-- ?‡æ?11-2 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-11-2')">
                     <div class="card-badge">11-2</div>
                     <div class="card-content">
-                        <h3>ç”¢å©¦è¦æ±‚å‰–è…¹ç”¢ç‡</h3>
+                        <h3>?¢å©¦è¦æ??–è…¹?¢ç?</h3>
                         <p class="card-code">1137.01</p>
                         <p class="card-cql-file">Indicator_11_2</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">å‰–è…¹ç”¢ç‡</span>
+                            <span class="mini-label">?–è…¹?¢ç?</span>
                             <span class="mini-value" id="ind11_2Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-11-2')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_11_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™11-3 -->
+                <!-- ?‡æ?11-3 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-11-3')">
                     <div class="card-badge">11-3</div>
                     <div class="card-content">
-                        <h3>æœ‰é©æ‡‰ç—‡å‰–è…¹ç”¢ç‡</h3>
+                        <h3>?‰é©?‰ç??–è…¹?¢ç?</h3>
                         <p class="card-code">1138.01</p>
                         <p class="card-cql-file">Indicator_11_3</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">å‰–è…¹ç”¢ç‡</span>
+                            <span class="mini-label">?–è…¹?¢ç?</span>
                             <span class="mini-value" id="ind11_3Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-11-3')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_11_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™11-4 -->
+                <!-- ?‡æ?11-4 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-11-4')">
                     <div class="card-badge">11-4</div>
                     <div class="card-content">
-                        <h3>åˆç”¢å©¦å‰–è…¹ç”¢ç‡</h3>
+                        <h3>?ç”¢å©¦å??¹ç”¢??/h3>
                         <p class="card-code">1075.01</p>
                         <p class="card-cql-file">Indicator_11_4</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">å‰–è…¹ç”¢ç‡</span>
+                            <span class="mini-label">?–è…¹?¢ç?</span>
                             <span class="mini-value" id="ind11_4Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-11-4')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_11_4" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -860,214 +860,214 @@
             </div>
         </section>
 
-        <!-- ===================== æ‰‹è¡“å“è³ªæŒ‡æ¨™ ===================== -->
+        <!-- ===================== ?‹è??è³ª?‡æ? ===================== -->
         <section class="overview-section" data-category="surgery">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-procedures"></i> æ‰‹è¡“å“è³ªæŒ‡æ¨™</h2>
-                    <p>æ‰‹è¡“å®‰å…¨èˆ‡è¡“å¾Œä½µç™¼ç—‡ç›£æ¸¬</p>
+                    <h2><i class="fas fa-procedures"></i> ?‹è??è³ª?‡æ?</h2>
+                    <p>?‹è?å®‰å…¨?‡è?å¾Œä½µ?¼ç???¸¬</p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('surgery')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> å…¨éƒ¨å•Ÿå‹•
+                    <i class="fas fa-play-circle"></i> ?¨éƒ¨?Ÿå?
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- æŒ‡æ¨™12 -->
+                <!-- ?‡æ?12 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-12')">
                     <div class="card-badge">12</div>
                     <div class="card-content">
-                        <h3>æ¸…æ·¨æ‰‹è¡“æŠ—ç”Ÿç´ è¶…3å¤©ç‡</h3>
+                        <h3>æ¸…æ·¨?‹è??—ç?ç´ è?3å¤©ç?</h3>
                         <p class="card-code">1155</p>
                         <p class="card-cql-file">Indicator_12</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">ä½¿ç”¨ç‡</span>
+                            <span class="mini-label">ä½¿ç”¨??/span>
                             <span class="mini-value" id="ind12Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-12')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_12" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™13 -->
+                <!-- ?‡æ?13 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-13')">
                     <div class="card-badge">13</div>
                     <div class="card-content">
-                        <h3>é«”å¤–éœ‡æ³¢ç¢çŸ³å¹³å‡åˆ©ç”¨æ¬¡æ•¸</h3>
+                        <h3>é«”å??‡æ³¢ç¢çŸ³å¹³å??©ç”¨æ¬¡æ•¸</h3>
                         <p class="card-code">20.01Q/1804Y</p>
                         <p class="card-cql-file">Indicator_13</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">å¹³å‡æ¬¡æ•¸</span>
+                            <span class="mini-label">å¹³å?æ¬¡æ•¸</span>
                             <span class="mini-value" id="ind13Rate">--</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-13')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_13" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™14 -->
+                <!-- ?‡æ?14 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-14')">
                     <div class="card-badge">14</div>
                     <div class="card-content">
-                        <h3>å­å®®è‚Œç˜¤è¡“14å¤©å†å…¥é™¢ç‡</h3>
+                        <h3>å­å®®?Œç˜¤è¡?4å¤©å??¥é™¢??/h3>
                         <p class="card-code">473.01</p>
                         <p class="card-cql-file">Indicator_14</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">å†å…¥é™¢ç‡</span>
+                            <span class="mini-label">?å…¥?¢ç?</span>
                             <span class="mini-value" id="ind14Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-14')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_14" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™15-1 -->
+                <!-- ?‡æ?15-1 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-15-1')">
                     <div class="card-badge">15-1</div>
                     <div class="card-content">
-                        <h3>è†é—œç¯€ç½®æ›90å¤©æ·±éƒ¨æ„ŸæŸ“ç‡</h3>
+                        <h3>?é?ç¯€ç½®æ?90å¤©æ·±?¨æ??“ç?</h3>
                         <p class="card-code">353.01</p>
                         <p class="card-cql-file">Indicator_15_1</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ„ŸæŸ“ç‡</span>
+                            <span class="mini-label">?Ÿæ???/span>
                             <span class="mini-value" id="ind15_1Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-15-1')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_15_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™15-2 -->
+                <!-- ?‡æ?15-2 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-15-2')">
                     <div class="card-badge">15-2</div>
                     <div class="card-content">
-                        <h3>å…¨è†ç½®æ›90å¤©æ·±éƒ¨æ„ŸæŸ“ç‡</h3>
+                        <h3>?¨è?ç½®æ?90å¤©æ·±?¨æ??“ç?</h3>
                         <p class="card-code">3249</p>
                         <p class="card-cql-file">Indicator_15_2</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ„ŸæŸ“ç‡</span>
+                            <span class="mini-label">?Ÿæ???/span>
                             <span class="mini-value" id="ind15_2Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-15-2')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_15_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™15-3 -->
+                <!-- ?‡æ?15-3 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-15-3')">
                     <div class="card-badge">15-3</div>
                     <div class="card-content">
-                        <h3>éƒ¨åˆ†è†ç½®æ›90å¤©æ·±éƒ¨æ„ŸæŸ“ç‡</h3>
+                        <h3>?¨å??ç½®??0å¤©æ·±?¨æ??“ç?</h3>
                         <p class="card-code">3250</p>
                         <p class="card-cql-file">Indicator_15_3</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ„ŸæŸ“ç‡</span>
+                            <span class="mini-label">?Ÿæ???/span>
                             <span class="mini-value" id="ind15_3Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-15-3')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_15_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™16 -->
+                <!-- ?‡æ?16 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-16')">
                     <div class="card-badge">16</div>
                     <div class="card-content">
-                        <h3>ä½é™¢æ‰‹è¡“å‚·å£æ„ŸæŸ“ç‡</h3>
+                        <h3>ä½é™¢?‹è??·å£?Ÿæ???/h3>
                         <p class="card-code">1658Q/1666Y</p>
                         <p class="card-cql-file">Indicator_16</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ„ŸæŸ“ç‡</span>
+                            <span class="mini-label">?Ÿæ???/span>
                             <span class="mini-value" id="ind16Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-16')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_16" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™19 -->
+                <!-- ?‡æ?19 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-19')">
                     <div class="card-badge">19</div>
                     <div class="card-content">
-                        <h3>æ¸…æ·¨æ‰‹è¡“å‚·å£æ„ŸæŸ“ç‡</h3>
+                        <h3>æ¸…æ·¨?‹è??·å£?Ÿæ???/h3>
                         <p class="card-code">2524Q/2526Y</p>
                         <p class="card-cql-file">Indicator_19</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ„ŸæŸ“ç‡</span>
+                            <span class="mini-label">?Ÿæ???/span>
                             <span class="mini-value" id="ind19Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-19')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_19" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -1075,64 +1075,64 @@
             </div>
         </section>
 
-        <!-- ===================== çµæœå“è³ªæŒ‡æ¨™ ===================== -->
+        <!-- ===================== çµæ??è³ª?‡æ? ===================== -->
         <section class="overview-section" data-category="outcome">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-chart-line"></i> çµæœå“è³ªæŒ‡æ¨™</h2>
-                    <p>é†«ç™‚çµæœèˆ‡æ­»äº¡ç‡ç›£æ¸¬</p>
+                    <h2><i class="fas fa-chart-line"></i> çµæ??è³ª?‡æ?</h2>
+                    <p>?«ç?çµæ??‡æ­»äº¡ç???¸¬</p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('outcome')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> å…¨éƒ¨å•Ÿå‹•
+                    <i class="fas fa-play-circle"></i> ?¨éƒ¨?Ÿå?
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- æŒ‡æ¨™17 -->
+                <!-- ?‡æ?17 -->
                 <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-17')">
                     <div class="card-badge">17</div>
                     <div class="card-content">
-                        <h3>æ€¥æ€§å¿ƒè‚Œæ¢—å¡æ­»äº¡ç‡</h3>
+                        <h3>?¥æ€§å??Œæ?å¡æ­»äº¡ç?</h3>
                         <p class="card-code">1662Q/1668Y</p>
                         <p class="card-cql-file">Indicator_17</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">æ­»äº¡ç‡</span>
+                            <span class="mini-label">æ­»äº¡??/span>
                             <span class="mini-value" id="ind17Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-17')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_17" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- æŒ‡æ¨™18 -->
+                <!-- ?‡æ?18 -->
                 <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-18')">
                     <div class="card-badge">18</div>
                     <div class="card-content">
-                        <h3>å¤±æ™ºç—‡å®‰å¯§ç™‚è­·åˆ©ç”¨ç‡</h3>
+                        <h3>å¤±æ™º?‡å?å¯§ç?è­·åˆ©?¨ç?</h3>
                         <p class="card-code">2795Q/2796Y</p>
                         <p class="card-cql-file">Indicator_18</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">åˆ©ç”¨ç‡</span>
+                            <span class="mini-label">?©ç”¨??/span>
                             <span class="mini-value" id="ind18Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="é–‹å§‹æ—¥æœŸ">
-                            <input type="date" id="endDate_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæŸæ—¥æœŸ">
-                            <select id="maxRecords_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="æœ€å¤§ç­†æ•¸">
-                                <option value="50">50ç­†</option><option value="100">100ç­†</option><option value="200" selected>200ç­†</option><option value="500">500ç­†</option><option value="1000">1000ç­†</option><option value="99999">ä¸é™åˆ¶</option>
+                            <input type="date" id="startDate_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?‹å??¥æ?">
+                            <input type="date" id="endDate_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="çµæ??¥æ?">
+                            <select id="maxRecords_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?€å¤§ç???>
+                                <option value="50">50ç­?/option><option value="100">100ç­?/option><option value="200" selected>200ç­?/option><option value="500">500ç­?/option><option value="1000">1000ç­?/option><option value="99999">ä¸é???/option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-18')">
-                            <i class="fas fa-play"></i> æŸ¥è©¢
+                            <i class="fas fa-play"></i> ?¥è©¢
                         </button>
                         <div class="card-status" id="status_18" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -1141,43 +1141,49 @@
         </section>
     </main>
 
-    <!-- è©³æƒ… Modal -->
+    <!-- è©³æ? Modal -->
     <div class="modal" id="detailModal">
         <div class="modal-content modal-large">
             <div class="modal-header">
-                <h2 id="modalTitle">è©³ç´°è³‡è¨Š</h2>
+                <h2 id="modalTitle">è©³ç´°è³‡è?</h2>
                 <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body" id="modalBody">
-                <!-- å‹•æ…‹è¼‰å…¥å…§å®¹ -->
+                <!-- ?•æ?è¼‰å…¥?§å®¹ -->
             </div>
         </div>
     </div>
 
-    <!-- LLM è¨­å®šæ¨¡æ…‹æ¡† -->
+    <!-- LLM è¨­å?æ¨¡æ?æ¡?-->
     <div id="llmSettingsModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;">
-                <h3><i class="fas fa-tachometer-alt"></i> å…¬å…±å¥åº·å³æ™‚çœ‹æ¿ - é†«ç™‚å“è³ªå„€è¡¨æ¿</h3>
+                <h3><i class="fas fa-tachometer-alt"></i> ?¬å…±?¥åº·?³æ??‹æ¿ - ?«ç??è³ª?€è¡¨æ¿</h3>
                 <span class="modal-close" onclick="closeLLMSettingsModal()" style="color: white;">&times;</span>
             </div>
             <div class="modal-body" style="padding: 2rem;">
                 <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <h4 style="margin: 0; color: #1e293b;">
-                            <i class="fas fa-power-off"></i> æœå‹™æ§åˆ¶
+                            <i class="fas fa-power-off"></i> ?å??§åˆ¶
                         </h4>
-                        <div style="display: flex; gap: 0.75rem;">
+                        <div style="display: flex; gap: 0.75rem; align-items: center;">
                             <button id="uiConnectBtn" onclick="sendToPublicDashboard()" class="btn-external-service inactive">
-                                <i class="fas fa-cloud-upload-alt"></i> <span>ä¸Šå‚³æ°‘çœ¾ç¶²é </span>
+                                <i class="fas fa-cloud-upload-alt"></i> <span>ä¸Šå‚³ æ°‘çœ¾ç¶²é? &amp; ?³æ??‹æ¿</span>
                             </button>
+                            <a href="https://fhir-cql-quality-platform-20260204.onrender.com/public-dashboard%20-%20API.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#6366f1;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s;" onmouseover="this.style.background='#4f46e5'" onmouseout="this.style.background='#6366f1'">
+                                <i class="fas fa-users"></i> æ°‘çœ¾ç¶²é?
+                            </a>
+                            <a href="https://fhir-cql-quality-platform-20260204.onrender.com/realtime-dashboard%20-%20API.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#0ea5e9;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s;" onmouseover="this.style.background='#0284c7'" onmouseout="this.style.background='#0ea5e9'">
+                                <i class="fas fa-tachometer-alt"></i> ?³æ??‹æ¿
+                            </a>
                         </div>
                     </div>
                     
-                    <!-- å››ç¯€é»é€£æ¥ç‹€æ…‹åœ– -->
+                    <!-- ?›ç?é»é€?¥?€?‹å? -->
                     <div class="llm-connection-flow" style="display:none;">
                         <div class="connection-flow-header">
-                            <h5>é€£æ¥ç‹€æ…‹</h5>
+                            <h5>??¥?€??/h5>
                         </div>
                         
                         <div class="connection-nodes-container">
@@ -1185,7 +1191,7 @@
                                 <div class="node-circle"><i class="fas fa-database"></i></div>
                                 <div class="node-label">
                                     <div class="node-title">FHIR</div>
-                                    <div class="node-subtitle">ä¼ºæœå™¨</div>
+                                    <div class="node-subtitle">ä¼ºæ???/div>
                                 </div>
                             </div>
                             <div class="connection-line-wrapper">
@@ -1194,37 +1200,37 @@
                             <div class="connection-node node-control">
                                 <div class="node-circle"><i class="fas fa-desktop"></i></div>
                                 <div class="node-label">
-                                    <div class="node-title">æ§åˆ¶ç¶²é </div>
-                                    <div class="node-subtitle">é†«è­·äººå“¡</div>
+                                    <div class="node-title">?§åˆ¶ç¶²é?</div>
+                                    <div class="node-subtitle">?«è­·äººå“¡</div>
                                 </div>
                             </div>
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-control-public connected"></div>
                             </div>
-                            <a href="public-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="é–‹å•Ÿæ°‘çœ¾ç‰ˆç¶²é ">
+                            <a href="public-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="?‹å?æ°‘çœ¾?ˆç¶²??>
                                 <div class="node-circle"><i class="fas fa-users"></i></div>
                                 <div class="node-label">
-                                    <div class="node-title">æ°‘çœ¾ç¶²é </div>
-                                    <div class="node-subtitle">å…¬é–‹ç‰ˆ</div>
+                                    <div class="node-title">æ°‘çœ¾ç¶²é?</div>
+                                    <div class="node-subtitle">?¬é???/div>
                                 </div>
                             </a>
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-public-llm connected"></div>
                             </div>
-                            <a href="realtime-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="é–‹å•Ÿå…¬å…±å¥åº·å³æ™‚çœ‹æ¿">
+                            <a href="realtime-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="?‹å??¬å…±?¥åº·?³æ??‹æ¿">
                                 <div class="node-circle"><i class="fas fa-tachometer-alt"></i></div>
                                 <div class="node-label">
-                                    <div class="node-title">å³æ™‚çœ‹æ¿</div>
-                                    <div class="node-subtitle">å…¬å…±å¥åº·</div>
+                                    <div class="node-title">?³æ??‹æ¿</div>
+                                    <div class="node-subtitle">?¬å…±?¥åº·</div>
                                 </div>
                             </a>
                         </div>
                     </div>
 
-                    <!-- å‚³é€éç¨‹ç´€éŒ„ -->
+                    <!-- ?³é€é?ç¨‹ç???-->
                     <div id="transferLog" style="display:none; margin-top: 1rem; background: #0f172a; border-radius: 10px; padding: 1rem 1.25rem; max-height: 220px; overflow-y: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.7; color: #94a3b8;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
-                            <span style="color: #38bdf8; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">ğŸ“‹ å‚³é€éç¨‹ç´€éŒ„</span>
+                            <span style="color: #38bdf8; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">?? ?³é€é?ç¨‹ç???/span>
                         </div>
                         <div id="transferLogContent"></div>
                     </div>
@@ -1240,7 +1246,7 @@
     <script src="js/data-exporter.js"></script>
     <script src="js/llm-connection-manager.js"></script>
     <script>
-    /* â”€â”€â”€ é€£ç·šæ°‘çœ¾ç¶²é ï¼šæ”¶é›†æ•¸æ“š â†’ å‘¼å«å¾Œç«¯ API æ¨é€è‡³ GitHub â†’ é¡¯ç¤ºéç¨‹ç´€éŒ„ â”€â”€â”€ */
+    /* ?€?€?€ ???æ°‘çœ¾ç¶²é?ï¼šæ”¶?†æ•¸?????¼å«å¾Œç«¯ API ?¨é€è‡³ GitHub ??é¡¯ç¤º?ç?ç´€???€?€?€ */
     var _isSending = false;
     function _logTransfer(msg, type) {
         var logWrap = document.getElementById('transferLog');
@@ -1248,7 +1254,7 @@
         if (!logWrap || !logContent) return;
         logWrap.style.display = 'block';
         var colors = { info: '#94a3b8', step: '#38bdf8', success: '#4ade80', error: '#f87171', data: '#a78bfa' };
-        var icons = { info: 'â„¹ï¸', step: 'â–¶', success: 'âœ…', error: 'âŒ', data: 'ğŸ“¦' };
+        var icons = { info: '?¹ï?', step: '??, success: '??, error: '??, data: '?“¦' };
         var now = new Date();
         var ts = now.toTimeString().slice(0,8);
         var line = document.createElement('div');
@@ -1263,9 +1269,9 @@
         var logContent = document.getElementById('transferLogContent');
         if (logContent) logContent.innerHTML = '';
         var btn = document.getElementById('uiConnectBtn');
-        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>å‚³é€ä¸­...</span>'; }
-        _logTransfer('é–‹å§‹å‚³é€æµç¨‹', 'step');
-        _logTransfer('æ”¶é›†é é¢æŒ‡æ¨™æ•¸æ“š...', 'step');
+        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>?³é€ä¸­...</span>'; }
+        _logTransfer('?‹å??³é€æ?ç¨?, 'step');
+        _logTransfer('?¶é??é¢?‡æ??¸æ?...', 'step');
         var data;
         if (window.dataExporter && typeof window.dataExporter.collectData === 'function') {
             data = window.dataExporter.collectData();
@@ -1273,13 +1279,13 @@
             try { data = JSON.parse(localStorage.getItem('fhir_export_cache') || '{}'); } catch(e) { data = {}; }
             data.exportedAt = data.exportedAt || new Date().toISOString();
         }
-        _logTransfer('åŒ¹å‡ºæ™‚é–“: ' + data.exportedAt, 'data');
-        _logTransfer('å¯«å…¥ localStorage å‚™ä»½...', 'step');
+        _logTransfer('?¹å‡º?‚é?: ' + data.exportedAt, 'data');
+        _logTransfer('å¯«å…¥ localStorage ?™ä»½...', 'step');
         try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
         try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.postMessage({ type: 'update-realtime', data: data }); ch.close(); } catch(e) {}
-        _logTransfer('æœ¬åœ°å‚™ä»½å®Œæˆ', 'success');
+        _logTransfer('?¬åœ°?™ä»½å®Œæ?', 'success');
         _animateLine('.line-control-public');
-        _logTransfer('å‘¼å«å¾Œç«¯ API /api/export-public-data ...', 'step');
+        _logTransfer('?¼å«å¾Œç«¯ API /api/export-public-data ...', 'step');
         var exportPromise;
         if (window.dataExporter && typeof window.dataExporter.exportToPublicSite === 'function') {
             exportPromise = window.dataExporter.exportToPublicSite();
@@ -1288,16 +1294,16 @@
             exportPromise = fetch(backendUrl + '/api/export-public-data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).then(function(r) { return r.json(); });
         }
         exportPromise.then(function(result) {
-            _logTransfer('å¾Œç«¯å›æ‡‰: ' + JSON.stringify(result.method || result.message || 'ok'), 'success');
-            if (result.method === 'github-api') { _logTransfer('å·²é€é GitHub API æ¨é€è‡³ public-health-dashboard repo', 'success'); _logTransfer('GitHub Pages å°‡åœ¨ 1-2 åˆ†é˜å…§è‡ªå‹•éƒ¨ç½²æ›´æ–°', 'info'); }
-            else if (result.method === 'local-file') { _logTransfer('å·²å¯«å…¥æœ¬åœ°æ°‘çœ¾ç¶²é è³‡æ–™å¤¾: ' + (result.path || ''), 'success'); }
-            else if (result.success) { _logTransfer('æ•¸æ“šæ¨é€æˆåŠŸ: ' + (result.message || ''), 'success'); }
+            _logTransfer('å¾Œç«¯?æ?: ' + JSON.stringify(result.method || result.message || 'ok'), 'success');
+            if (result.method === 'github-api') { _logTransfer('å·²é€é? GitHub API ?¨é€è‡³ public-health-dashboard repo', 'success'); _logTransfer('GitHub Pages å°‡åœ¨ 1-2 ?†é??§è‡ª?•éƒ¨ç½²æ›´??, 'info'); }
+            else if (result.method === 'local-file') { _logTransfer('å·²å¯«?¥æœ¬?°æ??¾ç¶²?è??™å¤¾: ' + (result.path || ''), 'success'); }
+            else if (result.success) { _logTransfer('?¸æ??¨é€æ??? ' + (result.message || ''), 'success'); }
             _animateLine('.line-public-llm');
-            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>ä¸Šå‚³æ°‘çœ¾ç¶²é </span>'; } _logTransfer('å‚³é€æµç¨‹å®Œæˆ âœ”', 'success'); _showSentToast(); _isSending = false; }, 2000);
+            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>ä¸Šå‚³æ°‘çœ¾ç¶²é?</span>'; } _logTransfer('?³é€æ?ç¨‹å?????, 'success'); _showSentToast(); _isSending = false; }, 2000);
         }).catch(function(err) {
-            _logTransfer('å¾Œç«¯ API éŒ¯èª¤: ' + err.message, 'error');
+            _logTransfer('å¾Œç«¯ API ?¯èª¤: ' + err.message, 'error');
             _clearLine('.line-control-public');
-            if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>ä¸Šå‚³æ°‘çœ¾ç¶²é </span>'; }
+            if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>ä¸Šå‚³æ°‘çœ¾ç¶²é?</span>'; }
             _isSending = false;
         });
     }
@@ -1321,7 +1327,7 @@
     }
     function _showSentToast() {
         var t = document.createElement('div');
-        t.textContent = 'âœ… å·²å‚³é€å®Œæˆ â€” æ•¸æ“šå·²é€é”æ°‘çœ¾ç¶²é èˆ‡å³æ™‚çœ‹æ¿';
+        t.textContent = '??å·²å‚³?å??????¸æ?å·²é€é?æ°‘çœ¾ç¶²é??‡å³?‚ç???;
         t.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#065f46;color:#ecfdf5;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s';
         document.body.appendChild(t);
         requestAnimationFrame(function(){ t.style.opacity='1'; });

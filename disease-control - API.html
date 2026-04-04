@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>疾管儀表板 - FHIR CQL Platform</title>
+    <title>?�管?�表板 - FHIR CQL Platform</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/llm-connection.css">
@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <!-- 導航欄 -->
+    <!-- 導航�?-->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -21,102 +21,102 @@
                 <span style="font-size: 0.55em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 6px; letter-spacing: 1px; font-weight: 700; vertical-align: middle;">API</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index - API.html">首頁</a></li>
-                <li><a href="disease-control - API.html" class="active">傳染病管制</a></li>
-                <li><a href="public-health - API.html">國民健康</a></li>
-                <li><a href="esg-indicators - API.html">ESG指標</a></li>
-                <li><a href="quality-indicators - API.html">醫療品質</a></li>
+                <li><a href="index - API.html">首�?</a></li>
+                <li><a href="disease-control - API.html" class="active">?��??�管??/a></li>
+                <li><a href="public-health - API.html">?��??�康</a></li>
+                <li><a href="esg-indicators - API.html">ESG?��?</a></li>
+                <li><a href="quality-indicators - API.html">?��??�質</a></li>
             </ul>
-            <div class="nav-settings" onclick="openLLMSettingsModal()" style="cursor: pointer;" title="LLM設定">
+            <div class="nav-settings" onclick="openLLMSettingsModal()" style="cursor: pointer;" title="LLM設�?">
                 <i class="fas fa-cog"></i>
             </div>
         </div>
     </nav>
 
-    <!-- 主要內容區 -->
+    <!-- 主�??�容?� -->
     <main class="main-content">
-        <!-- 頁面標題 -->
+        <!-- ?�面標�? -->
         <section class="page-header">
             <div class="header-content">
-                <h1><i class="fas fa-virus"></i> 疾病管制儀表板 <span style="font-size: 0.4em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 3px 10px; border-radius: 12px; vertical-align: middle; letter-spacing: 1px; font-weight: 600;">API</span></h1>
-                <p>傳染病監測與流行病學分析系統</p>
+                <h1><i class="fas fa-virus"></i> ?��?管制?�表板 <span style="font-size: 0.4em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 3px 10px; border-radius: 12px; vertical-align: middle; letter-spacing: 1px; font-weight: 600;">API</span></h1>
+                <p>?��??�監測�?流�??�學?��?系統</p>
             </div>
             <div class="header-actions" style="position: relative;">
                 <div style="display: flex; flex-direction: column; align-items: center; margin-right: 10px;">
                     <button class="btn btn-secondary" onclick="toggleDemoMode()" id="demoModeBtn">
-                        <i class="fas fa-flask"></i> <span id="demoModeText">啟用示範模式</span>
+                        <i class="fas fa-flask"></i> <span id="demoModeText">?�用示�?模�?</span>
                     </button>
                     <div style="font-size: 11px; color: #64748b; margin-top: 4px; text-align: center; line-height: 1.3;">
-                        <span style="color: #10b981; font-weight: 600;">●</span> 綠色：模擬資料<br>
-                        <span style="color: #94a3b8; font-weight: 600;">●</span> 灰色：FHIR資料
+                        <span style="color: #10b981; font-weight: 600;">??/span> 綠色：模?��???br>
+                        <span style="color: #94a3b8; font-weight: 600;">??/span> ?�色：FHIR資�?
                     </div>
                 </div>
                 <button class="btn btn-success" onclick="toggleMapMode()" id="mapModeBtn" style="margin-right: 10px; background: linear-gradient(135deg, #3b82f6, #2563eb);">
                     <i class="fas fa-map-marked-alt"></i> <span id="mapModeText">Google Map</span>
                 </button>
                 <button class="btn btn-primary" onclick="refreshAllData()">
-                    <i class="fas fa-sync-alt"></i> 重新整理
+                    <i class="fas fa-sync-alt"></i> ?�新?��?
                 </button>
             </div>
         </section>
 
-        <!-- FHIR 連線狀態 -->
+        <!-- FHIR ????�??-->
         <section class="connection-banner" id="connectionBanner">
             <div class="banner-content">
                 <i class="fas fa-exclamation-triangle"></i>
-                <span>請先在首頁設定 FHIR 伺服器連線</span>
-                <a href="index.html" class="btn btn-sm">前往設定</a>
+                <span>請�??��??�設�?FHIR 伺�??��??</span>
+                <a href="index.html" class="btn btn-sm">?��?設�?</a>
             </div>
         </section>
 
-        <!-- 快速測試區 - 已移除 -->
+        <!-- 快速測試�? - 已移??-->
 
-        <!-- 地圖模式區域 -->
+        <!-- ?��?模�??�??-->
         <section class="map-section" id="mapSection" style="display: none;">
-            <!-- 疾病選擇器 -->
+            <!-- ?��??��???-->
             <div class="disease-selector" style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 <h3 style="margin: 0 0 1rem 0; color: #1e293b; font-size: 1.1rem;">
-                    <i class="fas fa-filter"></i> 選擇要顯示的疾病
+                    <i class="fas fa-filter"></i> ?��?要顯示�??��?
                 </h3>
                 <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center;">
                     <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
                         <input type="checkbox" id="mapCovid19" value="covid19" onchange="updateMapDisplay()" 
                                style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
-                        <span style="color: #ef4444; font-weight: 600;">🦠 COVID-19</span>
+                        <span style="color: #ef4444; font-weight: 600;">?? COVID-19</span>
                     </label>
                     <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
                         <input type="checkbox" id="mapInfluenza" value="influenza" onchange="updateMapDisplay()" 
                                style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
-                        <span style="color: #3b82f6; font-weight: 600;">🤧 流感</span>
+                        <span style="color: #3b82f6; font-weight: 600;">?�� 流�?</span>
                     </label>
                     <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
                         <input type="checkbox" id="mapConjunctivitis" value="conjunctivitis" onchange="updateMapDisplay()" 
                                style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
-                        <span style="color: #f59e0b; font-weight: 600;">👁️ 急性結膜炎</span>
+                        <span style="color: #f59e0b; font-weight: 600;">??�??�性�??��?</span>
                     </label>
                     <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
                         <input type="checkbox" id="mapEnterovirus" value="enterovirus" onchange="updateMapDisplay()" 
                                style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
-                        <span style="color: #8b5cf6; font-weight: 600;">✋ 腸病毒</span>
+                        <span style="color: #8b5cf6; font-weight: 600;">???��?�?/span>
                     </label>
                     <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
                         <input type="checkbox" id="mapDiarrhea" value="diarrhea" onchange="updateMapDisplay()" 
                                style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
-                        <span style="color: #10b981; font-weight: 600;">🦠 腹瀉群聚</span>
+                        <span style="color: #10b981; font-weight: 600;">?? ?�瀉群??/span>
                     </label>
                     
-                    <!-- 全部查詢按鈕 -->
+                    <!-- ?�部?�詢?��? -->
                     <button class="btn btn-primary" onclick="executeAllCQL()" id="btnExecuteAll" 
                             style="margin-left: auto; padding: 0.6rem 1.5rem; font-size: 0.95rem; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);">
-                        <i class="fas fa-rocket"></i> 全部查詢 (5個CQL)
+                        <i class="fas fa-rocket"></i> ?�部?�詢 (5?�CQL)
                     </button>
                 </div>
                 
-                <!-- 查詢進度顯示 -->
+                <!-- ?�詢?�度顯示 -->
                 <div id="queryProgress" style="display: none; margin-top: 1rem; padding: 0.8rem 1rem; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left: 4px solid #3b82f6; border-radius: 8px;">
                     <div style="display: flex; align-items: center; justify-content: space-between;">
                         <span style="color: #1e40af; font-weight: 600; font-size: 0.95rem;">
-                            <i class="fas fa-spinner fa-spin"></i> <span id="queryProgressText">正在查詢中...</span>
+                            <i class="fas fa-spinner fa-spin"></i> <span id="queryProgressText">�?��?�詢�?..</span>
                         </span>
                         <span style="color: #3b82f6; font-weight: 700; font-size: 1.1rem;" id="queryProgressCount">0/5</span>
                     </div>
@@ -126,65 +126,65 @@
                 </div>
             </div>
 
-            <!-- 地圖容器 -->
+            <!-- ?��?容器 -->
             <div id="diseaseMap" style="height: 600px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
             
-            <!-- 地圖說明 -->
+            <!-- ?��?說�? -->
             <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 <h3 style="margin: 0 0 1rem 0; color: #1e293b; font-size: 1.1rem;">
-                    <i class="fas fa-info-circle"></i> 地圖說明
+                    <i class="fas fa-info-circle"></i> ?��?說�?
                 </h3>
                 <div style="color: #64748b; font-size: 0.9rem; line-height: 1.8;">
-                    <div><strong>圓圈大小:</strong> 代表該地區病例數量</div>
-                    <div><strong>顏色:</strong> 不同疾病使用不同顏色區分</div>
-                    <div><strong>點擊圓圈:</strong> 查看該城市的詳細資訊</div>
-                    <div><strong>多疾病叠加:</strong> 可同時勾選多個疾病進行比較</div>
+                    <div><strong>?��?大�?:</strong> �?��該地?�?��??��?</div>
+                    <div><strong>顏色:</strong> 不�??��?使用不�?顏色?�??/div>
+                    <div><strong>點�??��?:</strong> ?��?該�?市�?詳細資�?</div>
+                    <div><strong>多疾?��???</strong> ?��??�勾?��??�疾?�進�?比�?</div>
                 </div>
             </div>
         </section>
 
-        <!-- 疾病監控總覽 -->
+        <!-- ?��???��總覽 -->
         <section class="overview-section" id="overviewSection">
             <div class="overview-grid">
                 <!-- COVID-19 -->
                 <div class="overview-card covid" onclick="showDetailReport('covid19')" style="cursor:pointer;">
-                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點�??��?詳�?</div>
                     <div class="card-icon">
                         <i class="fas fa-virus"></i>
                     </div>
                     <div class="card-content">
                         <h3>COVID-19</h3>
                         <p class="card-code">InfectiousDisease_COVID19_Surveillance</p>
-                        <p class="card-description-text">查詢 COVID-19 確診病例、急診就診、住院資料</p>
+                        <p class="card-description-text">?�詢 COVID-19 確診?��??�急診就診?��??��???/p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">?�患??/span><br>
                                 <span class="mini-value" id="covidPatients" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診??/span><br>
                                 <span class="mini-value" id="covidEncounters" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                         </div>
                         
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeCQL('covid19')" id="btnCovid">
-                            <i class="fas fa-play"></i> 執行查詢
+                            <i class="fas fa-play"></i> ?��??�詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
                             <div style="display:flex; gap:6px; align-items:center;">
-                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">?��??��?</label>
                                 <input type="date" id="startDateCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
-                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">結�??��?</label>
                                 <input type="date" id="endDateCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
                                 <select id="maxRecordsCovid" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                    <option value="0">不設限</option>
-                                    <option value="100">100筆</option>
-                                    <option value="200" selected>200筆</option>
-                                    <option value="500">500筆</option>
-                                    <option value="1000">1000筆</option>
+                                    <option value="0">不設??/option>
+                                    <option value="100">100�?/option>
+                                    <option value="200" selected>200�?/option>
+                                    <option value="500">500�?/option>
+                                    <option value="1000">1000�?/option>
                                 </select>
                             </div>
                         </div>
@@ -194,43 +194,43 @@
                 </div>
 
                 <div class="overview-card influenza" onclick="showDetailReport('influenza')" style="cursor:pointer;">
-                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點�??��?詳�?</div>
                     <div class="card-icon">
                         <i class="fas fa-disease"></i>
                     </div>
                     <div class="card-content">
-                        <h3>流感</h3>
+                        <h3>流�?</h3>
                         <p class="card-code">InfectiousDisease_Influenza_Surveillance</p>
-                        <p class="card-description-text">追蹤流感病例、疫苗接種、重症案例</p>
+                        <p class="card-description-text">追蹤流�??��??�疫?�接種、�??��?�?/p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">?�患??/span><br>
                                 <span class="mini-value" id="fluPatients" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診??/span><br>
                                 <span class="mini-value" id="fluEncounters" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                         </div>
                         
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeCQL('influenza')" id="btnInfluenza">
-                            <i class="fas fa-play"></i> 執行查詢
+                            <i class="fas fa-play"></i> ?��??�詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
                             <div style="display:flex; gap:6px; align-items:center;">
-                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">?��??��?</label>
                                 <input type="date" id="startDateInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
-                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">結�??��?</label>
                                 <input type="date" id="endDateInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
                                 <select id="maxRecordsInfluenza" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                    <option value="0">不設限</option>
-                                    <option value="100">100筆</option>
-                                    <option value="200" selected>200筆</option>
-                                    <option value="500">500筆</option>
-                                    <option value="1000">1000筆</option>
+                                    <option value="0">不設??/option>
+                                    <option value="100">100�?/option>
+                                    <option value="200" selected>200�?/option>
+                                    <option value="500">500�?/option>
+                                    <option value="1000">1000�?/option>
                                 </select>
                             </div>
                         </div>
@@ -240,43 +240,43 @@
                 </div>
 
                 <div class="overview-card conjunctivitis" onclick="showDetailReport('conjunctivitis')" style="cursor:pointer;">
-                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點�??��?詳�?</div>
                     <div class="card-icon">
                         <i class="fas fa-eye"></i>
                     </div>
                     <div class="card-content">
-                        <h3>急性結膜炎</h3>
+                        <h3>?�性�??��?</h3>
                         <p class="card-code">InfectiousDisease_AcuteConjunctivitis_Surveillance</p>
-                        <p class="card-description-text">急性結膜炎發病監控、紅眼症聚落偵測</p>
+                        <p class="card-description-text">?�性�??��??��???��?��??��??�落?�測</p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">?�患??/span><br>
                                 <span class="mini-value" id="conjunctivitisPatients" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診??/span><br>
                                 <span class="mini-value" id="conjunctivitisEncounters" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                         </div>
                         
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeCQL('conjunctivitis')" id="btnConjunctivitis">
-                            <i class="fas fa-play"></i> 執行查詢
+                            <i class="fas fa-play"></i> ?��??�詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
                             <div style="display:flex; gap:6px; align-items:center;">
-                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">?��??��?</label>
                                 <input type="date" id="startDateConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
-                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">結�??��?</label>
                                 <input type="date" id="endDateConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
                                 <select id="maxRecordsConjunctivitis" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                    <option value="0">不設限</option>
-                                    <option value="100">100筆</option>
-                                    <option value="200" selected>200筆</option>
-                                    <option value="500">500筆</option>
-                                    <option value="1000">1000筆</option>
+                                    <option value="0">不設??/option>
+                                    <option value="100">100�?/option>
+                                    <option value="200" selected>200�?/option>
+                                    <option value="500">500�?/option>
+                                    <option value="1000">1000�?/option>
                                 </select>
                             </div>
                         </div>
@@ -286,43 +286,43 @@
                 </div>
 
                 <div class="overview-card enterovirus" onclick="showDetailReport('enterovirus')" style="cursor:pointer;">
-                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點�??��?詳�?</div>
                     <div class="card-icon">
                         <i class="fas fa-hand-dots"></i>
                     </div>
                     <div class="card-content">
-                        <h3>腸病毒</h3>
+                        <h3>?��?�?/h3>
                         <p class="card-code">InfectiousDisease_Enterovirus_Surveillance</p>
-                        <p class="card-description-text">腸病毒疫情、手足口症、疱疹性咽峽炎</p>
+                        <p class="card-description-text">?��?毒疫?�、�?足口?�、疱?�性咽峽�?</p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">?�患??/span><br>
                                 <span class="mini-value" id="enteroPatients" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診??/span><br>
                                 <span class="mini-value" id="enteroEncounters" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                         </div>
                         
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeCQL('enterovirus')" id="btnEnterovirus">
-                            <i class="fas fa-play"></i> 執行查詢
+                            <i class="fas fa-play"></i> ?��??�詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
                             <div style="display:flex; gap:6px; align-items:center;">
-                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">?��??��?</label>
                                 <input type="date" id="startDateEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
-                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">結�??��?</label>
                                 <input type="date" id="endDateEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
                                 <select id="maxRecordsEnterovirus" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                    <option value="0">不設限</option>
-                                    <option value="100">100筆</option>
-                                    <option value="200" selected>200筆</option>
-                                    <option value="500">500筆</option>
-                                    <option value="1000">1000筆</option>
+                                    <option value="0">不設??/option>
+                                    <option value="100">100�?/option>
+                                    <option value="200" selected>200�?/option>
+                                    <option value="500">500�?/option>
+                                    <option value="1000">1000�?/option>
                                 </select>
                             </div>
                         </div>
@@ -332,43 +332,43 @@
                 </div>
 
                 <div class="overview-card diarrhea" onclick="showDetailReport('diarrhea')" style="cursor:pointer;">
-                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點擊查看詳情</div>
+                    <div class="card-hover-hint"><i class="fas fa-expand"></i> 點�??��?詳�?</div>
                     <div class="card-icon">
                         <i class="fas fa-bacteria"></i>
                     </div>
                     <div class="card-content">
-                        <h3>腹瀉群聚</h3>
+                        <h3>?�瀉群??/h3>
                         <p class="card-code">InfectiousDisease_AcuteDiarrhea_Surveillance</p>
-                        <p class="card-description-text">腹瀉疫情、諾羅病毒、輪狀病毒監測</p>
+                        <p class="card-description-text">?�瀉疫?�、諾羅�?毒、輪?�?��???��</p>
                         <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">病患數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">?�患??/span><br>
                                 <span class="mini-value" id="diarrheaPatients" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                             <div class="mini-stat">
-                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診數</span><br>
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">就診??/span><br>
                                 <span class="mini-value" id="diarrheaEncounters" style="font-size:24px; font-weight:700;">--</span>
                             </div>
                         </div>
                         
                         <button class="btn-card-mini" onclick="executeCQL('diarrhea')" id="btnDiarrhea">
-                            <i class="fas fa-play"></i> 執行查詢
+                            <i class="fas fa-play"></i> ?��??�詢
                         </button>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px;">
                             <div style="display:flex; gap:6px; align-items:center;">
-                                <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">?��??��?</label>
                                 <input type="date" id="startDateDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
-                                <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
+                                <label style="color:#94a3b8; white-space:nowrap;">結�??��?</label>
                                 <input type="date" id="endDateDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
                                 <select id="maxRecordsDiarrhea" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
-                                    <option value="0">不設限</option>
-                                    <option value="100">100筆</option>
-                                    <option value="200" selected>200筆</option>
-                                    <option value="500">500筆</option>
-                                    <option value="1000">1000筆</option>
+                                    <option value="0">不設??/option>
+                                    <option value="100">100�?/option>
+                                    <option value="200" selected>200�?/option>
+                                    <option value="500">500�?/option>
+                                    <option value="1000">1000�?/option>
                                 </select>
                             </div>
                         </div>
@@ -380,39 +380,39 @@
         </section>
     </main>
 
-    <!-- 頁尾 -->
+    <!-- ?�尾 -->
     <footer class="footer">
         <div class="footer-content">
             <p>&copy; 2025 FHIR CQL Platform. All rights reserved.</p>
-            <p>疾病管制儀表板 v1.0 - Powered by FHIR 4.0.1 & CQL Engine</p>
+            <p>?��?管制?�表板 v1.0 - Powered by FHIR 4.0.1 & CQL Engine</p>
         </div>
     </footer>
 
-    <!-- 詳細數據模態框 -->
+    <!-- 詳細?��?模�?�?-->
     <div class="detail-modal" id="detailModal">
         <div class="detail-modal-content">
             <div class="detail-modal-header">
-                <h2 id="modalTitle"><i class="fas fa-virus"></i> COVID-19 詳細數據</h2>
+                <h2 id="modalTitle"><i class="fas fa-virus"></i> COVID-19 詳細?��?</h2>
                 <button class="modal-close-btn" onclick="closeDetailReport()">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="detail-modal-body">
                 <div class="detail-distribution">
-                    <h3><i class="fas fa-calendar-alt"></i> 患者年度分布</h3>
+                    <h3><i class="fas fa-calendar-alt"></i> ??��年度�?�?/h3>
                     <div id="yearPatientDistributionChart" class="year-distribution-chart"></div>
                 </div>
                 
                 <div class="detail-distribution">
-                    <h3><i class="fas fa-chart-bar"></i> 年齡分布（5歲分組）</h3>
+                    <h3><i class="fas fa-chart-bar"></i> 年齡?��?�?歲�?組�?</h3>
                     <div class="age-distribution-container">
                         <div class="age-chart-wrapper">
                             <div class="age-chart-section">
-                                <h4 class="year-chart-title">2024年</h4>
+                                <h4 class="year-chart-title">2024�?/h4>
                                 <div id="ageChart2024" class="age-chart-bars"></div>
                             </div>
                             <div class="age-chart-section">
-                                <h4 class="year-chart-title">2025年</h4>
+                                <h4 class="year-chart-title">2025�?/h4>
                                 <div id="ageChart2025" class="age-chart-bars"></div>
                             </div>
                         </div>
@@ -421,116 +421,122 @@
                 
                 <div class="detail-actions">
                     <button class="btn btn-primary" onclick="executeCQLFromModal()">
-                        <i class="fas fa-sync-alt"></i> 重新查詢
+                        <i class="fas fa-sync-alt"></i> ?�新?�詢
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- CQL 查看模態框 -->
+    <!-- CQL ?��?模�?�?-->
     <div id="cqlModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3><i class="fas fa-code"></i> CQL 查詢語言</h3>
+                <h3><i class="fas fa-code"></i> CQL ?�詢語�?</h3>
                 <span class="modal-close" onclick="closeCQLModal()">&times;</span>
             </div>
             <div class="modal-body">
                 <pre id="cqlCode"></pre>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeCQLModal()">關閉</button>
+                <button class="btn btn-secondary" onclick="closeCQLModal()">?��?</button>
                 <button class="btn btn-primary" onclick="copyCQL()">
-                    <i class="fas fa-copy"></i> 複製程式碼
+                    <i class="fas fa-copy"></i> 複製程�?�?
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- LLM 設定模態框 -->
+    <!-- LLM 設�?模�?�?-->
     <div id="llmSettingsModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;">
-                <h3><i class="fas fa-tachometer-alt"></i> 公共健康即時看板 - 傳染病管制儀表板</h3>
+                <h3><i class="fas fa-tachometer-alt"></i> ?�共?�康?��??�板 - ?��??�管?��?表板</h3>
                 <span class="modal-close" onclick="closeLLMSettingsModal()" style="color: white;">&times;</span>
             </div>
             <div class="modal-body" style="padding: 2rem;">
-                <!-- LLM 服務控制 -->
+                <!-- LLM ?��??�制 -->
                 <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <h4 style="margin: 0; color: #1e293b;">
-                            <i class="fas fa-power-off"></i> 服務控制
+                            <i class="fas fa-power-off"></i> ?��??�制
                         </h4>
-                        <div style="display: flex; gap: 0.75rem;">
+                        <div style="display: flex; gap: 0.75rem; align-items: center;">
                             <button id="uiConnectBtn" onclick="sendToPublicDashboard()" class="btn-external-service inactive">
-                                <i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網頁</span>
+                                <i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網�? &amp; ?��??�板</span>
                             </button>
+                            <a href="https://fhir-cql-quality-platform-20260204.onrender.com/public-dashboard%20-%20API.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#6366f1;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s;" onmouseover="this.style.background='#4f46e5'" onmouseout="this.style.background='#6366f1'">
+                                <i class="fas fa-users"></i> 民眾網�?
+                            </a>
+                            <a href="https://fhir-cql-quality-platform-20260204.onrender.com/realtime-dashboard%20-%20API.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#0ea5e9;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s;" onmouseover="this.style.background='#0284c7'" onmouseout="this.style.background='#0ea5e9'">
+                                <i class="fas fa-tachometer-alt"></i> ?��??�板
+                            </a>
                         </div>
                     </div>
                     
-                    <!-- 四節點連接狀態圖 -->
+                    <!-- ?��?點�?��?�?��? -->
                     <div class="llm-connection-flow" style="display:none;">
                         <div class="connection-flow-header">
-                            <h5>連接狀態</h5>
+                            <h5>??��?�??/h5>
                         </div>
                         
                         <div class="connection-nodes-container">
-                            <!-- FHIR 伺服器 -->
+                            <!-- FHIR 伺�???-->
                             <div class="connection-node node-fhir">
                                 <div class="node-circle">
                                     <i class="fas fa-database"></i>
                                 </div>
                                 <div class="node-label">
                                     <div class="node-title">FHIR</div>
-                                    <div class="node-subtitle">伺服器</div>
+                                    <div class="node-subtitle">伺�???/div>
                                 </div>
                             </div>
                             
-                            <!-- 連接線 1: FHIR → 控制網頁 -->
+                            <!-- ??���?1: FHIR ???�制網�? -->
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-fhir-control connected"></div>
                             </div>
                             
-                            <!-- 控制網頁 -->
+                            <!-- ?�制網�? -->
                             <div class="connection-node node-control">
                                 <div class="node-circle">
                                     <i class="fas fa-desktop"></i>
                                 </div>
                                 <div class="node-label">
-                                    <div class="node-title">控制網頁</div>
-                                    <div class="node-subtitle">醫護人員</div>
+                                    <div class="node-title">?�制網�?</div>
+                                    <div class="node-subtitle">?�護人員</div>
                                 </div>
                             </div>
                             
-                            <!-- 連接線 2: 控制網頁 → 民眾網頁 -->
+                            <!-- ??���?2: ?�制網�? ??民眾網�? -->
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-control-public connected"></div>
                             </div>
                             
-                            <!-- 民眾網頁 -->
-                            <a href="public-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="開啟民眾版網頁">
+                            <!-- 民眾網�? -->
+                            <a href="public-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="?��?民眾?�網??>
                                 <div class="node-circle">
                                     <i class="fas fa-users"></i>
                                 </div>
                                 <div class="node-label">
-                                    <div class="node-title">民眾網頁</div>
-                                    <div class="node-subtitle">公開版</div>
+                                    <div class="node-title">民眾網�?</div>
+                                    <div class="node-subtitle">?��???/div>
                                 </div>
                             </a>
                             
-                            <!-- 連接線 3: 民眾網頁 → LLM -->
+                            <!-- ??���?3: 民眾網�? ??LLM -->
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-public-llm connected"></div>
                             </div>
                             
-                            <!-- 公共健康即時看板 -->
-                            <a href="realtime-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="開啟公共健康即時看板">
+                            <!-- ?�共?�康?��??�板 -->
+                            <a href="realtime-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="?��??�共?�康?��??�板">
                                 <div class="node-circle">
                                     <i class="fas fa-tachometer-alt"></i>
                                 </div>
                                 <div class="node-label">
-                                    <div class="node-title">即時看板</div>
-                                    <div class="node-subtitle">公共健康</div>
+                                    <div class="node-title">?��??�板</div>
+                                    <div class="node-subtitle">?�共?�康</div>
                                 </div>
                             </a>
                         </div>
@@ -538,10 +544,10 @@
 
                     </div>
 
-                    <!-- 傳送過程紀錄 -->
+                    <!-- ?�送�?程�???-->
                     <div id="transferLog" style="display:none; margin-top: 1rem; background: #0f172a; border-radius: 10px; padding: 1rem 1.25rem; max-height: 220px; overflow-y: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.7; color: #94a3b8;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
-                            <span style="color: #38bdf8; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">📋 傳送過程紀錄</span>
+                            <span style="color: #38bdf8; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">?? ?�送�?程�???/span>
                         </div>
                         <div id="transferLogContent"></div>
                     </div>
@@ -558,15 +564,15 @@
     <script src="js/data-exporter.js"></script>
     <script src="js/llm-connection-manager.js"></script>
 
-    <!-- 自動連線衛福部 FHIR Server -->
+    <!-- ?��????衛�???FHIR Server -->
     <script>
     (function() {
         const defaultFhirServer = 'https://thas.mohw.gov.tw/v/r4/fhir';
-        // 確保 localStorage 有 FHIR Server URL
+        // 確�? localStorage ??FHIR Server URL
         if (!localStorage.getItem('fhirServer')) {
             localStorage.setItem('fhirServer', defaultFhirServer);
         }
-        // 確保 window.fhirConnection 存在
+        // 確�? window.fhirConnection 存在
         setTimeout(function() {
             if (!window.fhirConnection || !window.fhirConnection.serverUrl) {
                 if (typeof FHIRConnection !== 'undefined') {
@@ -577,11 +583,11 @@
                     window.fhirConnection.isConnected = true;
                 }
             }
-            console.log('✅ FHIR Server:', localStorage.getItem('fhirServer'));
+            console.log('??FHIR Server:', localStorage.getItem('fhirServer'));
         }, 100);
     })();
 
-    /* ─── 連線民眾網頁：收集數據 → 呼叫後端 API 推送至 GitHub → 顯示過程紀錄 ─── */
+    /* ?�?�?� ???民眾網�?：收?�數?????�叫後端 API ?�送至 GitHub ??顯示?��?紀???�?�?� */
     var _isSending = false;
     function _logTransfer(msg, type) {
         var logWrap = document.getElementById('transferLog');
@@ -589,7 +595,7 @@
         if (!logWrap || !logContent) return;
         logWrap.style.display = 'block';
         var colors = { info: '#94a3b8', step: '#38bdf8', success: '#4ade80', error: '#f87171', data: '#a78bfa' };
-        var icons = { info: 'ℹ️', step: '▶', success: '✅', error: '❌', data: '📦' };
+        var icons = { info: '?��?', step: '??, success: '??, error: '??, data: '?��' };
         var now = new Date();
         var ts = now.toTimeString().slice(0,8);
         var line = document.createElement('div');
@@ -604,9 +610,9 @@
         var logContent = document.getElementById('transferLogContent');
         if (logContent) logContent.innerHTML = '';
         var btn = document.getElementById('uiConnectBtn');
-        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>傳送中...</span>'; }
-        _logTransfer('開始傳送流程', 'step');
-        _logTransfer('收集頁面指標數據...', 'step');
+        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>?�送中...</span>'; }
+        _logTransfer('?��??�送�?�?, 'step');
+        _logTransfer('?��??�面?��??��?...', 'step');
         var data;
         if (window.dataExporter && typeof window.dataExporter.collectData === 'function') {
             data = window.dataExporter.collectData();
@@ -614,13 +620,13 @@
             try { data = JSON.parse(localStorage.getItem('fhir_export_cache') || '{}'); } catch(e) { data = {}; }
             data.exportedAt = data.exportedAt || new Date().toISOString();
         }
-        _logTransfer('匹出時間: ' + data.exportedAt, 'data');
-        _logTransfer('寫入 localStorage 備份...', 'step');
+        _logTransfer('?�出?��?: ' + data.exportedAt, 'data');
+        _logTransfer('寫入 localStorage ?�份...', 'step');
         try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
         try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.postMessage({ type: 'update-realtime', data: data }); ch.close(); } catch(e) {}
-        _logTransfer('本地備份完成', 'success');
+        _logTransfer('?�地?�份完�?', 'success');
         _animateLine('.line-control-public');
-        _logTransfer('呼叫後端 API /api/export-public-data ...', 'step');
+        _logTransfer('?�叫後端 API /api/export-public-data ...', 'step');
         var exportPromise;
         if (window.dataExporter && typeof window.dataExporter.exportToPublicSite === 'function') {
             exportPromise = window.dataExporter.exportToPublicSite();
@@ -629,16 +635,16 @@
             exportPromise = fetch(backendUrl + '/api/export-public-data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).then(function(r) { return r.json(); });
         }
         exportPromise.then(function(result) {
-            _logTransfer('後端回應: ' + JSON.stringify(result.method || result.message || 'ok'), 'success');
-            if (result.method === 'github-api') { _logTransfer('已透過 GitHub API 推送至 public-health-dashboard repo', 'success'); _logTransfer('GitHub Pages 將在 1-2 分鐘內自動部署更新', 'info'); }
-            else if (result.method === 'local-file') { _logTransfer('已寫入本地民眾網頁資料夾: ' + (result.path || ''), 'success'); }
-            else if (result.success) { _logTransfer('數據推送成功: ' + (result.message || ''), 'success'); }
+            _logTransfer('後端?��?: ' + JSON.stringify(result.method || result.message || 'ok'), 'success');
+            if (result.method === 'github-api') { _logTransfer('已透�? GitHub API ?�送至 public-health-dashboard repo', 'success'); _logTransfer('GitHub Pages 將在 1-2 ?��??�自?�部署更??, 'info'); }
+            else if (result.method === 'local-file') { _logTransfer('已寫?�本?��??�網?��??�夾: ' + (result.path || ''), 'success'); }
+            else if (result.success) { _logTransfer('?��??�送�??? ' + (result.message || ''), 'success'); }
             _animateLine('.line-public-llm');
-            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網頁</span>'; } _logTransfer('傳送流程完成 ✔', 'success'); _showSentToast(); _isSending = false; }, 2000);
+            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網�?</span>'; } _logTransfer('?�送�?程�?????, 'success'); _showSentToast(); _isSending = false; }, 2000);
         }).catch(function(err) {
-            _logTransfer('後端 API 錯誤: ' + err.message, 'error');
+            _logTransfer('後端 API ?�誤: ' + err.message, 'error');
             _clearLine('.line-control-public');
-            if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網頁</span>'; }
+            if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網�?</span>'; }
             _isSending = false;
         });
     }
@@ -662,7 +668,7 @@
     }
     function _showSentToast() {
         var t = document.createElement('div');
-        t.textContent = '✅ 已傳送完成 — 數據已送達民眾網頁與即時看板';
+        t.textContent = '??已傳?��??????��?已送�?民眾網�??�即?��???;
         t.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#065f46;color:#ecfdf5;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s';
         document.body.appendChild(t);
         requestAnimationFrame(function(){ t.style.opacity='1'; });
