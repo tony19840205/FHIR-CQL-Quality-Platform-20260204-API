@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>?��??�質?��??�表板 - FHIR CQL Platform (API)</title>
+    <title>醫療品質指標儀表板 - FHIR CQL Platform (API)</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/dashboard.css">
     <link rel="stylesheet" href="css/llm-connection.css">
@@ -11,7 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <!-- 導航�?-->
+    <!-- 導航欄 -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
@@ -20,534 +20,534 @@
                 <span style="font-size: 0.55em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 6px; letter-spacing: 1px; font-weight: 700; vertical-align: middle;">API</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index - API.html">首�?</a></li>
-                <li><a href="disease-control - API.html">?��??�管??/a></li>
-                <li><a href="public-health - API.html">?��??�康</a></li>
-                <li><a href="esg-indicators - API.html">ESG?��?</a></li>
-                <li><a href="quality-indicators - API.html" class="active">?��??�質</a></li>
+                <li><a href="index - API.html">首頁</a></li>
+                <li><a href="disease-control - API.html">傳染病管制</a></li>
+                <li><a href="public-health - API.html">國民健康</a></li>
+                <li><a href="esg-indicators - API.html">ESG指標</a></li>
+                <li><a href="quality-indicators - API.html" class="active">醫療品質</a></li>
             </ul>
-            <div class="nav-settings" onclick="openLLMSettingsModal()" style="cursor: pointer;" title="LLM設�?">
+            <div class="nav-settings" onclick="openLLMSettingsModal()" style="cursor: pointer;" title="LLM設定">
                 <i class="fas fa-cog"></i>
             </div>
         </div>
     </nav>
 
-    <!-- 主�??�容?� -->
+    <!-- 主要內容區 -->
     <main class="main-content">
-        <!-- ?�面標�? -->
+        <!-- 頁面標題 -->
         <section class="page-header">
             <div class="header-content">
-                <h1><i class="fas fa-award"></i> ?��??�質?��??�表板 <span style="font-size: 0.4em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 3px 10px; border-radius: 12px; vertical-align: middle; letter-spacing: 1px; font-weight: 600;">API</span></h1>
-                <p>?�院總�??��??�質資�??��?系統 - 39?�核心�?�?/p>
+                <h1><i class="fas fa-award"></i> 醫療品質指標儀表板 <span style="font-size: 0.4em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 3px 10px; border-radius: 12px; vertical-align: middle; letter-spacing: 1px; font-weight: 600;">API</span></h1>
+                <p>醫院總額醫療品質資訊公開系統 - 39項核心指標</p>
             </div>
             <div class="header-actions" style="position: relative;">
                 <div style="display: flex; flex-direction: column; align-items: center; margin-right: 10px;">
                     <button class="btn btn-secondary" onclick="toggleDemoMode()" id="demoModeBtn">
-                        <i class="fas fa-flask"></i> <span id="demoModeText">?�用示�?模�?</span>
+                        <i class="fas fa-flask"></i> <span id="demoModeText">啟用示範模式</span>
                     </button>
                     <div style="font-size: 11px; color: #64748b; margin-top: 4px; text-align: center; line-height: 1.3;">
-                        <span style="color: #10b981; font-weight: 600;">??/span> 綠色：模?��???br>
-                        <span style="color: #94a3b8; font-weight: 600;">??/span> ?�色：FHIR資�?
+                        <span style="color: #10b981; font-weight: 600;">●</span> 綠色：模擬資料<br>
+                        <span style="color: #94a3b8; font-weight: 600;">●</span> 灰色：FHIR資料
                     </div>
                 </div>
                 <button class="btn btn-primary" onclick="refreshData()">
-                    <i class="fas fa-sync-alt"></i> ?�新?��?
+                    <i class="fas fa-sync-alt"></i> 重新整理
                 </button>
             </div>
         </section>
 
-        <!-- ?��??��?標籤 -->
+        <!-- 指標分類標籤 -->
         <section class="filter-section">
             <div class="filter-tabs">
-                <button class="filter-tab active" onclick="filterCategory('all')">?�部 (39)</button>
-                <button class="filter-tab" onclick="filterCategory('medication')">?�藥安全 (16)</button>
-                <button class="filter-tab" onclick="filterCategory('outpatient')">?�診�?�?(4)</button>
-                <button class="filter-tab" onclick="filterCategory('inpatient')">住院?�質 (5)</button>
-                <button class="filter-tab" onclick="filterCategory('surgery')">?��??�質 (10)</button>
-                <button class="filter-tab" onclick="filterCategory('outcome')">結�??�質 (4)</button>
+                <button class="filter-tab active" onclick="filterCategory('all')">全部 (39)</button>
+                <button class="filter-tab" onclick="filterCategory('medication')">用藥安全 (16)</button>
+                <button class="filter-tab" onclick="filterCategory('outpatient')">門診品質 (4)</button>
+                <button class="filter-tab" onclick="filterCategory('inpatient')">住院品質 (5)</button>
+                <button class="filter-tab" onclick="filterCategory('surgery')">手術品質 (10)</button>
+                <button class="filter-tab" onclick="filterCategory('outcome')">結果品質 (4)</button>
             </div>
         </section>
 
-        <!-- 系統?��? -->
+        <!-- 系統公告 -->
         <section class="info-banner" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); border-radius: 12px; padding: 16px 24px; margin: 20px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
             <div class="banner-content" style="display: flex; align-items: center; gap: 16px; color: white;">
                 <i class="fas fa-info-circle" style="font-size: 24px; opacity: 0.9;"></i>
                 <div style="flex: 1;">
                     <div style="font-weight: 600; font-size: 16px; margin-bottom: 4px;">
-                        <i class="fas fa-code-branch"></i> 系統?�發說�?
+                        <i class="fas fa-code-branch"></i> 系統開發說明
                     </div>
                     <div style="font-size: 14px; opacity: 0.95; line-height: 1.6;">
-                        ?�系統已完整實�?衛�??�公?��?39?�醫?��?質�?標CQL規�?，透�?後端 CQL Engine API ?��??�詢?��??��?�???��? <strong>FHIR Implementation Guide</strong> ??<strong>TWCore Profile</strong> 後�??��?微調CodeSystem URL?�Extension定義?�可完�?對接??
+                        本系統已完整實作衛福部公告之39項醫療品質指標CQL規範，透過後端 CQL Engine API 執行查詢。待政府正式公告 <strong>FHIR Implementation Guide</strong> 及 <strong>TWCore Profile</strong> 後，僅需微調CodeSystem URL及Extension定義即可完成對接。
                     </div>
                 </div>
                 <button class="btn" onclick="this.parentElement.parentElement.style.display='none'" 
                         style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 8px 16px; cursor: pointer; border-radius: 6px; font-size: 13px; transition: all 0.2s;"
                         onmouseover="this.style.background='rgba(255,255,255,0.3)'"
                         onmouseout="this.style.background='rgba(255,255,255,0.2)'">
-                    <i class="fas fa-times"></i> ?��?
+                    <i class="fas fa-times"></i> 關閉
                 </button>
             </div>
         </section>
 
-        <!-- ===================== ?�藥安全?��? ===================== -->
+        <!-- ===================== 用藥安全指標 ===================== -->
         <section class="overview-section" data-category="medication">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-pills"></i> ?�藥安全?��?</h2>
-                    <p>?��??�方?��??��??��??�藥??��</p>
+                    <h2><i class="fas fa-pills"></i> 用藥安全指標</h2>
+                    <p>藥品處方合理性與重疊用藥監測</p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('medication')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> ?�部?��?
+                    <i class="fas fa-play-circle"></i> 全部啟動
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- ?��?01 -->
+                <!-- 指標01 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-01')">
                     <div class="card-badge">01</div>
                     <div class="card-content">
-                        <h3>?�診注射�?使用??/h3>
+                        <h3>門診注射劑使用率</h3>
                         <p class="card-code">3127</p>
                         <p class="card-cql-file">Indicator_01</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">使用??/span>
+                            <span class="mini-label">使用率</span>
                             <span class="mini-value" id="ind01Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_01" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-01')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_01" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?02 -->
+                <!-- 指標02 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-02')">
                     <div class="card-badge">02</div>
                     <div class="card-content">
-                        <h3>?�診�??��?使用??/h3>
+                        <h3>門診抗生素使用率</h3>
                         <p class="card-code">1140.01</p>
                         <p class="card-cql-file">Indicator_02</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">使用??/span>
+                            <span class="mini-label">使用率</span>
                             <span class="mini-value" id="ind02Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_02" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-02')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_02" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-1 -->
+                <!-- 指標03-1 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-1')">
                     <div class="card-badge">03-1</div>
                     <div class="card-content">
-                        <h3>?�院?��?壓藥?��?</h3>
+                        <h3>同院降血壓藥重疊</h3>
                         <p class="card-code">1710</p>
                         <p class="card-cql-file">Indicator_03_1</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_1Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-1')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-2 -->
+                <!-- 指標03-2 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-2')">
                     <div class="card-badge">03-2</div>
                     <div class="card-content">
-                        <h3>?�院?��??�藥?��?</h3>
+                        <h3>同院降血脂藥重疊</h3>
                         <p class="card-code">1711</p>
                         <p class="card-cql-file">Indicator_03_2</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_2Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-2')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-3 -->
+                <!-- 指標03-3 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-3')">
                     <div class="card-badge">03-3</div>
                     <div class="card-content">
-                        <h3>?�院?��?糖藥?��?</h3>
+                        <h3>同院降血糖藥重疊</h3>
                         <p class="card-code">1712</p>
                         <p class="card-cql-file">Indicator_03_3</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_3Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-3')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-4 -->
+                <!-- 指標03-4 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-4')">
                     <div class="card-badge">03-4</div>
                     <div class="card-content">
-                        <h3>?�院?�思覺失調?��???/h3>
+                        <h3>同院抗思覺失調藥重疊</h3>
                         <p class="card-code">1726</p>
                         <p class="card-cql-file">Indicator_03_4</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_4Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-4')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_4" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-5 -->
+                <!-- 指標03-5 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-5')">
                     <div class="card-badge">03-5</div>
                     <div class="card-content">
-                        <h3>?�院?��?鬱藥?��?</h3>
+                        <h3>同院抗憂鬱藥重疊</h3>
                         <p class="card-code">1727</p>
                         <p class="card-cql-file">Indicator_03_5</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_5Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-5')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_5" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-6 -->
+                <!-- 指標03-6 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-6')">
                     <div class="card-badge">03-6</div>
                     <div class="card-content">
-                        <h3>?�院安�??��??��???/h3>
+                        <h3>同院安眠鎮靜藥重疊</h3>
                         <p class="card-code">1728</p>
                         <p class="card-cql-file">Indicator_03_6</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_6Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-6')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_6" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-7 -->
+                <!-- 指標03-7 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-7')">
                     <div class="card-badge">03-7</div>
                     <div class="card-content">
-                        <h3>?�院?��??�藥?��?</h3>
+                        <h3>同院抗血栓藥重疊</h3>
                         <p class="card-code">3375</p>
                         <p class="card-cql-file">Indicator_03_7</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_7Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-7')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_7" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-8 -->
+                <!-- 指標03-8 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-8')">
                     <div class="card-badge">03-8</div>
                     <div class="card-content">
-                        <h3>?�院?��??�藥?��?</h3>
+                        <h3>同院前列腺藥重疊</h3>
                         <p class="card-code">3376</p>
                         <p class="card-cql-file">Indicator_03_8</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_8Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-8')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_8" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- 跨院?��? 03-9 ??03-16 -->
-                <!-- ?��?03-9 -->
+                <!-- 跨院指標 03-9 到 03-16 -->
+                <!-- 指標03-9 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-9')">
                     <div class="card-badge">03-9</div>
                     <div class="card-content">
-                        <h3>跨院?��?壓藥?��?</h3>
+                        <h3>跨院降血壓藥重疊</h3>
                         <p class="card-code">1713</p>
                         <p class="card-cql-file">Indicator_03_9</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_9Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-9')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_9" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-10 -->
+                <!-- 指標03-10 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-10')">
                     <div class="card-badge">03-10</div>
                     <div class="card-content">
-                        <h3>跨院?��??�藥?��?</h3>
+                        <h3>跨院降血脂藥重疊</h3>
                         <p class="card-code">1714</p>
                         <p class="card-cql-file">Indicator_03_10</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_10Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-10')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_10" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-11 -->
+                <!-- 指標03-11 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-11')">
                     <div class="card-badge">03-11</div>
                     <div class="card-content">
-                        <h3>跨院?��?糖藥?��?</h3>
+                        <h3>跨院降血糖藥重疊</h3>
                         <p class="card-code">1715</p>
                         <p class="card-cql-file">Indicator_03_11</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_11Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-11')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_11" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-12 -->
+                <!-- 指標03-12 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-12')">
                     <div class="card-badge">03-12</div>
                     <div class="card-content">
-                        <h3>跨院?�思覺失調?��???/h3>
+                        <h3>跨院抗思覺失調藥重疊</h3>
                         <p class="card-code">1729</p>
                         <p class="card-cql-file">Indicator_03_12</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_12Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-12')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_12" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-13 -->
+                <!-- 指標03-13 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-13')">
                     <div class="card-badge">03-13</div>
                     <div class="card-content">
-                        <h3>跨院?��?鬱藥?��?</h3>
+                        <h3>跨院抗憂鬱藥重疊</h3>
                         <p class="card-code">1730</p>
                         <p class="card-cql-file">Indicator_03_13</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_13Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-13')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_13" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-14 -->
+                <!-- 指標03-14 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-14')">
                     <div class="card-badge">03-14</div>
                     <div class="card-content">
-                        <h3>跨院安�??��??��???/h3>
+                        <h3>跨院安眠鎮靜藥重疊</h3>
                         <p class="card-code">1731</p>
                         <p class="card-cql-file">Indicator_03_14</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_14Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-14')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_14" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-15 -->
+                <!-- 指標03-15 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-15')">
                     <div class="card-badge">03-15</div>
                     <div class="card-content">
-                        <h3>跨院?��??�藥?��?</h3>
+                        <h3>跨院抗血栓藥重疊</h3>
                         <p class="card-code">3377</p>
                         <p class="card-cql-file">Indicator_03_15</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_15Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-15')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_15" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?03-16 -->
+                <!-- 指標03-16 -->
                 <div class="overview-card quality-med" onclick="showDetailModal('indicator-03-16')">
                     <div class="card-badge">03-16</div>
                     <div class="card-content">
-                        <h3>跨院?��??�藥?��?</h3>
+                        <h3>跨院前列腺藥重疊</h3>
                         <p class="card-code">3378</p>
                         <p class="card-cql-file">Indicator_03_16</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">重疊率</span>
                             <span class="mini-value" id="ind03_16Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_03_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-03-16')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_03_16" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -555,139 +555,139 @@
             </div>
         </section>
 
-        <!-- ===================== ?�診�?質�?�?===================== -->
+        <!-- ===================== 門診品質指標 ===================== -->
         <section class="overview-section" data-category="outpatient">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-hospital-user"></i> ?�診�?質�?�?/h2>
-                    <p>?�診照護�?質�??�方?��???/p>
+                    <h2><i class="fas fa-hospital-user"></i> 門診品質指標</h2>
+                    <p>門診照護品質與處方合理性</p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('outpatient')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> ?�部?��?
+                    <i class="fas fa-play-circle"></i> 全部啟動
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- ?��?04 -->
+                <!-- 指標04 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-04')">
                     <div class="card-badge">04</div>
                     <div class="card-content">
-                        <h3>?�性�????籤使?��?</h3>
+                        <h3>慢性病連處籤使用率</h3>
                         <p class="card-code">1318</p>
                         <p class="card-cql-file">Indicator_04</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">使用??/span>
+                            <span class="mini-label">使用率</span>
                             <span class="mini-value" id="ind04Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_04" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-04')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_04" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?05 -->
+                <!-- 指標05 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-05')">
                     <div class="card-badge">05</div>
                     <div class="card-content">
-                        <h3>?�方10種以上藥?��?</h3>
+                        <h3>處方10種以上藥品率</h3>
                         <p class="card-code">3128</p>
                         <p class="card-cql-file">Indicator_05</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">比�?</span>
+                            <span class="mini-label">比率</span>
                             <span class="mini-value" id="ind05Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_05" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-05')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_05" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?06 -->
+                <!-- 指標06 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-06')">
                     <div class="card-badge">06</div>
                     <div class="card-content">
-                        <h3>小�?�???�診??/h3>
+                        <h3>小兒氣喘急診率</h3>
                         <p class="card-code">1315Q/1317Y</p>
                         <p class="card-cql-file">Indicator_06</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�診??/span>
+                            <span class="mini-label">急診率</span>
                             <span class="mini-value" id="ind06Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_06" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-06')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_06" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?07 -->
+                <!-- 指標07 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-07')">
                     <div class="card-badge">07</div>
                     <div class="card-content">
-                        <h3>糖尿?�HbA1c檢�???/h3>
+                        <h3>糖尿病HbA1c檢驗率</h3>
                         <p class="card-code">109.01Q/110.01Y</p>
                         <p class="card-cql-file">Indicator_07</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">檢�???/span>
+                            <span class="mini-label">檢驗率</span>
                             <span class="mini-value" id="ind07Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_07" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-07')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_07" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?08 -->
+                <!-- 指標08 -->
                 <div class="overview-card quality-out" onclick="showDetailModal('indicator-08')">
                     <div class="card-badge">08</div>
                     <div class="card-content">
-                        <h3>?�日?�院?�疾?��?就診??/h3>
+                        <h3>同日同院同疾病再就診率</h3>
                         <p class="card-code">1322</p>
                         <p class="card-cql-file">Indicator_08</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�就診�?</span>
+                            <span class="mini-label">再就診率</span>
                             <span class="mini-value" id="ind08Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_08" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-08')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_08" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -695,164 +695,164 @@
             </div>
         </section>
 
-        <!-- ===================== 住院?�質?��? ===================== -->
+        <!-- ===================== 住院品質指標 ===================== -->
         <section class="overview-section" data-category="inpatient">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-bed"></i> 住院?�質?��?</h2>
-                    <p>住院?�護?�質?��??�院??/p>
+                    <h2><i class="fas fa-bed"></i> 住院品質指標</h2>
+                    <p>住院照護品質與再入院率</p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('inpatient')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> ?�部?��?
+                    <i class="fas fa-play-circle"></i> 全部啟動
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- ?��?09 -->
+                <!-- 指標09 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-09')">
                     <div class="card-badge">09</div>
                     <div class="card-content">
-                        <h3>14天內?��??��??�院??/h3>
+                        <h3>14天內非計畫再入院率</h3>
                         <p class="card-code">1077.01Q/1809Y</p>
                         <p class="card-cql-file">Indicator_09</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�入?��?</span>
+                            <span class="mini-label">再入院率</span>
                             <span class="mini-value" id="ind09Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_09" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-09')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_09" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?10 -->
+                <!-- 指標10 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-10')">
                     <div class="card-badge">10</div>
                     <div class="card-content">
-                        <h3>?�院�?天內?�診??/h3>
+                        <h3>出院後3天內急診率</h3>
                         <p class="card-code">108.01</p>
                         <p class="card-cql-file">Indicator_10</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�診??/span>
+                            <span class="mini-label">急診率</span>
                             <span class="mini-value" id="ind10Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-10')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_10" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?11-1 -->
+                <!-- 指標11-1 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-11-1')">
                     <div class="card-badge">11-1</div>
                     <div class="card-content">
-                        <h3>?��??�腹?��?</h3>
+                        <h3>整體剖腹產率</h3>
                         <p class="card-code">1136.01</p>
                         <p class="card-cql-file">Indicator_11_1</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�腹?��?</span>
+                            <span class="mini-label">剖腹產率</span>
                             <span class="mini-value" id="ind11_1Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_11_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-11-1')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_11_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?11-2 -->
+                <!-- 指標11-2 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-11-2')">
                     <div class="card-badge">11-2</div>
                     <div class="card-content">
-                        <h3>?�婦要�??�腹?��?</h3>
+                        <h3>產婦要求剖腹產率</h3>
                         <p class="card-code">1137.01</p>
                         <p class="card-cql-file">Indicator_11_2</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�腹?��?</span>
+                            <span class="mini-label">剖腹產率</span>
                             <span class="mini-value" id="ind11_2Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_11_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-11-2')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_11_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?11-3 -->
+                <!-- 指標11-3 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-11-3')">
                     <div class="card-badge">11-3</div>
                     <div class="card-content">
-                        <h3>?�適?��??�腹?��?</h3>
+                        <h3>有適應症剖腹產率</h3>
                         <p class="card-code">1138.01</p>
                         <p class="card-cql-file">Indicator_11_3</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�腹?��?</span>
+                            <span class="mini-label">剖腹產率</span>
                             <span class="mini-value" id="ind11_3Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_11_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-11-3')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_11_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?11-4 -->
+                <!-- 指標11-4 -->
                 <div class="overview-card quality-inp" onclick="showDetailModal('indicator-11-4')">
                     <div class="card-badge">11-4</div>
                     <div class="card-content">
-                        <h3>?�產婦�??�產??/h3>
+                        <h3>初產婦剖腹產率</h3>
                         <p class="card-code">1075.01</p>
                         <p class="card-cql-file">Indicator_11_4</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�腹?��?</span>
+                            <span class="mini-label">剖腹產率</span>
                             <span class="mini-value" id="ind11_4Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_11_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-11-4')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_11_4" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -860,214 +860,214 @@
             </div>
         </section>
 
-        <!-- ===================== ?��??�質?��? ===================== -->
+        <!-- ===================== 手術品質指標 ===================== -->
         <section class="overview-section" data-category="surgery">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-procedures"></i> ?��??�質?��?</h2>
-                    <p>?��?安全?��?後併?��???��</p>
+                    <h2><i class="fas fa-procedures"></i> 手術品質指標</h2>
+                    <p>手術安全與術後併發症監測</p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('surgery')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> ?�部?��?
+                    <i class="fas fa-play-circle"></i> 全部啟動
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- ?��?12 -->
+                <!-- 指標12 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-12')">
                     <div class="card-badge">12</div>
                     <div class="card-content">
-                        <h3>清淨?��??��?素�?3天�?</h3>
+                        <h3>清淨手術抗生素超3天率</h3>
                         <p class="card-code">1155</p>
                         <p class="card-cql-file">Indicator_12</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">使用??/span>
+                            <span class="mini-label">使用率</span>
                             <span class="mini-value" id="ind12Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-12')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_12" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?13 -->
+                <!-- 指標13 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-13')">
                     <div class="card-badge">13</div>
                     <div class="card-content">
-                        <h3>體�??�波碎石平�??�用次數</h3>
+                        <h3>體外震波碎石平均利用次數</h3>
                         <p class="card-code">20.01Q/1804Y</p>
                         <p class="card-cql-file">Indicator_13</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">平�?次數</span>
+                            <span class="mini-label">平均次數</span>
                             <span class="mini-value" id="ind13Rate">--</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-13')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_13" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?14 -->
+                <!-- 指標14 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-14')">
                     <div class="card-badge">14</div>
                     <div class="card-content">
-                        <h3>子宮?�瘤�?4天�??�院??/h3>
+                        <h3>子宮肌瘤術14天再入院率</h3>
                         <p class="card-code">473.01</p>
                         <p class="card-cql-file">Indicator_14</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�入?��?</span>
+                            <span class="mini-label">再入院率</span>
                             <span class="mini-value" id="ind14Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-14')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_14" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?15-1 -->
+                <!-- 指標15-1 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-15-1')">
                     <div class="card-badge">15-1</div>
                     <div class="card-content">
-                        <h3>?��?節置�?90天深?��??��?</h3>
+                        <h3>膝關節置換90天深部感染率</h3>
                         <p class="card-code">353.01</p>
                         <p class="card-cql-file">Indicator_15_1</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">感染率</span>
                             <span class="mini-value" id="ind15_1Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_15_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-15-1')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_15_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?15-2 -->
+                <!-- 指標15-2 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-15-2')">
                     <div class="card-badge">15-2</div>
                     <div class="card-content">
-                        <h3>?��?置�?90天深?��??��?</h3>
+                        <h3>全膝置換90天深部感染率</h3>
                         <p class="card-code">3249</p>
                         <p class="card-cql-file">Indicator_15_2</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">感染率</span>
                             <span class="mini-value" id="ind15_2Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_15_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-15-2')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_15_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?15-3 -->
+                <!-- 指標15-3 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-15-3')">
                     <div class="card-badge">15-3</div>
                     <div class="card-content">
-                        <h3>?��??�置??0天深?��??��?</h3>
+                        <h3>部分膝置換90天深部感染率</h3>
                         <p class="card-code">3250</p>
                         <p class="card-cql-file">Indicator_15_3</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">感染率</span>
                             <span class="mini-value" id="ind15_3Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_15_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-15-3')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_15_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?16 -->
+                <!-- 指標16 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-16')">
                     <div class="card-badge">16</div>
                     <div class="card-content">
-                        <h3>住院?��??�口?��???/h3>
+                        <h3>住院手術傷口感染率</h3>
                         <p class="card-code">1658Q/1666Y</p>
                         <p class="card-cql-file">Indicator_16</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">感染率</span>
                             <span class="mini-value" id="ind16Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-16')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_16" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?19 -->
+                <!-- 指標19 -->
                 <div class="overview-card quality-surg" onclick="showDetailModal('indicator-19')">
                     <div class="card-badge">19</div>
                     <div class="card-content">
-                        <h3>清淨?��??�口?��???/h3>
+                        <h3>清淨手術傷口感染率</h3>
                         <p class="card-code">2524Q/2526Y</p>
                         <p class="card-cql-file">Indicator_19</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?��???/span>
+                            <span class="mini-label">感染率</span>
                             <span class="mini-value" id="ind19Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-19')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_19" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -1075,64 +1075,64 @@
             </div>
         </section>
 
-        <!-- ===================== 結�??�質?��? ===================== -->
+        <!-- ===================== 結果品質指標 ===================== -->
         <section class="overview-section" data-category="outcome">
             <div class="section-header">
                 <div>
-                    <h2><i class="fas fa-chart-line"></i> 結�??�質?��?</h2>
-                    <p>?��?結�??�死亡�???��</p>
+                    <h2><i class="fas fa-chart-line"></i> 結果品質指標</h2>
+                    <p>醫療結果與死亡率監測</p>
                 </div>
                 <button class="btn btn-primary" onclick="executeAllCategory('outcome')" style="margin-left: auto;">
-                    <i class="fas fa-play-circle"></i> ?�部?��?
+                    <i class="fas fa-play-circle"></i> 全部啟動
                 </button>
             </div>
             
             <div class="overview-grid quality-grid">
-                <!-- ?��?17 -->
+                <!-- 指標17 -->
                 <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-17')">
                     <div class="card-badge">17</div>
                     <div class="card-content">
-                        <h3>?�性�??��?塞死亡�?</h3>
+                        <h3>急性心肌梗塞死亡率</h3>
                         <p class="card-code">1662Q/1668Y</p>
                         <p class="card-cql-file">Indicator_17</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">死亡??/span>
+                            <span class="mini-label">死亡率</span>
                             <span class="mini-value" id="ind17Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-17')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_17" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
                 </div>
 
-                <!-- ?��?18 -->
+                <!-- 指標18 -->
                 <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-18')">
                     <div class="card-badge">18</div>
                     <div class="card-content">
-                        <h3>失智?��?寧�?護利?��?</h3>
+                        <h3>失智症安寧療護利用率</h3>
                         <p class="card-code">2795Q/2796Y</p>
                         <p class="card-cql-file">Indicator_18</p>
                         <div class="card-mini-stats"><div class="mini-stat">
-                            <span class="mini-label">?�用??/span>
+                            <span class="mini-label">利用率</span>
                             <span class="mini-value" id="ind18Rate">--%</span>
                         </div></div>
                         <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
-                            <input type="date" id="startDate_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="?��??��?">
-                            <input type="date" id="endDate_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結�??��?">
-                            <select id="maxRecords_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="?�大�???>
-                                <option value="50">50�?/option><option value="100">100�?/option><option value="200" selected>200�?/option><option value="500">500�?/option><option value="1000">1000�?/option><option value="99999">不�???/option>
+                            <input type="date" id="startDate_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
                             </select>
                         </div>
                         <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-18')">
-                            <i class="fas fa-play"></i> ?�詢
+                            <i class="fas fa-play"></i> 查詢
                         </button>
                         <div class="card-status" id="status_18" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
                     </div>
@@ -1141,49 +1141,49 @@
         </section>
     </main>
 
-    <!-- 詳�? Modal -->
+    <!-- 詳情 Modal -->
     <div class="modal" id="detailModal">
         <div class="modal-content modal-large">
             <div class="modal-header">
-                <h2 id="modalTitle">詳細資�?</h2>
+                <h2 id="modalTitle">詳細資訊</h2>
                 <button class="modal-close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body" id="modalBody">
-                <!-- ?��?載入?�容 -->
+                <!-- 動態載入內容 -->
             </div>
         </div>
     </div>
 
-    <!-- LLM 設�?模�?�?-->
+    <!-- LLM 設定模態框 -->
     <div id="llmSettingsModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;">
-                <h3><i class="fas fa-tachometer-alt"></i> ?�共?�康?��??�板 - ?��??�質?�表板</h3>
+                <h3><i class="fas fa-tachometer-alt"></i> 公共健康即時看板 - 醫療品質儀表板</h3>
                 <span class="modal-close" onclick="closeLLMSettingsModal()" style="color: white;">&times;</span>
             </div>
             <div class="modal-body" style="padding: 2rem;">
                 <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <h4 style="margin: 0; color: #1e293b;">
-                            <i class="fas fa-power-off"></i> ?��??�制
+                            <i class="fas fa-power-off"></i> 服務控制
                         </h4>
                         <div style="display: flex; gap: 0.75rem; align-items: center;">
                             <button id="uiConnectBtn" onclick="sendToPublicDashboard()" class="btn-external-service inactive">
-                                <i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網�? &amp; ?��??�板</span>
+                                <i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網頁 &amp; 即時看板</span>
                             </button>
-                            <a href="https://fhir-cql-quality-platform-20260204.onrender.com/public-dashboard%20-%20API.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#6366f1;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s;" onmouseover="this.style.background='#4f46e5'" onmouseout="this.style.background='#6366f1'">
-                                <i class="fas fa-users"></i> 民眾網�?
+                            <a href="https://fhir-cql-quality-platform-20260204.onrender.com/public-dashboard%20-%20API.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#6366f1;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;" onmouseover="this.style.background='#4f46e5'" onmouseout="this.style.background='#6366f1'">
+                                <i class="fas fa-users"></i> 民眾網頁
                             </a>
-                            <a href="https://fhir-cql-quality-platform-20260204.onrender.com/realtime-dashboard%20-%20API.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#0ea5e9;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .2s;" onmouseover="this.style.background='#0284c7'" onmouseout="this.style.background='#0ea5e9'">
-                                <i class="fas fa-tachometer-alt"></i> ?��??�板
+                            <a href="https://fhir-cql-quality-platform-20260204.onrender.com/realtime-dashboard%20-%20API.html" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:#0ea5e9;color:#fff;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;" onmouseover="this.style.background='#0284c7'" onmouseout="this.style.background='#0ea5e9'">
+                                <i class="fas fa-tachometer-alt"></i> 即時看板
                             </a>
                         </div>
                     </div>
                     
-                    <!-- ?��?點�?��?�?��? -->
+                    <!-- 四節點連接狀態圖 -->
                     <div class="llm-connection-flow" style="display:none;">
                         <div class="connection-flow-header">
-                            <h5>??��?�??/h5>
+                            <h5>連接狀態</h5>
                         </div>
                         
                         <div class="connection-nodes-container">
@@ -1191,7 +1191,7 @@
                                 <div class="node-circle"><i class="fas fa-database"></i></div>
                                 <div class="node-label">
                                     <div class="node-title">FHIR</div>
-                                    <div class="node-subtitle">伺�???/div>
+                                    <div class="node-subtitle">伺服器</div>
                                 </div>
                             </div>
                             <div class="connection-line-wrapper">
@@ -1200,37 +1200,37 @@
                             <div class="connection-node node-control">
                                 <div class="node-circle"><i class="fas fa-desktop"></i></div>
                                 <div class="node-label">
-                                    <div class="node-title">?�制網�?</div>
-                                    <div class="node-subtitle">?�護人員</div>
+                                    <div class="node-title">控制網頁</div>
+                                    <div class="node-subtitle">醫護人員</div>
                                 </div>
                             </div>
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-control-public connected"></div>
                             </div>
-                            <a href="public-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="?��?民眾?�網??>
+                            <a href="public-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="開啟民眾版網頁">
                                 <div class="node-circle"><i class="fas fa-users"></i></div>
                                 <div class="node-label">
-                                    <div class="node-title">民眾網�?</div>
-                                    <div class="node-subtitle">?��???/div>
+                                    <div class="node-title">民眾網頁</div>
+                                    <div class="node-subtitle">公開版</div>
                                 </div>
                             </a>
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-public-llm connected"></div>
                             </div>
-                            <a href="realtime-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="?��??�共?�康?��??�板">
+                            <a href="realtime-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="開啟公共健康即時看板">
                                 <div class="node-circle"><i class="fas fa-tachometer-alt"></i></div>
                                 <div class="node-label">
-                                    <div class="node-title">?��??�板</div>
-                                    <div class="node-subtitle">?�共?�康</div>
+                                    <div class="node-title">即時看板</div>
+                                    <div class="node-subtitle">公共健康</div>
                                 </div>
                             </a>
                         </div>
                     </div>
 
-                    <!-- ?�送�?程�???-->
+                    <!-- 傳送過程紀錄 -->
                     <div id="transferLog" style="display:none; margin-top: 1rem; background: #0f172a; border-radius: 10px; padding: 1rem 1.25rem; max-height: 220px; overflow-y: auto; font-family: 'Consolas', 'Monaco', monospace; font-size: 13px; line-height: 1.7; color: #94a3b8;">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
-                            <span style="color: #38bdf8; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">?? ?�送�?程�???/span>
+                            <span style="color: #38bdf8; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">📋 傳送過程紀錄</span>
                         </div>
                         <div id="transferLogContent"></div>
                     </div>
@@ -1246,7 +1246,7 @@
     <script src="js/data-exporter.js"></script>
     <script src="js/llm-connection-manager.js"></script>
     <script>
-    /* ?�?�?� ???民眾網�?：收?�數?????�叫後端 API ?�送至 GitHub ??顯示?��?紀???�?�?� */
+    /* ─── 連線民眾網頁：收集數據 → 呼叫後端 API 推送至 GitHub → 顯示過程紀錄 ─── */
     var _isSending = false;
     function _logTransfer(msg, type) {
         var logWrap = document.getElementById('transferLog');
@@ -1254,7 +1254,7 @@
         if (!logWrap || !logContent) return;
         logWrap.style.display = 'block';
         var colors = { info: '#94a3b8', step: '#38bdf8', success: '#4ade80', error: '#f87171', data: '#a78bfa' };
-        var icons = { info: '?��?', step: '??, success: '??, error: '??, data: '?��' };
+        var icons = { info: 'ℹ️', step: '▶', success: '✅', error: '❌', data: '📦' };
         var now = new Date();
         var ts = now.toTimeString().slice(0,8);
         var line = document.createElement('div');
@@ -1269,9 +1269,9 @@
         var logContent = document.getElementById('transferLogContent');
         if (logContent) logContent.innerHTML = '';
         var btn = document.getElementById('uiConnectBtn');
-        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>?�送中...</span>'; }
-        _logTransfer('?��??�送�?�?, 'step');
-        _logTransfer('?��??�面?��??��?...', 'step');
+        if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>傳送中...</span>'; }
+        _logTransfer('開始傳送流程', 'step');
+        _logTransfer('收集頁面指標數據...', 'step');
         var data;
         if (window.dataExporter && typeof window.dataExporter.collectData === 'function') {
             data = window.dataExporter.collectData();
@@ -1279,13 +1279,13 @@
             try { data = JSON.parse(localStorage.getItem('fhir_export_cache') || '{}'); } catch(e) { data = {}; }
             data.exportedAt = data.exportedAt || new Date().toISOString();
         }
-        _logTransfer('?�出?��?: ' + data.exportedAt, 'data');
-        _logTransfer('寫入 localStorage ?�份...', 'step');
+        _logTransfer('匹出時間: ' + data.exportedAt, 'data');
+        _logTransfer('寫入 localStorage 備份...', 'step');
         try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
         try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.postMessage({ type: 'update-realtime', data: data }); ch.close(); } catch(e) {}
-        _logTransfer('?�地?�份完�?', 'success');
+        _logTransfer('本地備份完成', 'success');
         _animateLine('.line-control-public');
-        _logTransfer('?�叫後端 API /api/export-public-data ...', 'step');
+        _logTransfer('呼叫後端 API /api/export-public-data ...', 'step');
         var exportPromise;
         if (window.dataExporter && typeof window.dataExporter.exportToPublicSite === 'function') {
             exportPromise = window.dataExporter.exportToPublicSite();
@@ -1294,16 +1294,16 @@
             exportPromise = fetch(backendUrl + '/api/export-public-data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).then(function(r) { return r.json(); });
         }
         exportPromise.then(function(result) {
-            _logTransfer('後端?��?: ' + JSON.stringify(result.method || result.message || 'ok'), 'success');
-            if (result.method === 'github-api') { _logTransfer('已透�? GitHub API ?�送至 public-health-dashboard repo', 'success'); _logTransfer('GitHub Pages 將在 1-2 ?��??�自?�部署更??, 'info'); }
-            else if (result.method === 'local-file') { _logTransfer('已寫?�本?��??�網?��??�夾: ' + (result.path || ''), 'success'); }
-            else if (result.success) { _logTransfer('?��??�送�??? ' + (result.message || ''), 'success'); }
+            _logTransfer('後端回應: ' + JSON.stringify(result.method || result.message || 'ok'), 'success');
+            if (result.method === 'github-api') { _logTransfer('已透過 GitHub API 推送至 public-health-dashboard repo', 'success'); _logTransfer('GitHub Pages 將在 1-2 分鐘內自動部署更新', 'info'); }
+            else if (result.method === 'local-file') { _logTransfer('已寫入本地民眾網頁資料夾: ' + (result.path || ''), 'success'); }
+            else if (result.success) { _logTransfer('數據推送成功: ' + (result.message || ''), 'success'); }
             _animateLine('.line-public-llm');
-            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網�?</span>'; } _logTransfer('?�送�?程�?????, 'success'); _showSentToast(); _isSending = false; }, 2000);
+            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網頁 &amp; 即時看板</span>'; } _logTransfer('傳送流程完成 ✔', 'success'); _showSentToast(); _isSending = false; }, 2000);
         }).catch(function(err) {
-            _logTransfer('後端 API ?�誤: ' + err.message, 'error');
+            _logTransfer('後端 API 錯誤: ' + err.message, 'error');
             _clearLine('.line-control-public');
-            if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網�?</span>'; }
+            if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網頁 &amp; 即時看板</span>'; }
             _isSending = false;
         });
     }
@@ -1327,7 +1327,7 @@
     }
     function _showSentToast() {
         var t = document.createElement('div');
-        t.textContent = '??已傳?��??????��?已送�?民眾網�??�即?��???;
+        t.textContent = '✅ 已傳送完成 — 數據已送達民眾網頁與即時看板';
         t.style.cssText = 'position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:99999;background:#065f46;color:#ecfdf5;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.25);opacity:0;transition:opacity .3s';
         document.body.appendChild(t);
         requestAnimationFrame(function(){ t.style.opacity='1'; });
