@@ -104,7 +104,7 @@ class DataExporter {
         const data = {
             exportedAt: new Date().toISOString(),
             source: window.location.pathname,
-            diseaseItems:      this._mergeItems(disease, lastExport.diseaseItems, ['patients', 'encounters']),
+            diseaseItems:      this._mergeItems(disease, lastExport.diseaseItems, ['patients', 'encounters', 'cityData']),
             qualityIndicators: this._mergeItems(quality, lastExport.qualityIndicators, ['numerator', 'denominator', 'rate']),
             healthIndicators:  this._mergeItems(health, lastExport.healthIndicators, ['count', 'rate']),
             esgIndicators:     this._mergeItems(esg, lastExport.esgIndicators, ['count', 'rate']),
