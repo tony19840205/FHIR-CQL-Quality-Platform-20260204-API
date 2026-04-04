@@ -321,7 +321,7 @@
                             
                             <!-- 連接線 2: 控制網頁 → 民眾網頁 -->
                             <div class="connection-line-wrapper">
-                                <div class="connection-line line-control-public disconnected"></div>
+                                <div class="connection-line line-control-public connected"></div>
                             </div>
                             
                             <!-- 民眾網頁 -->
@@ -337,7 +337,7 @@
                             
                             <!-- 連接線 3: 民眾網頁 → LLM -->
                             <div class="connection-line-wrapper">
-                                <div class="connection-line line-public-llm disconnected"></div>
+                                <div class="connection-line line-public-llm connected"></div>
                             </div>
                             
                             <!-- 公共健康即時看板 -->
@@ -449,7 +449,7 @@
         var line = document.querySelector(sel);
         if (!line) return;
         line.classList.remove('transferring');
-        line.classList.add('disconnected');
+        line.classList.add('connected');
         line.querySelectorAll('.data-particle, .data-number').forEach(function(p) { p.remove(); });
     }
     function _showSentToast() {
