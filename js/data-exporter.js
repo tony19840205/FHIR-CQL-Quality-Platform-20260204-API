@@ -191,19 +191,28 @@ class DataExporter {
      */
     _generateCityDistribution(total) {
         const cities = [
-            { name: '台北市',  weight: 18 },
-            { name: '新北市',  weight: 16 },
-            { name: '桃園市',  weight: 10 },
-            { name: '新竹市',  weight:  5 },
-            { name: '基隆市',  weight:  3 },
-            { name: '台中市',  weight: 14 },
-            { name: '彰化縣',  weight:  5 },
+            { name: '台北市',  weight: 15 },
+            { name: '新北市',  weight: 14 },
+            { name: '桃園市',  weight:  8 },
+            { name: '新竹市',  weight:  3 },
+            { name: '新竹縣',  weight:  3 },
+            { name: '基隆市',  weight:  2 },
+            { name: '宜蘭縣',  weight:  2 },
+            { name: '台中市',  weight: 11 },
+            { name: '彰化縣',  weight:  4 },
             { name: '南投縣',  weight:  2 },
-            { name: '台南市',  weight:  9 },
-            { name: '高雄市',  weight: 10 },
+            { name: '苗栗縣',  weight:  2 },
+            { name: '雲林縣',  weight:  2 },
+            { name: '台南市',  weight:  7 },
+            { name: '高雄市',  weight:  9 },
             { name: '屏東縣',  weight:  3 },
+            { name: '嘉義市',  weight:  1 },
+            { name: '嘉義縣',  weight:  2 },
             { name: '花蓮縣',  weight:  3 },
             { name: '台東縣',  weight:  2 },
+            { name: '澎湖縣',  weight:  2 },
+            { name: '金門縣',  weight:  1 },
+            { name: '連江縣',  weight:  1 },
         ];
         if (!total || total <= 0) {
             const result = {};
