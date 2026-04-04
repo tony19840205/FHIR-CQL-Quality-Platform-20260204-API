@@ -222,15 +222,23 @@ class DataExporter {
         const totalWeight = cities.reduce((s, c) => s + c.weight, 0);
         const result = {};
         let assigned = 0;
-        cities.forEach((c, i) => {
-            if (i === cities.length - 1) {
-                result[c.name] = total - assigned;
-            } else {
-                const share = Math.round(total * c.weight / totalWeight);
-                result[c.name] = share;
-                assigned += share;
-            }
+        // Use floor to avoid over-allocation, then distribute remainder to top-weight cities
+        cities.forEach(c => {
+            const share = Math.floor(total * c.weight / totalWeight);
+            result[c.name] = share;
+            assigned += share;
         });
+        // Distribute remaining patients one-by-one to cities with highest fractional parts
+        let remainder = total - assigned;
+        if (remainder > 0) {
+            const fractions = cities.map(c => ({
+                name: c.name,
+                frac: (total * c.weight / totalWeight) - Math.floor(total * c.weight / totalWeight)
+            })).sort((a, b) => b.frac - a.frac);
+            for (let i = 0; i < remainder && i < fractions.length; i++) {
+                result[fractions[i].name]++;
+            }
+        }
         return result;
     }
 

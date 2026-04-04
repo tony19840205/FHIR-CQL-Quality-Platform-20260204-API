@@ -717,7 +717,7 @@ function initLeaflet() {
     if (!el) return;
     // 如果已存在地圖，清除重建（確保數據刷新）
     if (leafletMap) { leafletMap.remove(); leafletMap = null; }
-    leafletMap = L.map(el, { zoomControl: true, attributionControl: false }).setView([23.7, 121.0], 7);
+    leafletMap = L.map(el, { zoomControl: true, attributionControl: false }).setView([23.97, 120.3], 7);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { maxZoom: 18 }).addTo(leafletMap);
     const CITY_COORDS = {"台北市":[25.033,121.565],"新北市":[25.012,121.465],"桃園市":[24.994,121.301],"新竹市":[24.804,120.969],"新竹縣":[24.839,121.017],"基隆市":[25.128,121.739],"宜蘭縣":[24.752,121.753],"台中市":[24.148,120.674],"彰化縣":[24.081,120.539],"南投縣":[23.961,120.685],"苗栗縣":[24.560,120.821],"雲林縣":[23.709,120.431],"台南市":[22.999,120.227],"高雄市":[22.627,120.301],"屏東縣":[22.552,120.549],"嘉義市":[23.480,120.449],"嘉義縣":[23.452,120.255],"花蓮縣":[23.992,121.601],"台東縣":[22.756,121.145],"澎湖縣":[23.571,119.579],"金門縣":[24.449,118.377],"連江縣":[26.160,119.950]};
     const CLR = { covid19:'#ef4444', influenza:'#3b82f6', conjunctivitis:'#f59e0b', enterovirus:'#8b5cf6', diarrhea:'#10b981' };

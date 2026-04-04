@@ -127,6 +127,20 @@
         .qi-more { font-size: 13px; color: #94a3b8; margin-top: 8px; padding-left: 4px; }
         .qi-more a { color: #3b82f6; }
         .qi-more a:hover { text-decoration: underline; }
+        .qi-more a { cursor: pointer; }
+        /* Detail Modal */
+        .qi-modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; justify-content:center; align-items:center; }
+        .qi-modal-overlay.active { display:flex; }
+        .qi-modal { background:#fff; border-radius:16px; padding:2rem; max-width:480px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.15); position:relative; }
+        .qi-modal-close { position:absolute; top:12px; right:16px; font-size:20px; cursor:pointer; color:#94a3b8; background:none; border:none; }
+        .qi-modal-close:hover { color:#1e293b; }
+        .qi-modal h3 { font-size:18px; font-weight:700; color:#1e293b; margin-bottom:4px; }
+        .qi-modal .modal-code { font-size:13px; color:#94a3b8; margin-bottom:16px; }
+        .qi-modal .modal-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f1f5f9; }
+        .qi-modal .modal-label { font-size:14px; color:#64748b; }
+        .qi-modal .modal-value { font-size:14px; font-weight:600; color:#1e293b; }
+        .qi-card { cursor:pointer; transition: transform 0.15s, box-shadow 0.15s; }
+        .qi-card:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.08); }
         /* Category colors */
         .cat-medication i, .cat-medication h3 { color: #059669; }
         .cat-medication .cat-badge { background: #d1fae5; color: #065f46; }
@@ -296,7 +310,7 @@
                         <div class="sec-sub" id="qualitySub">39 項指標 · 5 大類別</div>
                     </div>
                 </div>
-                <a href=\"quality-indicators - API.html\" style=\"font-size:14px;color:#2563eb;font-weight:500;\">查看完整指標 <i class=\"fas fa-arrow-right\" style=\"font-size:12px;\"></i></a>
+                <a href="#quality" onclick="toggleAllQuality(event)" style="font-size:14px;color:#2563eb;font-weight:500;cursor:pointer;">查看完整指標 <i class="fas fa-chevron-down" id="qualityExpandIcon" style="font-size:12px;"></i></a>
             </div>
             <div id="qualityContainer"></div>
         </div>
@@ -455,12 +469,51 @@ function renderHealth(items) {
     `).join('');
 }
 
+// ─── Quality indicator state ───
+let _qualityData = [];
+let _expandedCats = {};
+let _allExpanded = false;
+
+function toggleCategory(cat, event) {
+    if (event) event.preventDefault();
+    _expandedCats[cat] = !_expandedCats[cat];
+    renderQuality(_qualityData);
+}
+
+function toggleAllQuality(event) {
+    if (event) event.preventDefault();
+    _allExpanded = !_allExpanded;
+    const order = ['medication','outpatient','inpatient','surgery','outcome'];
+    order.forEach(c => _expandedCats[c] = _allExpanded);
+    const icon = document.getElementById('qualityExpandIcon');
+    if (icon) icon.className = _allExpanded ? 'fas fa-chevron-up' : 'fas fa-chevron-down';
+    renderQuality(_qualityData);
+}
+
+function showQiDetail(ind) {
+    const ov = document.getElementById('qiModalOverlay');
+    document.getElementById('qiModalName').textContent = ind.name;
+    document.getElementById('qiModalCode').textContent = `${ind.number} · ${ind.code}`;
+    document.getElementById('qiModalBody').innerHTML = `
+        <div class="modal-row"><span class="modal-label">類別</span><span class="modal-value">${CATEGORY_LABELS[ind.category] || ind.category}</span></div>
+        <div class="modal-row"><span class="modal-label">數值</span><span class="modal-value">${ind.rate !== null ? ind.rate + ' ' + (ind.unit || '') : '尚未查詢'}</span></div>
+        <div class="modal-row"><span class="modal-label">分子</span><span class="modal-value">${ind.numerator !== undefined && ind.numerator !== null ? ind.numerator : '--'}</span></div>
+        <div class="modal-row"><span class="modal-label">分母</span><span class="modal-value">${ind.denominator !== undefined && ind.denominator !== null ? ind.denominator : '--'}</span></div>
+        <div class="modal-row"><span class="modal-label">說明</span><span class="modal-value" style="max-width:260px;text-align:right;">${ind.description || '--'}</span></div>
+    `;
+    ov.classList.add('active');
+}
+
+function closeQiModal() {
+    document.getElementById('qiModalOverlay').classList.remove('active');
+}
+
 function renderQuality(indicators) {
+    _qualityData = indicators;
     const container = document.getElementById('qualityContainer');
     const queried = indicators.filter(i => i.rate !== null).length;
     if (queried > 0) document.getElementById('qualitySub').textContent = `39 項指標 · 5 大類別 · ${queried} 項已查詢`;
 
-    // Group by category
     const grouped = {};
     indicators.forEach(ind => {
         if (!grouped[ind.category]) grouped[ind.category] = [];
@@ -471,7 +524,8 @@ function renderQuality(indicators) {
     container.innerHTML = order.map(cat => {
         const items = grouped[cat] || [];
         const catQueried = items.filter(i => i.rate !== null).length;
-        const show = items.slice(0, 4);
+        const expanded = !!_expandedCats[cat];
+        const show = expanded ? items : items.slice(0, 4);
         const remaining = items.length - 4;
         return `
             <div class="cat-section cat-${cat}">
@@ -481,8 +535,8 @@ function renderQuality(indicators) {
                     <span class="cat-badge">${items.length} 項${catQueried > 0 ? ` · ${catQueried} 有數據` : ''}</span>
                 </div>
                 <div class="qi-grid">
-                    ${show.map(ind => `
-                        <div class="qi-card">
+                    ${show.map((ind, idx) => `
+                        <div class="qi-card" onclick='showQiDetail(${JSON.stringify(ind).replace(/'/g, "&#39;")})'>
                             <div class="qi-top">
                                 <span class="qi-num">${ind.number}</span>
                                 <span class="qi-code">${ind.code}</span>
@@ -492,7 +546,7 @@ function renderQuality(indicators) {
                         </div>
                     `).join('')}
                 </div>
-                ${remaining > 0 ? `<div class="qi-more">還有 ${remaining} 項指標 → <a href="quality-indicators - API.html">查看全部</a></div>` : ''}
+                ${remaining > 0 ? `<div class="qi-more">${expanded ? '' : '還有 ' + remaining + ' 項指標 → '}<a href="#" onclick="toggleCategory('${cat}', event)">${expanded ? '收合 ▲' : '查看全部'}</a></div>` : ''}
             </div>
         `;
     }).join('');
@@ -632,5 +686,15 @@ function _applyDashboardData(d) {
     });
 })();
 </script>
+
+<!-- Quality Indicator Detail Modal -->
+<div class="qi-modal-overlay" id="qiModalOverlay" onclick="if(event.target===this)closeQiModal()">
+    <div class="qi-modal">
+        <button class="qi-modal-close" onclick="closeQiModal()"><i class="fas fa-times"></i></button>
+        <h3 id="qiModalName"></h3>
+        <div class="modal-code" id="qiModalCode"></div>
+        <div id="qiModalBody"></div>
+    </div>
+</div>
 </body>
 </html>
