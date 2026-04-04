@@ -426,7 +426,7 @@
             else if (result.method === 'local-file') { _logTransfer('已寫入本地民眾網頁資料夾: ' + (result.path || ''), 'success'); }
             else if (result.success) { _logTransfer('數據推送成功: ' + (result.message || ''), 'success'); }
             _animateLine('.line-public-llm');
-            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('active'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網頁</span>'; } _logTransfer('傳送流程完成 ✔', 'success'); _showSentToast(); _isSending = false; }, 2000);
+            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳民眾網頁</span>'; } _logTransfer('傳送流程完成 ✔', 'success'); _showSentToast(); _isSending = false; }, 2000);
         }).catch(function(err) {
             _logTransfer('後端 API 錯誤: ' + err.message, 'error');
             _clearLine('.line-control-public');
@@ -449,7 +449,7 @@
         var line = document.querySelector(sel);
         if (!line) return;
         line.classList.remove('transferring');
-        line.classList.add('connected');
+        line.classList.add('disconnected');
         line.querySelectorAll('.data-particle, .data-number').forEach(function(p) { p.remove(); });
     }
     function _showSentToast() {
