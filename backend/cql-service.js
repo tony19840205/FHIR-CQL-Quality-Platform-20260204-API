@@ -221,11 +221,20 @@ async function executeCQL(elm, fhirServerUrl, cqlFile, options = {}) {
 
 // ==================== 國民健康 FHIR 資料抓取 ====================
 async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
-    const { maxRecords = 500 } = options;
+    const { maxRecords = 500, startDate, endDate } = options;
     const isVaccination = cqlFile.toLowerCase().includes('vaccination');
     const isHypertension = cqlFile.toLowerCase().includes('hypertension');
 
-    console.log(`📥 [PublicHealth] 抓取${isVaccination ? '疫苗接種' : '高血壓'}資料 (max: ${maxRecords})...`);
+    // 建構日期過濾參數的 helper
+    const buildDateParam = (paramName) => {
+        const p = {};
+        if (startDate && endDate) p[paramName] = [`ge${startDate}`, `le${endDate}`];
+        else if (startDate) p[paramName] = `ge${startDate}`;
+        else if (endDate) p[paramName] = `le${endDate}`;
+        return p;
+    };
+    const hasDateFilter = !!(startDate || endDate);
+    console.log(`📥 [PublicHealth] 抓取${isVaccination ? '疫苗接種' : '高血壓'}資料 (max: ${maxRecords}, 日期: ${startDate || '無'} ~ ${endDate || '無'})...`);
 
     try {
         const fetchCount = maxRecords > 0 ? maxRecords : 10000;
@@ -249,7 +258,7 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
             // 逐一查詢各疫苗代碼 (不帶 system prefix，相容此 FHIR Server)
             const allPromises = vaccineCodes.map(code =>
                 axios.get(`${fhirServerUrl}/Immunization`, {
-                    params: { 'vaccine-code': code, _count: fetchCount },
+                    params: { 'vaccine-code': code, _count: fetchCount, ...buildDateParam('date') },
                     timeout: 60000
                 }).catch(() => ({ data: { entry: [] } }))
             );
@@ -273,12 +282,14 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
             const hypertensionICD10 = ['I10', 'I11', 'I12', 'I13', 'I14', 'I15', 'I16'];
             const bpLoincCodes = ['85354-9', '8480-6', '8462-4']; // BP panel, systolic, diastolic
 
+            // 建構各資源類型的日期參數
             const [condResponse, obsResponse, medResponse] = await Promise.all([
                 axios.get(`${fhirServerUrl}/Condition`, {
                     params: {
                         code: hypertensionICD10.join(','),
                         _count: fetchCount,
-                        _sort: '-recorded-date'
+                        _sort: '-recorded-date',
+                        ...buildDateParam('recorded-date')
                     },
                     timeout: 60000
                 }).catch(() => ({ data: { entry: [] } })),
@@ -286,12 +297,13 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
                     params: {
                         code: bpLoincCodes.join(','),
                         _count: fetchCount,
-                        _sort: '-date'
+                        _sort: '-date',
+                        ...buildDateParam('date')
                     },
                     timeout: 60000
                 }).catch(() => ({ data: { entry: [] } })),
                 axios.get(`${fhirServerUrl}/MedicationRequest`, {
-                    params: { _count: fetchCount, _sort: '-authoredon' },
+                    params: { _count: fetchCount, _sort: '-authoredon', ...buildDateParam('authoredon') },
                     timeout: 60000
                 }).catch(() => ({ data: { entry: [] } }))
             ]);
@@ -1485,8 +1497,17 @@ function detectDiseaseType(cqlFile) {
 }
 
 async function fetchFHIRData(fhirServerUrl, options = {}) {
-    const { maxRecords = 200, cqlFile } = options;
+    const { maxRecords = 200, cqlFile, startDate, endDate } = options;
     const fetchCount = maxRecords > 0 ? maxRecords : 10000;
+
+    // 建構日期過濾參數的 helper
+    const buildDateParam = (paramName) => {
+        const p = {};
+        if (startDate && endDate) p[paramName] = [`ge${startDate}`, `le${endDate}`];
+        else if (startDate) p[paramName] = `ge${startDate}`;
+        else if (endDate) p[paramName] = `le${endDate}`;
+        return p;
+    };
 
     // 根據 CQL 檔案判斷疾病類型，加上疾病代碼過濾
     const diseaseType = detectDiseaseType(cqlFile);
@@ -1494,7 +1515,7 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
 
     try {
         // 構建 Condition 查詢參數
-        const conditionParams = { _count: fetchCount, _sort: '-recorded-date' };
+        const conditionParams = { _count: fetchCount, _sort: '-recorded-date', ...buildDateParam('recorded-date') };
         
         if (diseaseCodes) {
             // 合併 ICD-10 + SNOMED 代碼為 code 查詢
@@ -1509,7 +1530,7 @@ async function fetchFHIRData(fhirServerUrl, options = {}) {
         }
 
         // 構建 Observation 查詢參數
-        const obsParams = { _count: fetchCount, _sort: '-date', category: 'laboratory' };
+        const obsParams = { _count: fetchCount, _sort: '-date', category: 'laboratory', ...buildDateParam('date') };
         if (diseaseCodes && diseaseCodes.labLoinc.length > 0) {
             obsParams.code = diseaseCodes.labLoinc.map(c => `http://loinc.org|${c}`).join(',');
         }
@@ -1926,12 +1947,21 @@ function extractPatientAddresses(fhirBundles, filterPatientIds = null) {
 
 // ==================== ESG FHIR 資料取得 ====================
 async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
-    const { maxRecords = 500 } = options;
+    const { maxRecords = 500, startDate, endDate } = options;
     const fetchCount = maxRecords > 0 ? maxRecords : 10000;
     const cqlLower = cqlFile.toLowerCase();
     const bundles = [];
 
-    console.log(`📥 [ESG] 取得 FHIR 資料: ${cqlFile}`);
+    // 建構各資源類型的日期過濾參數
+    const buildDateParam = (paramName) => {
+        const p = {};
+        if (startDate && endDate) p[paramName] = [`ge${startDate}`, `le${endDate}`];
+        else if (startDate) p[paramName] = `ge${startDate}`;
+        else if (endDate) p[paramName] = `le${endDate}`;
+        return p;
+    };
+
+    console.log(`📥 [ESG] 取得 FHIR 資料: ${cqlFile} (日期: ${startDate || '無'} ~ ${endDate || '無'})`);
 
     try {
         if (cqlLower.includes('antibiotic')) {
@@ -1942,7 +1972,7 @@ async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
             for (const name of antibioticNames) {
                 try {
                     const resp = await axios.get(`${fhirServerUrl}/MedicationAdministration`, {
-                        params: { 'code:text': name, status: 'completed', _count: fetchCount },
+                        params: { 'code:text': name, status: 'completed', _count: fetchCount, ...buildDateParam('effective-time') },
                         timeout: 30000
                     });
                     if (resp.data?.entry?.length) {
@@ -1956,7 +1986,7 @@ async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
             for (const name of antibioticNames.slice(0, 4)) {
                 try {
                     const resp = await axios.get(`${fhirServerUrl}/MedicationRequest`, {
-                        params: { 'code:text': name, _count: fetchCount },
+                        params: { 'code:text': name, _count: fetchCount, ...buildDateParam('authoredon') },
                         timeout: 30000
                     });
                     if (resp.data?.entry?.length) {
@@ -1969,7 +1999,7 @@ async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
             // ATC code 搜尋
             try {
                 const resp = await axios.get(`${fhirServerUrl}/MedicationAdministration`, {
-                    params: { 'medication-code': 'J01', status: 'completed', _count: fetchCount },
+                    params: { 'medication-code': 'J01', status: 'completed', _count: fetchCount, ...buildDateParam('effective-time') },
                     timeout: 30000
                 });
                 if (resp.data?.entry?.length) {
@@ -1981,7 +2011,7 @@ async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
             // Encounter (計算總病人數)
             try {
                 const resp = await axios.get(`${fhirServerUrl}/Encounter`, {
-                    params: { status: 'finished', _count: fetchCount },
+                    params: { status: 'finished', _count: fetchCount, ...buildDateParam('date') },
                     timeout: 30000
                 });
                 if (resp.data?.entry?.length) bundles.push(resp.data);
@@ -1993,7 +2023,7 @@ async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
             try {
                 const [patResp, docResp] = await Promise.all([
                     axios.get(`${fhirServerUrl}/Patient`, { params: { _count: fetchCount }, timeout: 30000 }),
-                    axios.get(`${fhirServerUrl}/DocumentReference`, { params: { _count: fetchCount }, timeout: 30000 })
+                    axios.get(`${fhirServerUrl}/DocumentReference`, { params: { _count: fetchCount, ...buildDateParam('date') }, timeout: 30000 })
                 ]);
                 if (patResp.data?.entry?.length) bundles.push(patResp.data);
                 if (docResp.data?.entry?.length) bundles.push(docResp.data);
@@ -2008,7 +2038,7 @@ async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
             for (const wt of wasteTypes) {
                 try {
                     const resp = await axios.get(`${fhirServerUrl}/Observation`, {
-                        params: { 'code:text': wt, _count: fetchCount },
+                        params: { 'code:text': wt, _count: fetchCount, ...buildDateParam('date') },
                         timeout: 30000
                     });
                     if (resp.data?.entry?.length) {
@@ -2020,7 +2050,7 @@ async function fetchESGFHIRData(fhirServerUrl, cqlFile, options = {}) {
             // 也試無過濾的 waste observation
             try {
                 const resp = await axios.get(`${fhirServerUrl}/Observation`, {
-                    params: { 'code:text': 'waste', _count: fetchCount },
+                    params: { 'code:text': 'waste', _count: fetchCount, ...buildDateParam('date') },
                     timeout: 30000
                 });
                 if (resp.data?.entry?.length) {
