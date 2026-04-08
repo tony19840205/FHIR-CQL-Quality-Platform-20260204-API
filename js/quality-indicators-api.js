@@ -553,6 +553,72 @@ function refreshData() {
     console.log('已重置所有指標');
 }
 
+// ========== EXCEL 生成功能 (API版) ==========
+function generateExcel() {
+    if (typeof XLSX === 'undefined') {
+        alert('找不到 XLSX 套件，請重新整理頁面後再試一次。');
+        return;
+    }
+
+    const resultKeys = Object.keys(currentResults || {});
+    if (resultKeys.length === 0) {
+        alert('目前沒有可匯出的查詢結果，請先執行至少一項指標查詢。');
+        return;
+    }
+
+    try {
+        const categoryLabel = {
+            medication: '用藥安全',
+            outpatient: '門診品質',
+            inpatient: '住院品質',
+            surgery: '手術品質',
+            outcome: '結果品質'
+        };
+
+        const rows = Object.entries(INDICATORS)
+            .filter(([indicatorId]) => currentResults[indicatorId])
+            .map(([indicatorId, ind]) => {
+                const r = currentResults[indicatorId] || {};
+                const value = ind.metric === '平均次數'
+                    ? (r.rate ?? '--')
+                    : (r.rate !== undefined ? `${r.rate}%` : '--');
+
+                return {
+                    '指標ID': indicatorId,
+                    '指標代碼': ind.code,
+                    '指標名稱': ind.title,
+                    '分類': categoryLabel[ind.category] || ind.category,
+                    '衡量指標': ind.metric,
+                    '數值': value,
+                    '分子': r.numerator ?? '--',
+                    '分母': r.denominator ?? '--',
+                    '總樣本數': r.totalPatients ?? '--',
+                    '資料來源': r.demoMode ? '示範資料' : 'FHIR/API資料',
+                    'FHIR Server': r.fhirServerUrl || getFHIRServerUrl(),
+                    '匯出時間': new Date().toLocaleString('zh-TW')
+                };
+            });
+
+        const workbook = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws['!cols'] = [
+            { wch: 12 }, { wch: 12 }, { wch: 32 }, { wch: 12 }, { wch: 12 },
+            { wch: 12 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 14 },
+            { wch: 38 }, { wch: 22 }
+        ];
+
+        XLSX.utils.book_append_sheet(workbook, ws, '醫療品質指標(API)');
+
+        const now = new Date();
+        const pad = (n) => String(n).padStart(2, '0');
+        const fileTag = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+        XLSX.writeFile(workbook, `醫療品質指標_API版_${fileTag}.xlsx`);
+    } catch (error) {
+        console.error('Excel 匯出失敗:', error);
+        alert(`Excel 匯出失敗：${error.message}`);
+    }
+}
+
 // ========== LLM Modal (placeholder) ==========
 function openLLMSettingsModal() {
     alert('LLM 設定功能在 API 版中暫不提供');
