@@ -210,29 +210,6 @@ async function calculateGeneric(fhirServer, quarter) {
     };
 }
 
-// ========== 讀取看板數據（供手機 / 外部裝置即時看板使用） ==========
-app.get('/api/export-dashboard', (req, res) => {
-    // 優先讀取 public-site 的 dashboard-data.json
-    const candidates = [
-        path.resolve(__dirname, '..', 'public-site', 'public', 'data', 'dashboard-data.json'),
-        path.resolve(__dirname, '..', 'data', 'dashboard-data.json'),
-        path.resolve(__dirname, '..', '..', 'public-health-dashboard', 'public', 'data', 'dashboard-data.json'),
-    ];
-    for (const fp of candidates) {
-        if (fs.existsSync(fp)) {
-            try {
-                const raw = fs.readFileSync(fp, 'utf-8');
-                const json = JSON.parse(raw);
-                return res.json(json);
-            } catch (e) {
-                console.error('❌ 讀取 dashboard-data.json 失敗:', e.message);
-            }
-        }
-    }
-    // 都找不到 → 回傳空殼資料讓前端不會掛掉
-    res.json({ exportedAt: null, error: 'dashboard-data.json not found on server' });
-});
-
 // ========== 匯出去識別化數據至民眾網頁 ==========
 app.post('/api/export-public-data', async (req, res) => {
     try {
