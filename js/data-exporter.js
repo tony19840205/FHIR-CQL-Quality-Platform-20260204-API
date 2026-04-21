@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 數據匯出器 — 從控制台收集去識別化數據，匯出至民眾網頁
  * 
  * 策略一：POST 到本地後端 /api/export-public-data 存檔
@@ -127,10 +127,10 @@ class DataExporter {
         const dr = window.diseaseResults || {};
         const template = [
             { id: 'covid19', name: 'COVID-19', cql: 'InfectiousDisease_COVID19_Surveillance' },
-            { id: 'influenza', name: '流感', cql: 'InfectiousDisease_Influenza_Surveillance' },
-            { id: 'conjunctivitis', name: '急性結膜炎', cql: 'InfectiousDisease_AcuteConjunctivitis_Surveillance' },
-            { id: 'enterovirus', name: '腸病毒', cql: 'InfectiousDisease_Enterovirus_Surveillance' },
-            { id: 'diarrhea', name: '腹瀉群聚', cql: 'InfectiousDisease_AcuteDiarrhea_Surveillance' },
+            { id: 'influenza', name: 'Influenza', cql: 'InfectiousDisease_Influenza_Surveillance' },
+            { id: 'conjunctivitis', name: 'Acute Conjunctivitis', cql: 'InfectiousDisease_AcuteConjunctivitis_Surveillance' },
+            { id: 'enterovirus', name: 'Enterovirus', cql: 'InfectiousDisease_Enterovirus_Surveillance' },
+            { id: 'diarrhea', name: 'Diarrhea Cluster', cql: 'InfectiousDisease_AcuteDiarrhea_Surveillance' },
         ];
 
         return template.map(item => {
@@ -191,28 +191,28 @@ class DataExporter {
      */
     _generateCityDistribution(total) {
         const cities = [
-            { name: '台北市',  weight: 15 },
-            { name: '新北市',  weight: 14 },
-            { name: '桃園市',  weight:  8 },
-            { name: '新竹市',  weight:  3 },
-            { name: '新竹縣',  weight:  3 },
-            { name: '基隆市',  weight:  2 },
-            { name: '宜蘭縣',  weight:  2 },
-            { name: '台中市',  weight: 11 },
-            { name: '彰化縣',  weight:  4 },
-            { name: '南投縣',  weight:  2 },
-            { name: '苗栗縣',  weight:  2 },
-            { name: '雲林縣',  weight:  2 },
-            { name: '台南市',  weight:  7 },
-            { name: '高雄市',  weight:  9 },
-            { name: '屏東縣',  weight:  3 },
-            { name: '嘉義市',  weight:  1 },
-            { name: '嘉義縣',  weight:  2 },
-            { name: '花蓮縣',  weight:  3 },
-            { name: '台東縣',  weight:  2 },
-            { name: '澎湖縣',  weight:  2 },
-            { name: '金門縣',  weight:  1 },
-            { name: '連江縣',  weight:  1 },
+            { name: 'Taipei',  weight: 15 },
+            { name: 'New Taipei',  weight: 14 },
+            { name: 'Taoyuan',  weight:  8 },
+            { name: 'Hsinchu City',  weight:  3 },
+            { name: 'Hsinchu County',  weight:  3 },
+            { name: 'Keelung',  weight:  2 },
+            { name: 'Yilan',  weight:  2 },
+            { name: 'Taichung',  weight: 11 },
+            { name: 'Changhua',  weight:  4 },
+            { name: 'Nantou',  weight:  2 },
+            { name: 'Miaoli',  weight:  2 },
+            { name: 'Yunlin',  weight:  2 },
+            { name: 'Tainan',  weight:  7 },
+            { name: 'Kaohsiung',  weight:  9 },
+            { name: 'Pingtung',  weight:  3 },
+            { name: 'Chiayi City',  weight:  1 },
+            { name: 'Chiayi County',  weight:  2 },
+            { name: 'Hualien',  weight:  3 },
+            { name: 'Taitung',  weight:  2 },
+            { name: 'Penghu',  weight:  2 },
+            { name: 'Kinmen',  weight:  1 },
+            { name: 'Lienchiang',  weight:  1 },
         ];
         if (!total || total <= 0) {
             const result = {};
@@ -249,9 +249,9 @@ class DataExporter {
     _collectHealthItems() {
         const hr = window.healthResults || {};
         const template = [
-            { id: 'covid19-vaccine', name: 'COVID-19 疫苗接種率', cql: 'COVID19VaccinationCoverage', description: '監測 COVID-19 疫苗接種涵蓋率與劑次完成度', countLabel: '接種人數', rateLabel: '接種率', rateUnit: '劑/人', domCount: 'covidVaccineCount', domRate: 'covidVaccineRate' },
-            { id: 'influenza-vaccine', name: '流感疫苗接種率', cql: 'InfluenzaVaccinationCoverage', description: '追蹤季節性流感疫苗接種涵蓋率', countLabel: '接種人數', rateLabel: '接種率', rateUnit: '劑/人', domCount: 'fluVaccineCount', domRate: 'fluVaccineRate' },
-            { id: 'hypertension', name: '高血壓活動個案數', cql: 'HypertensionActiveCases', description: '監測高血壓患者的管理與控制情況', countLabel: '活動個案', rateLabel: '控制率', rateUnit: '%', domCount: 'hypertensionCount', domRate: 'hypertensionRate' },
+            { id: 'covid19-vaccine', name: 'COVID-19 Vaccination Rate', cql: 'COVID19VaccinationCoverage', description: 'Monitor COVID-19 vaccination coverage and dose completion', countLabel: 'Vaccinated', rateLabel: 'Vaccination Rate', rateUnit: '劑/人', domCount: 'covidVaccineCount', domRate: 'covidVaccineRate' },
+            { id: 'influenza-vaccine', name: 'Influenza Vaccination Rate', cql: 'InfluenzaVaccinationCoverage', description: 'Track seasonal influenza vaccination coverage', countLabel: 'Vaccinated', rateLabel: 'Vaccination Rate', rateUnit: 'doses/person', domCount: 'fluVaccineCount', domRate: 'fluVaccineRate' },
+            { id: 'hypertension', name: 'Hypertension Active Cases', cql: 'HypertensionActiveCases', description: 'Monitor hypertension management and control', countLabel: 'Active Cases', rateLabel: 'Control Rate', rateUnit: '%', domCount: 'hypertensionCount', domRate: 'hypertensionRate' },
         ];
 
         return template.map(item => {
@@ -291,45 +291,45 @@ class DataExporter {
 
         // 完整 39 項指標定義（與 mock-data.ts 一一對應）
         const defs = [
-            { id: 'indicator-01', number: '01', name: '門診注射劑使用率', code: '3127', category: 'medication' },
-            { id: 'indicator-02', number: '02', name: '門診抗生素使用率', code: '1140.01', category: 'medication' },
-            { id: 'indicator-03-1', number: '03-1', name: '同院降血壓藥重疊', code: '1710', category: 'medication' },
-            { id: 'indicator-03-2', number: '03-2', name: '同院降血脂藥重疊', code: '1711', category: 'medication' },
-            { id: 'indicator-03-3', number: '03-3', name: '同院降血糖藥重疊', code: '1712', category: 'medication' },
-            { id: 'indicator-03-4', number: '03-4', name: '同院抗思覺失調藥重疊', code: '1726', category: 'medication' },
-            { id: 'indicator-03-5', number: '03-5', name: '同院抗憂鬱藥重疊', code: '1727', category: 'medication' },
-            { id: 'indicator-03-6', number: '03-6', name: '同院安眠鎮靜藥重疊', code: '1728', category: 'medication' },
-            { id: 'indicator-03-7', number: '03-7', name: '同院抗血栓藥重疊', code: '3375', category: 'medication' },
-            { id: 'indicator-03-8', number: '03-8', name: '同院前列腺藥重疊', code: '3376', category: 'medication' },
-            { id: 'indicator-03-9', number: '03-9', name: '跨院降血壓藥重疊', code: '1713', category: 'medication' },
-            { id: 'indicator-03-10', number: '03-10', name: '跨院降血脂藥重疊', code: '1714', category: 'medication' },
-            { id: 'indicator-03-11', number: '03-11', name: '跨院降血糖藥重疊', code: '1715', category: 'medication' },
-            { id: 'indicator-03-12', number: '03-12', name: '跨院抗思覺失調藥重疊', code: '1729', category: 'medication' },
-            { id: 'indicator-03-13', number: '03-13', name: '跨院抗憂鬱藥重疊', code: '1730', category: 'medication' },
-            { id: 'indicator-03-14', number: '03-14', name: '跨院安眠鎮靜藥重疊', code: '1731', category: 'medication' },
-            { id: 'indicator-03-15', number: '03-15', name: '跨院抗血栓藥重疊', code: '3377', category: 'medication' },
-            { id: 'indicator-03-16', number: '03-16', name: '跨院前列腺藥重疊', code: '3378', category: 'medication' },
-            { id: 'indicator-04', number: '04', name: '慢性病連續處方箋使用率', code: '1318', category: 'outpatient' },
-            { id: 'indicator-05', number: '05', name: '處方10種以上藥品率', code: '3128', category: 'outpatient' },
-            { id: 'indicator-06', number: '06', name: '小兒氣喘急診率', code: '1315Q', category: 'outpatient' },
-            { id: 'indicator-07', number: '07', name: '糖尿病HbA1c檢驗率', code: '109.01Q', category: 'outpatient' },
-            { id: 'indicator-08', number: '08', name: '同日同院同疾病再就診率', code: '1322', category: 'outpatient' },
-            { id: 'indicator-09', number: '09', name: '14天內非計畫再入院率', code: '1077.01Q', category: 'inpatient' },
-            { id: 'indicator-10', number: '10', name: '出院後3天內急診率', code: '108.01', category: 'inpatient' },
-            { id: 'indicator-11-1', number: '11-1', name: '整體剖腹產率', code: '1136.01', category: 'inpatient' },
-            { id: 'indicator-11-2', number: '11-2', name: '產婦要求剖腹產率', code: '1137.01', category: 'inpatient' },
-            { id: 'indicator-11-3', number: '11-3', name: '有適應症剖腹產率', code: '1138.01', category: 'inpatient' },
-            { id: 'indicator-11-4', number: '11-4', name: '初產婦剖腹產率', code: '1075.01', category: 'inpatient' },
-            { id: 'indicator-12', number: '12', name: '清淨手術抗生素超3天率', code: '1155', category: 'surgery' },
-            { id: 'indicator-13', number: '13', name: '體外震波碎石平均利用次數', code: '20.01Q', category: 'surgery' },
-            { id: 'indicator-14', number: '14', name: '子宮肌瘤術14天再入院率', code: '473.01', category: 'surgery' },
-            { id: 'indicator-15-1', number: '15-1', name: '膝關節置換90天深部感染率', code: '353.01', category: 'surgery' },
-            { id: 'indicator-15-2', number: '15-2', name: '全膝置換90天深部感染率', code: '3249', category: 'surgery' },
-            { id: 'indicator-15-3', number: '15-3', name: '部分膝置換90天深部感染率', code: '3250', category: 'surgery' },
-            { id: 'indicator-16', number: '16', name: '住院手術傷口感染率', code: '1658Q', category: 'surgery' },
-            { id: 'indicator-19', number: '19', name: '清淨手術傷口感染率', code: '2524Q', category: 'surgery' },
-            { id: 'indicator-17', number: '17', name: '急性心肌梗塞死亡率', code: '1662Q', category: 'outcome' },
-            { id: 'indicator-18', number: '18', name: '失智症安寧療護利用率', code: '2795Q', category: 'outcome' },
+            { id: 'indicator-01', number: '01', name: 'Outpatient Injection Rate', code: '3127', category: 'medication' },
+            { id: 'indicator-02', number: '02', name: 'Outpatient Antibiotic Rate', code: '1140.01', category: 'medication' },
+            { id: 'indicator-03-1', number: '03-1', name: 'Same-Hosp Antihypertensive Overlap', code: '1710', category: 'medication' },
+            { id: 'indicator-03-2', number: '03-2', name: 'Same-Hosp Lipid-Lowering Overlap', code: '1711', category: 'medication' },
+            { id: 'indicator-03-3', number: '03-3', name: 'Same-Hosp Antidiabetic Overlap', code: '1712', category: 'medication' },
+            { id: 'indicator-03-4', number: '03-4', name: 'Same-Hosp Antipsychotic Overlap', code: '1726', category: 'medication' },
+            { id: 'indicator-03-5', number: '03-5', name: 'Same-Hosp Antidepressant Overlap', code: '1727', category: 'medication' },
+            { id: 'indicator-03-6', number: '03-6', name: 'Same-Hosp Sedative Overlap', code: '1728', category: 'medication' },
+            { id: 'indicator-03-7', number: '03-7', name: 'Same-Hosp Antithrombotic Overlap', code: '3375', category: 'medication' },
+            { id: 'indicator-03-8', number: '03-8', name: 'Same-Hosp Prostate Overlap', code: '3376', category: 'medication' },
+            { id: 'indicator-03-9', number: '03-9', name: 'Cross-Hosp Antihypertensive Overlap', code: '1713', category: 'medication' },
+            { id: 'indicator-03-10', number: '03-10', name: 'Cross-Hosp Lipid-Lowering Overlap', code: '1714', category: 'medication' },
+            { id: 'indicator-03-11', number: '03-11', name: 'Cross-Hosp Antidiabetic Overlap', code: '1715', category: 'medication' },
+            { id: 'indicator-03-12', number: '03-12', name: 'Cross-Hosp Antipsychotic Overlap', code: '1729', category: 'medication' },
+            { id: 'indicator-03-13', number: '03-13', name: 'Cross-Hosp Antidepressant Overlap', code: '1730', category: 'medication' },
+            { id: 'indicator-03-14', number: '03-14', name: 'Cross-Hosp Sedative Overlap', code: '1731', category: 'medication' },
+            { id: 'indicator-03-15', number: '03-15', name: 'Cross-Hosp Antithrombotic Overlap', code: '3377', category: 'medication' },
+            { id: 'indicator-03-16', number: '03-16', name: 'Cross-Hosp Prostate Overlap', code: '3378', category: 'medication' },
+            { id: 'indicator-04', number: '04', name: 'Chronic Rx Refill Rate', code: '1318', category: 'outpatient' },
+            { id: 'indicator-05', number: '05', name: 'Rx 10+ Drugs Rate', code: '3128', category: 'outpatient' },
+            { id: 'indicator-06', number: '06', name: 'Pediatric Asthma ER Rate', code: '1315Q', category: 'outpatient' },
+            { id: 'indicator-07', number: '07', name: 'Diabetes HbA1c Test Rate', code: '109.01Q', category: 'outpatient' },
+            { id: 'indicator-08', number: '08', name: 'Same-Day Revisit Rate', code: '1322', category: 'outpatient' },
+            { id: 'indicator-09', number: '09', name: '14-Day Unplanned Readmission', code: '1077.01Q', category: 'inpatient' },
+            { id: 'indicator-10', number: '10', name: '3-Day Post-Discharge ER Rate', code: '108.01', category: 'inpatient' },
+            { id: 'indicator-11-1', number: '11-1', name: 'Overall C-Section Rate', code: '1136.01', category: 'inpatient' },
+            { id: 'indicator-11-2', number: '11-2', name: 'Maternal Request C-Section', code: '1137.01', category: 'inpatient' },
+            { id: 'indicator-11-3', number: '11-3', name: 'Indicated C-Section Rate', code: '1138.01', category: 'inpatient' },
+            { id: 'indicator-11-4', number: '11-4', name: 'Primipara C-Section Rate', code: '1075.01', category: 'inpatient' },
+            { id: 'indicator-12', number: '12', name: 'Clean Surgery Antibiotic >3d', code: '1155', category: 'surgery' },
+            { id: 'indicator-13', number: '13', name: 'ESWL Avg Utilization', code: '20.01Q', category: 'surgery' },
+            { id: 'indicator-14', number: '14', name: 'Fibroid Surgery 14d Readmit', code: '473.01', category: 'surgery' },
+            { id: 'indicator-15-1', number: '15-1', name: 'Knee Replacement 90d Infection', code: '353.01', category: 'surgery' },
+            { id: 'indicator-15-2', number: '15-2', name: 'Total Knee 90d Deep Infection', code: '3249', category: 'surgery' },
+            { id: 'indicator-15-3', number: '15-3', name: 'Partial Knee 90d Infection', code: '3250', category: 'surgery' },
+            { id: 'indicator-16', number: '16', name: 'Inpatient SSI Rate', code: '1658Q', category: 'surgery' },
+            { id: 'indicator-19', number: '19', name: 'Clean Surgery Wound Infection', code: '2524Q', category: 'surgery' },
+            { id: 'indicator-17', number: '17', name: 'AMI Mortality Rate', code: '1662Q', category: 'outcome' },
+            { id: 'indicator-18', number: '18', name: 'Dementia Hospice Utilization', code: '2795Q', category: 'outcome' },
         ];
 
         // DOM rate ID 對照（對應控制台 HTML 中的元素 ID）
@@ -364,7 +364,7 @@ class DataExporter {
 
         return defs.map(def => {
             let numerator = null, denominator = null, rate = null;
-            const unit = def.id === 'indicator-13' ? '次' : '%';
+            const unit = def.id === 'indicator-13' ? 'times' : '%';
 
             // 優先從 window.qualityResults 讀取
             const result = qr[def.id];
@@ -417,9 +417,9 @@ class DataExporter {
             ? window.esgResults
             : (cached.esgResults || {});
         const template = [
-            { id: 'antibiotic', name: '抗生素使用率', cql: 'Antibiotic_Utilization', description: '監測抗生素合理使用與抗藥性管理 (國際算法)', countLabel: '病人數', rateLabel: '使用率', domId: 'antibioticRate', domCountId: 'antibioticCount', rateField: 'utilizationRate', countField: 'totalPatients' },
-            { id: 'ehr', name: '電子病歷採用率', cql: 'EHR_Adoption_Rate', description: '追蹤病歷資料是否以結構化電子格式完整記錄', countLabel: '病人數', rateLabel: '採用率', domId: 'ehrRate', domCountId: 'ehrCount', rateField: 'adoptionRate', countField: 'ehrAdopted' },
-            { id: 'waste', name: '醫療廢棄物管理', cql: 'Waste', description: '監測醫療廢棄物產生與處理情況', countLabel: '廢棄物量', rateLabel: '回收率', domId: 'wasteRate', domCountId: 'wasteCount', rateField: 'recycleRate', countField: 'totalWaste' },
+            { id: 'antibiotic', name: 'Antibiotic Utilization Rate', cql: 'Antibiotic_Utilization', description: 'Monitor antibiotic rational use and AMR management', countLabel: 'Patients', rateLabel: 'Utilization Rate', domId: 'antibioticRate', domCountId: 'antibioticCount', rateField: 'utilizationRate', countField: 'totalPatients' },
+            { id: 'ehr', name: 'EHR Adoption Rate', cql: 'EHR_Adoption_Rate', description: 'Track structured electronic medical record adoption', countLabel: 'Patients', rateLabel: 'Adoption Rate', domId: 'ehrRate', domCountId: 'ehrCount', rateField: 'adoptionRate', countField: 'ehrAdopted' },
+            { id: 'waste', name: 'Medical Waste Management', cql: 'Waste', description: 'Monitor medical waste generation and disposal', countLabel: 'Waste Volume', rateLabel: 'Recycling Rate', domId: 'wasteRate', domCountId: 'wasteCount', rateField: 'recycleRate', countField: 'totalWaste' },
         ];
 
         return template.map(item => {
@@ -523,15 +523,15 @@ class DataExporter {
         let githubToken = localStorage.getItem('githubToken');
         if (!githubToken) {
             githubToken = prompt(
-                '首次匯出需要 GitHub Personal Access Token\n'
-                + '（需 repo 權限，至 github.com → Settings → Developer settings → Personal access tokens 產生）\n\n'
-                + '請貼上 Token (ghp_... 開頭)：'
+                'First export requires GitHub Personal Access Token\n'
+                + '(requires repo scope, go to github.com → Settings → Developer settings → Personal access tokens)\n\n'
+                + 'Paste Token (ghp_...):'
             );
             if (githubToken && githubToken.trim()) {
                 githubToken = githubToken.trim();
                 localStorage.setItem('githubToken', githubToken);
             } else {
-                return { success: false, method: 'cancelled', message: '使用者取消輸入 Token' };
+                return { success: false, method: 'cancelled', message: 'User cancelled token input' };
             }
         }
 
@@ -542,7 +542,7 @@ class DataExporter {
             console.warn('⚠️ GitHub API 推送失敗:', e.message);
             // Token 可能過期或無效，清除並提示重新輸入
             localStorage.removeItem('githubToken');
-            alert('GitHub Token 無效或已過期，請重新操作並輸入有效的 Token');
+            alert('GitHub Token is invalid or expired. Please try again with a valid token');
             return { success: false, method: 'github-api-failed', message: e.message };
         }
 
@@ -567,7 +567,7 @@ class DataExporter {
         } catch (_) { /* 檔案不存在 */ }
 
         const body = {
-            message: `data: 控制台匯出去識別化數據 ${new Date().toISOString().slice(0, 16)}`,
+            message: `data: Dashboard export de-identified data ${new Date().toISOString().slice(0, 16)}`,
             content,
             branch: 'main',
         };

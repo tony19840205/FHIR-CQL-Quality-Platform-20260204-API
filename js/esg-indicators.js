@@ -1,4 +1,4 @@
-// ========== ESG 指標儀表板邏輯 ==========
+﻿// ========== ESG 指標儀表板邏輯 ==========
 // CQL整合版本 - 基於ESG CQL 1119文件夾
 //
 // CQL文件映射:
@@ -69,7 +69,7 @@ function initializeCards() {
         
         if (countElement) countElement.textContent = '--';
         if (rateElement) rateElement.textContent = '--%';
-        if (dateElement) dateElement.textContent = '資料範圍: 全部資料';
+        if (dateElement) dateElement.textContent = 'Data range: All data';
     });
 }
 
@@ -104,7 +104,7 @@ async function executeQuery(indicatorType) {
     if (!demoMode) {
         const isConnected = await checkFHIRConnection();
         if (!isConnected) {
-            alert('請先在首頁設定 FHIR 伺服器連線，或啟用示範模式');
+            alert('Please configure FHIR server on Home page, or enable Demo Mode');
             return;
         }
     }
@@ -134,12 +134,12 @@ async function executeQuery(indicatorType) {
         btn.disabled = true;
         countInterval = setInterval(() => {
             count += Math.floor(Math.random() * 50) + 30;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> 已撈取 ${count} 筆`;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Fetched ${count} records`;
         }, 150);
     }
     
     if (statusElement) {
-        statusElement.innerHTML = '<span style="color: #2563eb;"><i class="fas fa-spinner fa-spin"></i> 執行中...</span>';
+        statusElement.innerHTML = '<span style="color: #2563eb;"><i class="fas fa-spinner fa-spin"></i> Running...</span>';
     }
     
     try {
@@ -147,11 +147,11 @@ async function executeQuery(indicatorType) {
         switch(indicatorType) {
             case 'antibiotic':
                 results = await queryAntibioticUtilization();
-                updateESGCard('antibiotic', results, '案件');
+                updateESGCard('antibiotic', results, 'Cases');
                 break;
             case 'ehr-adoption':
                 results = await queryEHRAdoption();
-                updateESGCard('ehr', results, '機構');
+                updateESGCard('ehr', results, 'Orgs');
                 break;
             case 'waste':
                 results = await queryWasteManagement();
@@ -165,33 +165,33 @@ async function executeQuery(indicatorType) {
         if (countInterval) clearInterval(countInterval);
         const actualCount = results.totalCases || results.count || 0;
         if (btn) {
-            btn.innerHTML = `<i class="fas fa-check"></i> 完成 (${actualCount} 筆)`;
+            btn.innerHTML = `<i class="fas fa-check"></i> Done (${actualCount} records)`;
         }
         
         if (statusElement) {
-            statusElement.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 完成</span>';
+            statusElement.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> Done</span>';
             setTimeout(() => { statusElement.innerHTML = ''; }, 3000);
         }
         
     } catch (error) {
-        console.error('查詢失敗:', error);
+        console.error('Query failed:', error);
         
         // 🆕 清除計數動畫
         if (countInterval) clearInterval(countInterval);
         if (btn) {
-            btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 查詢失敗';
+            btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Query failed';
         }
         
         if (statusElement) {
-            statusElement.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> 失敗</span>';
+            statusElement.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> Failed</span>';
         }
-        alert(`查詢失敗: ${error.message}`);
+        alert(`Query failed: ${error.message}`);
     } finally {
         // 🆕 延遲 2 秒後恢復按鈕
         setTimeout(() => {
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-play"></i> 執行查詢';
+                btn.innerHTML = '<i class="fas fa-play"></i> Run Query';
             }
         }, 2000);
     }
@@ -234,7 +234,7 @@ async function queryAntibioticUtilization() {
             });
             
             if (medAdmins.entry) {
-                console.log(`   ✅ MedicationAdministration "${name}": ${medAdmins.entry.length} 筆`);
+                console.log(`   ✅ MedicationAdministration "${name}": ${medAdmins.entry.length} records`);
                 medAdmins.entry.forEach(entry => {
                     const patientRef = entry.resource.subject?.reference;
                     if (patientRef) {
@@ -259,7 +259,7 @@ async function queryAntibioticUtilization() {
             });
             
             if (medAdmins.entry) {
-                console.log(`   ✅ MedicationAdministration (ATC J01*): ${medAdmins.entry.length} 筆`);
+                console.log(`   ✅ MedicationAdministration (ATC J01*): ${medAdmins.entry.length} records`);
                 medAdmins.entry.forEach(entry => {
                     const patientRef = entry.resource.subject?.reference;
                     if (patientRef) {
@@ -269,7 +269,7 @@ async function queryAntibioticUtilization() {
                 });
             }
         } catch (error) {
-            console.warn('   ⚠️ ATC code 查詢失敗:', error.message);
+            console.warn('   ⚠️ ATC code Query failed:', error.message);
         }
     }
     
@@ -350,8 +350,8 @@ async function queryEHRAdoption() {
     let totalOrgs = patients.entry?.length || 0;
     let ehrAdoptedOrgs = documents.entry?.length || 0;
     
-    console.log(`   ✅ Patient查詢: ${totalOrgs} 筆`);
-    console.log(`   ✅ DocumentReference查詢: ${ehrAdoptedOrgs} 筆`);
+    console.log(`   ✅ Patient查詢: ${totalOrgs} records`);
+    console.log(`   ✅ DocumentReference查詢: ${ehrAdoptedOrgs} records`);
     console.log(`   📊 結果: ${ehrAdoptedOrgs} 有電子病歷 / ${totalOrgs} 總患者`);
     
     if (totalOrgs === 0) {
@@ -404,7 +404,7 @@ async function queryWasteManagement() {
                 _count: 1000
             });
             
-            console.log(`   ✅ ${wasteType}查詢: ${wasteObs.entry?.length || 0} 筆`);
+            console.log(`   ✅ ${wasteType}查詢: ${wasteObs.entry?.length || 0} records`);
             
             if (wasteObs.entry && wasteObs.entry.length > 0) {
                 wasteObs.entry.forEach(entry => {
@@ -441,7 +441,7 @@ async function queryWasteManagement() {
             };
         }
     } catch (error) {
-        console.warn(`   ⚠️ 查詢失敗:`, error.message);
+        console.warn(`   ⚠️ Query failed:`, error.message);
     }
     
     // ========== CQL預設值: 無廢棄物資料 ==========
@@ -462,7 +462,7 @@ function updateESGCard(cardId, results, unit) {
     
     if (results.noData) {
         if (countElement) {
-            countElement.innerHTML = '<div class="no-data-message"><i class="fas fa-database"></i><p>資料庫無資料</p></div>';
+            countElement.innerHTML = '<div class="no-data-message"><i class="fas fa-database"></i><p>No Data Available</p></div>';
         }
         if (rateElement) {
             rateElement.textContent = '--';
@@ -519,18 +519,18 @@ function showDetailModal(indicatorType) {
     const modalBody = document.getElementById('modalBody');
     
     const titles = {
-        'antibiotic': '抗生素使用率詳情',
-        'ehr-adoption': '電子病歷採用率詳情',
-        'waste': '廢棄物管理詳情'
+        'antibiotic': 'Antibiotic Utilization Details',
+        'ehr-adoption': 'EHR Adoption Rate Details',
+        'waste': 'Waste Management Details'
     };
     
-    modalTitle.textContent = titles[indicatorType] || '詳細資訊';
+    modalTitle.textContent = titles[indicatorType] || 'Details';
     
     const results = currentResults[indicatorType];
     if (results) {
         modalBody.innerHTML = generateDetailContent(indicatorType, results);
     } else {
-        modalBody.innerHTML = '<p>請先執行查詢</p>';
+        modalBody.innerHTML = '<p>Please run a query first</p>';
     }
     
     modal.style.display = 'flex';
@@ -539,38 +539,38 @@ function showDetailModal(indicatorType) {
 // 生成詳細內容
 function generateDetailContent(indicatorType, results) {
     if (results.noData) {
-        return '<div class="no-data-message"><i class="fas fa-database"></i><p>資料庫無資料</p></div>';
+        return '<div class="no-data-message"><i class="fas fa-database"></i><p>No Data Available</p></div>';
     }
     
     let content = '<div class="detail-content" style="padding: 20px;">';
     
     if (results.demoMode) {
         content += '<div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; margin-bottom: 20px; border-radius: 4px;">';
-        content += '<i class="fas fa-flask" style="color: #f59e0b;"></i> <strong>示範模式數據</strong>';
+        content += '<i class="fas fa-flask" style="color: #f59e0b;"></i> <strong>Demo Mode Data</strong>';
         content += '</div>';
     }
     
     if (indicatorType === 'antibiotic') {
-        content += '<h3><i class="fas fa-pills"></i> 抗生素使用率統計</h3>';
+        content += '<h3><i class="fas fa-pills"></i> Antibiotic Utilization Statistics</h3>';
         content += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px;">';
-        content += `<div class="stat-box"><div class="stat-label">總病人數</div><div class="stat-value">${formatNumber(results.totalPatients)}</div></div>`;
-        content += `<div class="stat-box"><div class="stat-label">使用抗生素病人數</div><div class="stat-value">${formatNumber(results.antibioticPatients)}</div></div>`;
-        content += `<div class="stat-box"><div class="stat-label">使用率</div><div class="stat-value">${results.utilizationRate}%</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Total Patients</div><div class="stat-value">${formatNumber(results.totalPatients)}</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Patients on Antibiotics</div><div class="stat-value">${formatNumber(results.antibioticPatients)}</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Utilization Rate</div><div class="stat-value">${results.utilizationRate}%</div></div>`;
         content += '</div>';
     } else if (indicatorType === 'ehr-adoption') {
-        content += '<h3><i class="fas fa-laptop-medical"></i> 電子病歷採用率統計</h3>';
+        content += '<h3><i class="fas fa-laptop-medical"></i> EHR Adoption Rate Statistics</h3>';
         content += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px;">';
-        content += `<div class="stat-box"><div class="stat-label">總病人數</div><div class="stat-value">${formatNumber(results.totalOrganizations)}</div></div>`;
-        content += `<div class="stat-box"><div class="stat-label">已採用病人數</div><div class="stat-value">${formatNumber(results.ehrAdopted)}</div></div>`;
-        content += `<div class="stat-box"><div class="stat-label">採用率</div><div class="stat-value">${results.adoptionRate}%</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Total Patients</div><div class="stat-value">${formatNumber(results.totalOrganizations)}</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Patients with EHR</div><div class="stat-value">${formatNumber(results.ehrAdopted)}</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Adoption Rate</div><div class="stat-value">${results.adoptionRate}%</div></div>`;
         content += '</div>';
     } else if (indicatorType === 'waste') {
-        content += '<h3><i class="fas fa-recycle"></i> 醫療廢棄物管理統計</h3>';
+        content += '<h3><i class="fas fa-recycle"></i> Medical Waste Management Statistics</h3>';
         content += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 20px;">';
-        content += `<div class="stat-box"><div class="stat-label">總廢棄物量</div><div class="stat-value">${formatNumber(results.totalWaste)} kg</div></div>`;
-        content += `<div class="stat-box"><div class="stat-label">感染性廢棄物</div><div class="stat-value">${formatNumber(results.infectiousWaste)} kg</div></div>`;
-        content += `<div class="stat-box"><div class="stat-label">回收廢棄物</div><div class="stat-value">${formatNumber(results.recycledWaste)} kg</div></div>`;
-        content += `<div class="stat-box"><div class="stat-label">回收率</div><div class="stat-value">${results.recycleRate}%</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Total Waste</div><div class="stat-value">${formatNumber(results.totalWaste)} kg</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Infectious Waste</div><div class="stat-value">${formatNumber(results.infectiousWaste)} kg</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Recycled Waste</div><div class="stat-value">${formatNumber(results.recycledWaste)} kg</div></div>`;
+        content += `<div class="stat-box"><div class="stat-label">Recycling Rate</div><div class="stat-value">${results.recycleRate}%</div></div>`;
         content += '</div>';
     }
     
@@ -615,8 +615,8 @@ function toggleDemoMode() {
     updateDemoModeButton();
     
     const message = newMode 
-        ? '✅ 示範模式已啟用\n\n當 FHIR 伺服器沒有資料時，系統將顯示模擬數據供展示使用。\n\n請重新整理頁面並點擊「執行查詢」按鈕測試。'
-        : '✅ 示範模式已關閉\n\n系統將只顯示 FHIR 伺服器的真實資料。';
+        ? '✅ Demo Mode Enabled\\n\\nSimulated data will be shown when FHIR server has no data.\\n\\nRefresh and click Run Query to test.'
+        : '✅ Demo Mode Disabled\\n\\nSystem will only show real FHIR data.';
     
     alert(message);
     console.log(`示範模式: ${newMode ? '啟用' : '關閉'}`);
@@ -641,12 +641,12 @@ function updateDemoModeButton() {
             btn.classList.remove('btn-secondary');
             btn.classList.add('btn-success');
             btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            text.textContent = '示範模式：開啟';
+            text.textContent = 'Demo Mode: ON';
         } else {
             btn.classList.remove('btn-success');
             btn.classList.add('btn-secondary');
             btn.style.background = '';
-            text.textContent = '啟用示範模式';
+            text.textContent = 'Enable Demo Mode';
         }
     }
     

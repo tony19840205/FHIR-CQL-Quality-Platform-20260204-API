@@ -1,4 +1,4 @@
-// ========== 疾管儀表板邏輯 - 簡化版 ==========
+﻿// ========== 疾管儀表板邏輯 - 簡化版 ==========
 // CQL整合版本 - 基於傳染病統計資料CQL1119文件夾
 
 let currentResults = {};
@@ -68,7 +68,7 @@ async function executeCQL(diseaseType) {
     
     const isConnected = await checkFHIRConnection();
     if (!isConnected) {
-        alert('請先在首頁設定 FHIR 伺服器連線');
+        alert('Please configure FHIR server on Home page');
         window.location.href = 'index.html';
         return;
     }
@@ -86,11 +86,11 @@ async function executeCQL(diseaseType) {
     
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 查詢中...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Querying...';
     }
     
     if (statusElement) {
-        statusElement.innerHTML = '<span style="color: #2563eb;"><i class="fas fa-spinner fa-spin"></i> 執行中...</span>';
+        statusElement.innerHTML = '<span style="color: #2563eb;"><i class="fas fa-spinner fa-spin"></i> Running...</span>';
     }
     
     try {
@@ -105,7 +105,7 @@ async function executeCQL(diseaseType) {
         updateCard(diseaseType, results);
         
         if (statusElement) {
-            statusElement.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 完成</span>';
+            statusElement.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> Done</span>';
             setTimeout(() => { statusElement.innerHTML = ''; }, 3000);
         }
         
@@ -117,12 +117,12 @@ async function executeCQL(diseaseType) {
     } catch (error) {
         console.error('查詢失敗:', error);
         if (statusElement) {
-            statusElement.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> 失敗</span>';
+            statusElement.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> Failed</span>';
         }
     } finally {
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-play"></i> 執行查詢';
+            btn.innerHTML = '<i class="fas fa-play"></i> Run Query';
         }
     }
 }
@@ -133,7 +133,7 @@ async function executeAllCQL() {
     
     const isConnected = await checkFHIRConnection();
     if (!isConnected) {
-        alert('請先在首頁設定 FHIR 伺服器連線');
+        alert('Please configure FHIR server on Home page');
         window.location.href = 'index.html';
         return;
     }
@@ -141,10 +141,10 @@ async function executeAllCQL() {
     const diseases = ['covid19', 'influenza', 'conjunctivitis', 'enterovirus', 'diarrhea'];
     const diseaseNames = {
         'covid19': 'COVID-19',
-        'influenza': '流感',
-        'conjunctivitis': '急性結膜炎',
-        'enterovirus': '腸病毒',
-        'diarrhea': '腹瀉群聚'
+        'influenza': 'Influenza',
+        'conjunctivitis': 'Acute Conjunctivitis',
+        'enterovirus': 'Enterovirus',
+        'diarrhea': 'Diarrhea Cluster'
     };
     
     // 顯示進度條
@@ -157,7 +157,7 @@ async function executeAllCQL() {
     if (progressDiv) progressDiv.style.display = 'block';
     if (executeBtn) {
         executeBtn.disabled = true;
-        executeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 查詢中...';
+        executeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Querying...';
     }
     
     let completedCount = 0;
@@ -166,7 +166,7 @@ async function executeAllCQL() {
     for (const disease of diseases) {
         try {
             if (progressText) {
-                progressText.textContent = `正在查詢: ${diseaseNames[disease]}`;
+                progressText.textContent = `Querying: ${diseaseNames[disease]}`;
             }
             
             // 執行查詢
@@ -194,12 +194,12 @@ async function executeAllCQL() {
     
     // 完成所有查詢
     if (progressText) {
-        progressText.innerHTML = '<i class="fas fa-check-circle"></i> 全部查詢完成!';
+        progressText.innerHTML = '<i class="fas fa-check-circle"></i> All queries done!';
     }
     
     if (executeBtn) {
         executeBtn.disabled = false;
-        executeBtn.innerHTML = '<i class="fas fa-rocket"></i> 全部查詢 (5個CQL)';
+        executeBtn.innerHTML = '<i class="fas fa-rocket"></i> Run All (5 CQL)';
     }
     
     // 3秒後隱藏進度條
@@ -424,22 +424,22 @@ function updateCard(diseaseType, results) {
     console.log(`📊 ${diseaseType}: 病患數=${patientCount}, 就診數=${encounterCount}`);
 }
 
-// 顯示詳細報告
+// 顯示Detail Report
 function showDetailReport(diseaseType) {
-    console.log('顯示詳細報告:', diseaseType);
+    console.log('顯示Detail Report:', diseaseType);
     
     if (!currentResults[diseaseType]) {
-        alert('請先執行查詢');
+        alert('Please run a query first');
         return;
     }
     
     const results = currentResults[diseaseType];
     const diseaseNames = {
         'covid19': 'COVID-19',
-        'influenza': '流感',
-        'conjunctivitis': '急性結膜炎',
-        'enterovirus': '腸病毒',
-        'diarrhea': '急性腹瀉'
+        'influenza': 'Influenza',
+        'conjunctivitis': 'Acute Conjunctivitis',
+        'enterovirus': 'Enterovirus',
+        'diarrhea': 'Acute Diarrhea'
     };
     
     // 計算唯一患者數
@@ -452,7 +452,7 @@ function showDetailReport(diseaseType) {
         console.log('✨ 示範模式數據');
         console.log('   總患者數:', results.total);
         console.log('   新增案例:', results.newCases);
-        console.log('   地區分佈:', results.detailedData);
+        console.log('   Regional Distribution:', results.detailedData);
         
         // 為示範模式生成虛擬患者數據
         for (let i = 1; i <= results.total; i++) {
@@ -594,11 +594,11 @@ function showDetailReport(diseaseType) {
         inpatientCount = Math.floor(total * inpatientRatio);
         
         console.log('📊 示範模式 - 就診流程分配:', { 
-            總患者數: total,
-            急診人數: emergencyCount + ' (' + (emergencyRatio * 100).toFixed(1) + '%)',
-            門診人數: outpatientCount + ' (' + ((1-emergencyRatio) * 100).toFixed(1) + '%)',
-            住院人數: inpatientCount + ' (' + (inpatientRatio * 100).toFixed(1) + '%) - 從急診/門診轉入',
-            說明: '急診+門診=' + total + '人（初診），其中' + inpatientCount + '人轉住院'
+            totalPatients: total,
+            erCount: emergencyCount + ' (' + (emergencyRatio * 100).toFixed(1) + '%)',
+            outpatientCnt: outpatientCount + ' (' + ((1-emergencyRatio) * 100).toFixed(1) + '%)',
+            inpatientCnt: inpatientCount + ' (' + (inpatientRatio * 100).toFixed(1) + '%) - transferred from ER/Outpatient',
+            note: 'ER+Outpatient=' + total + ' (initial), ' + inpatientCount + ' hospitalized'
         });
     } else if (totalEncounterPatients === 0 && uniquePatients.size > 0) {
         // 真實 FHIR 數據但沒有就診記錄
@@ -619,7 +619,7 @@ function showDetailReport(diseaseType) {
     console.log('最終統計:', { emergencyCount, inpatientCount, outpatientCount, otherCount, totalPatients: uniquePatients.size });
     console.log('=================');
     
-    // 計算時間分佈 (按年份)
+    // 計算Time Distribution (按年份)
     const yearDistribution = {};
     const monthDistribution = {};
     
@@ -685,7 +685,7 @@ function showDetailReport(diseaseType) {
         <div style="background: white; padding: 2rem; border-radius: 16px; max-width: 800px; max-height: 80vh; overflow-y: auto;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 1rem;">
                 <h2 style="margin: 0; color: #1e293b; font-size: 1.5rem;">
-                    <i class="fas fa-file-medical"></i> ${diseaseNames[diseaseType]} 詳細報告
+                    <i class="fas fa-file-medical"></i> ${diseaseNames[diseaseType]} Detail Report
                 </h2>
                 <button onclick="closeDetailReport()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b;">
                     <i class="fas fa-times"></i>
@@ -696,56 +696,56 @@ function showDetailReport(diseaseType) {
             <div style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #f97316;">
                 <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                     <i class="fas fa-info-circle" style="color: #ea580c;"></i>
-                    <strong style="color: #7c2d12; font-size: 0.9rem;">${results.demoMode ? '示範數據說明' : '資料說明'}</strong>
+                    <strong style="color: #7c2d12; font-size: 0.9rem;">${results.demoMode ? 'Demo Data Description' : 'Data Description'}</strong>
                 </div>
                 <div style="color: #7c2d12; font-size: 0.85rem; line-height: 1.6;">
                     ${results.demoMode ? `
-                        • 示範模式：從2000筆資料庫隨機抽取 <strong>${uniquePatients.size}位患者</strong><br>
-                        • 包含 <strong>${totalConditions}筆診斷記錄</strong> 和 <strong>${totalEncounters}筆就診記錄</strong><br>
-                        • 地區分佈：${results.detailedData ? `北部約占 ${(results.northernRatio * 100).toFixed(0)}%（自然分布）` : '隨機分布'}<br>
-                        • 趨勢：${results.trendDescription || '隨機生成'}
+                        • Demo: randomly sampled from 2000 records, <strong>${uniquePatients.size} patients</strong><br>
+                        • Includes <strong>${totalConditions} diagnoses</strong> and <strong>${totalEncounters} encounters</strong><br>
+                        • Distribution: ${results.detailedData ? `Northern ~${(results.northernRatio * 100).toFixed(0)}% (natural distribution)` : 'random distribution'}<br>
+                        • Trend: ${results.trendDescription || 'randomly generated'}
                     ` : `
-                        • <strong>${uniquePatients.size}位患者</strong>產生了<strong>${totalConditions}筆診斷記錄</strong>(平均每人${(totalConditions / uniquePatients.size || 0).toFixed(1)}筆)<br>
-                        • 其中<strong>${totalEncounters}筆</strong>有完整的就診記錄(Encounter資源)<br>
-                        • 就診類型統計基於患者數而非記錄數
+                        • <strong>${uniquePatients.size} patients</strong> generated <strong>${totalConditions} diagnoses</strong> (avg per patient ${(totalConditions / uniquePatients.size || 0).toFixed(1)})<br>
+                        • Of which <strong>${totalEncounters}</strong> have complete encounter records (Encounter resources)<br>
+                        • Encounter type statistics based on patient count, not record count
                     `}
                 </div>
             </div>
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
                 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1.5rem; border-radius: 12px; color: white;">
-                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">總患者數</div>
+                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">Total Patients</div>
                     <div style="font-size: 2rem; font-weight: 700;">${uniquePatients.size}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem;">${results.demoMode ? '示範數據' : '唯一患者ID'}</div>
+                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem;">${results.demoMode ? 'Demo Data' : 'Unique Patient IDs'}</div>
                 </div>
                 
                 <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 1.5rem; border-radius: 12px; color: white;">
-                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">就診記錄</div>
+                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">Encounters</div>
                     <div style="font-size: 2rem; font-weight: 700;">${totalEncounters}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem;">${results.demoMode ? '模擬數據' : 'Encounter資源數'}</div>
+                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem;">${results.demoMode ? 'Simulated' : 'Encounter Resources'}</div>
                 </div>
                 
                 <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); padding: 1.5rem; border-radius: 12px; color: white;">
-                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">診斷記錄</div>
+                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">Diagnoses</div>
                     <div style="font-size: 2rem; font-weight: 700;">${totalConditions}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem;">${results.demoMode ? '模擬數據' : 'Condition資源數'}</div>
+                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem;">${results.demoMode ? 'Simulated' : 'Condition Resources'}</div>
                 </div>
                 
                 <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); padding: 1.5rem; border-radius: 12px; color: white;">
-                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">平均每人</div>
+                    <div style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 0.5rem;">Avg per Patient</div>
                     <div style="font-size: 2rem; font-weight: 700;">${(totalConditions / uniquePatients.size || 0).toFixed(1)}</div>
-                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem;">診斷記錄數</div>
+                    <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 0.5rem;">Diagnosis Records</div>
                 </div>
             </div>
             
             ${results.demoMode && results.detailedData && results.detailedData.length > 0 ? `
             <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid #06b6d4;">
                 <h3 style="margin: 0 0 1rem 0; color: #0c4a6e; font-size: 1.1rem;">
-                    <i class="fas fa-map-marker-alt"></i> 地區分佈 <span style="font-size: 0.85rem; font-weight: normal; color: #0369a1;">(隨機抽樣結果 - 北部約 ${(results.northernRatio * 100).toFixed(0)}%)</span>
+                    <i class="fas fa-map-marker-alt"></i> Regional Distribution <span style="font-size: 0.85rem; font-weight: normal; color: #0369a1;">(Random sample - Northern ~ ${(results.northernRatio * 100).toFixed(0)}%)</span>
                 </h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
                     ${results.detailedData.map(item => {
-                        const isNorthern = ['台北市', '新北市', '桃園市', '新竹市', '基隆市'].includes(item.city);
+                        const isNorthern = ['Taipei', 'New Taipei', 'Taoyuan', 'Hsinchu', 'Keelung'].includes(item.city);
                         const bgColor = isNorthern ? '#dbeafe' : '#f3f4f6';
                         const textColor = isNorthern ? '#1e40af' : '#374151';
                         return `
@@ -758,8 +758,8 @@ function showDetailReport(diseaseType) {
                     }).join('')}
                 </div>
                 <div style="margin-top: 1rem; padding: 0.75rem; background: rgba(6, 182, 212, 0.1); border-radius: 6px; font-size: 0.85rem; color: #0c4a6e;">
-                    <strong>北部佔比:</strong> ${((results.northernRatio || 0.75) * 100).toFixed(0)}% 
-                    (${results.detailedData['台北市'] + results.detailedData['新北市'] + results.detailedData['桃園市']}案例)
+                    <strong>Northern ratio:</strong> ${((results.northernRatio || 0.75) * 100).toFixed(0)}% 
+                    (${results.detailedData['Taipei'] + results.detailedData['New Taipei'] + results.detailedData['Taoyuan']}cases)
                 </div>
             </div>
             ` : ''}
@@ -767,52 +767,52 @@ function showDetailReport(diseaseType) {
             ${results.demoMode && results.trend ? `
             <div style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid #f97316;">
                 <h3 style="margin: 0 0 1rem 0; color: #7c2d12; font-size: 1.1rem;">
-                    <i class="fas fa-chart-line"></i> 疫情趨勢 <span style="font-size: 0.85rem; font-weight: normal;">(最近7天 - 逐漸增加)</span>
+                    <i class="fas fa-chart-line"></i> Epidemic Trend <span style="font-size: 0.85rem; font-weight: normal;">(Last 7 days - increasing)</span>
                 </h3>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                     <div style="text-align: center; flex: 1;">
-                        <div style="color: #7c2d12; font-size: 0.8rem; margin-bottom: 0.3rem;">今日新增</div>
+                        <div style="color: #7c2d12; font-size: 0.8rem; margin-bottom: 0.3rem;">New Today</div>
                         <div style="color: #ea580c; font-size: 1.8rem; font-weight: 700;">${results.newCases}</div>
                     </div>
                     <div style="text-align: center; flex: 1;">
-                        <div style="color: #7c2d12; font-size: 0.8rem; margin-bottom: 0.3rem;">趨勢</div>
+                        <div style="color: #7c2d12; font-size: 0.8rem; margin-bottom: 0.3rem;">Trend</div>
                         <div style="color: #dc2626; font-size: 1.2rem; font-weight: 700;">
-                            <i class="fas fa-arrow-up"></i> 上升中
+                            <i class="fas fa-arrow-up"></i> Rising
                         </div>
                     </div>
                     <div style="text-align: center; flex: 1;">
-                        <div style="color: #7c2d12; font-size: 0.8rem; margin-bottom: 0.3rem;">7日總計</div>
+                        <div style="color: #7c2d12; font-size: 0.8rem; margin-bottom: 0.3rem;">7-Day Total</div>
                         <div style="color: #ea580c; font-size: 1.8rem; font-weight: 700;">${results.trend.weeklyTotal || 0}</div>
                     </div>
                 </div>
                 <div style="padding: 0.75rem; background: rgba(234, 88, 12, 0.1); border-radius: 6px; font-size: 0.85rem; color: #7c2d12;">
-                    <strong>⚠️ 警示:</strong> 病例數呈現持續增長趨勢，建議加強防疫措施
+                    <strong>⚠️ Alert:</strong> Cases showing sustained growth trend, recommend enhanced measures
                 </div>
             </div>
             ` : ''}
             
             <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
                 <h3 style="margin: 0 0 0.5rem 0; color: #1e293b; font-size: 1.1rem;">
-                    <i class="fas fa-hospital"></i> 就診類型分布
-                    ${results.demoMode ? '<span style="font-size: 0.75rem; color: #10b981; font-weight: normal; margin-left: 0.5rem;">📊 示範數據</span>' : '<span style="font-size: 0.75rem; color: #3b82f6; font-weight: normal; margin-left: 0.5rem;">📋 FHIR實際數據</span>'}
+                    <i class="fas fa-hospital"></i> Encounter Type Distribution
+                    ${results.demoMode ? '<span style="font-size: 0.75rem; color: #10b981; font-weight: normal; margin-left: 0.5rem;">📊 Demo Data</span>' : '<span style="font-size: 0.75rem; color: #3b82f6; font-weight: normal; margin-left: 0.5rem;">📋 FHIR Actual Data</span>'}
                 </h3>
                 <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 1rem; line-height: 1.6;">
                     ${results.demoMode ? 
-                        '初診：急診 ' + emergencyCount + ' 人 + 門診 ' + outpatientCount + ' 人 = ' + (emergencyCount + outpatientCount) + ' 人<br>轉住院：' + inpatientCount + ' 人（從急診/門診轉入，為額外狀態記錄）' :
-                        '根據FHIR Encounter資源的class欄位統計（急診：emergency, 住院：inpatient, 門診：ambulatory）'
+                        'Initial: ER ' + emergencyCount + ' + Outpatient ' + outpatientCount + ' = ' + (emergencyCount + outpatientCount) + '<br>Hospitalized: ' + inpatientCount + ' (transferred from ER/Outpatient)' :
+                        'Based on FHIR Encounter resource class field (ER: emergency, Inpatient: inpatient, Outpatient: ambulatory)'
                     }
                 </div>
                 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
                     <div>
-                        <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 0.5rem;">急診</div>
+                        <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 0.5rem;">ER</div>
                         <div style="color: #ef4444; font-size: 1.5rem; font-weight: 700;">${emergencyCount}</div>
                     </div>
                     <div>
-                        <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 0.5rem;">住院</div>
+                        <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 0.5rem;">Inpatient</div>
                         <div style="color: #8b5cf6; font-size: 1.5rem; font-weight: 700;">${inpatientCount}</div>
                     </div>
                     <div>
-                        <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 0.5rem;">門診</div>
+                        <div style="color: #64748b; font-size: 0.85rem; margin-bottom: 0.5rem;">Outpatient</div>
                         <div style="color: #3b82f6; font-size: 1.5rem; font-weight: 700;">${outpatientCount}</div>
                     </div>
                 </div>
@@ -820,26 +820,26 @@ function showDetailReport(diseaseType) {
             
             <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
                 <h3 style="margin: 0 0 1rem 0; color: #1e293b; font-size: 1.1rem;">
-                    <i class="fas fa-calendar-alt"></i> 時間分佈
+                    <i class="fas fa-calendar-alt"></i> Time Distribution
                 </h3>
                 <div style="color: #64748b; font-size: 0.9rem;">
                     ${Object.keys(yearDistribution).length > 0 ? `
                         <div style="margin-bottom: 1rem;">
-                            <strong>年度統計:</strong>
+                            <strong>Yearly:</strong>
                             <div style="display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap;">
                                 ${Object.entries(yearDistribution).sort((a, b) => b[0] - a[0]).map(([year, count]) => `
                                     <div style="background: white; padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid #e2e8f0;">
-                                        <span style="font-weight: 600; color: #1e293b;">${year}年:</span>
-                                        <span style="color: #3b82f6; font-weight: 700;">${count}筆</span>
+                                        <span style="font-weight: 600; color: #1e293b;">${year}:</span>
+                                        <span style="color: #3b82f6; font-weight: 700;">${count} records</span>
                                     </div>
                                 `).join('')}
                             </div>
                         </div>
-                    ` : '<div style="color: #94a3b8;">無時間資料</div>'}
+                    ` : '<div style="color: #94a3b8;">No time data</div>'}
                     
                     ${Object.keys(monthDistribution).length > 0 ? `
                         <div>
-                            <strong>月份統計 (最近12個月):</strong>
+                            <strong>Monthly (last 12 months):</strong>
                             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 0.5rem; margin-top: 0.5rem;">
                                 ${Object.entries(monthDistribution).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 12).map(([month, count]) => `
                                     <div style="background: white; padding: 0.4rem 0.6rem; border-radius: 4px; border: 1px solid #e2e8f0; text-align: center;">
@@ -855,14 +855,14 @@ function showDetailReport(diseaseType) {
             
             <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
                 <h3 style="margin: 0 0 1rem 0; color: #1e293b; font-size: 1.1rem;">
-                    <i class="fas fa-virus"></i> 病毒明細
+                    <i class="fas fa-virus"></i> Virus Details
                 </h3>
                 ${(() => {
-                    // 生成病毒明細統計
+                    // 生成Virus Details統計
                     let virusDetails = {};
                     
                     if (results.demoMode && results.virusBreakdown) {
-                        // 示範模式：使用生成的病毒明細
+                        // 示範模式：使用生成的Virus Details
                         virusDetails = results.virusBreakdown;
                     } else if (results.conditions && results.conditions.length > 0) {
                         // 真實模式：從 Condition 資源提取
@@ -871,7 +871,7 @@ function showDetailReport(diseaseType) {
                         results.conditions.forEach(condition => {
                             const virusName = condition.code?.text || 
                                              condition.code?.coding?.[0]?.display || 
-                                             '未分類病毒';
+                                             'Unclassified';
                             const patientRef = condition.subject?.reference?.split('/').pop();
                             
                             if (!virusMap.has(virusName)) {
@@ -888,7 +888,7 @@ function showDetailReport(diseaseType) {
                                 count: patients.size,
                                 avgAge: null,
                                 ageRange: null,
-                                note: '需查詢Patient資源'
+                                note: 'Requires Patient query'
                             };
                         });
                     }
@@ -896,7 +896,7 @@ function showDetailReport(diseaseType) {
                     // 生成HTML
                     const virusEntries = Object.entries(virusDetails);
                     if (virusEntries.length === 0) {
-                        return '<div style="color: #94a3b8; text-align: center; padding: 1rem;">暫無病毒明細資料</div>';
+                        return '<div style="color: #94a3b8; text-align: center; padding: 1rem;">No virus detail data available</div>';
                     }
                     
                     return virusEntries.map(([virusName, data]) => `
@@ -910,16 +910,16 @@ function showDetailReport(diseaseType) {
                                 </div>
                                 <div style="display: flex; gap: 1.5rem; align-items: center;">
                                     <div style="text-align: center;">
-                                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">👥 病人數</div>
+                                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">👥 Patients</div>
                                         <div style="font-size: 1.25rem; font-weight: 700; color: #3b82f6;">${data.count}</div>
                                     </div>
                                     ${data.avgAge !== null && data.avgAge !== undefined ? `
                                     <div style="text-align: center;">
-                                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">📅 平均年齡</div>
-                                        <div style="font-size: 1.25rem; font-weight: 700; color: #10b981;">${data.avgAge}歲</div>
+                                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">📅 Avg Age</div>
+                                        <div style="font-size: 1.25rem; font-weight: 700; color: #10b981;">${data.avgAge}</div>
                                     </div>
                                     <div style="text-align: center;">
-                                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">📊 年齡範圍</div>
+                                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem;">📊 Age Range</div>
                                         <div style="font-size: 0.9rem; font-weight: 600; color: #64748b;">${data.ageRange}</div>
                                     </div>
                                     ` : data.note ? `
@@ -937,21 +937,21 @@ function showDetailReport(diseaseType) {
             ${!results.demoMode ? `
             <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
                 <h3 style="margin: 0 0 1rem 0; color: #1e293b; font-size: 1.1rem;">
-                    <i class="fas fa-info-circle"></i> 查詢資訊
+                    <i class="fas fa-info-circle"></i> Query Info
                 </h3>
                 <div style="color: #64748b; font-size: 0.9rem; line-height: 1.8;">
-                    <div><strong>FHIR 伺服器:</strong> ${window.fhirConnection?.serverUrl || 'N/A'}</div>
-                    <div><strong>查詢時間:</strong> ${new Date().toLocaleString('zh-TW')}</div>
-                    <div><strong>資料範圍:</strong> 所有可用資料</div>
-                    <div><strong>查詢上限:</strong> 1000筆</div>
-                    <div><strong>除錯:</strong> 急診${emergencyCount} / 住院${inpatientCount} / 門診${outpatientCount} / 其他${otherCount}</div>
+                    <div><strong>FHIR Server:</strong> ${window.fhirConnection?.serverUrl || 'N/A'}</div>
+                    <div><strong>Query Time:</strong> ${new Date().toLocaleString('zh-TW')}</div>
+                    <div><strong>Data Range:</strong> All available data</div>
+                    <div><strong>Query Limit:</strong> 1000 records</div>
+                    <div><strong>Debug:</strong> ER ${emergencyCount} / Inpatient ${inpatientCount} / Outpatient ${outpatientCount} / Other ${otherCount}</div>
                 </div>
             </div>
             ` : ''}
             
             <div style="display: flex; gap: 1rem; justify-content: flex-end;">
                 <button onclick="closeDetailReport()" style="padding: 0.75rem 1.5rem; background: #64748b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
-                    <i class="fas fa-times"></i> 關閉
+                    <i class="fas fa-times"></i> Close
                 </button>
             </div>
         </div>
@@ -970,7 +970,7 @@ function showDetailReport(diseaseType) {
     modal.style.display = 'flex';
 }
 
-// 關閉詳細報告
+// 關閉Detail Report
 function closeDetailReport() {
     const modal = document.getElementById('detailReportModal');
     if (modal) {
@@ -992,8 +992,8 @@ function toggleDemoMode() {
     updateDemoModeButton();
     
     const message = newMode 
-        ? '✅ 示範模式已啟用\n\n當 FHIR 伺服器沒有資料時，系統將顯示模擬數據供展示使用。\n\n請重新整理頁面並點擊「執行查詢」按鈕測試。'
-        : '✅ 示範模式已關閉\n\n系統將只顯示 FHIR 伺服器的真實資料。';
+        ? '✅ Demo Mode Enabled\n\nWhen FHIR server has no data, simulated data will be shown.\n\nPlease refresh and click "Run Query" to test.'
+        : '✅ Demo Mode Disabled\n\nSystem will only display real FHIR server data.';
     
     alert(message);
     if (newMode) location.reload();
@@ -1014,12 +1014,12 @@ function updateDemoModeButton() {
             btn.classList.remove('btn-secondary');
             btn.classList.add('btn-success');
             btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            text.textContent = '示範模式：開啟';
+            text.textContent = 'Demo Mode: ON';
         } else {
             btn.classList.remove('btn-success');
             btn.classList.add('btn-secondary');
             btn.style.background = '';
-            text.textContent = '啟用示範模式';
+            text.textContent = 'Enable Demo Mode';
         }
     }
 }
@@ -1040,10 +1040,10 @@ function generateDemoDataDisease(diseaseType) {
     
     // 5. 隨機決定趨勢類型
     const trendTypes = [
-        { type: 'increasing', rate: 0.05 + Math.random() * 0.08, desc: '持續上升', weight: 2 },
-        { type: 'surging', rate: 0.12 + Math.random() * 0.10, desc: '急遽上升', weight: 1 },
-        { type: 'decreasing', rate: -(0.04 + Math.random() * 0.05), desc: '趨勢下降', weight: 1 },
-        { type: 'stable', rate: -0.02 + Math.random() * 0.04, desc: '持平穩定', weight: 2 }
+        { type: 'increasing', rate: 0.05 + Math.random() * 0.08, desc: 'Steadily rising', weight: 2 },
+        { type: 'surging', rate: 0.12 + Math.random() * 0.10, desc: 'Rapidly rising', weight: 1 },
+        { type: 'decreasing', rate: -(0.04 + Math.random() * 0.05), desc: 'Declining', weight: 1 },
+        { type: 'stable', rate: -0.02 + Math.random() * 0.04, desc: 'Stable', weight: 2 }
     ];
     
     // 加權隨機選擇趨勢
@@ -1056,16 +1056,16 @@ function generateDemoDataDisease(diseaseType) {
     // 7. 根據隨機趨勢計算最近數據
     const recentCases = calculateRecentTrend(totalCases, randomTrend.rate, randomTrend.type);
     
-    // 8. 生成病毒明細（含年齡統計）
+    // 8. 生成Virus Details（含年齡統計）
     const virusBreakdown = generateVirusBreakdown(diseaseType, sampledCases);
     
     console.log(`📊 ${diseaseType} 示範數據:`, {
-        原始資料庫: fullDatabase.length,
-        抽樣數量: totalCases,
-        趨勢: randomTrend.desc,
-        成長率: (randomTrend.rate * 100).toFixed(1) + '%',
-        北部占比: (detailedCases.northernRatio * 100).toFixed(1) + '%',
-        病毒類型數: Object.keys(virusBreakdown).length
+        database: fullDatabase.length,
+        sampled: totalCases,
+        trend: randomTrend.desc,
+        growthRate: (randomTrend.rate * 100).toFixed(1) + '%',
+        northernRatio: (detailedCases.northernRatio * 100).toFixed(1) + '%',
+        virusTypes: Object.keys(virusBreakdown).length
     });
     
     return {
@@ -1090,22 +1090,22 @@ function generateFullDatabase(diseaseType, totalSize) {
     // 每次隨機調整城市權重 (±30%)
     const cities = [
         // 北部
-        { name: '台北市', region: 'north', weight: 15 * (0.7 + Math.random() * 0.6) },
-        { name: '新北市', region: 'north', weight: 18 * (0.7 + Math.random() * 0.6) },
-        { name: '桃園市', region: 'north', weight: 12 * (0.7 + Math.random() * 0.6) },
-        { name: '新竹市', region: 'north', weight: 6 * (0.7 + Math.random() * 0.6) },
-        { name: '基隆市', region: 'north', weight: 4 * (0.7 + Math.random() * 0.6) },
+        { name: 'Taipei', region: 'north', weight: 15 * (0.7 + Math.random() * 0.6) },
+        { name: 'New Taipei', region: 'north', weight: 18 * (0.7 + Math.random() * 0.6) },
+        { name: 'Taoyuan', region: 'north', weight: 12 * (0.7 + Math.random() * 0.6) },
+        { name: 'Hsinchu', region: 'north', weight: 6 * (0.7 + Math.random() * 0.6) },
+        { name: 'Keelung', region: 'north', weight: 4 * (0.7 + Math.random() * 0.6) },
         // 中部
-        { name: '台中市', region: 'central', weight: 8 * (0.7 + Math.random() * 0.6) },
-        { name: '彰化縣', region: 'central', weight: 4 * (0.7 + Math.random() * 0.6) },
-        { name: '南投縣', region: 'central', weight: 2 * (0.7 + Math.random() * 0.6) },
+        { name: 'Taichung', region: 'central', weight: 8 * (0.7 + Math.random() * 0.6) },
+        { name: 'Changhua', region: 'central', weight: 4 * (0.7 + Math.random() * 0.6) },
+        { name: 'Nantou', region: 'central', weight: 2 * (0.7 + Math.random() * 0.6) },
         // 南部
-        { name: '台南市', region: 'south', weight: 5 * (0.7 + Math.random() * 0.6) },
-        { name: '高雄市', region: 'south', weight: 6 * (0.7 + Math.random() * 0.6) },
-        { name: '屏東縣', region: 'south', weight: 3 * (0.7 + Math.random() * 0.6) },
+        { name: 'Tainan', region: 'south', weight: 5 * (0.7 + Math.random() * 0.6) },
+        { name: 'Kaohsiung', region: 'south', weight: 6 * (0.7 + Math.random() * 0.6) },
+        { name: 'Pingtung', region: 'south', weight: 3 * (0.7 + Math.random() * 0.6) },
         // 東部
-        { name: '花蓮縣', region: 'east', weight: 2 * (0.7 + Math.random() * 0.6) },
-        { name: '台東縣', region: 'east', weight: 1 * (0.7 + Math.random() * 0.6) }
+        { name: 'Hualien', region: 'east', weight: 2 * (0.7 + Math.random() * 0.6) },
+        { name: 'Taitung', region: 'east', weight: 1 * (0.7 + Math.random() * 0.6) }
     ];
     
     const totalWeight = cities.reduce((sum, city) => sum + city.weight, 0);
@@ -1286,7 +1286,7 @@ function calculateRecentTrend(totalCases, growthRate, trendType) {
     };
 }
 
-// 生成病毒明細（含亞型和年齡統計）
+// 生成Virus Details（含亞型和年齡統計）
 function generateVirusBreakdown(diseaseType, sampledCases) {
     const virusBreakdown = {};
     
@@ -1297,7 +1297,7 @@ function generateVirusBreakdown(diseaseType, sampledCases) {
             { name: 'SARS-CoV-2', subtype: 'Omicron XBB.1.5', weight: 0.30 },
             { name: 'SARS-CoV-2', subtype: 'Omicron BA.2', weight: 0.20 },
             { name: 'SARS-CoV-2', subtype: 'Delta', weight: 0.10 },
-            { name: 'SARS-CoV-2', subtype: '其他變異株', weight: 0.05 }
+            { name: 'SARS-CoV-2', subtype: 'Other variants', weight: 0.05 }
         ],
         'influenza': [
             { name: 'Influenza A', subtype: 'H3N2', weight: 0.40 },
@@ -1306,8 +1306,8 @@ function generateVirusBreakdown(diseaseType, sampledCases) {
             { name: 'Influenza B', subtype: 'Yamagata', weight: 0.10 }
         ],
         'conjunctivitis': [
-            { name: 'Adenovirus', subtype: '血清型8', weight: 0.45 },
-            { name: 'Adenovirus', subtype: '血清型19', weight: 0.30 },
+            { name: 'Adenovirus', subtype: 'Serotype 8', weight: 0.45 },
+            { name: 'Adenovirus', subtype: 'Serotype 19', weight: 0.30 },
             { name: 'Enterovirus 70', subtype: null, weight: 0.15 },
             { name: 'Coxsackievirus A24', subtype: null, weight: 0.10 }
         ],
@@ -1327,7 +1327,7 @@ function generateVirusBreakdown(diseaseType, sampledCases) {
     };
     
     const virusOptions = virusTypes[diseaseType] || [
-        { name: '未分類病毒', subtype: null, weight: 1.0 }
+        { name: 'Unclassified', subtype: null, weight: 1.0 }
     ];
     
     // 根據權重分配病例到各病毒類型
@@ -1361,7 +1361,7 @@ function generateVirusBreakdown(diseaseType, sampledCases) {
             const maxAge = Math.max(...ages);
             
             data.avgAge = avgAge;
-            data.ageRange = `${minAge}-${maxAge}歲`;
+            data.ageRange = `${minAge}-${maxAge}`;
             
             // 清理臨時的 ages 陣列
             delete data.ages;
@@ -1375,19 +1375,19 @@ function generateVirusBreakdown(diseaseType, sampledCases) {
 
 // 台灣主要城市座標
 const cityCoordinates = {
-    '台北市': [25.0330, 121.5654],
-    '新北市': [25.0116, 121.4648],
-    '桃園市': [24.9936, 121.3010],
-    '新竹市': [24.8138, 120.9675],
-    '基隆市': [25.1276, 121.7392],
-    '台中市': [24.1477, 120.6736],
-    '彰化縣': [24.0518, 120.5161],
-    '南投縣': [23.9609, 120.9719],
-    '台南市': [22.9998, 120.2269],
-    '高雄市': [22.6273, 120.3014],
-    '屏東縣': [22.5519, 120.5487],
-    '花蓮縣': [23.9871, 121.6015],
-    '台東縣': [22.7583, 121.1444]
+    'Taipei': [25.0330, 121.5654],
+    'New Taipei': [25.0116, 121.4648],
+    'Taoyuan': [24.9936, 121.3010],
+    'Hsinchu': [24.8138, 120.9675],
+    'Keelung': [25.1276, 121.7392],
+    'Taichung': [24.1477, 120.6736],
+    'Changhua': [24.0518, 120.5161],
+    'Nantou': [23.9609, 120.9719],
+    'Tainan': [22.9998, 120.2269],
+    'Kaohsiung': [22.6273, 120.3014],
+    'Pingtung': [22.5519, 120.5487],
+    'Hualien': [23.9871, 121.6015],
+    'Taitung': [22.7583, 121.1444]
 };
 
 // 疾病顏色配置
@@ -1402,10 +1402,10 @@ const diseaseColors = {
 // 疾病名稱
 const diseaseNames = {
     'covid19': 'COVID-19',
-    'influenza': '流感',
-    'conjunctivitis': '急性結膜炎',
-    'enterovirus': '腸病毒',
-    'diarrhea': '腹瀉群聚'
+    'influenza': 'Influenza',
+    'conjunctivitis': 'Acute Conjunctivitis',
+    'enterovirus': 'Enterovirus',
+    'diarrhea': 'Diarrhea Cluster'
 };
 
 // 切換地圖模式
@@ -1422,7 +1422,7 @@ function toggleMapMode() {
         mapSection.style.display = 'block';
         overviewSection.style.display = 'none';
         mapModeBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-        mapModeText.textContent = '返回列表模式';
+        mapModeText.textContent = 'Back to List';
         mapModeBtn.querySelector('i').className = 'fas fa-th-large';
         
         // 初始化地圖
@@ -1552,13 +1552,13 @@ function addCircleMarker(disease, city, coords, cases, color, diseaseName) {
             </h3>
             <div style="border-top: 2px solid ${color}; padding-top: 0.5rem; margin-top: 0.5rem;">
                 <div style="margin-bottom: 0.3rem;">
-                    <strong>疾病:</strong> ${diseaseName}
+                    <strong>Disease:</strong> ${diseaseName}
                 </div>
                 <div style="margin-bottom: 0.3rem;">
-                    <strong>案例數:</strong> <span style="color: ${color}; font-weight: 700; font-size: 1.1rem;">${cases}</span> 人
+                    <strong>Cases:</strong> <span style="color: ${color}; font-weight: 700; font-size: 1.1rem;">${cases} patients
                 </div>
                 <div style="font-size: 0.85rem; color: #64748b; margin-top: 0.5rem;">
-                    點擊圓圈查看更多資訊
+                    Click circle for more info
                 </div>
             </div>
         </div>

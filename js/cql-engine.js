@@ -1,4 +1,4 @@
-// ========== CQL 執行引擎 ==========
+﻿// ========== CQL 執行引擎 ==========
 
 class CQLEngine {
     constructor(fhirConnection) {
@@ -13,7 +13,7 @@ class CQLEngine {
                 name: 'InfectiousDisease_COVID19_Surveillance',
                 cqlFile: 'InfectiousDisease_COVID19_Surveillance.cql',
                 version: '1.0.0',
-                description: 'COVID-19 病例監測與分析（來自傳染病統計資料CQL1119）',
+                description: 'COVID-19 case surveillance and analysis (from CQL1119)',
                 resourceTypes: ['Patient', 'Encounter', 'Condition', 'Observation'],
                 diagnosisCodes: {
                     icd10: ['U07.1', 'U07.2'],
@@ -27,7 +27,7 @@ class CQLEngine {
                 name: 'InfectiousDisease_Influenza_Surveillance',
                 cqlFile: 'InfectiousDisease_Influenza_Surveillance.cql',
                 version: '1.0.0',
-                description: '流感病例監測與Episode分析（來自傳染病統計資料CQL1119）',
+                description: 'Influenza case surveillance and episode analysis (from CQL1119)',
                 resourceTypes: ['Patient', 'Encounter', 'Condition', 'Observation'],
                 diagnosisCodes: {
                     icd10: ['J09.X1', 'J09.X2', 'J09.X3', 'J09.X9', 'J10.00', 'J10.01', 'J10.08', 'J10.1', 'J10.2', 'J10.81', 'J10.82', 'J10.83', 'J10.89', 'J11.00', 'J11.08', 'J11.1', 'J11.2', 'J11.81', 'J11.82', 'J11.83', 'J11.89'],
@@ -41,7 +41,7 @@ class CQLEngine {
                 name: 'InfectiousDisease_AcuteConjunctivitis_Surveillance',
                 cqlFile: 'InfectiousDisease_AcuteConjunctivitis_Surveillance.cql',
                 version: '1.0.0',
-                description: '急性結膜炎病例監測（來自傳染病統計資料CQL1119）',
+                description: 'Acute conjunctivitis surveillance (from CQL1119)',
                 resourceTypes: ['Patient', 'Encounter', 'Condition', 'Observation'],
                 diagnosisCodes: {
                     icd10: ['H10.0', 'H10.1', 'H10.2', 'H10.3', 'H10.9', 'B30.0', 'B30.1', 'B30.2', 'B30.3', 'B30.8', 'B30.9'],
@@ -55,7 +55,7 @@ class CQLEngine {
                 name: 'InfectiousDisease_Enterovirus_Surveillance',
                 cqlFile: 'InfectiousDisease_Enterovirus_Surveillance.cql',
                 version: '1.0.0',
-                description: '腸病毒病例監測（來自傳染病統計資料CQL1119）',
+                description: 'Enterovirus surveillance (from CQL1119)',
                 resourceTypes: ['Patient', 'Encounter', 'Condition', 'Observation'],
                 diagnosisCodes: {
                     icd10: ['B084', 'B085', 'A870', 'B341'],
@@ -69,7 +69,7 @@ class CQLEngine {
                 name: 'InfectiousDisease_AcuteDiarrhea_Surveillance',
                 cqlFile: 'InfectiousDisease_AcuteDiarrhea_Surveillance.cql',
                 version: '1.0.0',
-                description: '腹瀉群聚監測（來自傳染病統計資料CQL1119）',
+                description: 'Diarrhea cluster surveillance (from CQL1119)',
                 resourceTypes: ['Patient', 'Encounter', 'Condition', 'Observation'],
                 diagnosisCodes: {
                     icd10: ['R19.7', 'A08.0', 'A08.1', 'A08.2', 'A08.3', 'A08.4', 'A09'],
@@ -89,12 +89,12 @@ class CQLEngine {
         console.log('========================================');
         
         if (!this.fhirConnection.isServerConnected()) {
-            throw new Error('未連線到 FHIR 伺服器');
+            throw new Error('Not connected to FHIR server');
         }
 
         const library = this.cqlLibraries[diseaseType];
         if (!library) {
-            throw new Error(`未知的疾病類型: ${diseaseType}`);
+            throw new Error(`Unknown disease type: ${diseaseType}`);
         }
 
         console.log(`📋 CQL Library: ${library.name} v${library.version}`);

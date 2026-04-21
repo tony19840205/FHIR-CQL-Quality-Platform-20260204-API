@@ -1,4 +1,4 @@
-/**
+﻿/**
  * LLM 連線控制台 - 四節點連接管理器
  * 控制 FHIR → 控制網頁 → 民眾網頁 → LLM 的連接狀態與動畫
  */
@@ -80,7 +80,7 @@ class LLMConnectionManager {
         // 更新按鈕狀態
         this.updateLLMButtonState('active');
 
-        this.showMessage('🔄 LLM 服務運行中 | 💰 計費已啟動', 'success');
+        this.showMessage('🔄 LLM Service Running | 💰 Billing Active', 'success');
     }
 
     /**
@@ -93,7 +93,7 @@ class LLMConnectionManager {
         try {
             // 階段 1: 停止計費並關閉 LLM
             console.log('💰 Stopping billing and disconnecting LLM...');
-            this.showMessage('正在停止計費並關閉 LLM...', 'info');
+            this.showMessage('Stopping billing and shutting down LLM...', 'info');
             this.stopBilling();
             
             // 清除 LLM 傳輸動畫
@@ -110,7 +110,7 @@ class LLMConnectionManager {
 
             // 階段 2: 斷開 FHIR
             console.log('🔌 Disconnecting FHIR...');
-            this.showMessage('正在關閉 FHIR 連線...', 'info');
+            this.showMessage('Disconnecting FHIR...', 'info');
             this.setLineState('fhirToControl', 'disconnected');
             this.setNodeState('fhir', 'inactive');
             await this.sleep(1000);
@@ -118,7 +118,7 @@ class LLMConnectionManager {
             // 階段 3: 開啟控制網頁 → 民眾網頁傳輸（5-8秒）
             const transferDuration = 5000 + Math.random() * 3000;
             console.log(`📊 Transferring data to UI for ${Math.round(transferDuration)}ms...`);
-            this.showMessage('🔄 正在傳輸資料至民眾網頁... 📊 數據去識別化處理中', 'transfer');
+            this.showMessage('🔄 Transferring data to public page... 📊 De-identifying data', 'transfer');
             this.setNodeState('public', 'active');
             this.setLineState('controlToPublic', 'transferring');
             this.addDataParticles('controlToPublic');
@@ -126,18 +126,18 @@ class LLMConnectionManager {
             // ★ 真實數據匯出 — 收集去識別化數據並推送至民眾網頁
             if (window.dataExporter) {
                 console.log('📦 開始匯出去識別化數據...');
-                this.showMessage('🔄 數據去識別化處理中... 匯出至民眾網頁', 'transfer');
+                this.showMessage('🔄 De-identifying data... Exporting to public page', 'transfer');
                 try {
                     const exportResult = await window.dataExporter.exportToPublicSite();
                     console.log('✅ 數據匯出結果:', exportResult);
                     if (exportResult.success) {
-                        this.showMessage(`✅ 數據已成功推送至民眾網頁 (${exportResult.method})`, 'success');
+                        this.showMessage(`✅ Data successfully pushed to public page (${exportResult.method})`, 'success');
                     } else {
-                        this.showMessage('📥 數據已下載，請手動部署至民眾網頁', 'info');
+                        this.showMessage('📥 Data downloaded, please deploy to public page manually', 'info');
                     }
                 } catch (err) {
                     console.warn('⚠️ 數據匯出失敗（動畫繼續）:', err);
-                    this.showMessage('⚠️ 匯出失敗，動畫繼續...', 'info');
+                    this.showMessage('⚠️ Export failed, animation continues...', 'info');
                 }
             }
             
@@ -145,7 +145,7 @@ class LLMConnectionManager {
 
             // 階段 4: 傳輸完成，清除動畫
             console.log('✅ UI/UX transfer completed');
-            this.showMessage('✅ UI/UX 傳輸完成，正在恢復連線...', 'success');
+            this.showMessage('✅ UI/UX transfer complete, restoring connection...', 'success');
             
             // 清除傳輸動畫
             const line = this.lines.controlToPublic;
@@ -160,14 +160,14 @@ class LLMConnectionManager {
             
             // 階段 5: 重新連接 FHIR
             console.log('🔌 Reconnecting FHIR...');
-            this.showMessage('正在重新連接 FHIR...', 'info');
+            this.showMessage('Reconnecting FHIR...', 'info');
             this.setLineState('fhirToControl', 'connected');
             this.setNodeState('fhir', 'active');
             await this.sleep(1000);
 
             // 階段 6: 重新連接 LLM 並啟動計費
             console.log('🤖 Reconnecting LLM and restarting billing...');
-            this.showMessage('正在重新連接 LLM 並啟動計費...', 'info');
+            this.showMessage('Reconnecting LLM and starting billing...', 'info');
             this.setLineState('publicToLLM', 'transferring');
             this.setNodeState('llm', 'active');
             this.addDataParticles('publicToLLM', true); // 雙向傳輸
@@ -180,11 +180,11 @@ class LLMConnectionManager {
             this.state = 'normal';
             this.uiConnected = false;
             this.updateUIButtonState('inactive');
-            this.showMessage('✅ 已恢復正常模式 | 💰 計費已啟動', 'success');
+            this.showMessage('✅ Normal mode restored | 💰 Billing active', 'success');
             
         } catch (error) {
             console.error('❌ Error connecting UI:', error);
-            this.showMessage('UI 連線失敗', 'info');
+            this.showMessage('UI connection failed', 'info');
             this.state = 'normal';
             this.updateUIButtonState('inactive');
         }
@@ -199,7 +199,7 @@ class LLMConnectionManager {
 
         try {
             console.log('🔌 Disconnecting UI and restoring normal mode...');
-            this.showMessage('正在關閉 UI/UX...', 'info');
+            this.showMessage('Shutting down UI/UX...', 'info');
             
             // 斷開 UI 連線
             this.setLineState('controlToPublic', 'disconnected');
@@ -208,7 +208,7 @@ class LLMConnectionManager {
 
             // 重新連接 FHIR
             console.log('🔌 Reconnecting FHIR...');
-            this.showMessage('正在重新連接 FHIR...', 'info');
+            this.showMessage('Reconnecting FHIR...', 'info');
             this.setLineState('fhirToControl', 'connected');
             this.setNodeState('fhir', 'active');
             this.setNodeState('control', 'active');
@@ -216,7 +216,7 @@ class LLMConnectionManager {
 
             // 重新連接 LLM 並啟動計費
             console.log('🤖 Reconnecting LLM and starting billing...');
-            this.showMessage('正在重新連接 LLM 並啟動計費...', 'info');
+            this.showMessage('Reconnecting LLM and starting billing...', 'info');
             this.setLineState('publicToLLM', 'transferring');
             this.setNodeState('llm', 'active');
             this.addDataParticles('publicToLLM', true); // 雙向傳輸
@@ -229,7 +229,7 @@ class LLMConnectionManager {
             this.state = 'normal';
             this.uiConnected = false;
             this.updateUIButtonState('inactive');
-            this.showMessage('✅ 已恢復正常模式 | 💰 計費已啟動', 'success');
+            this.showMessage('✅ Normal mode restored | 💰 Billing active', 'success');
 
         } catch (error) {
             console.error('❌ Error disconnecting UI:', error);
@@ -246,14 +246,14 @@ class LLMConnectionManager {
 
         try {
             console.log('🤖 Connecting to LLM...');
-            this.showMessage('正在連線 LLM...', 'info');
+            this.showMessage('Connecting LLM...', 'info');
             this.setLineState('publicToLLM', 'connected');
             this.setNodeState('llm', 'active');
             await this.sleep(500);
 
             // 開始數據傳輸到 LLM
             console.log('💰 Starting bidirectional data transfer to LLM and billing...');
-            this.showMessage('🔄 正在雙向傳輸數據至 AI... 💰 計費已啟動', 'transfer');
+            this.showMessage('🔄 Bi-directional data transfer to AI... 💰 Billing active', 'transfer');
             this.setLineState('publicToLLM', 'transferring');
             this.addDataParticles('publicToLLM', true); // 雙向傳輸
             
@@ -264,12 +264,12 @@ class LLMConnectionManager {
             this.state = 'normal';
             this.llmConnected = true;
             this.updateLLMButtonState('active');
-            this.showMessage('✅ LLM 服務運行中 | 💰 按使用量計費', 'success');
+            this.showMessage('✅ LLM Service Running | 💰 Pay-per-use billing', 'success');
 
             console.log('✅ LLM connected with billing');
         } catch (error) {
             console.error('❌ Error connecting LLM:', error);
-            this.showMessage('LLM 連線失敗', 'info');
+            this.showMessage('LLM connection failed', 'info');
             this.state = 'normal';
             this.updateLLMButtonState('inactive');
         }
@@ -287,7 +287,7 @@ class LLMConnectionManager {
             this.stopBilling();
 
             console.log('🔌 Disconnecting LLM and stopping billing...');
-            this.showMessage('正在斷開 LLM... 💰 停止計費', 'info');
+            this.showMessage('Disconnecting LLM... 💰 Stopping billing', 'info');
             
             // 清除 LLM 傳輸動畫
             const llmLine = this.lines.publicToLLM;
@@ -303,7 +303,7 @@ class LLMConnectionManager {
             this.state = 'normal';
             this.llmConnected = false;
             this.updateLLMButtonState('inactive');
-            this.showMessage('LLM 已斷線 | 計費已停止', 'info');
+            this.showMessage('LLM disconnected | Billing stopped', 'info');
 
             console.log('✅ LLM disconnected, billing ended');
         } catch (error) {
@@ -437,9 +437,9 @@ class LLMConnectionManager {
         this.uiButton.classList.add(state);
 
         const buttonContent = {
-            inactive: '<i class="fas fa-upload"></i> <span>連線 UI/UX</span>',
-            loading: '<i class="fas fa-spinner fa-spin"></i> <span>連線中...</span>',
-            active: '<i class="fas fa-stop-circle"></i> <span>關閉 UI/UX</span>'
+            inactive: '<i class="fas fa-upload"></i> <span>Connect UI/UX</span>',
+            loading: '<i class="fas fa-spinner fa-spin"></i> <span>Connecting...</span>',
+            active: '<i class="fas fa-stop-circle"></i> <span>Disconnect UI/UX</span>'
         };
 
         this.uiButton.innerHTML = buttonContent[state] || buttonContent.inactive;
@@ -455,9 +455,9 @@ class LLMConnectionManager {
         this.llmButton.classList.add(state);
 
         const buttonContent = {
-            inactive: '<i class="fas fa-brain"></i> <span>連線 LLM</span>',
-            loading: '<i class="fas fa-spinner fa-spin"></i> <span>連線中...</span>',
-            active: '<i class="fas fa-stop-circle"></i> <span>斷開 LLM</span>'
+            inactive: '<i class="fas fa-brain"></i> <span>Connect LLM</span>',
+            loading: '<i class="fas fa-spinner fa-spin"></i> <span>Connecting...</span>',
+            active: '<i class="fas fa-stop-circle"></i> <span>Disconnect LLM</span>'
         };
 
         this.llmButton.innerHTML = buttonContent[state] || buttonContent.inactive;
@@ -491,7 +491,7 @@ class LLMConnectionManager {
         }
 
         if (!this.uiConnected) {
-            this.showMessage('⚠️ 請先連線 UI/UX', 'info');
+            this.showMessage('⚠️ Please connect UI/UX first', 'info');
             return;
         }
 

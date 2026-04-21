@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FHIR CQL 整合平台 - 醫療數據分析系統</title>
+    <title>FHIR CQL Platform - Healthcare Data Analytics</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/fhir-connection.js"></script>
@@ -17,11 +17,11 @@
                 <span>FHIR CQL Platform</span>
             </div>
             <ul class="nav-menu">
-                <li><a href="index.html" class="active">首頁</a></li>
-                <li><a href="disease-control.html">傳染病管制</a></li>
-                <li><a href="public-health.html">國民健康</a></li>
-                <li><a href="esg-indicators.html">ESG指標</a></li>
-                <li><a href="quality-indicators.html">醫療品質</a></li>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="disease-control.html">Disease Control</a></li>
+                <li><a href="public-health.html">Public Health</a></li>
+                <li><a href="esg-indicators.html">ESG</a></li>
+                <li><a href="quality-indicators.html">Quality</a></li>
             </ul>
         </div>
     </nav>
@@ -31,20 +31,20 @@
         <!-- Hero Section -->
         <section class="hero-section">
             <div class="hero-content">
-                <h1>FHIR CQL 整合分析平台</h1>
-                <p>運用 FHIR 標準與 CQL 查詢語言，打造智慧醫療數據分析系統</p>
+                <h1>FHIR CQL Analytics Platform</h1>
+                <p>Smart healthcare data analytics powered by FHIR standards and CQL query language</p>
                 <div class="hero-stats">
                     <div class="stat-item">
                         <div class="stat-number" id="totalCQL">50+</div>
-                        <div class="stat-label">CQL 查詢模組</div>
+                        <div class="stat-label">CQL Query Modules</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="totalDiseases">9+</div>
-                        <div class="stat-label">疾病監控項目</div>
+                        <div class="stat-label">Disease Surveillance</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-number" id="fhirServers">3+</div>
-                        <div class="stat-label">FHIR 伺服器支援</div>
+                        <div class="stat-label">FHIR Servers</div>
                     </div>
                 </div>
             </div>
@@ -53,46 +53,46 @@
         <!-- FHIR 伺服器設定 -->
         <section class="fhir-config" style="display:none;">
             <div class="section-header">
-                <h2><i class="fas fa-server"></i> FHIR 伺服器設定</h2>
-                <p>配置您的 FHIR 數據源</p>
+                <h2><i class="fas fa-server"></i> FHIR Server Settings</h2>
+                <p>Configure your FHIR data source</p>
             </div>
             <div class="config-container">
                 <div class="config-card">
-                    <h3>伺服器連線</h3>
+                    <h3>Server Connection</h3>
                     <div class="form-group">
-                        <label for="fhirServer">選擇 FHIR 伺服器</label>
+                        <label for="fhirServer">Select FHIR Server</label>
                         <select id="fhirServer" class="form-control">
-                            <option value="https://thas.mohw.gov.tw/v/r4/fhir">台灣衛福部 FHIR Server (官方測試環境) ⭐ 推薦</option>
-                            <option value="https://hapi.fhir.org/baseR4">HAPI FHIR R4 (國際測試伺服器)</option>
+                            <option value="https://thas.mohw.gov.tw/v/r4/fhir">Taiwan MOHW FHIR Server (Official) ⭐ Recommended</option>
+                            <option value="https://hapi.fhir.org/baseR4">HAPI FHIR R4 (International)</option>
                             <option value="https://r4.smarthealthit.org">SMART Health IT R4</option>
-                            <option value="https://server.fire.ly/r4">Firely Server (國際測試環境)</option>
-                            <option value="custom">自訂伺服器...</option>
+                            <option value="https://server.fire.ly/r4">Firely Server (International)</option>
+                            <option value="custom">Custom server...</option>
                         </select>
                     </div>
                     <div class="form-group" id="customServerGroup" style="display: none;">
-                        <label for="customServer">自訂伺服器 URL</label>
+                        <label for="customServer">Custom Server URL</label>
                         <input type="text" id="customServer" class="form-control" placeholder="https://your-fhir-server.com/fhir">
                     </div>
                     <div class="form-group">
-                        <label for="authToken">驗證令牌 (選填)</label>
+                        <label for="authToken">Auth Token (Optional)</label>
                         <input type="password" id="authToken" class="form-control" placeholder="Bearer token...">
                     </div>
                     <button class="btn btn-primary" onclick="testConnection()">
-                        <i class="fas fa-plug"></i> 測試連線
+                        <i class="fas fa-plug"></i> Test Connection
                     </button>
                     <div id="connectionStatus" class="status-message"></div>
                 </div>
 
                 <div class="config-card">
-                    <h3>連線狀態</h3>
+                    <h3>Connection Status</h3>
                     <div class="status-grid">
                         <div class="status-item">
                             <div class="status-icon" id="serverStatus">
                                 <i class="fas fa-circle"></i>
                             </div>
                             <div class="status-info">
-                                <div class="status-title">伺服器狀態</div>
-                                <div class="status-value" id="serverStatusText">未連線</div>
+                                <div class="status-title">Server Status</div>
+                                <div class="status-value" id="serverStatusText">Disconnected</div>
                             </div>
                         </div>
                         <div class="status-item">
@@ -100,7 +100,7 @@
                                 <i class="fas fa-database"></i>
                             </div>
                             <div class="status-info">
-                                <div class="status-title">數據可用性</div>
+                                <div class="status-title">Data Availability</div>
                                 <div class="status-value" id="dataStatusText">--</div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="status-info">
-                                <div class="status-title">回應時間</div>
+                                <div class="status-title">Response Time</div>
                                 <div class="status-value" id="responseTimeText">--</div>
                             </div>
                         </div>
@@ -121,8 +121,8 @@
         <!-- 功能模組 -->
         <section class="features-section">
             <div class="section-header">
-                <h2><i class="fas fa-th-large"></i> 分析模組</h2>
-                <p>選擇您要使用的功能模組</p>
+                <h2><i class="fas fa-th-large"></i> Analytics Modules</h2>
+                <p>Select a module to get started</p>
             </div>
             <div class="features-grid">
                 <!-- 疾管儀表板 -->
@@ -130,17 +130,17 @@
                     <div class="feature-icon">
                         <i class="fas fa-virus"></i>
                     </div>
-                    <h3>疾管儀表板</h3>
-                    <p>傳染病監測與分析</p>
+                    <h3>Disease Control</h3>
+                    <p>Infectious disease surveillance</p>
                     <ul class="feature-list">
-                        <li><i class="fas fa-syringe"></i> COVID-19 監測</li>
-                        <li><i class="fas fa-head-side-cough"></i> 流感疫情追蹤</li>
-                        <li><i class="fas fa-eye"></i> 急性結膜炎監測</li>
-                        <li><i class="fas fa-hand-dots"></i> 腸病毒監控</li>
-                        <li><i class="fas fa-bacteria"></i> 腹瀉疫情統計</li>
+                        <li><i class="fas fa-syringe"></i> COVID-19 Monitoring</li>
+                        <li><i class="fas fa-head-side-cough"></i> Influenza Tracking</li>
+                        <li><i class="fas fa-eye"></i> Conjunctivitis Surveillance</li>
+                        <li><i class="fas fa-hand-dots"></i> Enterovirus Monitoring</li>
+                        <li><i class="fas fa-bacteria"></i> Diarrhea Statistics</li>
                     </ul>
                     <div class="feature-status">
-                        <span class="badge badge-emergency" id="badge-disease">未啟用</span>
+<span class="badge badge-emergency" id="badge-disease">Inactive</span>
                     </div>
                 </div>
 
@@ -149,15 +149,15 @@
                     <div class="feature-icon">
                         <i class="fas fa-user-shield"></i>
                     </div>
-                    <h3>國民健康</h3>
-                    <p>健康指標與預防醫學</p>
+                    <h3>Public Health</h3>
+                    <p>Health indicators &amp; preventive medicine</p>
                     <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> 疫苗接種分析</li>
-                        <li><i class="fas fa-check"></i> 慢性病管理</li>
-                        <li><i class="fas fa-check"></i> 健康篩檢追蹤</li>
+                        <li><i class="fas fa-check"></i> Vaccination Analysis</li>
+                        <li><i class="fas fa-check"></i> Chronic Disease Management</li>
+                        <li><i class="fas fa-check"></i> Health Screening Tracking</li>
                     </ul>
                     <div class="feature-status">
-                        <span class="badge badge-emergency" id="badge-health">未啟用</span>
+                        <span class="badge badge-emergency" id="badge-health">Inactive</span>
                     </div>
                 </div>
 
@@ -166,15 +166,15 @@
                     <div class="feature-icon">
                         <i class="fas fa-leaf"></i>
                     </div>
-                    <h3>ESG 指標</h3>
-                    <p>環境、社會與治理分析</p>
+                    <h3>ESG Indicators</h3>
+                    <p>Environment, Social &amp; Governance</p>
                     <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> 醫療廢棄物追蹤</li>
-                        <li><i class="fas fa-check"></i> 抗生素使用率</li>
-                        <li><i class="fas fa-check"></i> 電子病歷採用率</li>
+                        <li><i class="fas fa-check"></i> Medical Waste Tracking</li>
+                        <li><i class="fas fa-check"></i> Antibiotic Usage Rate</li>
+                        <li><i class="fas fa-check"></i> EHR Adoption Rate</li>
                     </ul>
                     <div class="feature-status">
-                        <span class="badge badge-emergency" id="badge-esg">未啟用</span>
+                        <span class="badge badge-emergency" id="badge-esg">Inactive</span>
                     </div>
                 </div>
 
@@ -183,15 +183,15 @@
                     <div class="feature-icon">
                         <i class="fas fa-award"></i>
                     </div>
-                    <h3>醫療品質</h3>
-                    <p>醫療服務品質指標</p>
+                    <h3>Quality Indicators</h3>
+                    <p>Healthcare service quality metrics</p>
                     <ul class="feature-list">
-                        <li><i class="fas fa-check"></i> 品質指標監控</li>
-                        <li><i class="fas fa-check"></i> 服務效能分析</li>
-                        <li><i class="fas fa-check"></i> 病患安全追蹤</li>
+                        <li><i class="fas fa-check"></i> Quality Indicator Monitoring</li>
+                        <li><i class="fas fa-check"></i> Service Efficiency Analysis</li>
+                        <li><i class="fas fa-check"></i> Patient Safety Tracking</li>
                     </ul>
                     <div class="feature-status">
-                        <span class="badge badge-emergency" id="badge-quality">未啟用</span>
+                        <span class="badge badge-emergency" id="badge-quality">Inactive</span>
                     </div>
                 </div>
             </div>
@@ -200,29 +200,29 @@
         <!-- 快速開始 -->
         <section class="quick-start">
             <div class="section-header" style="display:none;">
-                <h2><i class="fas fa-rocket"></i> 快速開始</h2>
+                <h2><i class="fas fa-rocket"></i> Quick Start</h2>
             </div>
             <div class="steps-container" style="display:none;">
                 <div class="step-card">
                     <div class="step-number">1</div>
-                    <h3>設定 FHIR 伺服器</h3>
-                    <p>選擇或輸入您的 FHIR 伺服器地址</p>
+                    <h3>Configure FHIR Server</h3>
+                    <p>Select or enter your FHIR server address</p>
                 </div>
                 <div class="step-arrow">
                     <i class="fas fa-arrow-right"></i>
                 </div>
                 <div class="step-card">
                     <div class="step-number">2</div>
-                    <h3>測試連線</h3>
-                    <p>驗證伺服器連線與數據可用性</p>
+                    <h3>Test Connection</h3>
+                    <p>Verify server connectivity and data availability</p>
                 </div>
                 <div class="step-arrow">
                     <i class="fas fa-arrow-right"></i>
                 </div>
                 <div class="step-card">
                     <div class="step-number">3</div>
-                    <h3>啟動分析</h3>
-                    <p>進入疾管儀表板開始 CQL 查詢分析</p>
+                    <h3>Start Analysis</h3>
+                    <p>Enter the dashboard to run CQL queries</p>
                 </div>
             </div>
         </section>
@@ -231,7 +231,7 @@
     <!-- 頁尾 -->
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2025 FHIR CQL Platform. All rights reserved.</p>
+            <p>&copy; 2026 FHIR CQL Platform. All rights reserved.</p>
             <p>Powered by FHIR 4.0.1 & CQL Engine</p>
         </div>
     </footer>
@@ -253,10 +253,10 @@
             badges.forEach(badge => {
                 if (!badge) return;
                 if (connected) {
-                    badge.textContent = '已啟用';
+                    badge.textContent = 'Active';
                     badge.className = 'badge badge-success';
                 } else {
-                    badge.textContent = '未啟用';
+                    badge.textContent = 'Inactive';
                     badge.className = 'badge badge-emergency';
                 }
             });

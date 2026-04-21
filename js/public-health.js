@@ -1,4 +1,4 @@
-// ========== 國民健康儀表板邏輯 ==========
+﻿// ========== 國民健康儀表板邏輯 ==========
 // CQL整合版本 - 基於國民健康  CQL  1119文件夾
 //
 // CQL文件映射:
@@ -65,7 +65,7 @@ function initializeCards() {
         
         if (countElement) countElement.textContent = '--';
         if (rateElement) rateElement.textContent = '--%';
-        if (dateElement) dateElement.textContent = '資料範圍: 全部資料';
+        if (dateElement) dateElement.textContent = 'Data range: All data';
     });
 }
 
@@ -96,7 +96,7 @@ async function executeQuery(indicatorType) {
     
     const isConnected = await checkFHIRConnection();
     if (!isConnected) {
-        alert('請先在首頁設定 FHIR 伺服器連線');
+        alert('Please configure FHIR server on Home page');
         window.location.href = 'index.html';
         return;
     }
@@ -126,12 +126,12 @@ async function executeQuery(indicatorType) {
         btn.disabled = true;
         countInterval = setInterval(() => {
             count += Math.floor(Math.random() * 60) + 30;
-            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> 已撈取 ${count} 筆`;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Fetched ${count} records`;
         }, 150);
     }
     
     if (statusElement) {
-        statusElement.innerHTML = '<span style="color: #2563eb;"><i class="fas fa-spinner fa-spin"></i> 執行中...</span>';
+        statusElement.innerHTML = '<span style="color: #2563eb;"><i class="fas fa-spinner fa-spin"></i> Running...</span>';
     }
     
     try {
@@ -158,33 +158,33 @@ async function executeQuery(indicatorType) {
         if (countInterval) clearInterval(countInterval);
         const actualCount = results.totalPatients || results.patients?.length || 0;
         if (btn) {
-            btn.innerHTML = `<i class="fas fa-check"></i> 完成 (${actualCount} 筆)`;
+            btn.innerHTML = `<i class="fas fa-check"></i> Done (${actualCount} records)`;
         }
         
         if (statusElement) {
-            statusElement.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> 完成</span>';
+            statusElement.innerHTML = '<span style="color: #10b981;"><i class="fas fa-check-circle"></i> Done</span>';
             setTimeout(() => { statusElement.innerHTML = ''; }, 3000);
         }
         
     } catch (error) {
-        console.error('查詢失敗:', error);
+        console.error('Query failed:', error);
         
         // 🆕 清除計數動畫
         if (countInterval) clearInterval(countInterval);
         if (btn) {
-            btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 查詢失敗';
+            btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Query failed';
         }
         
         if (statusElement) {
-            statusElement.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> 失敗</span>';
+            statusElement.innerHTML = '<span style="color: #ef4444;"><i class="fas fa-times-circle"></i> Failed</span>';
         }
-        alert(`查詢失敗: ${error.message}`);
+        alert(`Query failed: ${error.message}`);
     } finally {
         // 🆕 延遲 2 秒後恢復按鈕
         setTimeout(() => {
             if (btn) {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-play"></i> 執行查詢';
+                btn.innerHTML = '<i class="fas fa-play"></i> Run Query';
             }
         }, 2000);
     }
@@ -208,7 +208,7 @@ async function queryCOVID19Vaccination() {
     }
     
     const conn = window.fhirConnection;
-    console.log(`   🌐 FHIR伺服器: ${conn.serverUrl}`);
+    console.log(`   🌐 FHIRServer: ${conn.serverUrl}`);
     
     // CQL疫苗代碼定義 (SNOMED CT + CVX)
     // SNOMED CT代碼（國際標準）
@@ -232,11 +232,11 @@ async function queryCOVID19Vaccination() {
             });
             
             if (immunizations.entry) {
-                console.log(`   ✅ SNOMED ${code}: ${immunizations.entry.length} 筆`);
+                console.log(`   ✅ SNOMED ${code}: ${immunizations.entry.length} records`);
                 allImmunizations.push(...immunizations.entry.map(e => e.resource));
             }
         } catch (error) {
-            console.warn(`   ⚠️ 查詢 SNOMED ${code} 錯誤:`, error.message);
+            console.warn(`   ⚠️ 查詢 SNOMED ${code} Error:`, error.message);
         }
     }
     
@@ -249,11 +249,11 @@ async function queryCOVID19Vaccination() {
             });
             
             if (immunizations.entry) {
-                console.log(`   ✅ CVX ${code}: ${immunizations.entry.length} 筆`);
+                console.log(`   ✅ CVX ${code}: ${immunizations.entry.length} records`);
                 allImmunizations.push(...immunizations.entry.map(e => e.resource));
             }
         } catch (error) {
-            console.warn(`   ⚠️ 查詢 CVX ${code} 錯誤:`, error.message);
+            console.warn(`   ⚠️ 查詢 CVX ${code} Error:`, error.message);
         }
     }
     
@@ -272,10 +272,10 @@ async function queryCOVID19Vaccination() {
     
     console.log(`   📊 結果: ${totalVaccinations} 次接種, ${uniquePatients.size} 位患者`);
     
-    // 如果沒有資料，顯示資料庫無資料
+    // 如果沒有資料，顯示No Data Available
     if (totalVaccinations === 0 || uniquePatients.size === 0) {
         console.warn('⚠️ FHIR伺服器無COVID-19疫苗資料');
-        alert('⚠️ FHIR伺服器查詢結果：\n\n找到接種記錄但無有效患者數據。\n\n可能原因：\n1. 資料中缺少 patient.reference 欄位\n2. 疫苗代碼不匹配\n\n建議啟用「示範模式」查看模擬數據。');
+        alert('⚠️ FHIR Server Query Result：\n\nFound vaccination records but no valid patient data。\n\nPossible causes:\n1. Missing patient.reference field\n2. Vaccine code mismatch\n\nSuggest enabling Demo Mode。');
         return {
             totalVaccinations: 0,
             uniquePatients: 0,
@@ -287,7 +287,7 @@ async function queryCOVID19Vaccination() {
     // ========== CQL統計邏輯: 平均接種劑次 ==========
     // 平均劑次 = 總接種次數 ÷ 接種人數
     const averageDoses = (totalVaccinations / uniquePatients.size).toFixed(2);
-    console.log(`   📈 平均劑次: ${totalVaccinations}/${uniquePatients.size} = ${averageDoses} 劑/人`);
+    console.log(`   📈 平均劑次: ${totalVaccinations}/${uniquePatients.size} = ${averageDoses} doses/person`);
     console.log(`   ✅ 返回真實數據: ${uniquePatients.size} 位患者`);
     
     return {
@@ -316,7 +316,7 @@ async function queryInfluenzaVaccination() {
     }
     
     const conn = window.fhirConnection;
-    console.log(`   🌐 FHIR伺服器: ${conn.serverUrl}`);
+    console.log(`   🌐 FHIRServer: ${conn.serverUrl}`);
     
     // CQL疫苗代碼定義 (SNOMED CT + CVX)
     // SNOMED CT代碼（國際標準）
@@ -344,11 +344,11 @@ async function queryInfluenzaVaccination() {
             });
             
             if (immunizations.entry) {
-                console.log(`   ✅ SNOMED ${code}: ${immunizations.entry.length} 筆`);
+                console.log(`   ✅ SNOMED ${code}: ${immunizations.entry.length} records`);
                 allImmunizations.push(...immunizations.entry.map(e => e.resource));
             }
         } catch (error) {
-            console.warn(`   ⚠️ 查詢 SNOMED ${code} 錯誤:`, error.message);
+            console.warn(`   ⚠️ 查詢 SNOMED ${code} Error:`, error.message);
         }
     }
     
@@ -365,7 +365,7 @@ async function queryInfluenzaVaccination() {
                 allImmunizations.push(...immunizations.entry.map(e => e.resource));
             }
         } catch (error) {
-            console.warn(`   ⚠️ 查詢 CVX ${code} 錯誤:`, error.message);
+            console.warn(`   ⚠️ 查詢 CVX ${code} Error:`, error.message);
         }
     }
     
@@ -396,7 +396,7 @@ async function queryInfluenzaVaccination() {
     // ========== CQL統計邏輯: 平均接種劑次 ==========
     // 平均劑次 = 總接種次數 ÷ 接種人數
     const averageDoses = (totalVaccinations / uniquePatients.size).toFixed(2);
-    console.log(`   📈 平均劑次: ${totalVaccinations}/${uniquePatients.size} = ${averageDoses} 劑/人`);
+    console.log(`   📈 平均劑次: ${totalVaccinations}/${uniquePatients.size} = ${averageDoses} doses/person`);
     console.log(`   ✅ 返回真實數據: ${uniquePatients.size} 位患者`);
     
     return {
@@ -447,11 +447,11 @@ async function queryHypertension() {
             });
             
             if (conditions.entry) {
-                console.log(`   ✅ 搜尋 "${term}": ${conditions.entry.length} 筆`);
+                console.log(`   ✅ 搜尋 "${term}": ${conditions.entry.length} records`);
                 allConditions.push(...conditions.entry.map(e => e.resource));
             }
         } catch (error) {
-            console.warn(`   ⚠️ 搜尋 "${term}" 錯誤:`, error.message);
+            console.warn(`   ⚠️ 搜尋 "${term}" Error:`, error.message);
         }
     }
     
@@ -493,7 +493,7 @@ async function queryHypertension() {
         });
         
         if (observations.entry && observations.entry.length > 0) {
-            console.log(`   ✅ 血壓觀察記錄: ${observations.entry.length} 筆`);
+            console.log(`   ✅ 血壓觀察記錄: ${observations.entry.length} records`);
             
             // 統計有血壓記錄的患者（視為有在管理）
             const patientsWithObservations = new Set();
@@ -544,7 +544,7 @@ function updateVaccinationCard(cardId, results) {
     
     if (results.noData) {
         if (countElement) {
-            countElement.innerHTML = '<div class="no-data-message"><i class="fas fa-database"></i><p>資料庫無資料</p></div>';
+            countElement.innerHTML = '<div class="no-data-message"><i class="fas fa-database"></i><p>No Data Available</p></div>';
         }
         if (rateElement) {
             rateElement.textContent = '--';
@@ -560,9 +560,9 @@ function updateVaccinationCard(cardId, results) {
     }
     
     if (rateElement) {
-        rateElement.textContent = `${results.averageDoses} 劑/人`;
+        rateElement.textContent = `${results.averageDoses} doses/person`;
         rateElement.classList.add('animated');
-        console.log(`✅ 已更新接種率: ${results.averageDoses} 劑/人`);
+        console.log(`✅ 已更新接種率: ${results.averageDoses} doses/person`);
     }
 }
 
@@ -575,7 +575,7 @@ function updateChronicCard(cardId, results) {
     
     if (results.noData) {
         if (countElement) {
-            countElement.innerHTML = '<div class="no-data-message"><i class="fas fa-database"></i><p>資料庫無資料</p></div>';
+            countElement.innerHTML = '<div class="no-data-message"><i class="fas fa-database"></i><p>No Data Available</p></div>';
         }
         if (rateElement) {
             rateElement.textContent = '--';
@@ -617,18 +617,18 @@ function showDetailModal(indicatorType) {
     const modalBody = document.getElementById('modalBody');
     
     const titles = {
-        'covid19-vaccine': 'COVID-19 疫苗接種詳情',
-        'influenza-vaccine': '流感疫苗接種詳情',
-        'hypertension': '高血壓管理詳情'
+        'covid19-vaccine': 'COVID-19 Vaccination Details',
+        'influenza-vaccine': 'Influenza Vaccination Details',
+        'hypertension': 'Hypertension Management Details'
     };
     
-    modalTitle.textContent = titles[indicatorType] || '詳細資訊';
+    modalTitle.textContent = titles[indicatorType] || 'Details';
     
     const results = currentResults[indicatorType];
     if (results) {
         modalBody.innerHTML = generateDetailContent(indicatorType, results);
     } else {
-        modalBody.innerHTML = '<p>請先執行查詢</p>';
+        modalBody.innerHTML = '<p>Please run a query first</p>';
     }
     
     modal.style.display = 'flex';
@@ -637,7 +637,7 @@ function showDetailModal(indicatorType) {
 // 生成詳細內容
 function generateDetailContent(indicatorType, results) {
     if (results.noData) {
-        return '<div class="no-data-message"><i class="fas fa-database"></i><p>資料庫無資料</p></div>';
+        return '<div class="no-data-message"><i class="fas fa-database"></i><p>No Data Available</p></div>';
     }
     
     let content = '<div class="detail-content" style="padding: 20px;">';
@@ -645,38 +645,38 @@ function generateDetailContent(indicatorType, results) {
     // 示範模式/真實數據標籤
     if (results.demoMode) {
         content += '<div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; margin-bottom: 20px; border-radius: 4px;">';
-        content += '<i class="fas fa-flask" style="color: #f59e0b;"></i> <strong>示範模式數據</strong><p style="margin: 8px 0 0 0; font-size: 13px; color: #92400e;">此為模擬數據，僅供展示使用</p>';
+        content += '<i class="fas fa-flask" style="color: #f59e0b;"></i> <strong>Demo Mode Data</strong><p style="margin: 8px 0 0 0; font-size: 13px; color: #92400e;">This is simulated data for demonstration purposes only</p>';
         content += '</div>';
     } else if (results.isRealData) {
         content += '<div style="background: #dbeafe; border-left: 4px solid #3b82f6; padding: 12px; margin-bottom: 20px; border-radius: 4px;">';
-        content += '<i class="fas fa-database" style="color: #3b82f6;"></i> <strong>FHIR 真實數據</strong><p style="margin: 8px 0 0 0; font-size: 13px; color: #1e40af;">資料來源：' + (window.fhirConnection?.serverUrl || 'FHIR Server') + '</p>';
+        content += '<i class="fas fa-database" style="color: #3b82f6;"></i> <strong>FHIR Real Data</strong><p style="margin: 8px 0 0 0; font-size: 13px; color: #1e40af;">Data source: ' + (window.fhirConnection?.serverUrl || 'FHIR Server') + '</p>';
         content += '</div>';
     }
     
     if (indicatorType === 'covid19-vaccine') {
-        content += '<h3 style="margin-bottom: 20px;"><i class="fas fa-syringe" style="color: #3b82f6;"></i> COVID-19 疫苗接種統計</h3>';
+        content += '<h3 style="margin-bottom: 20px;"><i class="fas fa-syringe" style="color: #3b82f6;"></i> COVID-19 Vaccination Statistics</h3>';
         
         // 主要統計
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">';
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #dbeafe; color: #3b82f6;"><i class="fas fa-users"></i></div>
-            <div class="stat-label">接種人數</div>
+            <div class="stat-label">Vaccinated</div>
             <div class="stat-value">${formatNumber(results.uniquePatients)}</div>
         </div>`;
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #ddd6fe; color: #7c3aed;"><i class="fas fa-syringe"></i></div>
-            <div class="stat-label">總接種劑次</div>
+            <div class="stat-label">Total Doses</div>
             <div class="stat-value">${formatNumber(results.totalVaccinations)}</div>
         </div>`;
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #d1fae5; color: #059669;"><i class="fas fa-chart-line"></i></div>
-            <div class="stat-label">平均接種劑次</div>
-            <div class="stat-value">${results.averageDoses} <span style="font-size: 14px;">劑/人</span></div>
+            <div class="stat-label">Avg Doses</div>
+            <div class="stat-value">${results.averageDoses} <span style="font-size: 14px;">doses/person</span></div>
         </div>`;
         content += '</div>';
         
-        // 疫苗廠牌分布（真實數據使用統計估算）
-        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-industry"></i> 疫苗廠牌分布 ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
+        // Vaccine Brand Distribution（真實數據使用統計估算）
+        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-industry"></i> Vaccine Brand Distribution ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px;">';
         const brands = [
             { name: 'Pfizer-BioNTech', percent: 35, color: '#3b82f6' },
@@ -696,13 +696,13 @@ function generateDetailContent(indicatorType, results) {
         content += '</div>';
         
         // 年齡分布
-        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-users"></i> 年齡層分布 ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
+        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-users"></i> Age Distribution ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;">';
         const ageGroups = [
-            { range: '0-17歲', count: Math.floor(results.uniquePatients * 0.15), color: '#f59e0b' },
-            { range: '18-49歲', count: Math.floor(results.uniquePatients * 0.35), color: '#3b82f6' },
-            { range: '50-64歲', count: Math.floor(results.uniquePatients * 0.28), color: '#8b5cf6' },
-            { range: '65歲以上', count: Math.floor(results.uniquePatients * 0.22), color: '#10b981' }
+            { range: '0-17', count: Math.floor(results.uniquePatients * 0.15), color: '#f59e0b' },
+            { range: '18-49', count: Math.floor(results.uniquePatients * 0.35), color: '#3b82f6' },
+            { range: '50-64', count: Math.floor(results.uniquePatients * 0.28), color: '#8b5cf6' },
+            { range: '65+', count: Math.floor(results.uniquePatients * 0.22), color: '#10b981' }
         ];
         ageGroups.forEach(group => {
             content += `<div class="age-box">
@@ -713,34 +713,34 @@ function generateDetailContent(indicatorType, results) {
         content += '</div>';
         
     } else if (indicatorType === 'influenza-vaccine') {
-        content += '<h3 style="margin-bottom: 20px;"><i class="fas fa-shield-virus" style="color: #8b5cf6;"></i> 流感疫苗接種統計</h3>';
+        content += '<h3 style="margin-bottom: 20px;"><i class="fas fa-shield-virus" style="color: #8b5cf6;"></i> Influenza Vaccination Statistics</h3>';
         
         // 主要統計
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">';
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #ddd6fe; color: #8b5cf6;"><i class="fas fa-users"></i></div>
-            <div class="stat-label">接種人數</div>
+            <div class="stat-label">Vaccinated</div>
             <div class="stat-value">${formatNumber(results.uniquePatients)}</div>
         </div>`;
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #fce7f3; color: #db2777;"><i class="fas fa-syringe"></i></div>
-            <div class="stat-label">總接種劑次</div>
+            <div class="stat-label">Total Doses</div>
             <div class="stat-value">${formatNumber(results.totalVaccinations)}</div>
         </div>`;
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #d1fae5; color: #059669;"><i class="fas fa-chart-line"></i></div>
-            <div class="stat-label">平均接種劑次</div>
-            <div class="stat-value">${results.averageDoses} <span style="font-size: 14px;">劑/人</span></div>
+            <div class="stat-label">Avg Doses</div>
+            <div class="stat-value">${results.averageDoses} <span style="font-size: 14px;">doses/person</span></div>
         </div>`;
         content += '</div>';
         
-        // 流感疫苗類型分布（真實數據使用統計估算）
-        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-vial"></i> 疫苗類型分布 ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
+        // 流感Vaccine Type Distribution（真實數據使用統計估算）
+        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-vial"></i> Vaccine Type Distribution ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 24px;">';
         const types = [
-            { name: '四價流感疫苗', percent: 65, color: '#8b5cf6' },
-            { name: '三價流感疫苗', percent: 25, color: '#06b6d4' },
-            { name: '高劑量流感疫苗', percent: 10, color: '#10b981' }
+            { name: 'Quadrivalent Influenza', percent: 65, color: '#8b5cf6' },
+            { name: 'Trivalent Influenza', percent: 25, color: '#06b6d4' },
+            { name: 'High-dose Influenza', percent: 10, color: '#10b981' }
         ];
         types.forEach(type => {
             content += `<div class="brand-box">
@@ -754,13 +754,13 @@ function generateDetailContent(indicatorType, results) {
         content += '</div>';
         
         // 年齡分布
-        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-users"></i> 年齡層分布 ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
+        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-users"></i> Age Distribution ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;">';
         const ageGroups = [
-            { range: '0-5歲', count: Math.floor(results.uniquePatients * 0.18), color: '#f59e0b' },
-            { range: '6-17歲', count: Math.floor(results.uniquePatients * 0.22), color: '#3b82f6' },
-            { range: '18-64歲', count: Math.floor(results.uniquePatients * 0.35), color: '#8b5cf6' },
-            { range: '65歲以上', count: Math.floor(results.uniquePatients * 0.25), color: '#10b981' }
+            { range: '0-5', count: Math.floor(results.uniquePatients * 0.18), color: '#f59e0b' },
+            { range: '6-17', count: Math.floor(results.uniquePatients * 0.22), color: '#3b82f6' },
+            { range: '18-64', count: Math.floor(results.uniquePatients * 0.35), color: '#8b5cf6' },
+            { range: '65+', count: Math.floor(results.uniquePatients * 0.25), color: '#10b981' }
         ];
         ageGroups.forEach(group => {
             content += `<div class="age-box">
@@ -771,54 +771,54 @@ function generateDetailContent(indicatorType, results) {
         content += '</div>';
         
     } else if (indicatorType === 'hypertension') {
-        content += '<h3 style="margin-bottom: 20px;"><i class="fas fa-heartbeat" style="color: #ef4444;"></i> 高血壓管理統計</h3>';
+        content += '<h3 style="margin-bottom: 20px;"><i class="fas fa-heartbeat" style="color: #ef4444;"></i> Hypertension Management Statistics</h3>';
         
         // 主要統計
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px;">';
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #fee2e2; color: #ef4444;"><i class="fas fa-users"></i></div>
-            <div class="stat-label">活動個案數</div>
+            <div class="stat-label">Active Cases</div>
             <div class="stat-value">${formatNumber(results.totalCases)}</div>
         </div>`;
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #d1fae5; color: #059669;"><i class="fas fa-check-circle"></i></div>
-            <div class="stat-label">控制中個案</div>
+            <div class="stat-label">Controlled Cases</div>
             <div class="stat-value">${formatNumber(results.controlledCases || Math.floor(results.totalCases * results.controlRate / 100))}</div>
         </div>`;
         content += `<div class="stat-box-detail">
             <div class="stat-icon" style="background: #dbeafe; color: #3b82f6;"><i class="fas fa-chart-line"></i></div>
-            <div class="stat-label">血壓控制率</div>
+            <div class="stat-label">BP Control Rate</div>
             <div class="stat-value">${results.controlRate}%</div>
         </div>`;
         content += '</div>';
         
-        // 血壓控制分級（真實數據使用統計估算）
-        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-tachometer-alt"></i> 血壓控制分級 ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
+        // BP Control Level（真實數據使用統計估算）
+        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-tachometer-alt"></i> BP Control Level ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 24px;">';
         const controlLevels = [
-            { name: '理想控制 (<130/80)', count: Math.floor(results.totalCases * 0.35), color: '#10b981', icon: 'smile' },
-            { name: '良好控制 (<140/90)', count: Math.floor(results.totalCases * 0.25), color: '#3b82f6', icon: 'meh' },
-            { name: '需加強 (≥140/90)', count: Math.floor(results.totalCases * 0.40), color: '#f59e0b', icon: 'frown' }
+            { name: 'Ideal (<130/80)', count: Math.floor(results.totalCases * 0.35), color: '#10b981', icon: 'smile' },
+            { name: 'Good (<140/90)', count: Math.floor(results.totalCases * 0.25), color: '#3b82f6', icon: 'meh' },
+            { name: 'Needs Improvement (≥140/90)', count: Math.floor(results.totalCases * 0.40), color: '#f59e0b', icon: 'frown' }
         ];
         controlLevels.forEach(level => {
             content += `<div class="control-box">
                 <div class="control-icon" style="background: ${level.color}20; color: ${level.color};"><i class="fas fa-${level.icon}"></i></div>
                 <div class="control-info">
                     <div class="control-name">${level.name}</div>
-                    <div class="control-count">${formatNumber(level.count)} 人</div>
+                    <div class="control-count">${formatNumber(level.count)}</div>
                 </div>
             </div>`;
         });
         content += '</div>';
         
         // 年齡分布
-        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-users"></i> 年齡層分布 ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
+        content += '<h4 style="margin: 24px 0 16px 0; color: #1e293b;"><i class="fas fa-users"></i> Age Distribution ' + (results.isRealData ? '<span style="font-size: 12px; color: #64748b; font-weight: normal;">(基於統計估算)</span>' : '') + '</h4>';
         content += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;">';
         const ageGroups = [
-            { range: '40-49歲', count: Math.floor(results.totalCases * 0.15), color: '#3b82f6' },
-            { range: '50-59歲', count: Math.floor(results.totalCases * 0.25), color: '#8b5cf6' },
-            { range: '60-69歲', count: Math.floor(results.totalCases * 0.35), color: '#ef4444' },
-            { range: '70歲以上', count: Math.floor(results.totalCases * 0.25), color: '#f59e0b' }
+            { range: '40-49', count: Math.floor(results.totalCases * 0.15), color: '#3b82f6' },
+            { range: '50-59', count: Math.floor(results.totalCases * 0.25), color: '#8b5cf6' },
+            { range: '60-69', count: Math.floor(results.totalCases * 0.35), color: '#ef4444' },
+            { range: '70+', count: Math.floor(results.totalCases * 0.25), color: '#f59e0b' }
         ];
         ageGroups.forEach(group => {
             content += `<div class="age-box">
@@ -969,12 +969,12 @@ async function testRealFHIRConnection() {
     console.log('🔍 開始測試真實 FHIR 連線...');
     
     if (!window.fhirConnection || !window.fhirConnection.serverUrl) {
-        alert('❌ 未設定 FHIR 連線\n\n請先在首頁設定 FHIR 伺服器位址');
+        alert('❌ FHIR not configured\\n\\nPlease set FHIR server URL on Home page');
         return;
     }
     
     const serverUrl = window.fhirConnection.serverUrl;
-    console.log(`📡 測試伺服器: ${serverUrl}`);
+    console.log(`📡 測試Server: ${serverUrl}`);
     
     try {
         // 測試查詢 Immunization 資源
@@ -985,12 +985,12 @@ async function testRealFHIRConnection() {
         console.log('✅ FHIR 連線成功');
         console.log('📊 查詢結果:', result);
         
-        alert(`✅ FHIR 連線測試成功\n\n伺服器: ${serverUrl}\n\n找到 ${count} 筆 Immunization 資源\n\n這是真實的 FHIR 數據！\n\n${count === 0 ? '\n⚠️ 但伺服器沒有疫苗數據，所以查詢會返回 0。\n建議啟用「示範模式」查看模擬數據。' : ''}`);
+        alert(`✅ FHIR Connection Test Successful\n\nServer: ${serverUrl}\n\nFound ${count} Immunization resources\n\nThis is real FHIR data!\n\n${count === 0 ? '\n⚠️ No vaccine data on server, query returned 0.\nTry enabling Demo Mode.' : ''}`);
         
         return true;
     } catch (error) {
         console.error('❌ FHIR 連線失敗:', error);
-        alert(`❌ FHIR 連線測試失敗\n\n錯誤: ${error.message}\n\n可能原因：\n1. 伺服器位址錯誤\n2. 網路連線問題\n3. CORS 設定問題`);
+        alert(`❌ FHIR Connection Test Failed\n\nError: ${error.message}\n\nPossible causes:\n1. Invalid server URL\n2. Network issue\n3. CORS configuration issue`);
         return false;
     }
 }
@@ -1018,8 +1018,8 @@ function toggleDemoMode() {
     clearAllData();
     
     const message = newMode 
-        ? '✅ 示範模式已啟用\n\n系統將顯示模擬數據供展示使用。\n\n請點擊各指標的「執行查詢」按鈕查看示範數據。'
-        : '⚠️ 示範模式已關閉\n\n系統將只查詢 FHIR 伺服器的真實資料。\n\n請點擊「執行查詢」按鈕。\n\n注意：如果伺服器沒有資料，將顯示「資料庫無資料」。';
+        ? '✅ Demo Mode Enabled\\n\\nSimulated data will be shown.\\n\\nClick Run Query on each indicator to view demo data.'
+        : '⚠️ Demo Mode Disabled\\n\\nSystem will only query real FHIR data.\\n\\nClick Run Query.\\n\\nNote: If server has no data, No Data will be shown.';
     
     alert(message);
 }
@@ -1039,12 +1039,12 @@ function updateDemoModeButton() {
             btn.classList.remove('btn-secondary');
             btn.classList.add('btn-success');
             btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            text.textContent = '示範模式：開啟';
+            text.textContent = 'Demo Mode: ON';
         } else {
             btn.classList.remove('btn-success');
             btn.classList.add('btn-secondary');
             btn.style.background = '';
-            text.textContent = '啟用示範模式';
+            text.textContent = 'Enable Demo Mode';
         }
     }
 }
@@ -1052,13 +1052,13 @@ function updateDemoModeButton() {
 // 生成示範數據 - 完全隨機，屬性名稱與真實數據一致
 function generateDemoDataHealth(indicatorType) {
     if (indicatorType === 'covid19') {
-        // COVID-19疫苗：30-99人接種，接種率1.5-4.5劑/人
+        // COVID-19疫苗：30-99人接種，接種率1.5-4.5doses/person
         const uniquePatients = 30 + Math.floor(Math.random() * 70);
         const averageDoses = (1.5 + Math.random() * 3.0).toFixed(2);
         console.log('📊 COVID-19示範數據:', { uniquePatients, averageDoses });
         return { uniquePatients, averageDoses, noData: false, demoMode: true };
     } else if (indicatorType === 'influenza') {
-        // 流感疫苗：50-200人接種，接種率1.0-2.5劑/人
+        // 流感疫苗：50-200人接種，接種率1.0-2.5doses/person
         const uniquePatients = 50 + Math.floor(Math.random() * 151);
         const averageDoses = (1.0 + Math.random() * 1.5).toFixed(2);
         console.log('📊 流感疫苗示範數據:', { uniquePatients, averageDoses });
@@ -1111,7 +1111,7 @@ function updateFHIRServerDisplay() {
             // 提取伺服器名稱（簡化顯示）
             let displayName = serverUrl;
             if (serverUrl.includes('hapi.fhir.org')) {
-                displayName = 'HAPI FHIR (測試伺服器)';
+                displayName = 'HAPI FHIR (Test Server)';
             } else if (serverUrl.includes('smart')) {
                 displayName = 'SMART Health IT';
             } else {
@@ -1126,7 +1126,7 @@ function updateFHIRServerDisplay() {
             serverNameElement.textContent = displayName;
             serverNameElement.style.color = '#0ea5e9';
         } else {
-            serverNameElement.textContent = '未連線';
+            serverNameElement.textContent = 'Not Connected';
             serverNameElement.style.color = '#ef4444';
         }
     }

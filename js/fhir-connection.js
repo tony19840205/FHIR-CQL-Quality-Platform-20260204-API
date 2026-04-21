@@ -1,4 +1,4 @@
-// ========== FHIR 連線管理 ==========
+﻿// ========== FHIR 連線管理 ==========
 
 class FHIRConnection {
     constructor() {
@@ -58,18 +58,18 @@ class FHIRConnection {
         this.authToken = tokenInput.value.trim();
         
         if (!this.serverUrl) {
-            this.showStatus('請輸入 FHIR 伺服器 URL', 'error');
+            this.showStatus('Please enter FHIR server URL', 'error');
             return;
         }
 
         // 🚀 立即更新UI狀態（同步，不等待）
-        this.showStatus('正在測試連線...', 'info');
+        this.showStatus('Testing connection...', 'info');
         
         // 立即顯示黃色連線中狀態
         const serverStatus = document.getElementById('serverStatus');
         const serverStatusText = document.getElementById('serverStatusText');
         serverStatus.className = 'status-icon warning';
-        serverStatusText.textContent = '連線中';
+        serverStatusText.textContent = 'Connecting';
         
         document.getElementById('dataStatusText').textContent = '--';
         document.getElementById('dataStatus').className = 'status-icon';
@@ -104,7 +104,7 @@ class FHIRConnection {
                 this.isConnected = true;
                 this.saveConfig();
                 
-                this.showStatus(`✓ 連線成功！伺服器版本: ${data.fhirVersion || 'N/A'}`, 'success');
+                this.showStatus(`✓ Connected! Server version: ${data.fhirVersion || 'N/A'}`, 'success');
                 this.updateConnectionStatus(true, responseTime);
                 
                 // 測試資料可用性
@@ -114,11 +114,11 @@ class FHIRConnection {
             }
         } catch (error) {
             this.isConnected = false;
-            this.showStatus(`✗ 連線失敗: ${error.message}`, 'error');
+            this.showStatus(`✗ Connection failed: ${error.message}`, 'error');
             this.updateConnectionStatus(false, 0);
             
             // 連線失敗時也要更新資料狀態
-            document.getElementById('dataStatusText').textContent = '無法存取';
+            document.getElementById('dataStatusText').textContent = 'Unavailable';
             document.getElementById('dataStatus').className = 'status-icon inactive';
         }
     }
@@ -128,7 +128,7 @@ class FHIRConnection {
         console.log('檢查 FHIR 資料可用性...');
         
         // 立即顯示檢查中狀態（不用動畫）
-        document.getElementById('dataStatusText').textContent = '檢查中...';
+        document.getElementById('dataStatusText').textContent = 'Checking...';
         document.getElementById('dataStatus').className = 'status-icon warning';
         
         try {
@@ -164,13 +164,13 @@ class FHIRConnection {
                     }
                 }
                 
-                console.log(`找到 ${total} 筆患者資料`);
+                console.log(`找到 ${total} patient records`);
                 
                 if (total > 0 || total === '0+') {
-                    document.getElementById('dataStatusText').textContent = `${total} 筆患者資料`;
+                    document.getElementById('dataStatusText').textContent = `${total} patient records`;
                     document.getElementById('dataStatus').className = 'status-icon active';
                 } else {
-                    document.getElementById('dataStatusText').textContent = '可用';
+                    document.getElementById('dataStatusText').textContent = 'Available';
                     document.getElementById('dataStatus').className = 'status-icon active';
                 }
             } else {
@@ -178,7 +178,7 @@ class FHIRConnection {
             }
         } catch (error) {
             console.error('檢查資料可用性失敗:', error);
-            document.getElementById('dataStatusText').textContent = '無法存取';
+            document.getElementById('dataStatusText').textContent = 'Unavailable';
             document.getElementById('dataStatus').className = 'status-icon inactive';
         }
     }
@@ -191,11 +191,11 @@ class FHIRConnection {
         
         if (connected) {
             serverStatus.className = 'status-icon active';
-            serverStatusText.textContent = '已連線';
+            serverStatusText.textContent = 'Connected';
             responseTimeText.textContent = `${responseTime} ms`;
         } else {
             serverStatus.className = 'status-icon inactive';
-            serverStatusText.textContent = '未連線';
+            serverStatusText.textContent = 'Disconnected';
             responseTimeText.textContent = '--';
         }
     }
@@ -216,7 +216,7 @@ class FHIRConnection {
     // 執行 FHIR 查詢
     async query(resourceType, params = {}) {
         if (!this.isConnected) {
-            throw new Error('未連線到 FHIR 伺服器');
+            throw new Error('Not connected to FHIR server');
         }
 
         // 支持數組參數(同名參數多次出現)
@@ -250,7 +250,7 @@ class FHIRConnection {
         });
 
         if (!response.ok) {
-            throw new Error(`查詢失敗: ${response.status} ${response.statusText}`);
+            throw new Error(`Query failed: ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();

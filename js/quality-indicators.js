@@ -131,7 +131,7 @@ async function executeQuery(indicatorId) {
     
     const isConnected = await checkFHIRConnection();
     if (!isConnected) {
-        alert('請先在首頁設定 FHIR 伺服器連線');
+        alert('Please configure FHIR server on Home page');
         window.location.href = 'index.html';
         return;
     }
@@ -158,7 +158,7 @@ async function executeQuery(indicatorId) {
             let count = 0;
             countInterval = setInterval(() => {
                 count += Math.floor(Math.random() * 40) + 20;
-                button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> 已撈取 ${count} 筆`;
+                button.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Fetched ${count} records`;
             }, 150);
         }
     }
@@ -177,18 +177,18 @@ async function executeQuery(indicatorId) {
         if (countInterval) clearInterval(countInterval);
         const actualCount = results.numerator || 0;
         if (button) {
-            button.innerHTML = `<i class="fas fa-check"></i> 完成 (${actualCount} 筆)`;
+            button.innerHTML = `<i class="fas fa-check"></i> Done (${actualCount} records)`;
         }
         
     } catch (error) {
-        console.error('查詢失敗:', error);
+        console.error('Query failed:', error);
         
         // 🆕 清除計數
         if (countInterval) clearInterval(countInterval);
         if (button) {
-            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 查詢失敗';
+            button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Query failed';
         }
-        alert(`查詢失敗: ${error.message}`);
+        alert(`Query failed: ${error.message}`);
         
     } finally {
         // 🆕 延遲 2 秒後恢復按鈕
@@ -430,12 +430,12 @@ async function queryIndicator(indicatorId) {
         };
         
     } catch (error) {
-        console.error('查詢失敗:', error);
+        console.error('Query failed:', error);
         return generateDefaultCurrentQuarterData();
     }
 }
 
-// 生成預設當前季度數據（當查詢失敗時）- 返回真實的0值
+// 生成預設當前季度數據（當Query failed時）- 返回真實的0值
 function generateDefaultCurrentQuarterData() {
     const currentQuarter = getCurrentQuarter();
     const baseRate = '0.00';
@@ -626,14 +626,14 @@ async function queryOutpatientInjectionRateSample(conn, quarter = null) {
         // 檢查是否屬於有效的門診案件
         const encounterRef = med.encounter?.reference;
         if (!encounterRef) {
-            if (unmatchedSample.length < 3) unmatchedSample.push('無encounter reference');
+            if (unmatchedSample.length < 3) unmatchedSample.push('no encounter reference');
             continue;
         }
         
         const encounterId = encounterRef.split('/').pop();
         if (!validEncounterIds.has(encounterId)) {
             if (unmatchedSample.length < 3) {
-                unmatchedSample.push(`encounter ${encounterId} 不在有效列表中`);
+                unmatchedSample.push(`encounter ${encounterId} not in valid list`);
             }
             continue; // 不是有效門診案件
         }
@@ -1079,24 +1079,24 @@ async function queryDrugOverlapRateSample(conn, indicatorId, quarter = null) {
     // 根據indicatorId定義藥品類別檢查函數
     const drugCheckers = {
         // 同院指標 (Same Hospital) - 指標代碼 1710, 1711, 3373-3376
-        'indicator-03-1': { check: isAntihypertensiveDrug, name: '降血壓藥(口服)', cqlFile: 'Indicator_03_1_Same_Hospital_Antihypertensive_Overlap_1710.cql' },
-        'indicator-03-2': { check: isLipidLoweringDrug, name: '降血脂藥(口服)', cqlFile: 'Indicator_03_2_Same_Hospital_Lipid_Lowering_Overlap_1711.cql' },
-        'indicator-03-3': { check: isAntidiabeticDrug, name: '降血糖藥(口服及注射)', cqlFile: 'Indicator_03_3_Same_Hospital_Antidiabetic_Overlap_3373.cql' },
-        'indicator-03-4': { check: isAntipsychoticDrug, name: '抗思覺失調症藥(口服)', cqlFile: 'Indicator_03_4_Same_Hospital_Antipsychotic_Overlap_3374.cql' },
-        'indicator-03-5': { check: isAntidepressantDrug, name: '抗憂鬱症藥(口服)', cqlFile: 'Indicator_03_5_Same_Hospital_Antidepressant_Overlap_1728.cql' },
-        'indicator-03-6': { check: isSedativeHypnoticDrug, name: '安眠鎮靜藥(口服)', cqlFile: 'Indicator_03_6_Same_Hospital_Sedative_Overlap_1712.cql' },
-        'indicator-03-7': { check: isAntithromboticDrug, name: '抗血栓藥(口服)', cqlFile: 'Indicator_03_7_Same_Hospital_Antithrombotic_Overlap_3375.cql' },
-        'indicator-03-8': { check: isProstateDrug, name: '前列腺藥(口服)', cqlFile: 'Indicator_03_8_Same_Hospital_Prostate_Overlap_3376.cql' },
+        'indicator-03-1': { check: isAntihypertensiveDrug, name: 'Antihypertensive (Oral)', cqlFile: 'Indicator_03_1_Same_Hospital_Antihypertensive_Overlap_1710.cql' },
+        'indicator-03-2': { check: isLipidLoweringDrug, name: 'Lipid-Lowering (Oral)', cqlFile: 'Indicator_03_2_Same_Hospital_Lipid_Lowering_Overlap_1711.cql' },
+        'indicator-03-3': { check: isAntidiabeticDrug, name: 'Antidiabetic (Oral/Inj)', cqlFile: 'Indicator_03_3_Same_Hospital_Antidiabetic_Overlap_3373.cql' },
+        'indicator-03-4': { check: isAntipsychoticDrug, name: 'Antipsychotic (Oral)', cqlFile: 'Indicator_03_4_Same_Hospital_Antipsychotic_Overlap_3374.cql' },
+        'indicator-03-5': { check: isAntidepressantDrug, name: 'Antidepressant (Oral)', cqlFile: 'Indicator_03_5_Same_Hospital_Antidepressant_Overlap_1728.cql' },
+        'indicator-03-6': { check: isSedativeHypnoticDrug, name: 'Sedative (Oral)', cqlFile: 'Indicator_03_6_Same_Hospital_Sedative_Overlap_1712.cql' },
+        'indicator-03-7': { check: isAntithromboticDrug, name: 'Antithrombotic (Oral)', cqlFile: 'Indicator_03_7_Same_Hospital_Antithrombotic_Overlap_3375.cql' },
+        'indicator-03-8': { check: isProstateDrug, name: 'Prostate Drug (Oral)', cqlFile: 'Indicator_03_8_Same_Hospital_Prostate_Overlap_3376.cql' },
         
         // 跨院指標 (Cross Hospital) - 指標代碼 1713-1715, 1729-1731, 3377-3378
-        'indicator-03-9': { check: isAntihypertensiveDrug, name: '降血壓藥(跨院)', cqlFile: 'Indicator_03_9_Cross_Hospital_Antihypertensive_Overlap_1713.cql', crossHospital: true },
-        'indicator-03-10': { check: isLipidLoweringDrug, name: '降血脂藥(跨院)', cqlFile: 'Indicator_03_10_Cross_Hospital_Lipid_Lowering_Overlap_1714.cql', crossHospital: true },
-        'indicator-03-11': { check: isAntidiabeticDrug, name: '降血糖藥(跨院)', cqlFile: 'Indicator_03_11_Cross_Hospital_Antidiabetic_Overlap_1715.cql', crossHospital: true },
-        'indicator-03-12': { check: isAntipsychoticDrug, name: '抗思覺失調症藥(跨院)', cqlFile: 'Indicator_03_12_Cross_Hospital_Antipsychotic_Overlap_1729.cql', crossHospital: true },
-        'indicator-03-13': { check: isAntidepressantDrug, name: '抗憂鬱症藥(跨院)', cqlFile: 'Indicator_03_13_Cross_Hospital_Antidepressant_Overlap_1730.cql', crossHospital: true },
-        'indicator-03-14': { check: isSedativeHypnoticDrug, name: '安眠鎮靜藥(跨院)', cqlFile: 'Indicator_03_14_Cross_Hospital_Sedative_Overlap_1731.cql', crossHospital: true },
-        'indicator-03-15': { check: isAntithromboticDrug, name: '抗血栓藥(跨院)', cqlFile: 'Indicator_03_15_Cross_Hospital_Antithrombotic_Overlap_3377.cql', crossHospital: true },
-        'indicator-03-16': { check: isProstateDrug, name: '前列腺藥(跨院)', cqlFile: 'Indicator_03_16_Cross_Hospital_Prostate_Overlap_3378.cql', crossHospital: true },
+        'indicator-03-9': { check: isAntihypertensiveDrug, name: 'Antihypertensive (Cross)', cqlFile: 'Indicator_03_9_Cross_Hospital_Antihypertensive_Overlap_1713.cql', crossHospital: true },
+        'indicator-03-10': { check: isLipidLoweringDrug, name: 'Lipid-Lowering (Cross)', cqlFile: 'Indicator_03_10_Cross_Hospital_Lipid_Lowering_Overlap_1714.cql', crossHospital: true },
+        'indicator-03-11': { check: isAntidiabeticDrug, name: 'Antidiabetic (Cross)', cqlFile: 'Indicator_03_11_Cross_Hospital_Antidiabetic_Overlap_1715.cql', crossHospital: true },
+        'indicator-03-12': { check: isAntipsychoticDrug, name: 'Antipsychotic (Cross)', cqlFile: 'Indicator_03_12_Cross_Hospital_Antipsychotic_Overlap_1729.cql', crossHospital: true },
+        'indicator-03-13': { check: isAntidepressantDrug, name: 'Antidepressant (Cross)', cqlFile: 'Indicator_03_13_Cross_Hospital_Antidepressant_Overlap_1730.cql', crossHospital: true },
+        'indicator-03-14': { check: isSedativeHypnoticDrug, name: 'Sedative (Cross)', cqlFile: 'Indicator_03_14_Cross_Hospital_Sedative_Overlap_1731.cql', crossHospital: true },
+        'indicator-03-15': { check: isAntithromboticDrug, name: 'Antithrombotic (Cross)', cqlFile: 'Indicator_03_15_Cross_Hospital_Antithrombotic_Overlap_3377.cql', crossHospital: true },
+        'indicator-03-16': { check: isProstateDrug, name: 'Prostate Drug (Cross)', cqlFile: 'Indicator_03_16_Cross_Hospital_Prostate_Overlap_3378.cql', crossHospital: true },
     };
     
     const checker = drugCheckers[indicatorId];
@@ -1383,7 +1383,7 @@ async function queryPrescription10PlusDrugsRateSample(conn, quarter = null) {
         
         return { rate: rate, numerator: casesWith10PlusDrugs, denominator: casesWithMedications };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -1492,7 +1492,7 @@ async function queryPediatricAsthmaEDRateSample(conn, quarter = null) {
         
         return { rate: rate, numerator: edCount, denominator: totalAsthmaPatients };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -1553,7 +1553,7 @@ async function queryDiabetesHbA1cTestingRateSample(conn, quarter = null) {
                     allConditions.push(...conditionsByEnc.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ Encounter ${encId} Condition查詢失敗`);
+                console.log(`    ⚠️ Encounter ${encId} ConditionQuery failed`);
             }
         }
         
@@ -1604,7 +1604,7 @@ async function queryDiabetesHbA1cTestingRateSample(conn, quarter = null) {
                     allMedications.push(...medicationsByEnc.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ Encounter ${encId} MedicationRequest查詢失敗`);
+                console.log(`    ⚠️ Encounter ${encId} MedicationRequestQuery failed`);
             }
         }
         
@@ -1658,7 +1658,7 @@ async function queryDiabetesHbA1cTestingRateSample(conn, quarter = null) {
                     allObservations.push(...observationsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Observation查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ObservationQuery failed`);
             }
         }
         
@@ -1694,7 +1694,7 @@ async function queryDiabetesHbA1cTestingRateSample(conn, quarter = null) {
         
         return { rate: rate, numerator: withHbA1c, denominator: totalDiabetes };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -1822,7 +1822,7 @@ async function querySameDaySameDiseaseRevisitRateSample(conn, quarter = null) {
         
         return { rate: rate, numerator: revisitCount, denominator: totalPatients };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -2157,7 +2157,7 @@ async function queryInpatient3DayEDAfterDischargeSample(conn, quarter = null) {
         
         return { rate: rate, numerator: edWithin3Days, denominator: dischargeCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -2193,7 +2193,7 @@ async function queryCesareanSectionOverallRateSample(conn, quarter = null) {
                     allEncounters.push(...encountersByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} 查詢失敗，繼續查詢其他患者`);
+                console.log(`    ⚠️ 患者 ${patientId} Query failed，繼續查詢其他患者`);
             }
         }
         
@@ -2221,7 +2221,7 @@ async function queryCesareanSectionOverallRateSample(conn, quarter = null) {
                     allProcedures.push(...proceduresByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Procedure查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ProcedureQuery failed`);
             }
         }
         
@@ -2241,7 +2241,7 @@ async function queryCesareanSectionOverallRateSample(conn, quarter = null) {
                     allConditions.push(...conditionsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Condition查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ConditionQuery failed`);
             }
         }
         
@@ -2362,7 +2362,7 @@ async function queryCesareanSectionOverallRateSample(conn, quarter = null) {
         
         return { rate: rate, numerator: cesareanCount, denominator: totalDeliveries };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -2397,7 +2397,7 @@ async function queryCesareanSectionPatientRequestedRateSample(conn, quarter = nu
                     allEncounters.push(...encountersByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} 查詢失敗，繼續查詢其他患者`);
+                console.log(`    ⚠️ 患者 ${patientId} Query failed，繼續查詢其他患者`);
             }
         }
         
@@ -2445,7 +2445,7 @@ async function queryCesareanSectionPatientRequestedRateSample(conn, quarter = nu
                     allProcedures.push(...proceduresByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Procedure查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ProcedureQuery failed`);
             }
         }
         
@@ -2465,7 +2465,7 @@ async function queryCesareanSectionPatientRequestedRateSample(conn, quarter = nu
                     allConditions.push(...conditionsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Condition查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ConditionQuery failed`);
             }
         }
         
@@ -2568,7 +2568,7 @@ async function queryCesareanSectionPatientRequestedRateSample(conn, quarter = nu
         
         return { rate: rate, numerator: patientRequestedCount, denominator: totalDeliveries };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -2602,7 +2602,7 @@ async function queryCesareanSectionWithIndicationRateSample(conn, quarter = null
                     allEncounters.push(...encountersByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} 查詢失敗，繼續查詢其他患者`);
+                console.log(`    ⚠️ 患者 ${patientId} Query failed，繼續查詢其他患者`);
             }
         }
         
@@ -2650,7 +2650,7 @@ async function queryCesareanSectionWithIndicationRateSample(conn, quarter = null
                     allProcedures.push(...proceduresByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Procedure查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ProcedureQuery failed`);
             }
         }
         
@@ -2670,7 +2670,7 @@ async function queryCesareanSectionWithIndicationRateSample(conn, quarter = null
                     allConditions.push(...conditionsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Condition查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ConditionQuery failed`);
             }
         }
         
@@ -2772,7 +2772,7 @@ async function queryCesareanSectionWithIndicationRateSample(conn, quarter = null
         
         return { rate: rate, numerator: withIndicationCount, denominator: totalCesarean };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -2806,7 +2806,7 @@ async function queryCesareanSectionFirstTimeRateSample(conn, quarter = null) {
                     allEncounters.push(...encountersByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} 查詢失敗，繼續查詢其他患者`);
+                console.log(`    ⚠️ 患者 ${patientId} Query failed，繼續查詢其他患者`);
             }
         }
         
@@ -2854,7 +2854,7 @@ async function queryCesareanSectionFirstTimeRateSample(conn, quarter = null) {
                     allProcedures.push(...proceduresByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Procedure查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ProcedureQuery failed`);
             }
         }
         
@@ -2874,7 +2874,7 @@ async function queryCesareanSectionFirstTimeRateSample(conn, quarter = null) {
                     allConditions.push(...conditionsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Condition查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ConditionQuery failed`);
             }
         }
         
@@ -2895,7 +2895,7 @@ async function queryCesareanSectionFirstTimeRateSample(conn, quarter = null) {
                     allObservations.push(...observationsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Observation查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ObservationQuery failed`);
             }
         }
         
@@ -3015,7 +3015,7 @@ async function queryCesareanSectionFirstTimeRateSample(conn, quarter = null) {
         
         return { rate: rate, numerator: firstTimeCount, denominator: totalCesarean };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -3058,7 +3058,7 @@ async function queryCleanSurgeryAntibioticOver3DaysRateSample(conn, quarter = nu
                     allEncounters.push(...encountersByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Encounter查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} EncounterQuery failed`);
             }
         }
         
@@ -3100,7 +3100,7 @@ async function queryCleanSurgeryAntibioticOver3DaysRateSample(conn, quarter = nu
                     allProcedures.push(...proceduresByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Procedure查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ProcedureQuery failed`);
             }
         }
         
@@ -3121,7 +3121,7 @@ async function queryCleanSurgeryAntibioticOver3DaysRateSample(conn, quarter = nu
                     allMedications.push(...medicationsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} MedicationRequest查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} MedicationRequestQuery failed`);
             }
         }
         
@@ -3210,7 +3210,7 @@ async function queryCleanSurgeryAntibioticOver3DaysRateSample(conn, quarter = nu
         
         return { rate: rate, numerator: over3DaysCount, denominator: cleanSurgeryCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -3315,7 +3315,7 @@ async function queryESWLAverageUtilizationTimesSample(conn, quarter = null) {
         
         return { rate: avgTimes, numerator: eswlTotalCount, denominator: patientCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -3351,7 +3351,7 @@ async function queryUterineFibroidSurgery14DayReadmissionSample(conn, quarter = 
                     allEncounters.push(...encountersByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} 查詢失敗，繼續查詢其他患者`);
+                console.log(`    ⚠️ 患者 ${patientId} Query failed，繼續查詢其他患者`);
             }
         }
         
@@ -3466,7 +3466,7 @@ async function queryUterineFibroidSurgery14DayReadmissionSample(conn, quarter = 
         
         return { rate: rate, numerator: readmissionCount, denominator: fibroidSurgeryCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -3509,7 +3509,7 @@ async function queryKneeArthroplasty90DayDeepInfectionSample(conn, quarter = nul
                     allEncounters.push(...encountersByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Encounter查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} EncounterQuery failed`);
             }
         }
         
@@ -3551,7 +3551,7 @@ async function queryKneeArthroplasty90DayDeepInfectionSample(conn, quarter = nul
                     allProcedures.push(...proceduresByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Procedure查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ProcedureQuery failed`);
             }
         }
         
@@ -3571,7 +3571,7 @@ async function queryKneeArthroplasty90DayDeepInfectionSample(conn, quarter = nul
                     allConditions.push(...conditionsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Condition查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ConditionQuery failed`);
             }
         }
         
@@ -3662,7 +3662,7 @@ async function queryKneeArthroplasty90DayDeepInfectionSample(conn, quarter = nul
         
         return { rate: rate, numerator: infectionCount, denominator: kneeArthroplastyCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -3764,7 +3764,7 @@ async function queryTotalKneeArthroplasty90DayInfectionSample(conn, quarter = nu
         
         return { rate: rate, numerator: infectionCount, denominator: totalTkaCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -3807,7 +3807,7 @@ async function queryPartialKneeArthroplasty90DayInfectionSample(conn, quarter = 
                     allEncounters.push(...encountersByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Encounter查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} EncounterQuery failed`);
             }
         }
         
@@ -3849,7 +3849,7 @@ async function queryPartialKneeArthroplasty90DayInfectionSample(conn, quarter = 
                     allProcedures.push(...proceduresByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Procedure查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ProcedureQuery failed`);
             }
         }
         
@@ -3869,7 +3869,7 @@ async function queryPartialKneeArthroplasty90DayInfectionSample(conn, quarter = 
                     allConditions.push(...conditionsByPatient.entry);
                 }
             } catch (err) {
-                console.log(`    ⚠️ 患者 ${patientId} Condition查詢失敗`);
+                console.log(`    ⚠️ 患者 ${patientId} ConditionQuery failed`);
             }
         }
         
@@ -3958,7 +3958,7 @@ async function queryPartialKneeArthroplasty90DayInfectionSample(conn, quarter = 
         
         return { rate: rate, numerator: infectionCount, denominator: partialKneeCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -4081,7 +4081,7 @@ async function queryInpatientSurgicalWoundInfectionRateSample(conn, quarter = nu
         
         return { rate: rate, numerator: infectionCount, denominator: surgeryCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -4244,7 +4244,7 @@ async function queryAcuteMyocardialInfarctionMortalityRateSample(conn, quarter =
         
         return { rate: rate, numerator: amiDeaths, denominator: amiPatients };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -4397,7 +4397,7 @@ async function queryDementiaHospiceCareUtilizationRateSample(conn, quarter = nul
         
         return { rate: rate, numerator: withHospice, denominator: totalDementia };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -4523,7 +4523,7 @@ async function queryCleanSurgeryWoundInfectionRateSample(conn, quarter = null) {
         
         return { rate: rate, numerator: infectionCount, denominator: cleanSurgeryCount };
     } catch (error) {
-        console.error(`  ❌ 查詢失敗:`, error);
+        console.error(`  ❌ Query failed:`, error);
         return { rate: '0.00', numerator: 0, denominator: 0 };
     }
 }
@@ -4566,7 +4566,7 @@ function updateIndicatorCard(indicatorId, results) {
     
     console.log(`🔄 更新卡片 ${indicatorId}:`, {
         elementId, 
-        element: element ? '找到' : '未找到',
+        element: element ? 'Found' : 'Not found',
         results,
         demoMode: results.demoMode
     });
@@ -4588,7 +4588,7 @@ function updateIndicatorCard(indicatorId, results) {
     
     if (results.noData) {
         // 真的無資料才顯示 0.00% 加提示
-        element.innerHTML = `0.00% <span style="color: #999; font-size: 0.85em; font-weight: normal;">(資料庫無符合資料)</span>`;
+        element.innerHTML = `0.00% <span style="color: #999; font-size: 0.85em; font-weight: normal;">(No matching data)</span>`;
         console.log(`  ⚠️ 無資料，顯示 0.00%`);
         return;
     }
@@ -4605,7 +4605,7 @@ function updateIndicatorCard(indicatorId, results) {
         
         // 如果是0.00，加上提示文字
         if (currentValue === '0.00' || currentValue === 0) {
-            element.innerHTML = `${currentValue}${suffix} <span style="color: #999; font-size: 0.85em; font-weight: normal;">(資料庫無符合資料)</span>`;
+            element.innerHTML = `${currentValue}${suffix} <span style="color: #999; font-size: 0.85em; font-weight: normal;">(No matching data)</span>`;
         } else {
             element.textContent = `${currentValue}${suffix}`;
         }
@@ -4669,12 +4669,12 @@ function getOutcomeQualityPatientIds() {
 function generateQuarterRow(year, quarter, data, isCurrent) {
     const bgColor = isCurrent ? 'background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%); font-weight: bold;' : 
                     (quarter === 'Q1' || quarter === 'Q3') ? 'background: #f8f9fa;' : '';
-    const marker = isCurrent ? ' <span style="color: #f59e0b; font-weight: bold;">● 當前</span>' : '';
+    const marker = isCurrent ? ' <span style="color: #f59e0b; font-weight: bold;">● Current</span>' : '';
     const quarterText = {
-        'Q1': '第一季',
-        'Q2': '第二季',
-        'Q3': '第三季',
-        'Q4': '第四季'
+        'Q1': 'Q1',
+        'Q2': 'Q2',
+        'Q3': 'Q3',
+        'Q4': 'Q4'
     };
     
     // 處理 null 值（尚未計算的季度）
@@ -4731,17 +4731,17 @@ async function showDetailModal(indicatorId) {
     
     // 指標標題映射
     const titles = {
-        'indicator-01': '門診注射劑使用率',
-        'indicator-02': '門診抗生素使用率',
+        'indicator-01': 'Outpatient Injection Rate',
+        'indicator-02': 'Outpatient Antibiotic Rate',
         // ... 其他指標標題
     };
     
-    modalTitle.textContent = titles[indicatorId] || '指標詳情';
+    modalTitle.textContent = titles[indicatorId] || 'Indicator Details';
     
     const results = currentResults[indicatorId];
     if (results) {
         if (results.noData) {
-            modalBody.innerHTML = '<div class="no-data-message"><i class="fas fa-database"></i><p>資料庫無資料</p></div>';
+            modalBody.innerHTML = '<div class="no-data-message"><i class="fas fa-database"></i><p>No Data Available</p></div>';
         } else {
             const currentQuarter = getCurrentQuarter();
             
@@ -4760,15 +4760,15 @@ async function showDetailModal(indicatorId) {
                 console.log(`   验证比率: ${currentData.numerator} ÷ ${currentData.denominator} = ${(currentData.numerator / currentData.denominator * 100).toFixed(2)}%`);
                 modalBody.innerHTML = `
                     <div class="detail-content">
-                        <h3>季度統計數據 (2024-2025) <span style="font-size: 0.9rem; color: #94a3b8; font-weight: normal;">● 正在載入歷史數據...</span></h3>
+                        <h3>Quarterly Statistics (2024-2025) <span style="font-size: 0.9rem; color: #94a3b8; font-weight: normal;">● Loading historical data...</span></h3>
                         <table id="quarterTable-${indicatorId}" style="width: 100%; border-collapse: collapse; margin: 20px 0;">
                             <thead>
                                 <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">年度</th>
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">季度</th>
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">分子</th>
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">分母</th>
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">比率 (%)</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Year</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Quarter</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Numerator</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Denominator</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Rate (%)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -4797,15 +4797,15 @@ async function showDetailModal(indicatorId) {
                 const updatedResults = currentResults[indicatorId];
                 modalBody.innerHTML = `
                     <div class="detail-content">
-                        <h3>季度統計數據 (2024-2025)</h3>
+                        <h3>Quarterly Statistics (2024-2025)</h3>
                         <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
                             <thead>
                                 <tr style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">年度</th>
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">季度</th>
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">分子</th>
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">分母</th>
-                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">比率 (%)</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Year</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Quarter</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Numerator</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Denominator</th>
+                                    <th style="padding: 12px; text-align: center; border: 1px solid #ddd;">Rate (%)</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -4825,7 +4825,7 @@ async function showDetailModal(indicatorId) {
             }
         }
     } else {
-        modalBody.innerHTML = '<p>請先執行查詢</p>';
+        modalBody.innerHTML = '<p>Please run a query first</p>';
     }
     
     modal.style.display = 'flex';
@@ -4962,9 +4962,9 @@ async function progressiveLoadQuarters(indicatorId, currentResults) {
     // 全部載入完成後，移除載入提示
     const header = document.querySelector(`#quarterTable-${indicatorId}`)?.previousElementSibling;
     if (header) {
-        header.innerHTML = '季度統計數據 (2024-2025) <span style="font-size: 0.9rem; color: #10b981; font-weight: normal;">✓ 載入完成</span>';
+        header.innerHTML = 'Quarterly Statistics (2024-2025) <span style="font-size: 0.9rem; color: #10b981; font-weight: normal;">✓ Loaded</span>';
         setTimeout(() => {
-            header.textContent = '季度統計數據 (2024-2025)';
+            header.textContent = 'Quarterly Statistics (2024-2025)';
         }, 2000);
     }
     
@@ -5044,7 +5044,7 @@ function exportData() {
 function switchToTestServer() {
     const testServer = 'https://hapi.fhir.org/baseR4';
     
-    if (confirm(`將切換到公開測試FHIR服務器:\n${testServer}\n\n此服務器包含測試數據,可以驗證CQL邏輯。\n\n是否繼續?`)) {
+    if (confirm(`Switch to public test FHIR server:\n${testServer}\n\nThis server contains test data for CQL logic validation.\n\nContinue?`)) {
         // 保存到localStorage
         localStorage.setItem('fhirServer', testServer);
         localStorage.removeItem('authToken'); // 公開服務器不需要token
@@ -5064,9 +5064,9 @@ function switchToTestServer() {
         }
         
         // 提示用戶
-        alert('✅ 已切換到測試服務器\n\n請重新點擊"查詢"按鈕測試指標。');
+        alert('✅ Switched to test server\n\nPlease click Query again to test indicators.');
         
-        console.log('✅ 已切換到測試服務器:', testServer);
+        console.log('✅ Switched to test server:', testServer);
     }
 }
 
@@ -5079,8 +5079,8 @@ function toggleDemoMode() {
     updateDemoModeButton();
     
     const message = newMode 
-        ? '✅ 示範模式已啟用\n\n當 FHIR 伺服器沒有資料時，系統將顯示模擬數據供展示使用。\n\n請重新整理頁面並點擊「查詢」按鈕測試。'
-        : '✅ 示範模式已關閉\n\n系統將只顯示 FHIR 伺服器的真實資料。';
+        ? '✅ Demo Mode Enabled\\n\\nSimulated data shown when FHIR has no data.\\n\\nRefresh and click Query to test.'
+        : '✅ Demo Mode Disabled\\n\\nOnly real FHIR data will be shown.';
     
     alert(message);
     console.log(`示範模式: ${newMode ? '啟用' : '關閉'}`);
@@ -5106,12 +5106,12 @@ function updateDemoModeButton() {
             btn.classList.remove('btn-secondary');
             btn.classList.add('btn-success');
             btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            text.textContent = '示範模式：開啟';
+            text.textContent = 'Demo Mode: ON';
         } else {
             btn.classList.remove('btn-success');
             btn.classList.add('btn-secondary');
             btn.style.background = '';
-            text.textContent = '啟用示範模式';
+            text.textContent = 'Enable Demo Mode';
         }
     }
     
@@ -5215,9 +5215,9 @@ async function generateExcel() {
     loadingMessage.innerHTML = `
         <div style="font-size: 1.2rem; color: #1e293b; margin-bottom: 1rem;">
             <i class="fas fa-file-excel" style="color: #10b981; font-size: 2rem; margin-bottom: 0.5rem;"></i>
-            <div style="margin-top: 0.5rem; font-weight: 600;">正在生成Excel報告...</div>
+            <div style="margin-top: 0.5rem; font-weight: 600;">Generating Excel report...</div>
         </div>
-        <div style="color: #64748b; font-size: 0.9rem;">請稍候，正在收集39項指標數據</div>
+        <div style="color: #64748b; font-size: 0.9rem;">Please wait, collecting 39 indicator data</div>
     `;
     
     const overlay = document.createElement('div');
@@ -5243,7 +5243,7 @@ async function generateExcel() {
         const workbook = createExcelWorkbook(allData);
         
         // 生成並下載Excel
-        XLSX.writeFile(workbook, `林口長庚醫院_醫療品質報告_${getCurrentDateString()}.xlsx`);
+        XLSX.writeFile(workbook, `CGMH_Quality_Report_${getCurrentDateString()}.xlsx`);
         
         // 移除載入提示
         setTimeout(() => {
@@ -5254,18 +5254,18 @@ async function generateExcel() {
         console.log('Excel生成成功！');
         
     } catch (error) {
-        console.error('Excel生成失敗:', error);
+        console.error('Excel generation failed:', error);
         
         // 顯示錯誤訊息
         loadingMessage.innerHTML = `
             <div style="font-size: 1.2rem; color: #ef4444; margin-bottom: 1rem;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                <div style="margin-top: 0.5rem; font-weight: 600;">Excel生成失敗</div>
+                <div style="margin-top: 0.5rem; font-weight: 600;">Excel generation failed</div>
             </div>
             <div style="color: #64748b; font-size: 0.9rem;">${error.message}</div>
             <button onclick="document.body.removeChild(document.getElementById('excelLoadingMessage')); document.body.removeChild(document.getElementById('excelOverlay'));" 
                     style="margin-top: 1rem; padding: 0.5rem 1.5rem; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">
-                關閉
+                Close
             </button>
         `;
     }
@@ -5282,7 +5282,7 @@ function closeNHIDialog() {
 
 // 上傳健保局功能
 function uploadToNHI() {
-    // 顯示尚未連結的訊息
+    // 顯示Not Connected的訊息
     const messageBox = document.createElement('div');
     messageBox.setAttribute('data-nhi-dialog', 'true');
     messageBox.style.cssText = `
@@ -5307,15 +5307,15 @@ function uploadToNHI() {
         </button>
         <div style="font-size: 1.2rem; color: #1e293b; margin-bottom: 1rem;">
             <i class="fas fa-link-slash" style="color: #f59e0b; font-size: 2rem; margin-bottom: 0.5rem;"></i>
-            <div style="margin-top: 0.5rem; font-weight: 600;">尚未連結</div>
+            <div style="margin-top: 0.5rem; font-weight: 600;">Not Connected</div>
         </div>
         <div style="color: #64748b; font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.6;">
-            健保局系統連結尚未建立<br>
-            連結後即可上傳醫療品質報告
+            NHI system connection not established<br>
+            Quality report can be uploaded once connected
         </div>
         <button onclick="closeNHIDialog();" 
                 style="padding: 0.75rem 2rem; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.95rem;">
-            <i class="fas fa-check"></i> 確定
+            <i class="fas fa-check"></i> OK
         </button>
     `;
     
@@ -5348,53 +5348,53 @@ async function collectAllIndicatorsData() {
     // 定義39項指標
     const indicatorDefinitions = [
         // 用藥安全指標 (1-18)
-        { id: '01', name: '門診注射劑使用率', category: '用藥安全', code: '3127' },
-        { id: '02', name: '門診抗生素使用率', category: '用藥安全', code: '1140.01' },
-        { id: '03-1', name: '同院降血壓重疊率', category: '用藥安全', code: '1710' },
-        { id: '03-2', name: '同院降血脂重疊率', category: '用藥安全', code: '1711' },
-        { id: '03-3', name: '同院降血糖重疊率', category: '用藥安全', code: '1712' },
-        { id: '03-4', name: '同院抗思覺失調重疊率', category: '用藥安全', code: '1726' },
-        { id: '03-5', name: '同院抗憂鬱重疊率', category: '用藥安全', code: '1727' },
-        { id: '03-6', name: '同院安眠鎮靜重疊率', category: '用藥安全', code: '1728' },
-        { id: '03-7', name: '同院抗血栓重疊率', category: '用藥安全', code: '3375' },
-        { id: '03-8', name: '同院前列腺肥大重疊率', category: '用藥安全', code: '3376' },
-        { id: '03-9', name: '跨院降血壓重疊率', category: '用藥安全', code: '1713' },
-        { id: '03-10', name: '跨院降血脂重疊率', category: '用藥安全', code: '1714' },
-        { id: '03-11', name: '跨院降血糖重疊率', category: '用藥安全', code: '1715' },
-        { id: '03-12', name: '跨院抗思覺失調重疊率', category: '用藥安全', code: '1729' },
-        { id: '03-13', name: '跨院抗憂鬱重疊率', category: '用藥安全', code: '1730' },
-        { id: '03-14', name: '跨院安眠鎮靜重疊率', category: '用藥安全', code: '1731' },
-        { id: '03-15', name: '跨院抗血栓重疊率', category: '用藥安全', code: '3377' },
-        { id: '03-16', name: '跨院前列腺肥大重疊率', category: '用藥安全', code: '3378' },
+        { id: '01', name: 'Outpatient Injection Rate', category: 'Medication Safety', code: '3127' },
+        { id: '02', name: 'Outpatient Antibiotic Rate', category: 'Medication Safety', code: '1140.01' },
+        { id: '03-1', name: 'Same-Hosp Antihypertensive Overlap', category: 'Medication Safety', code: '1710' },
+        { id: '03-2', name: 'Same-Hosp Lipid-Lowering Overlap', category: 'Medication Safety', code: '1711' },
+        { id: '03-3', name: 'Same-Hosp Antidiabetic Overlap', category: 'Medication Safety', code: '1712' },
+        { id: '03-4', name: 'Same-Hosp Antipsychotic Overlap', category: 'Medication Safety', code: '1726' },
+        { id: '03-5', name: 'Same-Hosp Antidepressant Overlap', category: 'Medication Safety', code: '1727' },
+        { id: '03-6', name: 'Same-Hosp Sedative Overlap', category: 'Medication Safety', code: '1728' },
+        { id: '03-7', name: 'Same-Hosp Antithrombotic Overlap', category: 'Medication Safety', code: '3375' },
+        { id: '03-8', name: 'Same-Hosp Prostate Overlap', category: 'Medication Safety', code: '3376' },
+        { id: '03-9', name: 'Cross-Hosp Antihypertensive Overlap', category: 'Medication Safety', code: '1713' },
+        { id: '03-10', name: 'Cross-Hosp Lipid-Lowering Overlap', category: 'Medication Safety', code: '1714' },
+        { id: '03-11', name: 'Cross-Hosp Antidiabetic Overlap', category: 'Medication Safety', code: '1715' },
+        { id: '03-12', name: 'Cross-Hosp Antipsychotic Overlap', category: 'Medication Safety', code: '1729' },
+        { id: '03-13', name: 'Cross-Hosp Antidepressant Overlap', category: 'Medication Safety', code: '1730' },
+        { id: '03-14', name: 'Cross-Hosp Sedative Overlap', category: 'Medication Safety', code: '1731' },
+        { id: '03-15', name: 'Cross-Hosp Antithrombotic Overlap', category: 'Medication Safety', code: '3377' },
+        { id: '03-16', name: 'Cross-Hosp Prostate Overlap', category: 'Medication Safety', code: '3378' },
         
         // 門診品質指標 (4-8)
-        { id: '04', name: '慢性病連續處方箋開立率', category: '門診品質', code: '1318' },
-        { id: '05', name: '處方10種以上藥品件數率', category: '門診品質', code: '3128' },
-        { id: '06', name: '兒童氣喘急診率', category: '門診品質', code: '1315Q' },
-        { id: '07', name: '糖尿病HbA1c檢測率', category: '門診品質', code: '109.01Q' },
-        { id: '08', name: '同日同疾病再就診率', category: '門診品質', code: '1322' },
+        { id: '04', name: 'Chronic Rx Refill Rate', category: 'Outpatient Quality', code: '1318' },
+        { id: '05', name: 'Rx 10+ Drugs Rate', category: 'Outpatient Quality', code: '3128' },
+        { id: '06', name: 'Pediatric Asthma ER Rate', category: 'Outpatient Quality', code: '1315Q' },
+        { id: '07', name: 'Diabetes HbA1c Test Rate', category: 'Outpatient Quality', code: '109.01Q' },
+        { id: '08', name: 'Same-Day Revisit Rate', category: 'Outpatient Quality', code: '1322' },
         
         // 住院品質指標 (9-11)
-        { id: '09', name: '非計畫性14日內再住院率', category: '住院品質', code: '1077.01Q' },
-        { id: '10', name: '出院後3日內急診率', category: '住院品質', code: '108.01' },
-        { id: '11-1', name: '整體剖腹產率', category: '住院品質', code: '1136.01' },
-        { id: '11-2', name: '產婦要求剖腹產率', category: '住院品質', code: '1137.01' },
-        { id: '11-3', name: '有適應症剖腹產率', category: '住院品質', code: '1138.01' },
-        { id: '11-4', name: '初次剖腹產率', category: '住院品質', code: '1075.01' },
+        { id: '09', name: '14-Day Unplanned Readmission', category: 'Inpatient Quality', code: '1077.01Q' },
+        { id: '10', name: '3-Day Post-Discharge ER Rate', category: 'Inpatient Quality', code: '108.01' },
+        { id: '11-1', name: 'Overall C-Section Rate', category: 'Inpatient Quality', code: '1136.01' },
+        { id: '11-2', name: 'Maternal Request C-Section', category: 'Inpatient Quality', code: '1137.01' },
+        { id: '11-3', name: 'Indicated C-Section Rate', category: 'Inpatient Quality', code: '1138.01' },
+        { id: '11-4', name: 'Primipara C-Section Rate', category: 'Inpatient Quality', code: '1075.01' },
         
         // 手術品質指標 (12-16, 19)
-        { id: '12', name: '清淨手術抗生素超過3日率', category: '手術品質', code: '1155' },
-        { id: '13', name: 'ESWL平均利用次數', category: '手術品質', code: '20.01Q' },
-        { id: '14', name: '子宮肌瘤手術14日再住院率', category: '手術品質', code: '473.01' },
-        { id: '15-1', name: '人工膝關節90日深部感染率', category: '手術品質', code: '353.01' },
-        { id: '15-2', name: '全人工膝關節90日深部感染率', category: '手術品質', code: '3249' },
-        { id: '15-3', name: '部分人工膝關節90日深部感染率', category: '手術品質', code: '3250' },
-        { id: '16', name: '住院手術傷口感染率', category: '手術品質', code: '1658Q' },
-        { id: '19', name: '清淨手術傷口感染率', category: '手術品質', code: '2524Q' },
+        { id: '12', name: 'Clean Surgery Antibiotic >3d', category: 'Surgical Quality', code: '1155' },
+        { id: '13', name: 'ESWL Avg Utilization', category: 'Surgical Quality', code: '20.01Q' },
+        { id: '14', name: 'Fibroid Surgery 14d Readmit', category: 'Surgical Quality', code: '473.01' },
+        { id: '15-1', name: 'Knee Replacement 90d Infection', category: 'Surgical Quality', code: '353.01' },
+        { id: '15-2', name: 'Total Knee 90d Deep Infection', category: 'Surgical Quality', code: '3249' },
+        { id: '15-3', name: 'Partial Knee 90d Infection', category: 'Surgical Quality', code: '3250' },
+        { id: '16', name: 'Inpatient SSI Rate', category: 'Surgical Quality', code: '1658Q' },
+        { id: '19', name: 'Clean Surgery Wound Infection', category: 'Surgical Quality', code: '2524Q' },
         
         // 結果品質指標 (17-18)
-        { id: '17', name: '急性心肌梗塞死亡率', category: '結果品質', code: '1662Q' },
-        { id: '18', name: '失智症安寧療護利用率', category: '結果品質', code: '2795Q' }
+        { id: '17', name: 'AMI Mortality Rate', category: 'Outcome Quality', code: '1662Q' },
+        { id: '18', name: 'Dementia Hospice Utilization', category: 'Outcome Quality', code: '2795Q' }
     ];
     
     // 生成季度數據（從2024Q1到當前季度）
@@ -5430,7 +5430,7 @@ async function collectAllIndicatorsData() {
         indicators: indicators,
         quarters: quarters,
         generatedDate: new Date().toLocaleString('zh-TW'),
-        hospital: '林口長庚醫院',
+        hospital: 'CGMH Linkou',
         demoMode: demoMode
     };
 }
@@ -5458,10 +5458,10 @@ function generateDemoIndicatorValue(category, code) {
     // 根據指標類別設定合理的範圍
     let min, max, decimals = 2, isPercentage = true;
     
-    if (category === '用藥安全') {
+    if (category === 'Medication Safety') {
         min = 0.5;
         max = 5.0;
-    } else if (category === '門診品質') {
+    } else if (category === 'Outpatient Quality') {
         if (code === '1318') { // 慢性病連續處方箋
             min = 60;
             max = 80;
@@ -5469,10 +5469,10 @@ function generateDemoIndicatorValue(category, code) {
             min = 1.0;
             max = 10.0;
         }
-    } else if (category === '住院品質') {
+    } else if (category === 'Inpatient Quality') {
         min = 2.0;
         max = 15.0;
-    } else if (category === '手術品質') {
+    } else if (category === 'Surgical Quality') {
         if (code === '20.01Q') { // ESWL平均次數
             isPercentage = false;
             min = 1.0;
@@ -5482,7 +5482,7 @@ function generateDemoIndicatorValue(category, code) {
             min = 0.5;
             max = 5.0;
         }
-    } else if (category === '結果品質') {
+    } else if (category === 'Outcome Quality') {
         min = 1.0;
         max = 8.0;
     } else {
@@ -5504,13 +5504,13 @@ function createExcelWorkbook(data) {
     // 1. 創建封面工作表
     const coverData = [
         [hospital],
-        ['醫院總額整體性醫療品質資訊公開'],
-        ['FHIR 生成資料'],
+        ['Hospital Healthcare Quality Report'],
+        ['Generated from FHIR Data'],
         [''],
-        [`資料期間: ${quarters[0]} ~ ${quarters[quarters.length - 1]}`],
-        [`生成日期: ${generatedDate}`],
-        [demoMode ? '資料來源: 示範模擬數據' : '資料來源: FHIR 伺服器真實數據'],
-        ['共39項核心品質指標']
+        [`Data Period: ${quarters[0]} ~ ${quarters[quarters.length - 1]}`],
+        [`Generated: ${generatedDate}`],
+        [demoMode ? 'Source: Demo simulated data' : 'Source: FHIR server real data'],
+        ['39 Core Quality Indicators']
     ];
     
     const coverSheet = XLSX.utils.aoa_to_sheet(coverData);
@@ -5518,33 +5518,33 @@ function createExcelWorkbook(data) {
     // 設定封面樣式（欄寬）
     coverSheet['!cols'] = [{ wch: 60 }];
     
-    XLSX.utils.book_append_sheet(workbook, coverSheet, '封面');
+    XLSX.utils.book_append_sheet(workbook, coverSheet, 'Cover');
     
     // 2. 創建目錄工作表
     const tocData = [
-        ['目錄'],
+        ['Table of Contents'],
         [''],
-        ['用藥安全指標 (指標1-3，共18項)'],
-        ['門診品質指標 (指標4-8，共5項)'],
-        ['住院品質指標 (指標9-11，共6項)'],
-        ['手術品質指標 (指標12-16, 19，共8項)'],
-        ['結果品質指標 (指標17-18，共2項)'],
+        ['Medication Safety (Indicators 1-3, 18 items)'],
+        ['Outpatient Quality (Indicators 4-8, 5 items)'],
+        ['Inpatient Quality (Indicators 9-11, 6 items)'],
+        ['Surgical Quality (Indicators 12-16, 19, 8 items)'],
+        ['Outcome Quality (Indicators 17-18, 2 items)'],
         [''],
-        ['本報告數據填入「醫學中心」欄位']
+        ['Data entered in Medical Center column']
     ];
     
     const tocSheet = XLSX.utils.aoa_to_sheet(tocData);
     tocSheet['!cols'] = [{ wch: 50 }];
     
-    XLSX.utils.book_append_sheet(workbook, tocSheet, '目錄');
+    XLSX.utils.book_append_sheet(workbook, tocSheet, 'Table of Contents');
     
     // 3. 為每個分類創建工作表
     const categories = [
-        { name: '用藥安全', sheetName: '用藥安全指標' },
-        { name: '門診品質', sheetName: '門診品質指標' },
-        { name: '住院品質', sheetName: '住院品質指標' },
-        { name: '手術品質', sheetName: '手術品質指標' },
-        { name: '結果品質', sheetName: '結果品質指標' }
+        { name: 'Medication Safety', sheetName: 'Medication Safety' },
+        { name: 'Outpatient Quality', sheetName: 'Outpatient Quality' },
+        { name: 'Inpatient Quality', sheetName: 'Inpatient Quality' },
+        { name: 'Surgical Quality', sheetName: 'Surgical Quality' },
+        { name: 'Outcome Quality', sheetName: 'Outcome Quality' }
     ];
     
     categories.forEach(category => {
@@ -5556,7 +5556,7 @@ function createExcelWorkbook(data) {
         const tableData = [];
         
         // 標題行
-        const headerRow = ['指標編號', '指標名稱', '指標代碼', '醫學中心'];
+        const headerRow = ['Indicator No.', 'Indicator Name', 'Indicator Code', 'Medical Center'];
         quarters.forEach(q => headerRow.push(q));
         tableData.push(headerRow);
         
@@ -5596,7 +5596,7 @@ function createExcelWorkbook(data) {
     const summaryData = [];
     
     // 標題行
-    const summaryHeaderRow = ['分類', '指標編號', '指標名稱', '指標代碼', '醫學中心'];
+    const summaryHeaderRow = ['Category', 'Indicator No.', 'Indicator Name', 'Indicator Code', 'Medical Center'];
     quarters.forEach(q => summaryHeaderRow.push(q));
     summaryData.push(summaryHeaderRow);
     
@@ -5633,7 +5633,7 @@ function createExcelWorkbook(data) {
         ...Array(quarters.length).fill({ wch: 10 })  // 各季度
     ];
     
-    XLSX.utils.book_append_sheet(workbook, summarySheet, '完整數據彙總');
+    XLSX.utils.book_append_sheet(workbook, summarySheet, 'Full Data Summary');
     
     return workbook;
 }

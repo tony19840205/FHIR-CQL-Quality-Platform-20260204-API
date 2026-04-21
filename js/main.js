@@ -1,4 +1,4 @@
-// ========== 主要 JavaScript ==========
+﻿// ========== 主要 JavaScript ==========
 
 // 頁面載入動畫
 document.addEventListener('DOMContentLoaded', function() {
@@ -71,7 +71,7 @@ function formatNumber(num) {
 function showLoading(elementId) {
     const element = document.getElementById(elementId);
     if (element) {
-        element.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 載入中...';
+        element.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
     }
 }
 

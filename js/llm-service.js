@@ -1,4 +1,4 @@
-// ========== LLM 服務管理系統 ==========
+﻿// ========== LLM 服務管理系統 ==========
 // 功能: 模擬 LLM 服務連接、Token 計價、獲利統計、歷史紀錄
 
 let llmServiceActive = false;
@@ -43,17 +43,17 @@ function toggleLLMService() {
     
     if (llmServiceActive) {
         // 啟動狀態
-        toggleBtn.innerHTML = '<i class="fas fa-stop"></i> 停止 LLM 服務';
+        toggleBtn.innerHTML = '<i class="fas fa-stop"></i> Stop LLM Service';
         toggleBtn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
         
-        // FHIR ↔ 網頁 變灰色 (模擬斷開,但不真的斷線)
+        // FHIR ↔ Web 變灰色 (模擬斷開,但不真的斷線)
         connection1.innerHTML = `
             <div style="height: 3px; background: #cbd5e1; width: 100%; position: relative;">
                 <div style="position: absolute; left: 50%; top: -20px; transform: translateX(-50%); color: #94a3b8; font-size: 1.2rem;">✕</div>
             </div>
         `;
         
-        // 網頁 ↔ LLM 變綠色 (連接)
+        // Web ↔ LLM 變綠色 (連接)
         connection2.innerHTML = `
             <div style="height: 3px; background: linear-gradient(90deg, #10b981, #059669); width: 100%; position: relative;">
                 <div style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 0; height: 0; border-left: 8px solid #059669; border-top: 6px solid transparent; border-bottom: 6px solid transparent;"></div>
@@ -64,7 +64,7 @@ function toggleLLMService() {
         llmIcon.style.background = 'linear-gradient(135deg, #8b5cf6, #7c3aed)';
         llmIcon.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.5)';
         
-        connectionStatus.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> LLM 服務已啟動: FHIR ✕ 網頁 | 網頁 ↔ LLM';
+        connectionStatus.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i> LLM Service Active: FHIR ✕ Web | Web ↔ LLM';
         connectionStatus.style.color = '#10b981';
         
         console.log('✅ LLM 服務已啟動');
@@ -74,7 +74,7 @@ function toggleLLMService() {
         
     } else {
         // 停止狀態
-        toggleBtn.innerHTML = '<i class="fas fa-play"></i> 啟動 LLM 服務';
+        toggleBtn.innerHTML = '<i class="fas fa-play"></i> Start LLM Service';
         toggleBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
         
         // 恢復原始連接狀態
@@ -93,7 +93,7 @@ function toggleLLMService() {
         llmIcon.style.background = 'linear-gradient(135deg, #94a3b8, #64748b)';
         llmIcon.style.boxShadow = '0 4px 12px rgba(148, 163, 184, 0.3)';
         
-        connectionStatus.innerHTML = '<i class="fas fa-info-circle"></i> 預設狀態: FHIR ↔ 網頁 | 網頁 ✕ LLM';
+        connectionStatus.innerHTML = '<i class="fas fa-info-circle"></i> Default: FHIR ↔ Web | Web ✕ LLM';
         connectionStatus.style.color = '#64748b';
         
         console.log('⛔ LLM 服務已停止');
@@ -226,12 +226,12 @@ function addHistoryItem(item) {
 
 // 清除歷史記錄
 function clearLLMHistory() {
-    if (confirm('確定要清除所有歷史記錄嗎？')) {
+    if (confirm('Clear all history?')) {
         llmStats.history = [];
         document.getElementById('llmHistory').innerHTML = `
             <div style="text-align: center; padding: 2rem; color: #94a3b8;">
                 <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                <div>尚無查詢記錄</div>
+                <div>No query history</div>
             </div>
         `;
     }
