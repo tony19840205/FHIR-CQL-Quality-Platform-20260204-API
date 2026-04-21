@@ -440,20 +440,21 @@ function renderHealthGauge() {
     return `<div class="panel-header"><div class="panel-header-icon" style="background:linear-gradient(135deg,#0891b2,#14b8a6)"><i class="fas fa-tachometer-alt"></i></div><div><h2>健康儀表</h2><p>環形進度 + 趨勢線 · 一眼掌握達標狀況</p></div></div>
     <div class="grid-3">${DATA.healthIndicators.map(h => {
         const c = cfg[h.id]; if(!c) return '';
-        const val = h.rate ?? c.trend[c.trend.length-1];
-        const td = h.rate!==null ? [...c.trend.slice(0,-1),h.rate] : c.trend;
-        const tDir = td[td.length-1]>td[0]?'↑ 上升':td[td.length-1]<td[0]?'↓ 下降':'→ 持平';
+        const hasRate = (h.rate !== null && h.rate !== undefined);
+        const val = hasRate ? h.rate : 0;
+        const td = hasRate ? [...c.trend.slice(0,-1), h.rate] : null;
+        const tDir = hasRate ? (td[td.length-1]>td[0]?'↑ 上升':td[td.length-1]<td[0]?'↓ 下降':'→ 持平') : '尚無資料';
         return `<div class="card" style="padding:1.5rem;display:flex;flex-direction:column;align-items:center">
             <h3 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px;text-align:center">${h.name}</h3>
             <p style="font-size:12px;color:#94a3b8;margin-bottom:1rem;text-align:center">${h.description||''}</p>
-            ${svgRingGauge(val, c.target, 180, c.color, `目標: ${c.target}${h.rateUnit||'%'}`)}
+            ${hasRate ? svgRingGauge(val, c.target, 180, c.color, `目標: ${c.target}${h.rateUnit||'%'}`) : `<div style="width:180px;height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px dashed #334155;border-radius:50%;color:#64748b"><div style="font-size:1.5rem;font-weight:700">--</div><div style="font-size:11px;margin-top:4px">尚無資料</div><div style="font-size:10px;color:#475569;margin-top:8px">目標: ${c.target}${h.rateUnit||'%'}</div></div>`}
             <div class="grid-2" style="width:100%;margin-top:1rem">
                 <div style="text-align:center"><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${h.countLabel}</div><div style="font-size:1.5rem;font-weight:800;color:${c.color}" class="tn">${h.count!==null?Number(h.count).toLocaleString():'--'}</div></div>
-                <div style="text-align:center"><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${h.rateLabel}</div><div style="font-size:1.5rem;font-weight:800;color:${c.color}" class="tn">${h.rate!==null?h.rate:'--'}<span style="font-size:12px;color:#64748b;margin-left:4px">${h.rate!==null?(h.rateUnit||'%'):''}</span></div></div>
+                <div style="text-align:center"><div style="font-size:12px;color:#94a3b8;margin-bottom:4px">${h.rateLabel}</div><div style="font-size:1.5rem;font-weight:800;color:${c.color}" class="tn">${hasRate?h.rate:'--'}<span style="font-size:12px;color:#64748b;margin-left:4px">${hasRate?(h.rateUnit||'%'):''}</span></div></div>
             </div>
             <div style="width:100%;background:rgba(30,41,59,0.4);border-radius:12px;padding:12px;margin-top:1rem">
-                <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:#475569">近 6 個月趨勢</span><span style="font-size:10px;font-weight:500;color:${c.color}">${tDir}</span></div>
-                ${svgSparkline(td, c.color, 260, 52)}
+                <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:10px;color:#475569">近 6 個月趨勢</span><span style="font-size:10px;font-weight:500;color:${hasRate?c.color:'#64748b'}">${tDir}</span></div>
+                ${hasRate ? svgSparkline(td, c.color, 260, 52) : `<div style="height:52px;display:flex;align-items:center;justify-content:center;color:#475569;font-size:11px;border:1px dashed #334155;border-radius:6px">尚未上傳資料</div>`}
                 <div style="display:flex;justify-content:space-between;margin-top:4px">${c.months.map(m=>`<span style="font-size:9px;color:#475569">${m}</span>`).join('')}</div>
             </div>
         </div>`;
