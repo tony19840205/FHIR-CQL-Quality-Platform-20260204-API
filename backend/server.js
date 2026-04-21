@@ -37,8 +37,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// 解析JSON
-app.use(express.json());
+// 解析JSON（提高 limit 以容納完整儀表板資料）
+app.use(express.json({ limit: '20mb' }));
+
+// 記憶體快取：最近一次上傳的儀表板資料
+let _dashboardCache = null;
 
 // ========== 健康檢查（測試用） ==========
 app.get('/health', (req, res) => {
@@ -216,6 +219,26 @@ async function calculateGeneric(fhirServer, quarter) {
     };
 }
 
+// ========== 即時看板讀取資料 ==========
+// 優先順序：1) 記憶體快取  2) GitHub raw (public-health-dashboard repo)
+app.get('/api/export-dashboard', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    if (_dashboardCache) {
+        return res.json(_dashboardCache);
+    }
+    try {
+        const rawUrl = 'https://raw.githubusercontent.com/tony19840205/public-health-dashboard/main/public/data/dashboard-data.json';
+        const r = await axios.get(rawUrl, { timeout: 8000 });
+        if (r.data && typeof r.data === 'object') {
+            _dashboardCache = r.data;
+            return res.json(r.data);
+        }
+        return res.status(404).json({ error: 'no data' });
+    } catch (e) {
+        return res.status(404).json({ error: 'no data', detail: e.message });
+    }
+});
+
 // ========== 匯出去識別化數據至民眾網頁 ==========
 app.post('/api/export-public-data', async (req, res) => {
     try {
@@ -223,6 +246,9 @@ app.post('/api/export-public-data', async (req, res) => {
         if (!data || typeof data !== 'object') {
             return res.status(400).json({ error: '無效的數據格式' });
         }
+
+        // 寫入記憶體快取，供即時看板 GET /api/export-dashboard 立即取用
+        _dashboardCache = data;
 
         const jsonContent = JSON.stringify(data, null, 2);
 
