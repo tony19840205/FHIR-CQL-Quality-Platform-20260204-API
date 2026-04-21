@@ -11,6 +11,12 @@ const gradleConverter = require('./gradle-converter');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 首頁：使用 "index - API.html" 作為入口
+app.get('/', (req, res) => {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.sendFile(path.join(__dirname, '..', 'index - API.html'));
+});
+
 // 提供靜態前端檔案（HTML/CSS/JS）— 禁止CDN快取JS/HTML以確保更新即時生效
 app.use(express.static(path.join(__dirname, '..'), {
     setHeaders: (res, filePath) => {
