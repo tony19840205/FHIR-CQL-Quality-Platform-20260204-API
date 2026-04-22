@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>按鈕測試診斷</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            background: #3b82f6;
+            color: white;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+        }
+        .error {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+        }
+        .success {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 FHIR Dashboard 按鈕功能診斷</h1>
+
+    <div class="test-section">
+        <h2>1. JavaScript 載入檢測</h2>
+        <button onclick="testJavaScriptLoad()">檢測 JS 檔案</button>
+        <div id="jsLoadResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. FHIR 連線狀態</h2>
+        <button onclick="testFHIRConnection()">檢測 FHIR 連線</button>
+        <div id="fhirConnResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. localStorage 設定</h2>
+        <button onclick="testLocalStorage()">檢測 localStorage</button>
+        <div id="localStorageResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. 按鈕點擊測試</h2>
+        <button onclick="testButtonClick()">測試按鈕點擊</button>
+        <button onclick="testExecuteQuery()">測試 executeQuery 函數</button>
+        <div id="buttonTestResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. FHIR 查詢測試</h2>
+        <button onclick="testFHIRQuery()">測試 FHIR 查詢</button>
+        <div id="fhirQueryResult" class="result" style="display:none;"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>6. 快速修復</h2>
+        <button onclick="setTestServer()">設定測試伺服器</button>
+        <button onclick="clearAllSettings()">清除所有設定</button>
+        <div id="fixResult" class="result" style="display:none;"></div>
+    </div>
+
+    <!-- 載入 Dashboard 的 JavaScript -->
+    <script src="js/fhir-connection.js"></script>
+    <script src="js/quality-indicators.js"></script>
+
+    <script>
+        function showResult(elementId, message, type = 'result') {
+            const element = document.getElementById(elementId);
+            element.style.display = 'block';
+            element.className = `result ${type}`;
+            element.innerHTML = message;
+        }
+
+        function testJavaScriptLoad() {
+            let results = [];
+            
+            // 檢測 FHIRConnection
+            if (typeof FHIRConnection !== 'undefined') {
+                results.push('✅ fhir-connection.js 已載入');
+            } else {
+                results.push('❌ fhir-connection.js 未載入');
+            }
+            
+            // 檢測 executeQuery
+            if (typeof executeQuery === 'function') {
+                results.push('✅ executeQuery 函數存在');
+            } else {
+                results.push('❌ executeQuery 函數不存在');
+            }
+            
+            // 檢測 refreshData
+            if (typeof refreshData === 'function') {
+                results.push('✅ refreshData 函數存在');
+            } else {
+                results.push('❌ refreshData 函數不存在');
+            }
+            
+            // 檢測 executeAllMedication
+            if (typeof executeAllMedication === 'function') {
+                results.push('✅ executeAllMedication 函數存在');
+            } else {
+                results.push('❌ executeAllMedication 函數不存在');
+            }
+            
+            const hasErrors = results.some(r => r.startsWith('❌'));
+            showResult('jsLoadResult', results.join('<br>'), hasErrors ? 'error' : 'success');
+        }
+
+        function testFHIRConnection() {
+            let results = [];
+            
+            if (window.fhirConnection) {
+                results.push('✅ window.fhirConnection 存在');
+                results.push(`📍 伺服器: ${window.fhirConnection.serverUrl || '未設定'}`);
+                results.push(`🔑 Token: ${window.fhirConnection.authToken ? '已設定' : '未設定'}`);
+                results.push(`🔌 連線狀態: ${window.fhirConnection.isConnected ? '已連線' : '未連線'}`);
+            } else {
+                results.push('❌ window.fhirConnection 不存在');
+            }
+            
+            const hasErrors = results.some(r => r.startsWith('❌'));
+            showResult('fhirConnResult', results.join('<br>'), hasErrors ? 'error' : 'result');
+        }
+
+        function testLocalStorage() {
+            let results = [];
+            
+            const fhirServer = localStorage.getItem('fhirServer');
+            const authToken = localStorage.getItem('authToken');
+            const demoMode = localStorage.getItem('demoMode');
+            
+            results.push(`📍 FHIR 伺服器: ${fhirServer || '未設定'}`);
+            results.push(`🔑 Auth Token: ${authToken ? '已設定' : '未設定'}`);
+            results.push(`🎭 示範模式: ${demoMode || '未設定'}`);
+            
+            if (!fhirServer) {
+                results.push('<br>⚠️ <strong>未設定 FHIR 伺服器,這可能是按鈕無法作用的原因!</strong>');
+            }
+            
+            showResult('localStorageResult', results.join('<br>'), !fhirServer ? 'error' : 'result');
+        }
+
+        function testButtonClick() {
+            const result = '✅ 按鈕點擊事件正常!<br>如果您看到這個訊息,表示按鈕的 onclick 事件可以正常執行。';
+            showResult('buttonTestResult', result, 'success');
+        }
+
+        async function testExecuteQuery() {
+            try {
+                showResult('buttonTestResult', '⏳ 測試中...', 'result');
+                
+                if (typeof executeQuery !== 'function') {
+                    showResult('buttonTestResult', '❌ executeQuery 函數不存在!', 'error');
+                    return;
+                }
+                
+                // 檢查 FHIR 連線
+                if (!window.fhirConnection || !window.fhirConnection.serverUrl) {
+                    showResult('buttonTestResult', 
+                        '❌ FHIR 連線未設定!<br><br>請點擊下方「設定測試伺服器」按鈕來建立連線。', 
+                        'error');
+                    return;
+                }
+                
+                showResult('buttonTestResult', 
+                    '✅ executeQuery 函數可以呼叫<br>📍 FHIR 伺服器: ' + window.fhirConnection.serverUrl, 
+                    'success');
+                
+            } catch (error) {
+                showResult('buttonTestResult', `❌ 錯誤: ${error.message}`, 'error');
+            }
+        }
+
+        async function testFHIRQuery() {
+            try {
+                showResult('fhirQueryResult', '⏳ 查詢中...', 'result');
+                
+                if (!window.fhirConnection || !window.fhirConnection.serverUrl) {
+                    showResult('fhirQueryResult', '❌ 請先設定 FHIR 連線!', 'error');
+                    return;
+                }
+                
+                const url = window.fhirConnection.serverUrl;
+                
+                // 測試基本查詢
+                const response = await fetch(`${url}/Patient?_count=1`);
+                const data = await response.json();
+                
+                if (data.resourceType === 'Bundle') {
+                    const count = data.entry?.length || 0;
+                    showResult('fhirQueryResult', 
+                        `✅ FHIR 查詢成功!<br>📊 找到 ${data.total || count} 筆 Patient 資料`, 
+                        'success');
+                } else {
+                    showResult('fhirQueryResult', `⚠️ 回應格式: ${JSON.stringify(data).substring(0, 200)}`, 'result');
+                }
+                
+            } catch (error) {
+                showResult('fhirQueryResult', `❌ 查詢失敗: ${error.message}`, 'error');
+            }
+        }
+
+        function setTestServer() {
+            const testServer = 'https://emr-smart.appx.com.tw/v/r4/fhir';
+            
+            // 儲存到 localStorage
+            localStorage.setItem('fhirServer', testServer);
+            localStorage.removeItem('authToken');
+            
+            // 建立連線
+            if (typeof FHIRConnection !== 'undefined') {
+                window.fhirConnection = new FHIRConnection();
+                window.fhirConnection.serverUrl = testServer;
+                window.fhirConnection.authToken = '';
+                window.fhirConnection.isConnected = true;
+            }
+            
+            showResult('fixResult', 
+                `✅ 已設定測試伺服器<br>📍 ${testServer}<br><br>現在可以返回 quality-indicators.html 測試按鈕功能!`, 
+                'success');
+        }
+
+        function clearAllSettings() {
+            localStorage.clear();
+            if (window.fhirConnection) {
+                window.fhirConnection = null;
+            }
+            showResult('fixResult', '✅ 已清除所有設定', 'success');
+        }
+
+        // 頁面載入時自動執行診斷
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('🔍 診斷頁面已載入');
+            
+            // 自動執行所有測試
+            setTimeout(() => {
+                testJavaScriptLoad();
+                testFHIRConnection();
+                testLocalStorage();
+            }, 500);
+        });
+    </script>
+</body>
+</html>

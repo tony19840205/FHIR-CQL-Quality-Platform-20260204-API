@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>快速修復 FHIR 連線</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin: 0 0 10px 0;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .status-box {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #333;
+        }
+        .value {
+            color: #666;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+        }
+        .success {
+            color: #10b981;
+            font-weight: 600;
+        }
+        .error {
+            color: #ef4444;
+            font-weight: 600;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4);
+        }
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        .icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+        .alert-success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+        .alert-error {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🔧</div>
+        <h1>FHIR 連線快速修復</h1>
+        <p class="subtitle">診斷並修復按鈕無反應問題</p>
+
+        <div class="status-box" id="statusBox">
+            <h3 style="margin-top: 0; color: #667eea;">目前狀態</h3>
+            <div class="status-item">
+                <span class="label">FHIR 伺服器:</span>
+                <span class="value" id="serverStatus">檢查中...</span>
+            </div>
+            <div class="status-item">
+                <span class="label">連線狀態:</span>
+                <span class="value" id="connStatus">檢查中...</span>
+            </div>
+            <div class="status-item">
+                <span class="label">測試數據:</span>
+                <span class="value" id="dataStatus">檢查中...</span>
+            </div>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <button class="btn-success" onclick="fixConnection()">
+            <span id="fixBtnText">🔧 一鍵修復連線</span>
+        </button>
+
+        <button class="btn-primary" onclick="testQuery()">
+            <span id="testBtnText">🧪 測試查詢功能</span>
+        </button>
+
+        <button class="btn-secondary" onclick="goToDashboard()">
+            ➜ 返回醫療品質指標頁面
+        </button>
+
+        <button class="btn-secondary" onclick="clearAll()">
+            🗑️ 清除所有設定重新開始
+        </button>
+    </div>
+
+    <script>
+        // 檢查狀態
+        function checkStatus() {
+            const fhirServer = localStorage.getItem('fhirServer');
+            const serverEl = document.getElementById('serverStatus');
+            const connEl = document.getElementById('connStatus');
+            
+            if (fhirServer) {
+                serverEl.innerHTML = `<span class="success">✓ ${fhirServer}</span>`;
+                connEl.innerHTML = '<span class="success">✓ 已設定</span>';
+            } else {
+                serverEl.innerHTML = '<span class="error">✗ 未設定</span>';
+                connEl.innerHTML = '<span class="error">✗ 未連線</span>';
+            }
+            
+            // 檢查測試數據
+            checkData();
+        }
+
+        async function checkData() {
+            const dataEl = document.getElementById('dataStatus');
+            const fhirServer = localStorage.getItem('fhirServer');
+            
+            if (!fhirServer) {
+                dataEl.innerHTML = '<span class="error">✗ 無法檢查</span>';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${fhirServer}/Patient?_count=1`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/fhir+json' }
+                });
+                
+                const data = await response.json();
+                const count = data.total || data.entry?.length || 0;
+                
+                if (count > 0) {
+                    dataEl.innerHTML = `<span class="success">✓ 找到 ${count}+ 筆資料</span>`;
+                } else {
+                    dataEl.innerHTML = '<span class="error">✗ 無測試數據</span>';
+                }
+            } catch (error) {
+                dataEl.innerHTML = `<span class="error">✗ ${error.message}</span>`;
+            }
+        }
+
+        function showAlert(message, type = 'success') {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = `alert alert-${type}`;
+            alertBox.innerHTML = message;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 5000);
+        }
+
+        async function fixConnection() {
+            const btn = document.getElementById('fixBtnText');
+            const originalText = btn.textContent;
+            btn.innerHTML = '<span class="loading"></span> 修復中...';
+            
+            try {
+                // 設定測試伺服器
+                const testServer = 'https://emr-smart.appx.com.tw/v/r4/fhir';
+                localStorage.setItem('fhirServer', testServer);
+                localStorage.removeItem('authToken');
+                
+                // 測試連線
+                const response = await fetch(`${testServer}/metadata`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/fhir+json' }
+                });
+                
+                if (response.ok) {
+                    showAlert('✅ 連線修復成功!<br>FHIR 伺服器: ' + testServer, 'success');
+                    checkStatus();
+                } else {
+                    throw new Error('伺服器回應錯誤');
+                }
+                
+            } catch (error) {
+                showAlert('❌ 修復失敗: ' + error.message, 'error');
+            } finally {
+                btn.innerHTML = originalText;
+            }
+        }
+
+        async function testQuery() {
+            const btn = document.getElementById('testBtnText');
+            const originalText = btn.textContent;
+            btn.innerHTML = '<span class="loading"></span> 測試中...';
+            
+            try {
+                const fhirServer = localStorage.getItem('fhirServer');
+                if (!fhirServer) {
+                    throw new Error('請先修復連線');
+                }
+                
+                // 測試 MedicationRequest 查詢
+                const response = await fetch(`${fhirServer}/MedicationRequest?status=active,completed&_count=5`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/fhir+json' }
+                });
+                
+                const data = await response.json();
+                const count = data.entry?.length || 0;
+                
+                if (count > 0) {
+                    showAlert(`✅ 查詢測試成功!<br>找到 ${count} 筆 MedicationRequest 資料<br><br>您現在可以返回指標頁面測試按鈕了!`, 'success');
+                } else {
+                    showAlert('⚠️ 查詢成功但無資料<br>伺服器可能沒有測試數據', 'error');
+                }
+                
+            } catch (error) {
+                showAlert('❌ 查詢測試失敗: ' + error.message, 'error');
+            } finally {
+                btn.innerHTML = originalText;
+            }
+        }
+
+        function goToDashboard() {
+            window.location.href = 'quality-indicators.html';
+        }
+
+        function clearAll() {
+            if (confirm('確定要清除所有設定嗎?')) {
+                localStorage.clear();
+                showAlert('✅ 已清除所有設定', 'success');
+                checkStatus();
+            }
+        }
+
+        // 頁面載入時檢查
+        window.addEventListener('DOMContentLoaded', checkStatus);
+    </script>
+</body>
+</html>

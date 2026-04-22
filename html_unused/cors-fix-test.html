@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS 代理測試 - FHIR 連線修復</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .server-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+        }
+        .server-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .server-url {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #666;
+            background: #fff;
+            padding: 8px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .status.testing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            margin: 5px;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .proxy-selector {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .proxy-option {
+            margin: 10px 0;
+        }
+        .proxy-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        .result-box {
+            background: #f0f0f0;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .success-msg {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        .error-msg {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+        .button-group {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .info-box {
+            background: #d1ecf1;
+            border: 2px solid #bee5eb;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .info-box h3 {
+            margin-top: 0;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 FHIR 連線修復工具</h1>
+        <p class="subtitle">解決 GitHub Pages CORS 封鎖問題</p>
+
+        <div class="info-box">
+            <h3>📋 問題說明</h3>
+            <p>你的 GitHub Pages 網站 (<code>https://tony19840205.github.io</code>) 被所有 FHIR 伺服器的 CORS 政策封鎖。</p>
+            <p><strong>解決方案：</strong>使用 CORS 代理伺服器轉發請求。</p>
+        </div>
+
+        <div class="proxy-selector">
+            <h3>🌐 選擇 CORS 代理伺服器</h3>
+            <div class="proxy-option">
+                <input type="radio" name="proxy" value="0" id="proxy0">
+                <label for="proxy0">
+                    <strong>CORS Anywhere (Heroku)</strong> - 需要每天手動啟用
+                    <a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" style="color: #667eea;">[啟用連結]</a>
+                </label>
+            </div>
+            <div class="proxy-option">
+                <input type="radio" name="proxy" value="1" id="proxy1" checked>
+                <label for="proxy1">
+                    <strong>AllOrigins</strong> - 免費且穩定 ⭐ 推薦
+                </label>
+            </div>
+            <div class="proxy-option">
+                <input type="radio" name="proxy" value="2" id="proxy2">
+                <label for="proxy2">
+                    <strong>CORS.SH</strong> - 免費代理服務
+                </label>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button onclick="testAllServers()">🧪 測試所有伺服器</button>
+            <button onclick="clearResults()">🗑️ 清除結果</button>
+        </div>
+
+        <div id="servers"></div>
+    </div>
+
+    <script src="cors-proxy.js"></script>
+    <script>
+        const servers = [
+            {
+                name: '台灣衛福部 FHIR Server',
+                url: 'https://thas.mohw.gov.tw/v/r4/fhir',
+                id: 'mohw'
+            },
+            {
+                name: 'SMART Health IT R4',
+                url: 'https://r4.smarthealthit.org',
+                id: 'smart'
+            },
+            {
+                name: 'Firely Server',
+                url: 'https://server.fire.ly/r4',
+                id: 'firely'
+            },
+            {
+                name: 'HAPI FHIR R4',
+                url: 'https://hapi.fhir.org/baseR4',
+                id: 'hapi'
+            }
+        ];
+
+        // 渲染伺服器卡片
+        function renderServers() {
+            const container = document.getElementById('servers');
+            container.innerHTML = servers.map(server => `
+                <div class="server-card" id="card-${server.id}">
+                    <div class="server-name">${server.name}</div>
+                    <div class="server-url">${server.url}</div>
+                    <div>
+                        <span class="status" id="status-${server.id}">未測試</span>
+                        <button onclick="testServer('${server.id}')">測試連線</button>
+                    </div>
+                    <div class="result-box" id="result-${server.id}" style="display: none;"></div>
+                </div>
+            `).join('');
+        }
+
+        // 獲取選擇的代理
+        function getSelectedProxy() {
+            const selected = document.querySelector('input[name="proxy"]:checked');
+            return parseInt(selected.value);
+        }
+
+        // 測試單個伺服器
+        async function testServer(serverId) {
+            const server = servers.find(s => s.id === serverId);
+            const statusEl = document.getElementById(`status-${serverId}`);
+            const resultEl = document.getElementById(`result-${serverId}`);
+            
+            // 更新狀態為測試中
+            statusEl.className = 'status testing';
+            statusEl.textContent = '⏳ 測試中...';
+            resultEl.style.display = 'none';
+
+            const proxyIndex = getSelectedProxy();
+            const client = new FHIRProxyClient(server.url, true);
+            client.switchProxy(proxyIndex);
+
+            try {
+                const startTime = Date.now();
+                const metadata = await client.get('/metadata');
+                const duration = Date.now() - startTime;
+
+                // 成功
+                statusEl.className = 'status success';
+                statusEl.textContent = `✅ 連線成功 (${duration}ms)`;
+                
+                resultEl.className = 'result-box success-msg';
+                resultEl.style.display = 'block';
+                resultEl.innerHTML = `
+                    <strong>✅ 成功取得伺服器資訊</strong><br>
+                    FHIR 版本: ${metadata.fhirVersion || 'Unknown'}<br>
+                    軟體: ${metadata.software?.name || 'Unknown'}<br>
+                    代理: ${CORS_PROXIES[proxyIndex].name}<br>
+                    回應時間: ${duration}ms
+                `;
+            } catch (error) {
+                // 失敗
+                statusEl.className = 'status failed';
+                statusEl.textContent = '❌ 連線失敗';
+                
+                resultEl.className = 'result-box error-msg';
+                resultEl.style.display = 'block';
+                resultEl.innerHTML = `
+                    <strong>❌ 連線失敗</strong><br>
+                    錯誤: ${error.message}<br>
+                    建議: 嘗試切換其他 CORS 代理
+                `;
+            }
+        }
+
+        // 測試所有伺服器
+        async function testAllServers() {
+            for (const server of servers) {
+                await testServer(server.id);
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 延遲 1 秒
+            }
+        }
+
+        // 清除結果
+        function clearResults() {
+            servers.forEach(server => {
+                const statusEl = document.getElementById(`status-${server.id}`);
+                const resultEl = document.getElementById(`result-${server.id}`);
+                
+                statusEl.className = 'status';
+                statusEl.textContent = '未測試';
+                resultEl.style.display = 'none';
+            });
+        }
+
+        // 初始化
+        renderServers();
+    </script>
+</body>
+</html>

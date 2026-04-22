@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESG 按钮测试</title>
+    <style>
+        body { padding: 50px; font-family: Arial, sans-serif; }
+        button { 
+            padding: 15px 30px; 
+            margin: 10px; 
+            font-size: 16px; 
+            cursor: pointer; 
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        button:hover { opacity: 0.9; }
+        .log { 
+            background: #f8f9fa; 
+            padding: 20px; 
+            margin-top: 30px; 
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <h1>🧪 ESG 按钮功能测试</h1>
+    
+    <div>
+        <h2>方法 1: addEventListener</h2>
+        <button id="btn1">测试按钮 1</button>
+    </div>
+    
+    <div>
+        <h2>方法 2: onclick property</h2>
+        <button id="btn2">测试按钮 2</button>
+    </div>
+    
+    <div>
+        <h2>方法 3: inline onclick</h2>
+        <button onclick="testInline()">测试按钮 3</button>
+    </div>
+    
+    <div>
+        <h2>ESG 实际按钮复制</h2>
+        <button class="btn btn-secondary" id="demoModeBtn">
+            <span id="demoModeText">啟用示範模式</span>
+        </button>
+        <button id="btnAntibiotic">執行查詢 - 抗生素</button>
+    </div>
+    
+    <div class="log" id="log">
+        <strong>日志：</strong><br>
+        等待页面加载...
+    </div>
+    
+    <script>
+        let logDiv = document.getElementById('log');
+        
+        function addLog(message, type = 'normal') {
+            const color = type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#333';
+            logDiv.innerHTML += `<div style="color: ${color}; margin: 5px 0;">${new Date().toLocaleTimeString()} - ${message}</div>`;
+            console.log(message);
+        }
+        
+        function testInline() {
+            alert('✅ Inline onclick 工作正常！');
+            addLog('✅ Inline onclick 被触发', 'success');
+        }
+        
+        addLog('📄 页面 JavaScript 开始执行');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            addLog('✅ DOMContentLoaded 事件触发', 'success');
+            
+            // 方法 1: addEventListener
+            const btn1 = document.getElementById('btn1');
+            if (btn1) {
+                btn1.addEventListener('click', function() {
+                    alert('✅ addEventListener 工作正常！');
+                    addLog('✅ 按钮 1 (addEventListener) 被点击', 'success');
+                });
+                addLog('✅ 按钮 1 事件已绑定', 'success');
+            } else {
+                addLog('❌ 找不到按钮 1', 'error');
+            }
+            
+            // 方法 2: onclick property
+            const btn2 = document.getElementById('btn2');
+            if (btn2) {
+                btn2.onclick = function() {
+                    alert('✅ onclick property 工作正常！');
+                    addLog('✅ 按钮 2 (onclick property) 被点击', 'success');
+                };
+                addLog('✅ 按钮 2 事件已绑定', 'success');
+            } else {
+                addLog('❌ 找不到按钮 2', 'error');
+            }
+            
+            // ESG 实际按钮
+            const demoModeBtn = document.getElementById('demoModeBtn');
+            if (demoModeBtn) {
+                demoModeBtn.addEventListener('click', function() {
+                    alert('✅ ESG 示范模式按钮工作正常！');
+                    addLog('✅ ESG 示范模式按钮被点击', 'success');
+                });
+                addLog('✅ ESG 示范模式按钮事件已绑定', 'success');
+            } else {
+                addLog('❌ 找不到 ESG 示范模式按钮', 'error');
+            }
+            
+            const btnAntibiotic = document.getElementById('btnAntibiotic');
+            if (btnAntibiotic) {
+                btnAntibiotic.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    alert('✅ ESG 抗生素查询按钮工作正常！');
+                    addLog('✅ ESG 抗生素查询按钮被点击', 'success');
+                });
+                addLog('✅ ESG 抗生素查询按钮事件已绑定', 'success');
+            } else {
+                addLog('❌ 找不到 ESG 抗生素查询按钮', 'error');
+            }
+            
+            addLog('🎉 所有事件绑定完成！', 'success');
+        });
+        
+        addLog('📄 JavaScript 代码执行完毕，等待 DOMContentLoaded...');
+    </script>
+</body>
+</html>

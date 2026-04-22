@@ -1,0 +1,540 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:patient-ed-001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-ed-001",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "ED3DAY-001"
+          }
+        ],
+        "name": [
+          {
+            "family": "張",
+            "given": ["志明"]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1975-05-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-ed-001"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-001-inpatient",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-001-inpatient",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-001"
+        },
+        "period": {
+          "start": "2025-10-01T08:00:00Z",
+          "end": "2025-10-05T14:00:00Z"
+        },
+        "hospitalization": {
+          "dischargeDisposition": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/discharge-disposition",
+                "code": "home",
+                "display": "Home"
+              }
+            ]
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-001-inpatient"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-001-emergency",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-001-emergency",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "EMER",
+          "display": "emergency"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-001"
+        },
+        "period": {
+          "start": "2025-10-07T10:00:00Z",
+          "end": "2025-10-07T15:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "text": "出院後病情惡化"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-001-emergency"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-ed-002",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-ed-002",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "ED3DAY-002"
+          }
+        ],
+        "name": [
+          {
+            "family": "林",
+            "given": ["淑芬"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1968-09-12"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-ed-002"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-002-inpatient",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-002-inpatient",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-002"
+        },
+        "period": {
+          "start": "2025-10-08T09:00:00Z",
+          "end": "2025-10-12T11:00:00Z"
+        },
+        "hospitalization": {
+          "dischargeDisposition": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/discharge-disposition",
+                "code": "home",
+                "display": "Home"
+              }
+            ]
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-002-inpatient"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-002-emergency",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-002-emergency",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "EMER",
+          "display": "emergency"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-002"
+        },
+        "period": {
+          "start": "2025-10-13T16:00:00Z",
+          "end": "2025-10-13T20:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "text": "術後併發症"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-002-emergency"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-ed-003",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-ed-003",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "ED3DAY-003"
+          }
+        ],
+        "name": [
+          {
+            "family": "黃",
+            "given": ["建華"]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1982-03-28"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-ed-003"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-003-inpatient",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-003-inpatient",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-003"
+        },
+        "period": {
+          "start": "2025-10-15T07:00:00Z",
+          "end": "2025-10-18T10:00:00Z"
+        },
+        "hospitalization": {
+          "dischargeDisposition": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/discharge-disposition",
+                "code": "home",
+                "display": "Home"
+              }
+            ]
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-003-inpatient"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-003-emergency",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-003-emergency",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "EMER",
+          "display": "emergency"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-003"
+        },
+        "period": {
+          "start": "2025-10-20T08:00:00Z",
+          "end": "2025-10-20T12:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "text": "傷口疼痛"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-003-emergency"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-ed-004",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-ed-004",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "ED3DAY-004"
+          }
+        ],
+        "name": [
+          {
+            "family": "吳",
+            "given": ["文玲"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1990-11-05"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-ed-004"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-004-inpatient",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-004-inpatient",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-004"
+        },
+        "period": {
+          "start": "2025-10-20T13:00:00Z",
+          "end": "2025-10-23T15:00:00Z"
+        },
+        "hospitalization": {
+          "dischargeDisposition": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/discharge-disposition",
+                "code": "home",
+                "display": "Home"
+              }
+            ]
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-004-inpatient"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-004-emergency",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-004-emergency",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "EMER",
+          "display": "emergency"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-004"
+        },
+        "period": {
+          "start": "2025-10-24T18:00:00Z",
+          "end": "2025-10-24T22:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "text": "發燒"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-004-emergency"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-ed-005",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-ed-005",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "ED3DAY-005"
+          }
+        ],
+        "name": [
+          {
+            "family": "劉",
+            "given": ["俊傑"]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1955-07-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-ed-005"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-005-inpatient",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-005-inpatient",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-005"
+        },
+        "period": {
+          "start": "2025-10-25T06:00:00Z",
+          "end": "2025-10-28T09:00:00Z"
+        },
+        "hospitalization": {
+          "dischargeDisposition": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/discharge-disposition",
+                "code": "home",
+                "display": "Home"
+              }
+            ]
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-005-inpatient"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-005-emergency",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-005-emergency",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "EMER",
+          "display": "emergency"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-005"
+        },
+        "period": {
+          "start": "2025-10-29T14:00:00Z",
+          "end": "2025-10-29T18:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "text": "呼吸困難"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-005-emergency"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:patient-ed-006",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "patient-ed-006",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "ED3DAY-006"
+          }
+        ],
+        "name": [
+          {
+            "family": "鄭",
+            "given": ["雅婷"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1978-02-18"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/patient-ed-006"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-006-inpatient",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-006-inpatient",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-006"
+        },
+        "period": {
+          "start": "2025-11-01T10:00:00Z",
+          "end": "2025-11-04T12:00:00Z"
+        },
+        "hospitalization": {
+          "dischargeDisposition": {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/discharge-disposition",
+                "code": "home",
+                "display": "Home"
+              }
+            ]
+          }
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-006-inpatient"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-ed-006-emergency",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-ed-006-emergency",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "EMER",
+          "display": "emergency"
+        },
+        "subject": {
+          "reference": "Patient/patient-ed-006"
+        },
+        "period": {
+          "start": "2025-11-06T09:00:00Z",
+          "end": "2025-11-06T13:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "text": "腹痛"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-ed-006-emergency"
+      }
+    }
+  ]
+}

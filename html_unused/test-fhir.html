@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR 連線測試工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .test-section h2 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .result-box {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9rem;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .success {
+            color: #4ec9b0;
+        }
+        
+        .error {
+            color: #f48771;
+        }
+        
+        .warning {
+            color: #dcdcaa;
+        }
+        
+        .info {
+            color: #9cdcfe;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 FHIR 連線測試工具</h1>
+        
+        <div class="test-section">
+            <h2>1. 選擇 FHIR 伺服器</h2>
+            <div class="input-group">
+                <label>伺服器選擇</label>
+                <select id="serverSelect">
+                    <option value="https://hapi.fhir.org/baseR4">HAPI FHIR R4 (公開測試)</option>
+                    <option value="https://r4.test.pyrohealth.net/fhir">Pyro Health R4</option>
+                    <option value="https://vonk.fire.ly">Firely Vonk</option>
+                    <option value="custom">自訂伺服器...</option>
+                </select>
+            </div>
+            <div class="input-group" id="customServerGroup" style="display: none;">
+                <label>自訂伺服器 URL</label>
+                <input type="text" id="customServer" placeholder="https://your-fhir-server.com/fhir">
+            </div>
+            <button onclick="testConnection()">
+                <span id="btnTest1Text">測試連線</span>
+            </button>
+            <div id="connectionResult" style="margin-top: 15px;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>2. 測試基本資源查詢</h2>
+            <button onclick="testBasicQueries()" id="btnTest2">
+                <span id="btnTest2Text">查詢所有資源</span>
+            </button>
+            <div id="basicResult" style="margin-top: 15px;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>3. 測試 COVID-19 CQL 查詢</h2>
+            <button onclick="testCovidCQL()" id="btnTest3">
+                <span id="btnTest3Text">執行 COVID-19 CQL</span>
+            </button>
+            <div id="cqlResult" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+    
+    <script>
+        let currentServer = 'https://hapi.fhir.org/baseR4';
+        
+        document.getElementById('serverSelect').addEventListener('change', function(e) {
+            const customGroup = document.getElementById('customServerGroup');
+            if (e.target.value === 'custom') {
+                customGroup.style.display = 'block';
+            } else {
+                customGroup.style.display = 'none';
+                currentServer = e.target.value;
+            }
+        });
+        
+        document.getElementById('customServer').addEventListener('input', function(e) {
+            currentServer = e.target.value;
+        });
+        
+        async function testConnection() {
+            const resultDiv = document.getElementById('connectionResult');
+            const btnText = document.getElementById('btnTest1Text');
+            btnText.innerHTML = '測試中<span class="loading"></span>';
+            
+            resultDiv.innerHTML = '<div class="result-box"><span class="info">🔍 正在測試連線...</span></div>';
+            
+            try {
+                const response = await fetch(`${currentServer}/metadata`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const fhirVersion = data.fhirVersion || '未知';
+                    const softwareName = data.software?.name || '未知';
+                    const softwareVersion = data.software?.version || '未知';
+                    
+                    resultDiv.innerHTML = `
+                        <div class="result-box">
+                            <span class="success">✅ 連線成功！</span>
+                            
+                            <span class="info">伺服器資訊：</span>
+                            • URL: ${currentServer}
+                            • FHIR 版本: ${fhirVersion}
+                            • 軟體: ${softwareName} ${softwareVersion}
+                            
+                            <span class="success">✓ 此伺服器可正常使用</span>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result-box">
+                        <span class="error">❌ 連線失敗</span>
+                        
+                        錯誤訊息: ${error.message}
+                        
+                        <span class="warning">可能原因：</span>
+                        1. 伺服器 URL 不正確
+                        2. 網路連線問題
+                        3. CORS 限制
+                        4. 伺服器暫時無法存取
+                    </div>
+                `;
+            }
+            
+            btnText.textContent = '測試連線';
+        }
+        
+        async function testBasicQueries() {
+            const resultDiv = document.getElementById('basicResult');
+            const btnText = document.getElementById('btnTest2Text');
+            btnText.innerHTML = '查詢中<span class="loading"></span>';
+            
+            resultDiv.innerHTML = '<div class="result-box"><span class="info">🔍 正在查詢資源...</span></div>';
+            
+            const resources = [
+                { name: 'Patient', display: '患者' },
+                { name: 'Encounter', display: '就診記錄' },
+                { name: 'Condition', display: '診斷' },
+                { name: 'Observation', display: '檢驗' }
+            ];
+            
+            const results = {};
+            
+            for (const resource of resources) {
+                try {
+                    const response = await fetch(`${currentServer}/${resource.name}?_summary=count`);
+                    const data = await response.json();
+                    results[resource.name] = data.total || 0;
+                } catch (error) {
+                    results[resource.name] = '查詢失敗';
+                }
+            }
+            
+            const statsHtml = `
+                <div class="stats-grid">
+                    ${resources.map(r => `
+                        <div class="stat-card">
+                            <div class="stat-label">${r.display} (${r.name})</div>
+                            <div class="stat-value">${results[r.name]}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            const hasData = Object.values(results).some(v => typeof v === 'number' && v > 0);
+            
+            resultDiv.innerHTML = `
+                <div class="result-box">
+                    ${hasData ? 
+                        '<span class="success">✅ 伺服器有資料</span>' : 
+                        '<span class="warning">⚠️ 伺服器沒有資料或無法取得統計資訊</span>'
+                    }
+                </div>
+                ${statsHtml}
+            `;
+            
+            btnText.textContent = '查詢所有資源';
+        }
+        
+        async function testCovidCQL() {
+            const resultDiv = document.getElementById('cqlResult');
+            const btnText = document.getElementById('btnTest3Text');
+            btnText.innerHTML = '查詢中<span class="loading"></span>';
+            
+            resultDiv.innerHTML = '<div class="result-box"><span class="info">🔍 正在執行 COVID-19 CQL 查詢...</span></div>';
+            
+            try {
+                // 查詢 COVID-19 相關的 Condition (使用 ICD-10 U07.1)
+                const conditionResponse = await fetch(
+                    `${currentServer}/Condition?code=U07.1&_count=100`
+                );
+                const conditions = await conditionResponse.json();
+                const conditionCount = conditions.entry?.length || 0;
+                
+                // 查詢相關的患者
+                let patientIds = new Set();
+                if (conditions.entry) {
+                    conditions.entry.forEach(entry => {
+                        const patientRef = entry.resource?.subject?.reference;
+                        if (patientRef) {
+                            const patientId = patientRef.split('/').pop();
+                            patientIds.add(patientId);
+                        }
+                    });
+                }
+                
+                // 查詢 Encounter
+                const encounterResponse = await fetch(
+                    `${currentServer}/Encounter?_count=100`
+                );
+                const encounters = await encounterResponse.json();
+                const encounterCount = encounters.entry?.length || 0;
+                
+                // 查詢 Patient
+                const patientResponse = await fetch(
+                    `${currentServer}/Patient?_count=100`
+                );
+                const patients = await patientResponse.json();
+                const patientCount = patients.entry?.length || 0;
+                
+                const statsHtml = `
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">COVID-19 診斷</div>
+                            <div class="stat-value">${conditionCount}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">相關患者</div>
+                            <div class="stat-value">${patientIds.size}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">就診記錄</div>
+                            <div class="stat-value">${encounterCount}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">總患者數</div>
+                            <div class="stat-value">${patientCount}</div>
+                        </div>
+                    </div>
+                `;
+                
+                if (conditionCount > 0 || patientCount > 0) {
+                    resultDiv.innerHTML = `
+                        <div class="result-box">
+                            <span class="success">✅ CQL 查詢成功</span>
+                            
+                            <span class="info">查詢結果：</span>
+                            • COVID-19 診斷: ${conditionCount} 筆
+                            • 相關患者: ${patientIds.size} 位
+                            • 就診記錄: ${encounterCount} 筆
+                            • 總患者數: ${patientCount} 位
+                            
+                            ${conditionCount > 0 ? 
+                                '<span class="success">✓ 找到 COVID-19 相關資料</span>' : 
+                                '<span class="warning">⚠️ 沒有 COVID-19 診斷資料，但有其他患者資料</span>'
+                            }
+                        </div>
+                        ${statsHtml}
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result-box">
+                            <span class="warning">⚠️ 沒有找到資料</span>
+                            
+                            <span class="info">可能原因：</span>
+                            1. 伺服器沒有 COVID-19 相關測試資料
+                            2. 資料使用不同的編碼系統
+                            3. 資料尚未上傳到伺服器
+                            
+                            <span class="info">建議：</span>
+                            • 切換到 HAPI FHIR R4 測試伺服器
+                            • 上傳測試資料
+                            • 檢查 CQL 查詢條件
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result-box">
+                        <span class="error">❌ CQL 查詢失敗</span>
+                        
+                        錯誤訊息: ${error.message}
+                        
+                        <span class="warning">請檢查：</span>
+                        1. 伺服器是否正常運作
+                        2. 查詢語法是否正確
+                        3. 網路連線是否穩定
+                    </div>
+                `;
+            }
+            
+            btnText.textContent = '執行 COVID-19 CQL';
+        }
+    </script>
+</body>
+</html>

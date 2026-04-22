@@ -1,0 +1,164 @@
+{
+  "info": {
+    "name": "FHIR Server Upload Test Collection",
+    "description": "Test uploading patient data to various FHIR servers",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Test Firely Server (Working)",
+      "item": [
+        {
+          "name": "Get Metadata",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "url": {
+              "raw": "https://server.fire.ly/r4/metadata",
+              "protocol": "https",
+              "host": ["server", "fire", "ly"],
+              "path": ["r4", "metadata"]
+            },
+            "description": "測試 Firely Server 連線"
+          }
+        },
+        {
+          "name": "Upload Patient (Simple)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/fhir+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Patient\",\n  \"id\": \"test-patient-001\",\n  \"name\": [\n    {\n      \"family\": \"測試\",\n      \"given\": [\"病人\"]\n    }\n  ],\n  \"gender\": \"female\",\n  \"birthDate\": \"1990-01-01\"\n}"
+            },
+            "url": {
+              "raw": "https://server.fire.ly/r4/Patient",
+              "protocol": "https",
+              "host": ["server", "fire", "ly"],
+              "path": ["r4", "Patient"]
+            },
+            "description": "上傳單一病人到 Firely Server"
+          }
+        },
+        {
+          "name": "Query Recent Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "url": {
+              "raw": "https://server.fire.ly/r4/Patient?_count=5&_sort=-_lastUpdated",
+              "protocol": "https",
+              "host": ["server", "fire", "ly"],
+              "path": ["r4", "Patient"],
+              "query": [
+                {
+                  "key": "_count",
+                  "value": "5"
+                },
+                {
+                  "key": "_sort",
+                  "value": "-_lastUpdated"
+                }
+              ]
+            },
+            "description": "查詢最近上傳的 5 位病人"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Taiwan MOHW Server (502 Error)",
+      "item": [
+        {
+          "name": "Get Metadata",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "url": {
+              "raw": "https://thas.mohw.gov.tw/v/r4/fhir/metadata",
+              "protocol": "https",
+              "host": ["thas", "mohw", "gov", "tw"],
+              "path": ["v", "r4", "fhir", "metadata"]
+            },
+            "description": "測試台灣衛福部 FHIR Server 連線（目前 502）"
+          }
+        },
+        {
+          "name": "Upload Bundle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/fhir+json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resourceType\": \"Bundle\",\n  \"type\": \"transaction\",\n  \"entry\": [\n    {\n      \"fullUrl\": \"urn:uuid:test-patient-1\",\n      \"resource\": {\n        \"resourceType\": \"Patient\",\n        \"id\": \"TEST-P1\",\n        \"name\": [{\"family\": \"測試\", \"given\": [\"病人\"]}],\n        \"gender\": \"female\",\n        \"birthDate\": \"1990-01-01\"\n      },\n      \"request\": {\"method\": \"PUT\", \"url\": \"Patient/TEST-P1\"}\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "https://thas.mohw.gov.tw/v/r4/fhir",
+              "protocol": "https",
+              "host": ["thas", "mohw", "gov", "tw"],
+              "path": ["v", "r4", "fhir"]
+            },
+            "description": "上傳 Bundle 到台灣衛福部 FHIR Server"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. SMART Health IT (502 Error)",
+      "item": [
+        {
+          "name": "Get Metadata",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/fhir+json"
+              }
+            ],
+            "url": {
+              "raw": "https://r4.smarthealthit.org/metadata",
+              "protocol": "https",
+              "host": ["r4", "smarthealthit", "org"],
+              "path": ["metadata"]
+            },
+            "description": "測試 SMART Health IT 連線（目前 502）"
+          }
+        }
+      ]
+    }
+  ]
+}

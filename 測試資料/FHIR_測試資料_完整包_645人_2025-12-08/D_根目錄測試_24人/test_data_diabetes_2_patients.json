@@ -1,0 +1,144 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:dm-p1",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "DM-P1",
+        "name": [{"family": "陳", "given": ["建國"]}],
+        "gender": "male",
+        "birthDate": "1965-03-20"
+      },
+      "request": {"method": "PUT", "url": "Patient/DM-P1"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-enc1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "DM-ENC1",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory"},
+        "subject": {"reference": "Patient/DM-P1"},
+        "period": {"start": "2025-10-15T09:00:00+08:00", "end": "2025-10-15T09:30:00+08:00"}
+      },
+      "request": {"method": "PUT", "url": "Encounter/DM-ENC1"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-cond1",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "DM-COND1",
+        "code": {
+          "coding": [{"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11.9", "display": "Type 2 diabetes mellitus without complications"}],
+          "text": "第二型糖尿病"
+        },
+        "subject": {"reference": "Patient/DM-P1"},
+        "encounter": {"reference": "Encounter/DM-ENC1"}
+      },
+      "request": {"method": "PUT", "url": "Condition/DM-COND1"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-med1",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "DM-MED1",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [{"system": "http://www.whocc.no/atc", "code": "A10BA02", "display": "Metformin"}],
+          "text": "Metformin 500mg"
+        },
+        "subject": {"reference": "Patient/DM-P1"},
+        "encounter": {"reference": "Encounter/DM-ENC1"}
+      },
+      "request": {"method": "PUT", "url": "MedicationRequest/DM-MED1"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-obs1",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "DM-OBS1",
+        "status": "final",
+        "code": {
+          "coding": [{"system": "http://loinc.org", "code": "4548-4", "display": "Hemoglobin A1c/Hemoglobin.total in Blood"}],
+          "text": "HbA1c"
+        },
+        "subject": {"reference": "Patient/DM-P1"},
+        "effectiveDateTime": "2025-10-15T09:15:00+08:00",
+        "valueQuantity": {"value": 7.2, "unit": "%", "system": "http://unitsofmeasure.org", "code": "%"}
+      },
+      "request": {"method": "PUT", "url": "Observation/DM-OBS1"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-p2",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "DM-P2",
+        "name": [{"family": "林", "given": ["淑芬"]}],
+        "gender": "female",
+        "birthDate": "1970-07-12"
+      },
+      "request": {"method": "PUT", "url": "Patient/DM-P2"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-enc2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "DM-ENC2",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory"},
+        "subject": {"reference": "Patient/DM-P2"},
+        "period": {"start": "2025-11-08T10:00:00+08:00", "end": "2025-11-08T10:30:00+08:00"}
+      },
+      "request": {"method": "PUT", "url": "Encounter/DM-ENC2"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-cond2",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "DM-COND2",
+        "code": {
+          "coding": [{"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11.65", "display": "Type 2 diabetes mellitus with hyperglycemia"}],
+          "text": "第二型糖尿病伴高血糖"
+        },
+        "subject": {"reference": "Patient/DM-P2"},
+        "encounter": {"reference": "Encounter/DM-ENC2"}
+      },
+      "request": {"method": "PUT", "url": "Condition/DM-COND2"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-med2",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "DM-MED2",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [{"system": "http://www.whocc.no/atc", "code": "A10BG03", "display": "Pioglitazone"}],
+          "text": "Pioglitazone 15mg"
+        },
+        "subject": {"reference": "Patient/DM-P2"},
+        "encounter": {"reference": "Encounter/DM-ENC2"}
+      },
+      "request": {"method": "PUT", "url": "MedicationRequest/DM-MED2"}
+    },
+    {
+      "fullUrl": "urn:uuid:dm-obs2",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "DM-OBS2",
+        "status": "final",
+        "code": {
+          "coding": [{"system": "http://loinc.org", "code": "17856-6", "display": "Hemoglobin A1c/Hemoglobin.total in Blood by HPLC"}],
+          "text": "HbA1c"
+        },
+        "subject": {"reference": "Patient/DM-P2"},
+        "effectiveDateTime": "2025-11-08T10:20:00+08:00",
+        "valueQuantity": {"value": 6.8, "unit": "%", "system": "http://unitsofmeasure.org", "code": "%"}
+      },
+      "request": {"method": "PUT", "url": "Observation/DM-OBS2"}
+    }
+  ]
+}

@@ -1,0 +1,871 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:mr-fhir-cql-001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "mr-fhir-cql-001",
+        "identifier": [
+          {
+            "system": "http://fhir-cql-platform.demo",
+            "value": "DEMO-FHIR-CQL-2025"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "FHIR CQL",
+            "given": ["Mr."],
+            "text": "Mr. FHIR CQL"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "2024-12-04",
+        "address": [
+          {
+            "text": "FHIR CQL Quality Platform Demo",
+            "city": "Taipei",
+            "country": "TW"
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/mr-fhir-cql-001"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-covid19",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-covid19-mr-fhir-cql",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "門診"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "period": {
+          "start": "2025-10-15T09:00:00Z",
+          "end": "2025-10-15T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-covid19-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:condition-covid19",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition-covid19-mr-fhir-cql",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "840539006",
+              "display": "COVID-19"
+            },
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "U07.1",
+              "display": "COVID-19"
+            }
+          ],
+          "text": "COVID-19 確診"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-covid19-mr-fhir-cql"
+        },
+        "onsetDateTime": "2025-10-15",
+        "recordedDate": "2025-10-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/condition-covid19-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:immunization-covid19-dose1",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "immunization-covid19-dose1-mr-fhir-cql",
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/cvx",
+              "code": "208",
+              "display": "COVID-19 mRNA vaccine"
+            }
+          ],
+          "text": "COVID-19 疫苗第一劑"
+        },
+        "patient": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "occurrenceDateTime": "2025-09-01",
+        "primarySource": true
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Immunization/immunization-covid19-dose1-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:immunization-covid19-dose2",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "immunization-covid19-dose2-mr-fhir-cql",
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/cvx",
+              "code": "208",
+              "display": "COVID-19 mRNA vaccine"
+            }
+          ],
+          "text": "COVID-19 疫苗第二劑"
+        },
+        "patient": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "occurrenceDateTime": "2025-10-01",
+        "primarySource": true
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Immunization/immunization-covid19-dose2-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:immunization-influenza",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "immunization-influenza-mr-fhir-cql",
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/cvx",
+              "code": "141",
+              "display": "Influenza vaccine"
+            }
+          ],
+          "text": "流感疫苗"
+        },
+        "patient": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "occurrenceDateTime": "2025-10-10",
+        "primarySource": true
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Immunization/immunization-influenza-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:condition-hypertension",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition-hypertension-mr-fhir-cql",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "高血壓"
+            },
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "I10",
+              "display": "Essential hypertension"
+            }
+          ],
+          "text": "高血壓"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "onsetDateTime": "2025-08-01",
+        "recordedDate": "2025-08-01"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/condition-hypertension-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:medication-antihypertensive",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medication-antihypertensive-mr-fhir-cql",
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "C09AA02",
+              "display": "Enalapril"
+            }
+          ],
+          "text": "降血壓藥物 - Enalapril"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "authoredOn": "2025-10-01",
+        "dosageInstruction": [
+          {
+            "text": "每日一次，口服",
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/medication-antihypertensive-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:condition-diabetes",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition-diabetes-mr-fhir-cql",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "73211009",
+              "display": "糖尿病"
+            },
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "E11",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ],
+          "text": "第二型糖尿病"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "onsetDateTime": "2025-07-15",
+        "recordedDate": "2025-07-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/condition-diabetes-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:observation-hba1c",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation-hba1c-mr-fhir-cql",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ],
+          "text": "糖化血色素 HbA1c"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "effectiveDateTime": "2025-10-20",
+        "valueQuantity": {
+          "value": 7.2,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/observation-hba1c-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:medication-metformin",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medication-metformin-mr-fhir-cql",
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "A10BA02",
+              "display": "Metformin"
+            }
+          ],
+          "text": "降血糖藥物 - Metformin"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "authoredOn": "2025-10-01",
+        "dosageInstruction": [
+          {
+            "text": "每日兩次，餐後服用",
+            "timing": {
+              "repeat": {
+                "frequency": 2,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/medication-metformin-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:medication-antibiotic",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medication-antibiotic-mr-fhir-cql",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01CA04",
+              "display": "Amoxicillin"
+            }
+          ],
+          "text": "抗生素 - Amoxicillin"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "authoredOn": "2025-10-15",
+        "dosageInstruction": [
+          {
+            "text": "每日三次，連續7天",
+            "timing": {
+              "repeat": {
+                "frequency": 3,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/medication-antibiotic-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-outpatient-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-outpatient-1-mr-fhir-cql",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "門診"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "period": {
+          "start": "2025-10-01T10:00:00Z",
+          "end": "2025-10-01T11:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "38341003",
+                "display": "高血壓追蹤"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-outpatient-1-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-outpatient-2",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-outpatient-2-mr-fhir-cql",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "門診"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "period": {
+          "start": "2025-10-20T14:00:00Z",
+          "end": "2025-10-20T15:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "73211009",
+                "display": "糖尿病追蹤"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-outpatient-2-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:encounter-inpatient",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "encounter-inpatient-mr-fhir-cql",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "住院"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "period": {
+          "start": "2025-11-01T08:00:00Z",
+          "end": "2025-11-05T16:00:00Z"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "233604007",
+                "display": "肺炎"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/encounter-inpatient-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:condition-pneumonia",
+      "resource": {
+        "resourceType": "Condition",
+        "id": "condition-pneumonia-mr-fhir-cql",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "resolved"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "233604007",
+              "display": "肺炎"
+            },
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "J18.9",
+              "display": "Pneumonia"
+            }
+          ],
+          "text": "肺炎"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-inpatient-mr-fhir-cql"
+        },
+        "onsetDateTime": "2025-11-01",
+        "abatementDateTime": "2025-11-05",
+        "recordedDate": "2025-11-01"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/condition-pneumonia-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:procedure-surgery",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "procedure-surgery-mr-fhir-cql",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "80146002",
+              "display": "闌尾切除術"
+            }
+          ],
+          "text": "闌尾切除術"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-inpatient-mr-fhir-cql"
+        },
+        "performedDateTime": "2025-11-02T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/procedure-surgery-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:medication-prophylactic-antibiotic",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medication-prophylactic-mr-fhir-cql",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01DC02",
+              "display": "Cefuroxime"
+            }
+          ],
+          "text": "手術預防性抗生素 - Cefuroxime"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "encounter": {
+          "reference": "Encounter/encounter-inpatient-mr-fhir-cql"
+        },
+        "authoredOn": "2025-11-02",
+        "dosageInstruction": [
+          {
+            "text": "手術前30分鐘靜脈注射",
+            "timing": {
+              "event": ["2025-11-02T09:30:00Z"]
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/medication-prophylactic-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:observation-bp",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation-bp-mr-fhir-cql",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "vital-signs"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "85354-9",
+              "display": "Blood pressure"
+            }
+          ],
+          "text": "血壓"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "effectiveDateTime": "2025-10-01T10:30:00Z",
+        "component": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "8480-6",
+                  "display": "Systolic blood pressure"
+                }
+              ]
+            },
+            "valueQuantity": {
+              "value": 135,
+              "unit": "mmHg",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]"
+            }
+          },
+          {
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "8462-4",
+                  "display": "Diastolic blood pressure"
+                }
+              ]
+            },
+            "valueQuantity": {
+              "value": 85,
+              "unit": "mmHg",
+              "system": "http://unitsofmeasure.org",
+              "code": "mm[Hg]"
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/observation-bp-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:medication-lipid-lowering",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medication-lipid-mr-fhir-cql",
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "C10AA01",
+              "display": "Simvastatin"
+            }
+          ],
+          "text": "降血脂藥物 - Simvastatin"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "authoredOn": "2025-10-01",
+        "dosageInstruction": [
+          {
+            "text": "每晚一次，睡前服用",
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "when": ["HS"]
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/medication-lipid-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:observation-cholesterol",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "observation-cholesterol-mr-fhir-cql",
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2093-3",
+              "display": "Total cholesterol"
+            }
+          ],
+          "text": "總膽固醇"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "effectiveDateTime": "2025-10-20",
+        "valueQuantity": {
+          "value": 220,
+          "unit": "mg/dL",
+          "system": "http://unitsofmeasure.org",
+          "code": "mg/dL"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/observation-cholesterol-mr-fhir-cql"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:medication-chronic-prescription",
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "medication-chronic-mr-fhir-cql",
+        "status": "active",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "C09AA02",
+              "display": "Enalapril"
+            }
+          ],
+          "text": "慢性病連續處方 - 降血壓藥"
+        },
+        "subject": {
+          "reference": "Patient/mr-fhir-cql-001"
+        },
+        "authoredOn": "2025-10-01",
+        "dispenseRequest": {
+          "numberOfRepeatsAllowed": 3,
+          "quantity": {
+            "value": 90,
+            "unit": "tablets"
+          }
+        },
+        "dosageInstruction": [
+          {
+            "text": "慢性處方，每日一次",
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d"
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/medication-chronic-mr-fhir-cql"
+      }
+    }
+  ]
+}

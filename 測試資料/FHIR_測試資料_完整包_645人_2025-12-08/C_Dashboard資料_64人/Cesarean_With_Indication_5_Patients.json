@@ -1,0 +1,691 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CWID001",
+        "identifier": [
+          {
+            "system": "http://www.boca.gov.tw/",
+            "value": "CWID001"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1992-06-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CWID001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CWID001-enc",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CWID001"
+        },
+        "period": {
+          "start": "2024-07-10T08:00:00Z",
+          "end": "2024-07-13T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CWID001-enc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "CWID001-cond",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "resolved"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.0",
+              "display": "Delivery by emergency cesarean section"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "237311001",
+              "display": "Cephalopelvic disproportion"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID001"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID001-enc"
+        },
+        "onsetDateTime": "2024-07-10T08:00:00Z",
+        "recordedDate": "2024-07-10T08:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/CWID001-cond"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CWID001-proc",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/health-insurance-coding-procedure-tw",
+              "code": "81004C",
+              "display": "剖腹產術"
+            },
+            {
+              "system": "http://www.cms.gov/Medicare/Coding/ICD10",
+              "code": "10D00Z0",
+              "display": "Extraction of Products of Conception, Classical, Open Approach"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID001"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID001-enc"
+        },
+        "performedDateTime": "2024-07-10T10:30:00Z",
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "237311001",
+                "display": "Cephalopelvic disproportion"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CWID001-proc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CWID002",
+        "identifier": [
+          {
+            "system": "http://www.boca.gov.tw/",
+            "value": "CWID002"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1988-11-20"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CWID002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CWID002-enc",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CWID002"
+        },
+        "period": {
+          "start": "2024-08-15T09:00:00Z",
+          "end": "2024-08-18T11:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CWID002-enc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "CWID002-cond",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "resolved"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.1",
+              "display": "Delivery by elective cesarean section"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "271903000",
+              "display": "Placenta previa"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID002"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID002-enc"
+        },
+        "onsetDateTime": "2024-08-15T09:00:00Z",
+        "recordedDate": "2024-08-15T09:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/CWID002-cond"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CWID002-proc",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/health-insurance-coding-procedure-tw",
+              "code": "81028C",
+              "display": "選擇性剖腹產"
+            },
+            {
+              "system": "http://www.cms.gov/Medicare/Coding/ICD10",
+              "code": "10D00Z1",
+              "display": "Extraction of Products of Conception, Low Cervical, Open Approach"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177152005",
+              "display": "Elective cesarean section"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID002"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID002-enc"
+        },
+        "performedDateTime": "2024-08-15T11:30:00Z",
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "271903000",
+                "display": "Placenta previa"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CWID002-proc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CWID003",
+        "identifier": [
+          {
+            "system": "http://www.boca.gov.tw/",
+            "value": "CWID003"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1990-03-08"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CWID003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CWID003-enc",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CWID003"
+        },
+        "period": {
+          "start": "2024-09-22T07:30:00Z",
+          "end": "2024-09-25T12:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CWID003-enc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "CWID003-cond",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "resolved"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.0",
+              "display": "Delivery by emergency cesarean section"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "199246003",
+              "display": "Fetal distress"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID003"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID003-enc"
+        },
+        "onsetDateTime": "2024-09-22T07:30:00Z",
+        "recordedDate": "2024-09-22T07:30:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/CWID003-cond"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CWID003-proc",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/health-insurance-coding-procedure-tw",
+              "code": "81004C",
+              "display": "剖腹產術"
+            },
+            {
+              "system": "http://www.cms.gov/Medicare/Coding/ICD10",
+              "code": "10D00Z2",
+              "display": "Extraction of Products of Conception, Extraperitoneal, Open Approach"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID003"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID003-enc"
+        },
+        "performedDateTime": "2024-09-22T09:45:00Z",
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "199246003",
+                "display": "Fetal distress"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CWID003-proc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CWID004",
+        "identifier": [
+          {
+            "system": "http://www.boca.gov.tw/",
+            "value": "CWID004"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1995-07-30"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CWID004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CWID004-enc",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CWID004"
+        },
+        "period": {
+          "start": "2024-10-05T08:30:00Z",
+          "end": "2024-10-08T14:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CWID004-enc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "CWID004-cond",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "resolved"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.1",
+              "display": "Delivery by elective cesarean section"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "415105001",
+              "display": "Placental abruption"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID004"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID004-enc"
+        },
+        "onsetDateTime": "2024-10-05T08:30:00Z",
+        "recordedDate": "2024-10-05T08:30:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/CWID004-cond"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CWID004-proc",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/health-insurance-coding-procedure-tw",
+              "code": "81028C",
+              "display": "選擇性剖腹產"
+            },
+            {
+              "system": "http://www.cms.gov/Medicare/Coding/ICD10",
+              "code": "10D00Z0",
+              "display": "Extraction of Products of Conception, Classical, Open Approach"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "177141003",
+              "display": "Elective cesarean hysterectomy"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID004"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID004-enc"
+        },
+        "performedDateTime": "2024-10-05T10:15:00Z",
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "415105001",
+                "display": "Placental abruption"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CWID004-proc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CWID005",
+        "identifier": [
+          {
+            "system": "http://www.boca.gov.tw/",
+            "value": "CWID005"
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1993-09-12"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CWID005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CWID005-enc",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CWID005"
+        },
+        "period": {
+          "start": "2024-11-18T06:00:00Z",
+          "end": "2024-11-21T09:30:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CWID005-enc"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "CWID005-cond",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "resolved"
+            }
+          ]
+        },
+        "verificationStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+              "code": "confirmed"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-cm",
+              "code": "O82.0",
+              "display": "Delivery by emergency cesarean section"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "48194001",
+              "display": "Pregnancy-induced hypertension"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID005"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID005-enc"
+        },
+        "onsetDateTime": "2024-11-18T06:00:00Z",
+        "recordedDate": "2024-11-18T06:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/CWID005-cond"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CWID005-proc",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/health-insurance-coding-procedure-tw",
+              "code": "81004C",
+              "display": "剖腹產術"
+            },
+            {
+              "system": "http://www.cms.gov/Medicare/Coding/ICD10",
+              "code": "10D00Z1",
+              "display": "Extraction of Products of Conception, Low Cervical, Open Approach"
+            },
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/CWID005"
+        },
+        "encounter": {
+          "reference": "Encounter/CWID005-enc"
+        },
+        "performedDateTime": "2024-11-18T08:20:00Z",
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "48194001",
+                "display": "Pregnancy-induced hypertension"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CWID005-proc"
+      }
+    }
+  ]
+}

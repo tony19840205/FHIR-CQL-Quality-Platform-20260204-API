@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>按钮测试</title>
+    <style>
+        body { padding: 50px; font-family: Arial; }
+        button { padding: 10px 20px; margin: 10px; font-size: 16px; cursor: pointer; }
+        .log { background: #f0f0f0; padding: 20px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>按钮功能测试</h1>
+    
+    <button id="testBtn1">测试按钮 1</button>
+    <button id="testBtn2">测试按钮 2</button>
+    <button id="testBtn3" onclick="alert('Inline onclick 工作正常')">测试按钮 3 (inline)</button>
+    
+    <div class="log" id="log">
+        等待测试...
+    </div>
+    
+    <script>
+        console.log('页面已加载');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded 触发');
+            const log = document.getElementById('log');
+            log.innerHTML = 'DOMContentLoaded 已触发<br>';
+            
+            const btn1 = document.getElementById('testBtn1');
+            const btn2 = document.getElementById('testBtn2');
+            
+            if (btn1) {
+                btn1.addEventListener('click', function() {
+                    alert('按钮 1 点击成功！');
+                    log.innerHTML += '按钮 1 被点击<br>';
+                });
+                log.innerHTML += '按钮 1 事件已绑定<br>';
+            }
+            
+            if (btn2) {
+                btn2.onclick = function() {
+                    alert('按钮 2 点击成功！');
+                    log.innerHTML += '按钮 2 被点击<br>';
+                };
+                log.innerHTML += '按钮 2 事件已绑定<br>';
+            }
+        });
+    </script>
+</body>
+</html>

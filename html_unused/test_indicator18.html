@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <title>Test Indicator 18</title>
+</head>
+<body>
+    <h1>測試指標18</h1>
+    <button onclick='testIndicator18()'>查詢指標18</button>
+    <pre id='result'></pre>
+    
+    <script src='quality-indicators.js'></script>
+    <script>
+    async function testIndicator18() {
+        const resultEl = document.getElementById('result');
+        resultEl.textContent = '查詢中...';
+        
+        try {
+            // 創建連線
+            const conn = {
+                query: async function(resourceType, params) {
+                    let url = 'https://thas.mohw.gov.tw/v/r4/fhir/' + resourceType + '?';
+                    for (const [key, value] of Object.entries(params)) {
+                        if (Array.isArray(value)) {
+                            value.forEach(v => url += key + '=' + v + '&');
+                        } else {
+                            url += key + '=' + value + '&';
+                        }
+                    }
+                    const response = await fetch(url);
+                    return await response.json();
+                }
+            };
+            
+            const result = await queryDementiaHospiceCareUtilizationRateSample(conn, '2025-Q4');
+            resultEl.textContent = JSON.stringify(result, null, 2);
+        } catch (error) {
+            resultEl.textContent = 'Error: ' + error.message;
+        }
+    }
+    </script>
+</body>
+</html>

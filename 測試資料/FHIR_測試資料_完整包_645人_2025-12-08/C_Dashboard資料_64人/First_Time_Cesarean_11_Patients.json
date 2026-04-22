@@ -1,0 +1,1436 @@
+﻿{
+    "resourceType":  "Bundle",
+    "type":  "transaction",
+    "entry":  [
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-001",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS001"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1990-03-15"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-001",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-001"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-01T08:00:00+08:00",
+                                                      "end":  "2024-10-05T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-001",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.0",
+                                                                       "display":  "Elective cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-001"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-001",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81004C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z0",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "11466000",
+                                                                       "display":  "Cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-001"
+                                                     },
+                                       "performedDateTime":  "2024-10-02T10:30:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "237311001",
+                                                                                 "display":  "Cephalopelvic disproportion"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-002",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS002"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1992-07-22"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-002",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-002"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-05T09:00:00+08:00",
+                                                      "end":  "2024-10-09T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-002",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.1",
+                                                                       "display":  "Cesarean section with medical indication"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-002"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-002"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-002",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81028C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z1",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "177152005",
+                                                                       "display":  "Emergency cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-002"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-002"
+                                                     },
+                                       "performedDateTime":  "2024-10-06T11:00:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "199246003",
+                                                                                 "display":  "Fetal distress"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-003",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS003"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1988-11-30"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-003",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-003"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-10T08:30:00+08:00",
+                                                      "end":  "2024-10-14T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-003",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.0",
+                                                                       "display":  "Elective cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-003"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-003"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-003",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81004C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z2",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "18946005",
+                                                                       "display":  "Lower segment cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-003"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-003"
+                                                     },
+                                       "performedDateTime":  "2024-10-11T09:45:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "289365005",
+                                                                                 "display":  "Finding of malposition of fetus"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-004",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS004"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1993-04-18"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-004",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-004"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-15T09:00:00+08:00",
+                                                      "end":  "2024-10-19T14:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-004",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.1",
+                                                                       "display":  "Cesarean section with medical indication"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-004"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-004"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-004",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81028C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z0",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "11466000",
+                                                                       "display":  "Cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-004"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-004"
+                                                     },
+                                       "performedDateTime":  "2024-10-16T10:15:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "271903000",
+                                                                                 "display":  "Placenta previa"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-005",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS005"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1991-09-10"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-005",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-005"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-20T08:00:00+08:00",
+                                                      "end":  "2024-10-24T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-005",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.0",
+                                                                       "display":  "Elective cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-005"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-005"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-005",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81004C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z1",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "177141003",
+                                                                       "display":  "Elective cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-005"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-005"
+                                                     },
+                                       "performedDateTime":  "2024-10-21T11:30:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "415105001",
+                                                                                 "display":  "Placental abruption"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-006",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS006"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1989-02-28"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-006",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-006"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-25T09:00:00+08:00",
+                                                      "end":  "2024-10-29T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-006",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.1",
+                                                                       "display":  "Cesarean section with medical indication"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-006"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-006"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-006",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81028C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z2",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "177152005",
+                                                                       "display":  "Emergency cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-006"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-006"
+                                                     },
+                                       "performedDateTime":  "2024-10-26T10:00:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "48194001",
+                                                                                 "display":  "Pregnancy induced hypertension"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-007",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS007"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1994-06-12"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-007",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-007"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-01T08:30:00+08:00",
+                                                      "end":  "2024-11-05T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-007",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.0",
+                                                                       "display":  "Elective cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-007"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-007"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-007",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81004C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z0",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "18946005",
+                                                                       "display":  "Lower segment cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-007"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-007"
+                                                     },
+                                       "performedDateTime":  "2024-11-02T09:30:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "237238006",
+                                                                                 "display":  "Prolonged labor"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-008",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS008"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1990-12-05"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-008",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-008"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-05T09:00:00+08:00",
+                                                      "end":  "2024-11-09T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-008",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.1",
+                                                                       "display":  "Cesarean section with medical indication"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-008"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-008"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-008",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81028C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z1",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "11466000",
+                                                                       "display":  "Cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-008"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-008"
+                                                     },
+                                       "performedDateTime":  "2024-11-06T11:00:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "427139004",
+                                                                                 "display":  "Multiple gestation"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-009",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS009"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1992-08-20"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-009",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-009"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-10T08:00:00+08:00",
+                                                      "end":  "2024-11-14T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-009",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.0",
+                                                                       "display":  "Elective cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-009"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-009"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-009",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81004C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z2",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "177141003",
+                                                                       "display":  "Elective cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-009"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-009"
+                                                     },
+                                       "performedDateTime":  "2024-11-11T10:30:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "15938005",
+                                                                                 "display":  "Eclampsia"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-010",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS010"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1991-05-18"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-010",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-010"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-15T09:00:00+08:00",
+                                                      "end":  "2024-11-19T14:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-010",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.1",
+                                                                       "display":  "Cesarean section with medical indication"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-010"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-010"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-010",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81028C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z0",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "177152005",
+                                                                       "display":  "Emergency cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-010"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-010"
+                                                     },
+                                       "performedDateTime":  "2024-11-16T09:45:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "237311001",
+                                                                                 "display":  "Cephalopelvic disproportion"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "ftcs-patient-011",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "FTCS011"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1993-10-25"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/ftcs-patient-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "ftcs-encounter-011",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-011"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-20T08:00:00+08:00",
+                                                      "end":  "2024-11-24T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/ftcs-encounter-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "ftcs-condition-011",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "O82.0",
+                                                                       "display":  "Elective cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-011"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-011"
+                                                     },
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/ftcs-condition-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "ftcs-procedure-011",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+                                                                       "code":  "81004C",
+                                                                       "display":  "剖腹產術"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs",
+                                                                       "code":  "10D00Z1",
+                                                                       "display":  "Extraction of Products of Conception, Low Cervical, Open Approach"
+                                                                   },
+                                                                   {
+                                                                       "system":  "http://snomed.info/sct",
+                                                                       "code":  "18946005",
+                                                                       "display":  "Lower segment cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/ftcs-patient-011"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/ftcs-encounter-011"
+                                                     },
+                                       "performedDateTime":  "2024-11-21T11:00:00+08:00",
+                                       "reasonCode":  [
+                                                          {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://snomed.info/sct",
+                                                                                 "code":  "199246003",
+                                                                                 "display":  "Fetal distress"
+                                                                             }
+                                                                         ]
+                                                          }
+                                                      ]
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/ftcs-procedure-011"
+                                  }
+                  }
+              ]
+}

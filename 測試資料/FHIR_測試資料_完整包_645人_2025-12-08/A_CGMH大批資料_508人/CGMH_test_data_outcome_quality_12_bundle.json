@@ -1,0 +1,1226 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20001",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20001"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20001"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1936-09-08"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000101",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20001"
+        },
+        "period": {
+          "start": "2024-10-21T08:00:00Z",
+          "end": "2024-10-29T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000101",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "I21.2",
+              "display": "Diagnosis I21.2"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20001"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000101"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20002",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20002"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20002"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1945-09-24"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000201",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20002"
+        },
+        "period": {
+          "start": "2024-10-20T08:00:00Z",
+          "end": "2024-10-30T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000201",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "I21.0",
+              "display": "Diagnosis I21.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20002"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000201"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20003",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20003"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20003"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1941-03-22"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000301",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20003"
+        },
+        "period": {
+          "start": "2024-10-17T08:00:00Z",
+          "end": "2024-10-22T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000301",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "I21.0",
+              "display": "Diagnosis I21.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20003"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000301"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20004",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20004"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20004"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1960-01-08"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000401",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20004"
+        },
+        "period": {
+          "start": "2024-10-13T08:00:00Z",
+          "end": "2024-10-24T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000401",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "I21.1",
+              "display": "Diagnosis I21.1"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20004"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000401"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20005",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20005"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20005"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1936-07-27"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000501",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20005"
+        },
+        "period": {
+          "start": "2024-10-18T08:00:00Z",
+          "end": "2024-10-29T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000501",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "I21.2",
+              "display": "Diagnosis I21.2"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20005"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000501"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20006",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20006"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20006"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1949-08-08"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000601",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20006"
+        },
+        "period": {
+          "start": "2024-10-12T08:00:00Z",
+          "end": "2024-10-18T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000601",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "I21.0",
+              "display": "Diagnosis I21.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20006"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000601"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "OBS2000601",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "69453-9",
+              "display": "Cause of Death"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20006"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000601"
+        },
+        "effectiveDateTime": "2025-10-20T15:00:00Z",
+        "valueCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "I21.9",
+              "display": "Acute myocardial infarction, unspecified"
+            }
+          ]
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/OBS2000601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20007",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20007"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20007"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1931-09-10"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20007"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000701",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20007"
+        },
+        "period": {
+          "start": "2024-10-19T08:00:00Z",
+          "end": "2024-10-30T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000701",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "F01",
+              "display": "Diagnosis F01"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20007"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000701"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000702",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/TW20007"
+        },
+        "period": {
+          "start": "2024-10-23T08:00:00Z",
+          "end": "2024-10-24T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000702"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC2000701",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://www.nhi.gov.tw/",
+              "code": "05023C",
+              "display": "Hospice Care 05023C"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20007"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000702"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC2000701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20008",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20008"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20008"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-06-21"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20008"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000801",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20008"
+        },
+        "period": {
+          "start": "2024-10-07T08:00:00Z",
+          "end": "2024-10-16T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000801",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "G30",
+              "display": "Diagnosis G30"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20008"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000801"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000802",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/TW20008"
+        },
+        "period": {
+          "start": "2024-10-23T08:00:00Z",
+          "end": "2024-10-24T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000802"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC2000801",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://www.nhi.gov.tw/",
+              "code": "05025C",
+              "display": "Hospice Care 05025C"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20008"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000802"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC2000801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20009",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20009"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20009"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1943-08-10"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20009"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000901",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20009"
+        },
+        "period": {
+          "start": "2024-10-07T08:00:00Z",
+          "end": "2024-10-19T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2000901",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "G30",
+              "display": "Diagnosis G30"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20009"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000901"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2000901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2000902",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/TW20009"
+        },
+        "period": {
+          "start": "2024-10-23T08:00:00Z",
+          "end": "2024-10-24T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2000902"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC2000901",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://www.nhi.gov.tw/",
+              "code": "05024C",
+              "display": "Hospice Care 05024C"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20009"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2000902"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC2000901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20010",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20010"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20010"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1946-03-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20010"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2001001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20010"
+        },
+        "period": {
+          "start": "2024-10-07T08:00:00Z",
+          "end": "2024-10-15T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2001001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2001001",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "F01",
+              "display": "Diagnosis F01"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20010"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2001001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2001001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2001002",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "AMB",
+          "display": "ambulatory"
+        },
+        "subject": {
+          "reference": "Patient/TW20010"
+        },
+        "period": {
+          "start": "2024-10-15T08:00:00Z",
+          "end": "2024-10-16T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2001002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC2001001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://www.nhi.gov.tw/",
+              "code": "05025C",
+              "display": "Hospice Care 05025C"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20010"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2001002"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC2001001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20011",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20011"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20011"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1936-03-25"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20011"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2001101",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20011"
+        },
+        "period": {
+          "start": "2024-10-20T08:00:00Z",
+          "end": "2024-10-28T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2001101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2001101",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "F00",
+              "display": "Diagnosis F00"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20011"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2001101"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2001101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW20012",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW20012"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "結果20012"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1945-07-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW20012"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC2001201",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW20012"
+        },
+        "period": {
+          "start": "2024-10-22T08:00:00Z",
+          "end": "2024-10-27T18:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC2001201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND2001201",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "F03",
+              "display": "Diagnosis F03"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW20012"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC2001201"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND2001201"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1799 @@
+﻿{
+    "resourceType":  "Bundle",
+    "type":  "transaction",
+    "entry":  [
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-001",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM001"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1938-05-12"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-001",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-001"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-01T08:00:00+08:00",
+                                                      "end":  "2024-10-15T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-001",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G30.9",
+                                                                       "display":  "Alzheimer disease, unspecified"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-001"
+                                                     },
+                                       "onsetDateTime":  "2022-03-15",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "dementia-hospice-001",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "05601K",
+                                                                       "display":  "安寧住院照護"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-001"
+                                                     },
+                                       "performedDateTime":  "2024-10-05T09:00:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/dementia-hospice-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-002",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM002"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1942-08-20"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-002",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-002"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-05T09:00:00+08:00",
+                                                      "end":  "2024-10-20T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-002",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F03",
+                                                                       "display":  "Unspecified dementia"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-002"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-002"
+                                                     },
+                                       "onsetDateTime":  "2021-11-08",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "dementia-hospice-002",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "P4401B",
+                                                                       "display":  "全民健康保險安寧共同照護試辦方案"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-002"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-002"
+                                                     },
+                                       "performedDateTime":  "2024-10-10T10:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/dementia-hospice-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-003",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM003"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1945-03-15"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-003",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-003"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-10T14:00:00+08:00",
+                                                      "end":  "2024-10-10T15:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-003",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G30.1",
+                                                                       "display":  "Alzheimer disease with late onset"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-003"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-003"
+                                                     },
+                                       "onsetDateTime":  "2023-05-20",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "dementia-hospice-003",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "05312C",
+                                                                       "display":  "安寧居家療護"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-003"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-003"
+                                                     },
+                                       "performedDateTime":  "2024-10-10T14:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/dementia-hospice-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-004",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM004"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1940-11-28"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-004",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-004"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-12T08:30:00+08:00",
+                                                      "end":  "2024-10-25T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-004",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F01",
+                                                                       "display":  "Vascular dementia"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-004"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-004"
+                                                     },
+                                       "onsetDateTime":  "2020-09-10",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "dementia-hospice-004",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "05602A",
+                                                                       "display":  "安寧住院照護"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-004"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-004"
+                                                     },
+                                       "performedDateTime":  "2024-10-15T11:00:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/dementia-hospice-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-005",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM005"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1948-07-05"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-005",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-005"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-18T09:00:00+08:00",
+                                                      "end":  "2024-10-18T10:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-005",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F02",
+                                                                       "display":  "Dementia in other diseases classified elsewhere"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-005"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-005"
+                                                     },
+                                       "onsetDateTime":  "2022-12-03",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "dementia-hospice-005",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "05323C",
+                                                                       "display":  "安寧居家療護"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-005"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-005"
+                                                     },
+                                       "performedDateTime":  "2024-10-18T09:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/dementia-hospice-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-006",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM006"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1943-02-18"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-006",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-006"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-20T08:00:00+08:00",
+                                                      "end":  "2024-11-02T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-006",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G30.0",
+                                                                       "display":  "Alzheimer disease with early onset"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-006"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-006"
+                                                     },
+                                       "onsetDateTime":  "2019-06-22",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "dementia-hospice-006",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "P4402B",
+                                                                       "display":  "全民健康保險安寧共同照護試辦方案"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-006"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-006"
+                                                     },
+                                       "performedDateTime":  "2024-10-25T10:00:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/dementia-hospice-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-007",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM007"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1950-09-30"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-007",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-007"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-25T14:00:00+08:00",
+                                                      "end":  "2024-10-25T15:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-007",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G31",
+                                                                       "display":  "Other degenerative diseases of nervous system"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-007"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-007"
+                                                     },
+                                       "onsetDateTime":  "2023-01-15",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "dementia-hospice-007",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "05336C",
+                                                                       "display":  "安寧居家療護"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-007"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-007"
+                                                     },
+                                       "performedDateTime":  "2024-10-25T15:00:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/dementia-hospice-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-008",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM008"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1946-12-10"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-008",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-008"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-28T09:00:00+08:00",
+                                                      "end":  "2024-11-10T14:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-008",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F03",
+                                                                       "display":  "Unspecified dementia"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-008"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-008"
+                                                     },
+                                       "onsetDateTime":  "2021-08-19",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "dementia-hospice-008",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "05603B",
+                                                                       "display":  "安寧住院照護"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-008"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-008"
+                                                     },
+                                       "performedDateTime":  "2024-11-01T10:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/dementia-hospice-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-009",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM009"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1944-04-22"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-009",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-009"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-05T10:00:00+08:00",
+                                                      "end":  "2024-11-05T11:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-009",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G30.9",
+                                                                       "display":  "Alzheimer disease, unspecified"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-009"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-009"
+                                                     },
+                                       "onsetDateTime":  "2022-07-08",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-010",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM010"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1947-06-15"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-010",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-010"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-08T08:00:00+08:00",
+                                                      "end":  "2024-11-18T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-010",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F01",
+                                                                       "display":  "Vascular dementia"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-010"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-010"
+                                                     },
+                                       "onsetDateTime":  "2020-11-25",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-011",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM011"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1949-08-08"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-011",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-011"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-10T14:00:00+08:00",
+                                                      "end":  "2024-11-10T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-011",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G30.1",
+                                                                       "display":  "Alzheimer disease with late onset"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-011"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-011"
+                                                     },
+                                       "onsetDateTime":  "2023-02-14",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-012",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM012"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1941-10-20"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-012",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-012"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-12T09:00:00+08:00",
+                                                      "end":  "2024-11-22T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-012",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F02",
+                                                                       "display":  "Dementia in other diseases classified elsewhere"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-012"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-012"
+                                                     },
+                                       "onsetDateTime":  "2021-04-10",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-013",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM013"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1952-03-05"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-013",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-013"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-15T09:00:00+08:00",
+                                                      "end":  "2024-11-15T10:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-013",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F03",
+                                                                       "display":  "Unspecified dementia"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-013"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-013"
+                                                     },
+                                       "onsetDateTime":  "2023-09-22",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-014",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM014"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1945-11-18"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-014",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-014"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-18T08:30:00+08:00",
+                                                      "end":  "2024-11-28T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-014",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G30.0",
+                                                                       "display":  "Alzheimer disease with early onset"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-014"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-014"
+                                                     },
+                                       "onsetDateTime":  "2019-12-30",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-015",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM015"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1948-05-25"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-015"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-015",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-015"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-20T10:00:00+08:00",
+                                                      "end":  "2024-11-20T11:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-015"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-015",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G31",
+                                                                       "display":  "Other degenerative diseases of nervous system"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-015"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-015"
+                                                     },
+                                       "onsetDateTime":  "2022-10-05",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-015"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-016",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM016"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1950-01-12"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-016"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-016",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-016"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-22T09:00:00+08:00",
+                                                      "end":  "2024-12-02T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-016"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-016",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F01",
+                                                                       "display":  "Vascular dementia"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-016"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-016"
+                                                     },
+                                       "onsetDateTime":  "2020-06-18",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-016"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-017",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM017"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1946-09-08"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-017"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-017",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-017"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-25T14:00:00+08:00",
+                                                      "end":  "2024-11-25T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-017"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-017",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G30.9",
+                                                                       "display":  "Alzheimer disease, unspecified"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-017"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-017"
+                                                     },
+                                       "onsetDateTime":  "2023-03-20",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-017"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-018",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM018"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1944-07-30"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-018"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-018",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-018"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-28T08:00:00+08:00",
+                                                      "end":  "2024-12-08T14:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-018"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-018",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "F02",
+                                                                       "display":  "Dementia in other diseases classified elsewhere"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-018"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-018"
+                                                     },
+                                       "onsetDateTime":  "2021-11-12",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-018"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "dementia-patient-019",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "DEM019"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1951-02-14"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/dementia-patient-019"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "dementia-encounter-019",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "AMB",
+                                                     "display":  "ambulatory"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-019"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-30T09:00:00+08:00",
+                                                      "end":  "2024-11-30T10:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/dementia-encounter-019"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "dementia-condition-019",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "G30.1",
+                                                                       "display":  "Alzheimer disease with late onset"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/dementia-patient-019"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/dementia-encounter-019"
+                                                     },
+                                       "onsetDateTime":  "2023-07-25",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/dementia-condition-019"
+                                  }
+                  }
+              ]
+}

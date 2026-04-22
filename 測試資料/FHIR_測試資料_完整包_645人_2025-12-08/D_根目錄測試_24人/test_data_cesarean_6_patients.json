@@ -1,0 +1,576 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:cesarean-patient-001",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CESAREAN-001",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "CESAREAN-001"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "王",
+            "given": ["美玲"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1990-03-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CESAREAN-001"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-encounter-001",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CESAREAN-ENC-001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-001"
+        },
+        "period": {
+          "start": "2025-10-01T08:00:00+08:00",
+          "end": "2025-10-04T14:00:00+08:00"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "177184002",
+                "display": "Normal delivery procedure"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CESAREAN-ENC-001"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-procedure-001",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CESAREAN-PROC-001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            },
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+              "code": "81004C",
+              "display": "剖腹產術"
+            }
+          ],
+          "text": "剖腹產"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-001"
+        },
+        "encounter": {
+          "reference": "Encounter/CESAREAN-ENC-001"
+        },
+        "performedDateTime": "2025-10-02T10:30:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CESAREAN-PROC-001"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-patient-002",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CESAREAN-002",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "CESAREAN-002"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "李",
+            "given": ["淑華"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1988-07-22"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CESAREAN-002"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-encounter-002",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CESAREAN-ENC-002",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-002"
+        },
+        "period": {
+          "start": "2025-10-05T09:00:00+08:00",
+          "end": "2025-10-08T15:00:00+08:00"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "177184002",
+                "display": "Normal delivery procedure"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CESAREAN-ENC-002"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-procedure-002",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CESAREAN-PROC-002",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            },
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+              "code": "81004C",
+              "display": "剖腹產術"
+            }
+          ],
+          "text": "剖腹產"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-002"
+        },
+        "encounter": {
+          "reference": "Encounter/CESAREAN-ENC-002"
+        },
+        "performedDateTime": "2025-10-06T11:45:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CESAREAN-PROC-002"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-patient-003",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CESAREAN-003",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "CESAREAN-003"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "陳",
+            "given": ["雅婷"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1992-11-30"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CESAREAN-003"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-encounter-003",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CESAREAN-ENC-003",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-003"
+        },
+        "period": {
+          "start": "2025-10-10T07:30:00+08:00",
+          "end": "2025-10-13T16:00:00+08:00"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "177184002",
+                "display": "Normal delivery procedure"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CESAREAN-ENC-003"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-procedure-003",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CESAREAN-PROC-003",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            },
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+              "code": "81005C",
+              "display": "剖腹產合併子宮切除"
+            }
+          ],
+          "text": "剖腹產"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-003"
+        },
+        "encounter": {
+          "reference": "Encounter/CESAREAN-ENC-003"
+        },
+        "performedDateTime": "2025-10-11T09:20:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CESAREAN-PROC-003"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-patient-004",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CESAREAN-004",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "CESAREAN-004"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "張",
+            "given": ["慧珍"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1991-05-18"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CESAREAN-004"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-encounter-004",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CESAREAN-ENC-004",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-004"
+        },
+        "period": {
+          "start": "2025-10-15T08:00:00+08:00",
+          "end": "2025-10-18T14:30:00+08:00"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "177184002",
+                "display": "Normal delivery procedure"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CESAREAN-ENC-004"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-procedure-004",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CESAREAN-PROC-004",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            },
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+              "code": "81028C",
+              "display": "選擇性剖腹產"
+            }
+          ],
+          "text": "剖腹產"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-004"
+        },
+        "encounter": {
+          "reference": "Encounter/CESAREAN-ENC-004"
+        },
+        "performedDateTime": "2025-10-16T10:15:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CESAREAN-PROC-004"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-patient-005",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CESAREAN-005",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "CESAREAN-005"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "林",
+            "given": ["佳蓉"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1989-09-25"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CESAREAN-005"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-encounter-005",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CESAREAN-ENC-005",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-005"
+        },
+        "period": {
+          "start": "2025-10-20T09:30:00+08:00",
+          "end": "2025-10-23T15:00:00+08:00"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "177184002",
+                "display": "Normal delivery procedure"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CESAREAN-ENC-005"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-procedure-005",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CESAREAN-PROC-005",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            },
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+              "code": "81029C",
+              "display": "緊急剖腹產"
+            }
+          ],
+          "text": "剖腹產"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-005"
+        },
+        "encounter": {
+          "reference": "Encounter/CESAREAN-ENC-005"
+        },
+        "performedDateTime": "2025-10-21T11:00:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CESAREAN-PROC-005"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-patient-006",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "CESAREAN-006",
+        "identifier": [
+          {
+            "system": "http://hospital.example.org/patients",
+            "value": "CESAREAN-006"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "黃",
+            "given": ["詩涵"]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1993-12-08"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/CESAREAN-006"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-encounter-006",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "CESAREAN-ENC-006",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-006"
+        },
+        "period": {
+          "start": "2025-10-25T08:30:00+08:00",
+          "end": "2025-10-28T16:00:00+08:00"
+        },
+        "reasonCode": [
+          {
+            "coding": [
+              {
+                "system": "http://snomed.info/sct",
+                "code": "177184002",
+                "display": "Normal delivery procedure"
+              }
+            ]
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/CESAREAN-ENC-006"
+      }
+    },
+    {
+      "fullUrl": "urn:uuid:cesarean-procedure-006",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "CESAREAN-PROC-006",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "11466000",
+              "display": "Cesarean section"
+            },
+            {
+              "system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure",
+              "code": "97009C",
+              "display": "剖腹產手術費"
+            }
+          ],
+          "text": "剖腹產"
+        },
+        "subject": {
+          "reference": "Patient/CESAREAN-006"
+        },
+        "encounter": {
+          "reference": "Encounter/CESAREAN-ENC-006"
+        },
+        "performedDateTime": "2025-10-26T10:45:00+08:00"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/CESAREAN-PROC-006"
+      }
+    }
+  ]
+}

@@ -1,0 +1,431 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "diabetes-patient-001",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "DM001"}],
+        "name": [{"family": "Wang", "given": ["Zhong", "Hua"]}],
+        "gender": "male",
+        "birthDate": "1965-04-12"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "diabetes-enc-001",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory"},
+        "subject": {"reference": "Patient/diabetes-patient-001"},
+        "period": {"start": "2025-09-20T10:00:00+08:00", "end": "2025-09-20T10:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "diabetes-cond-001",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11.9", "display": "Type 2 diabetes mellitus without complications"},
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11", "display": "Type 2 diabetes mellitus"}
+          ],
+          "text": "Type 2 diabetes"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-001"},
+        "encounter": {"reference": "Encounter/diabetes-enc-001"},
+        "onsetDateTime": "2020-01-15",
+        "recordedDate": "2025-09-20"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "diabetes-med-001",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [{"system": "http://www.whocc.no/atc", "code": "A10BA02", "display": "Metformin"}],
+          "text": "Metformin 500mg"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-001"},
+        "encounter": {"reference": "Encounter/diabetes-enc-001"},
+        "authoredOn": "2025-09-20",
+        "dispenseRequest": {
+          "expectedSupplyDuration": {
+            "value": 30,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "hba1c-obs-001",
+        "status": "final",
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/observation-category", "code": "laboratory"}]}],
+        "code": {
+          "coding": [{"system": "http://loinc.org", "code": "4548-4", "display": "Hemoglobin A1c/Hemoglobin.total in Blood"}],
+          "text": "HbA1c"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-001"},
+        "encounter": {"reference": "Encounter/diabetes-enc-001"},
+        "effectiveDateTime": "2025-09-20T10:15:00+08:00",
+        "valueQuantity": {
+          "value": 7.2,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "diabetes-patient-002",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "DM002"}],
+        "name": [{"family": "Li", "given": ["Xiu", "Lan"]}],
+        "gender": "female",
+        "birthDate": "1972-08-25"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "diabetes-enc-002",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory"},
+        "subject": {"reference": "Patient/diabetes-patient-002"},
+        "period": {"start": "2025-10-10T14:00:00+08:00", "end": "2025-10-10T14:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "diabetes-cond-002",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11.65", "display": "Type 2 diabetes mellitus with hyperglycemia"},
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11", "display": "Type 2 diabetes mellitus"}
+          ],
+          "text": "Type 2 diabetes with hyperglycemia"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-002"},
+        "encounter": {"reference": "Encounter/diabetes-enc-002"},
+        "onsetDateTime": "2018-05-10",
+        "recordedDate": "2025-10-10"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "diabetes-med-002",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [{"system": "http://www.whocc.no/atc", "code": "A10BJ01", "display": "Liraglutide"}],
+          "text": "Liraglutide injection"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-002"},
+        "encounter": {"reference": "Encounter/diabetes-enc-002"},
+        "authoredOn": "2025-10-10",
+        "dispenseRequest": {
+          "expectedSupplyDuration": {
+            "value": 30,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "hba1c-obs-002",
+        "status": "final",
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/observation-category", "code": "laboratory"}]}],
+        "code": {
+          "coding": [{"system": "http://loinc.org", "code": "4548-4", "display": "Hemoglobin A1c/Hemoglobin.total in Blood"}],
+          "text": "HbA1c"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-002"},
+        "encounter": {"reference": "Encounter/diabetes-enc-002"},
+        "effectiveDateTime": "2025-10-10T14:20:00+08:00",
+        "valueQuantity": {
+          "value": 8.5,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "diabetes-patient-003",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "DM003"}],
+        "name": [{"family": "Chen", "given": ["Jian", "Ming"]}],
+        "gender": "male",
+        "birthDate": "1958-11-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "diabetes-enc-003",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory"},
+        "subject": {"reference": "Patient/diabetes-patient-003"},
+        "period": {"start": "2025-08-15T09:00:00+08:00", "end": "2025-08-15T09:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "diabetes-cond-003",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E10.9", "display": "Type 1 diabetes mellitus without complications"},
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E10", "display": "Type 1 diabetes mellitus"}
+          ],
+          "text": "Type 1 diabetes"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-003"},
+        "encounter": {"reference": "Encounter/diabetes-enc-003"},
+        "onsetDateTime": "2015-03-20",
+        "recordedDate": "2025-08-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "diabetes-med-003",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [{"system": "http://www.whocc.no/atc", "code": "A10AB01", "display": "Insulin human"}],
+          "text": "Insulin human injection"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-003"},
+        "encounter": {"reference": "Encounter/diabetes-enc-003"},
+        "authoredOn": "2025-08-15",
+        "dispenseRequest": {
+          "expectedSupplyDuration": {
+            "value": 30,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "hba1c-obs-003",
+        "status": "final",
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/observation-category", "code": "laboratory"}]}],
+        "code": {
+          "coding": [{"system": "http://loinc.org", "code": "4548-4", "display": "Hemoglobin A1c/Hemoglobin.total in Blood"}],
+          "text": "HbA1c"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-003"},
+        "encounter": {"reference": "Encounter/diabetes-enc-003"},
+        "effectiveDateTime": "2025-08-15T09:15:00+08:00",
+        "valueQuantity": {
+          "value": 6.8,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "diabetes-patient-004",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "DM004"}],
+        "name": [{"family": "Huang", "given": ["Mei", "Zhen"]}],
+        "gender": "female",
+        "birthDate": "1980-02-18"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "diabetes-enc-004",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory"},
+        "subject": {"reference": "Patient/diabetes-patient-004"},
+        "period": {"start": "2025-11-05T15:30:00+08:00", "end": "2025-11-05T16:00:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "diabetes-cond-004",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11.22", "display": "Type 2 diabetes mellitus with diabetic chronic kidney disease"},
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11", "display": "Type 2 diabetes mellitus"}
+          ],
+          "text": "Type 2 diabetes with CKD"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-004"},
+        "encounter": {"reference": "Encounter/diabetes-enc-004"},
+        "onsetDateTime": "2019-08-01",
+        "recordedDate": "2025-11-05"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "diabetes-med-004",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [{"system": "http://www.whocc.no/atc", "code": "A10BK01", "display": "Empagliflozin"}],
+          "text": "Empagliflozin 10mg"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-004"},
+        "encounter": {"reference": "Encounter/diabetes-enc-004"},
+        "authoredOn": "2025-11-05",
+        "dispenseRequest": {
+          "expectedSupplyDuration": {
+            "value": 30,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "hba1c-obs-004",
+        "status": "final",
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/observation-category", "code": "laboratory"}]}],
+        "code": {
+          "coding": [{"system": "http://loinc.org", "code": "4548-4", "display": "Hemoglobin A1c/Hemoglobin.total in Blood"}],
+          "text": "HbA1c"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-004"},
+        "encounter": {"reference": "Encounter/diabetes-enc-004"},
+        "effectiveDateTime": "2025-11-05T15:45:00+08:00",
+        "valueQuantity": {
+          "value": 7.8,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "diabetes-patient-005",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "DM005"}],
+        "name": [{"family": "Zhang", "given": ["Yong", "Jie"]}],
+        "gender": "male",
+        "birthDate": "1975-06-08"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "diabetes-enc-005",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB", "display": "ambulatory"},
+        "subject": {"reference": "Patient/diabetes-patient-005"},
+        "period": {"start": "2025-10-25T11:00:00+08:00", "end": "2025-10-25T11:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "diabetes-cond-005",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11.36", "display": "Type 2 diabetes mellitus with diabetic cataract"},
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "E11", "display": "Type 2 diabetes mellitus"}
+          ],
+          "text": "Type 2 diabetes with cataract"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-005"},
+        "encounter": {"reference": "Encounter/diabetes-enc-005"},
+        "onsetDateTime": "2017-11-15",
+        "recordedDate": "2025-10-25"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "diabetes-med-005",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [{"system": "http://www.whocc.no/atc", "code": "A10BD08", "display": "Metformin and pioglitazone"}],
+          "text": "Metformin/Pioglitazone combination"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-005"},
+        "encounter": {"reference": "Encounter/diabetes-enc-005"},
+        "authoredOn": "2025-10-25",
+        "dispenseRequest": {
+          "expectedSupplyDuration": {
+            "value": 30,
+            "unit": "days",
+            "system": "http://unitsofmeasure.org",
+            "code": "d"
+          }
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "hba1c-obs-005",
+        "status": "final",
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/observation-category", "code": "laboratory"}]}],
+        "code": {
+          "coding": [{"system": "http://loinc.org", "code": "4548-4", "display": "Hemoglobin A1c/Hemoglobin.total in Blood"}],
+          "text": "HbA1c"
+        },
+        "subject": {"reference": "Patient/diabetes-patient-005"},
+        "encounter": {"reference": "Encounter/diabetes-enc-005"},
+        "effectiveDateTime": "2025-10-25T11:20:00+08:00",
+        "valueQuantity": {
+          "value": 6.5,
+          "unit": "%",
+          "system": "http://unitsofmeasure.org",
+          "code": "%"
+        }
+      }
+    }
+  ]
+}

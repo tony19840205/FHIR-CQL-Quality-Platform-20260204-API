@@ -1,0 +1,297 @@
+================================================================================
+           測試資料包說明 - 2025年12月9日至12月11日修復指標
+================================================================================
+
+打包日期：2025-12-11
+用途：提交給主辦單位上傳至 FHIR 測試伺服器
+FHIR 伺服器：https://thas.mohw.gov.tw/v/r4/fhir
+
+================================================================================
+一、本次打包檔案清單
+================================================================================
+
+已打包的測試資料檔案（3個）：
+
+1. test_data_clean_surgery_14_patients.json
+   - 指標：12 (清淨手術抗生素超過3天率)
+   - 病人數：14人
+   - 預期結果：1/14 = 7.14%
+   - 檔案大小：99.44 KB
+   - 創建日期：2025-12-11
+
+2. test_data_knee_arthroplasty_19_patients.json
+   - 指標：15-1 (人工膝關節置換90天深部感染率)
+   - 病人數：19人
+   - 預期結果：11/19 = 57.89%
+   - 檔案大小：103.97 KB
+   - 創建日期：2025-12-11
+
+3. test_data_partial_knee_12_patients.json
+   - 指標：15-3 (半人工膝關節置換90天深部感染率)
+   - 病人數：12人
+   - 預期結果：3/12 = 25.00%
+   - 檔案大小：64.72 KB
+   - 創建日期：2025-12-11
+
+總計：45 位病人，總大小：268.13 KB
+
+================================================================================
+二、12月9-11日期間修復的其他指標（測試資料已在伺服器）
+================================================================================
+
+以下指標的測試資料已於修復時直接上傳至 FHIR 伺服器：
+
+1. 指標 11-2：產婦要求剖腹產率
+   - 病人 ID：patient-requested-cesarean-001 至 011
+   - 病人數：11人
+   - 預期結果：11/11 = 100.00%
+   - 上傳日期：2025-12-10
+
+2. 指標 11-3：有適應症剖腹產率
+   - 病人 ID：cesarean-with-indication-001 至 015
+   - 病人數：15人
+   - 預期結果：2/15 = 13.33%
+   - 上傳日期：2025-12-10
+
+3. 指標 11-4：初產婦剖腹產率
+   - 病人 ID：cesarean-first-time-001 至 009
+   - 病人數：9人
+   - 預期結果：2/9 = 22.22%
+   - 上傳日期：2025-12-11
+
+4. 指標 07：糖尿病HbA1c檢驗率
+   - 病人 ID：diabetes-encounter-001 至 011
+   - 病人數：11人
+   - 修復內容：改用直接查詢避免批次查詢遺漏資料
+   - 修復日期：2025-12-11
+
+================================================================================
+三、資料結構說明
+================================================================================
+
+3.1 FHIR 資源組成
+-----------------
+每個病人案例包含以下 FHIR 資源：
+
+1. Patient（病人基本資料）
+   - 性別、出生日期
+   
+2. Encounter（就診記錄）
+   - 類型：IMP (住院)
+   - 狀態：finished
+   - 住院/出院日期：2025-Q4 (2025-10-01 至 2025-12-31)
+
+3. Procedure（處置/手術）
+   - 狀態：completed
+   - 執行日期：2025-Q4
+   - 代碼系統：ICD-10-PCS 或 Taiwan NHI Codes
+
+4. Condition（診斷）
+   - 代碼系統：ICD-10-CM
+   - 關聯至 Encounter
+
+5. MedicationRequest（用藥，部分指標使用）
+   - 狀態：completed
+   - 代碼系統：ATC (WHO)
+   - 用藥天數資訊
+
+6. Observation（檢驗/觀察，部分指標使用）
+   - 代碼系統：LOINC
+   - 觀察值
+
+3.2 關鍵編碼系統
+----------------
+
+【指標 12 - 清淨手術抗生素超過3天率】
+- 病人 ID：clean-surgery-patient-001 至 014
+- 手術碼：SNOMED CT 80146002 (清淨手術)
+- 藥物碼：ATC J01CA04 (Amoxicillin，抗生素)
+- 用藥天數：dosageInstruction.timing.repeat.boundsDuration
+- 感染判定：用藥天數 > 3 天
+
+【指標 15-1 - 膝關節置換90天深部感染率】
+- 病人 ID：knee-arthroplasty-patient-001 至 019
+- 手術碼：ICD-10-PCS 0SRC0JZ (人工膝關節置換)
+- 感染碼：ICD-10-CM T84.54XA (膝關節深部感染)
+- 無感染碼：Z98.89 (術後正常恢復)
+- 感染判定：有 T84.54XA 診斷碼
+
+【指標 15-3 - 半人工膝關節置換90天深部感染率】
+- 病人 ID：partial-knee-patient-001 至 012
+- 手術碼：ICD-10-PCS 0SRC0JA (半人工膝關節置換)
+- 感染碼：ICD-10-CM T84.54XA (膝關節深部感染)
+- 無感染碼：Z98.89 (術後正常恢復)
+- 感染判定：有 T84.54XA 診斷碼
+
+================================================================================
+四、上傳方式
+================================================================================
+
+4.1 使用 PowerShell 上傳
+------------------------
+```powershell
+# 單一檔案上傳
+Invoke-RestMethod -Uri "https://thas.mohw.gov.tw/v/r4/fhir" `
+    -Method Post `
+    -Body (Get-Content "test_data_clean_surgery_14_patients.json" -Raw -Encoding UTF8) `
+    -ContentType "application/json; charset=utf-8"
+
+# 批次上傳所有檔案
+Get-ChildItem -Filter "*.json" | ForEach-Object {
+    Write-Host "上傳: $($_.Name)"
+    Invoke-RestMethod -Uri "https://thas.mohw.gov.tw/v/r4/fhir" `
+        -Method Post `
+        -Body (Get-Content $_.FullName -Raw -Encoding UTF8) `
+        -ContentType "application/json; charset=utf-8"
+    Start-Sleep -Seconds 2
+}
+```
+
+4.2 使用 Postman 上傳
+---------------------
+1. Method: POST
+2. URL: https://thas.mohw.gov.tw/v/r4/fhir
+3. Headers:
+   - Content-Type: application/json; charset=utf-8
+4. Body: 選擇 raw，貼上 JSON 內容
+5. 點擊 Send
+
+4.3 使用 Python 上傳
+--------------------
+```python
+import requests
+import json
+
+url = "https://thas.mohw.gov.tw/v/r4/fhir"
+headers = {"Content-Type": "application/json; charset=utf-8"}
+
+with open("test_data_clean_surgery_14_patients.json", "r", encoding="utf-8") as f:
+    data = json.load(f)
+    
+response = requests.post(url, json=data, headers=headers)
+print(f"狀態碼: {response.status_code}")
+print(f"回應: {response.json()}")
+```
+
+================================================================================
+五、驗證方式
+================================================================================
+
+5.1 上傳成功回應
+----------------
+成功上傳後會收到 FHIR Bundle (transaction-response)：
+```json
+{
+  "resourceType": "Bundle",
+  "type": "transaction-response",
+  "entry": [
+    {
+      "response": {
+        "status": "201 Created",
+        "location": "Patient/patient-id/_history/1"
+      }
+    },
+    ...
+  ]
+}
+```
+
+5.2 查詢驗證
+------------
+上傳後可透過以下方式驗證：
+
+1. 查詢病人：
+   GET https://thas.mohw.gov.tw/v/r4/fhir/Patient/clean-surgery-patient-001
+
+2. 查詢就診記錄：
+   GET https://thas.mohw.gov.tw/v/r4/fhir/Encounter?patient=clean-surgery-patient-001
+
+3. 查詢手術記錄：
+   GET https://thas.mohw.gov.tw/v/r4/fhir/Procedure?patient=clean-surgery-patient-001
+
+4. 使用系統查詢：
+   https://tony19840205.github.io/FHIR-CQL-Quality-Platform/
+   點擊對應指標的查詢按鈕
+
+5.3 預期結果
+------------
+上傳成功後，在品質指標平台查詢應顯示：
+
+- 指標 12：7.14% (1/14)
+- 指標 15-1：57.89% (11/19)
+- 指標 15-3：25.00% (3/12)
+
+季度分布：
+- 2025-Q4：顯示上述比率
+- 其他季度：0/0 (0.00%)
+
+================================================================================
+六、技術規格
+================================================================================
+
+6.1 FHIR 版本
+-------------
+- FHIR R4 (4.0.1)
+- 符合 HL7 FHIR 標準
+
+6.2 編碼系統
+------------
+- ICD-10-CM: http://hl7.org/fhir/sid/icd-10-cm
+- ICD-10-PCS: http://hl7.org/fhir/sid/icd-10-pcs
+- SNOMED CT: http://snomed.info/sct
+- LOINC: http://loinc.org
+- ATC: http://www.whocc.no/atc
+- Taiwan NHI: https://twhealth.mohw.gov.tw/fhir/CodeSystem/health-insurance
+
+6.3 Bundle 結構
+---------------
+- resourceType: Bundle
+- type: transaction
+- entry: 陣列，包含所有資源
+  - fullUrl: 完整 URL
+  - resource: FHIR 資源物件
+  - request: 
+    - method: PUT
+    - url: 相對 URL
+
+================================================================================
+七、注意事項
+================================================================================
+
+1. 編碼格式
+   - 所有 JSON 檔案使用 UTF-8 編碼
+   - 上傳時必須指定 charset=utf-8
+
+2. 日期格式
+   - 使用 ISO 8601 格式：YYYY-MM-DDTHH:mm:ssZ
+   - 所有測試資料日期在 2025-Q4
+
+3. 資源 ID
+   - 使用 PUT 方法確保冪等性
+   - ID 格式：[類型]-[編號]，例如 clean-surgery-patient-001
+
+4. 關聯性
+   - Encounter 關聯至 Patient
+   - Procedure/Condition 關聯至 Encounter
+   - 使用 reference 欄位建立關聯
+
+5. 資料清除
+   - FHIR 測試伺服器定期清除資料
+   - 建議保留原始 JSON 檔案以便重新上傳
+
+================================================================================
+八、聯絡資訊
+================================================================================
+
+系統名稱：FHIR CQL 品質指標平台
+GitHub：https://github.com/tony19840205/FHIR-CQL-Quality-Platform
+線上系統：https://tony19840205.github.io/FHIR-CQL-Quality-Platform/
+文件日期：2025-12-11
+
+如有問題請參考：
+- 系統技術規格說明文件_2025-12-11.txt
+- GitHub Issues
+
+================================================================================
+檔案結束
+================================================================================

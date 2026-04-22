@@ -1,0 +1,1086 @@
+﻿{
+    "resourceType":  "Bundle",
+    "entry":  [
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-001",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-001",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-001",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-001"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-16T08:00:00Z",
+                                                      "end":  "2025-10-16T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-001",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-001",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-001"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-16T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-001",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-001"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "T84.54XA",
+                                                                       "display":  "膝關節深部感染",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-001",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-001"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-001",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-002",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-002",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-002",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-002"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-20T08:00:00Z",
+                                                      "end":  "2025-10-20T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-002",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-002",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-002"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-002"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-20T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-002",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-002"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "T84.54XA",
+                                                                       "display":  "膝關節深部感染",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-002",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-002"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-002",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-003",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-003",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-003",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-003"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-24T08:00:00Z",
+                                                      "end":  "2025-10-24T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-003",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-003",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-003"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-003"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-24T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-003",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-003"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "T84.54XA",
+                                                                       "display":  "膝關節深部感染",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-003",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-003"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-003",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-004",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-004",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-004",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-004"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-28T08:00:00Z",
+                                                      "end":  "2025-10-28T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-004",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-004",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-004"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-004"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-28T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-004",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-004"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-004",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-004"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-004",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-005",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-005",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-005",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-005"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-01T08:00:00Z",
+                                                      "end":  "2025-11-01T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-005",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-005",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-005"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-005"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-01T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-005",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-005"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-005",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-005"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-005",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-006",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-006",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-006",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-006"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-05T08:00:00Z",
+                                                      "end":  "2025-11-05T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-006",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-006",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-006"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-006"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-05T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-006",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-006"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-006",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-006"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-006",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-007",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-007",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-007",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-007"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-09T08:00:00Z",
+                                                      "end":  "2025-11-09T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-007",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-007",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-007"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-007"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-09T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-007",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-007"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-007",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-007"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-007",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-008",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-008",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-008",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-008"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-13T08:00:00Z",
+                                                      "end":  "2025-11-13T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-008",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-008",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-008"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-008"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-13T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-008",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-008"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-008",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-008"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-008",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-009",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-009",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-009",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-009"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-17T08:00:00Z",
+                                                      "end":  "2025-11-17T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-009",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-009",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-009"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-009"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-17T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-009",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-009"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-009",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-009"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-009",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-010",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-010",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-010",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-010"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-21T08:00:00Z",
+                                                      "end":  "2025-11-21T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-010",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-010",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-010"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-010"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-21T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-010",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-010"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-010",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-010"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-010",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-011",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-011",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-011",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-011"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-25T08:00:00Z",
+                                                      "end":  "2025-11-25T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-011",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-011",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-011"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-011"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-25T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-011",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-011"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-011",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-011"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-011",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1965-01-01",
+                                       "id":  "partial-knee-patient-012",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/partial-knee-patient-012",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/partial-knee-patient-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-partial-knee-012",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-012"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-29T08:00:00Z",
+                                                      "end":  "2025-11-29T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-partial-knee-012",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-partial-knee-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-partial-knee-012",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "0SRC0JA",
+                                                                       "display":  "半人工膝關節置換",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-pcs"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-012"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-012"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-29T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-partial-knee-012",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-partial-knee-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-partial-knee-012"
+                                                     },
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "Z98.89",
+                                                                       "display":  "術後正常恢復",
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm"
+                                                                   }
+                                                               ]
+                                                },
+                                       "id":  "cond-partial-knee-012",
+                                       "subject":  {
+                                                       "reference":  "Patient/partial-knee-patient-012"
+                                                   }
+                                   },
+                      "fullUrl":  "Condition/cond-partial-knee-012",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/cond-partial-knee-012"
+                                  }
+                  }
+              ],
+    "type":  "transaction"
+}

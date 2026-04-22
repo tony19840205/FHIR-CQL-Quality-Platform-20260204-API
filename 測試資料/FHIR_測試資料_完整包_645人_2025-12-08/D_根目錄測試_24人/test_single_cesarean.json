@@ -1,0 +1,48 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:test-patient-1",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TEST-CS-P1",
+        "name": [{"family": "測", "given": ["試"]}],
+        "gender": "female",
+        "birthDate": "1990-01-01"
+      },
+      "request": {"method": "PUT", "url": "Patient/TEST-CS-P1"}
+    },
+    {
+      "fullUrl": "urn:uuid:test-enc-1",
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "TEST-CS-E1",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP"},
+        "subject": {"reference": "Patient/TEST-CS-P1"},
+        "period": {"start": "2025-11-15T08:00:00+08:00", "end": "2025-11-18T14:00:00+08:00"}
+      },
+      "request": {"method": "PUT", "url": "Encounter/TEST-CS-E1"}
+    },
+    {
+      "fullUrl": "urn:uuid:test-proc-1",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "TEST-CS-PR1",
+        "status": "completed",
+        "category": {
+          "coding": [{"system": "http://snomed.info/sct", "code": "387713003", "display": "Surgical procedure"}]
+        },
+        "code": {
+          "coding": [{"system": "https://twcore.mohw.gov.tw/ig/twcore/CodeSystem/nhi-procedure", "code": "97014C", "display": "剖腹產處置費"}],
+          "text": "剖腹產"
+        },
+        "subject": {"reference": "Patient/TEST-CS-P1"},
+        "encounter": {"reference": "Encounter/TEST-CS-E1"},
+        "performedDateTime": "2025-11-16T10:00:00+08:00"
+      },
+      "request": {"method": "PUT", "url": "Procedure/TEST-CS-PR1"}
+    }
+  ]
+}

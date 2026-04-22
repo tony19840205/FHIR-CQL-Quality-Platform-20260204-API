@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FHIR Dashboard - 快速導航</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+        
+        .card.home::before {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .card.disease::before {
+            background: linear-gradient(90deg, #f093fb, #f5576c);
+        }
+        
+        .card.health::before {
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+        }
+        
+        .card.esg::before {
+            background: linear-gradient(90deg, #43e97b, #38f9d7);
+        }
+        
+        .card.quality::before {
+            background: linear-gradient(90deg, #fa709a, #fee140);
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+        }
+        
+        .card.home .card-icon {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .card.disease .card-icon {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+        }
+        
+        .card.health .card-icon {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+        }
+        
+        .card.esg .card-icon {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: white;
+        }
+        
+        .card.quality .card-icon {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: white;
+        }
+        
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+        
+        .card p {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .card-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            opacity: 0.8;
+            margin-top: 2rem;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-heartbeat"></i> FHIR CQL 整合平台</h1>
+            <p>醫療數據分析系統 - 快速導航</p>
+        </div>
+        
+        <div class="grid">
+            <!-- 首頁 -->
+            <a href="index.html" class="card home">
+                <div class="card-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <h2>首頁</h2>
+                <p>FHIR 伺服器設定與系統總覽</p>
+                <div class="card-stats">
+                    <div class="stat">
+                        <div class="stat-value">50+</div>
+                        <div class="stat-label">CQL 模組</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">4</div>
+                        <div class="stat-label">儀表板</div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- 傳染病管制 -->
+            <a href="disease-control.html" class="card disease">
+                <div class="card-icon">
+                    <i class="fas fa-virus"></i>
+                </div>
+                <h2>傳染病管制</h2>
+                <p>COVID-19、流感、登革熱、腸病毒、急性腹瀉監測</p>
+                <div class="card-stats">
+                    <div class="stat">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">疾病類型</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">CQL 查詢</div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- 國民健康 -->
+            <a href="public-health.html" class="card health">
+                <div class="card-icon">
+                    <i class="fas fa-heart-pulse"></i>
+                </div>
+                <h2>國民健康</h2>
+                <p>疫苗接種率與慢性病管理監測系統</p>
+                <div class="card-stats">
+                    <div class="stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">健康指標</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">CQL 查詢</div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- ESG 指標 -->
+            <a href="esg-indicators.html" class="card esg">
+                <div class="card-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h2>ESG 指標</h2>
+                <p>環境、社會與治理永續發展監測系統</p>
+                <div class="card-stats">
+                    <div class="stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">ESG 指標</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">CQL 查詢</div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- 醫療品質 -->
+            <a href="quality-indicators.html" class="card quality">
+                <div class="card-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h2>醫療品質</h2>
+                <p>醫院總額醫療品質資訊 - 39項核心指標</p>
+                <div class="card-stats">
+                    <div class="stat">
+                        <div class="stat-value">39</div>
+                        <div class="stat-label">品質指標</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">5</div>
+                        <div class="stat-label">主要類別</div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>📚 詳細說明請參閱 <a href="QUICK_START_GUIDE.md" target="_blank">快速使用指南</a> 或 <a href="UPDATE_SUMMARY.md" target="_blank">完整更新報告</a></p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">Version 2.0.0 | Updated: November 20, 2025</p>
+        </div>
+    </div>
+</body>
+</html>

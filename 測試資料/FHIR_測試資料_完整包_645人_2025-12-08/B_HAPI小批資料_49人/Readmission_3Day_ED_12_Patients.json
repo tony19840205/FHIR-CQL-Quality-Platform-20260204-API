@@ -1,0 +1,607 @@
+﻿{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-001",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA001"}],
+        "name": [{"family": "Zhang", "given": ["Wei", "Lun"]}],
+        "gender": "male",
+        "birthDate": "1975-06-20"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-001",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-001"},
+        "period": {"start": "2025-10-10T08:00:00+08:00", "end": "2025-10-15T10:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-001",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-001"},
+        "period": {"start": "2025-10-17T14:30:00+08:00", "end": "2025-10-17T18:00:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-001",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "I50.9", "display": "Heart failure, unspecified"}
+          ],
+          "text": "Heart failure"
+        },
+        "subject": {"reference": "Patient/readmit-patient-001"},
+        "encounter": {"reference": "Encounter/readmit-ed-001"},
+        "recordedDate": "2025-10-17"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-002",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA002"}],
+        "name": [{"family": "Chen", "given": ["Shu", "Fen"]}],
+        "gender": "female",
+        "birthDate": "1982-03-14"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-002",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-002"},
+        "period": {"start": "2025-09-20T10:00:00+08:00", "end": "2025-09-24T11:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-002",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-002"},
+        "period": {"start": "2025-09-25T20:00:00+08:00", "end": "2025-09-25T23:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-002",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "J18.9", "display": "Pneumonia, unspecified organism"}
+          ],
+          "text": "Pneumonia"
+        },
+        "subject": {"reference": "Patient/readmit-patient-002"},
+        "encounter": {"reference": "Encounter/readmit-ed-002"},
+        "recordedDate": "2025-09-25"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-003",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA003"}],
+        "name": [{"family": "Lin", "given": ["Jian", "Hong"]}],
+        "gender": "male",
+        "birthDate": "1968-11-08"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-003",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-003"},
+        "period": {"start": "2025-11-01T07:00:00+08:00", "end": "2025-11-05T09:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-003",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-003"},
+        "period": {"start": "2025-11-06T16:00:00+08:00", "end": "2025-11-06T19:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-003",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "K92.2", "display": "Gastrointestinal hemorrhage, unspecified"}
+          ],
+          "text": "GI bleeding"
+        },
+        "subject": {"reference": "Patient/readmit-patient-003"},
+        "encounter": {"reference": "Encounter/readmit-ed-003"},
+        "recordedDate": "2025-11-06"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-004",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA004"}],
+        "name": [{"family": "Wang", "given": ["Xiu", "Mei"]}],
+        "gender": "female",
+        "birthDate": "1990-05-22"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-004",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-004"},
+        "period": {"start": "2025-08-15T14:00:00+08:00", "end": "2025-08-18T10:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-004",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-004"},
+        "period": {"start": "2025-08-20T11:00:00+08:00", "end": "2025-08-20T14:00:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-004",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "N39.0", "display": "Urinary tract infection, site not specified"}
+          ],
+          "text": "UTI"
+        },
+        "subject": {"reference": "Patient/readmit-patient-004"},
+        "encounter": {"reference": "Encounter/readmit-ed-004"},
+        "recordedDate": "2025-08-20"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-005",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA005"}],
+        "name": [{"family": "Liu", "given": ["Zhi", "Wei"]}],
+        "gender": "male",
+        "birthDate": "1955-09-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-005",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-005"},
+        "period": {"start": "2025-10-20T09:00:00+08:00", "end": "2025-10-25T11:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-005",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-005"},
+        "period": {"start": "2025-10-27T08:30:00+08:00", "end": "2025-10-27T12:00:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-005",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "R07.9", "display": "Chest pain, unspecified"}
+          ],
+          "text": "Chest pain"
+        },
+        "subject": {"reference": "Patient/readmit-patient-005"},
+        "encounter": {"reference": "Encounter/readmit-ed-005"},
+        "recordedDate": "2025-10-27"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-006",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA006"}],
+        "name": [{"family": "Huang", "given": ["Ya", "Hui"]}],
+        "gender": "female",
+        "birthDate": "1978-12-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-006",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-006"},
+        "period": {"start": "2025-09-05T11:00:00+08:00", "end": "2025-09-09T10:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-006",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-006"},
+        "period": {"start": "2025-09-11T19:00:00+08:00", "end": "2025-09-11T22:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-006",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "R50.9", "display": "Fever, unspecified"}
+          ],
+          "text": "Fever"
+        },
+        "subject": {"reference": "Patient/readmit-patient-006"},
+        "encounter": {"reference": "Encounter/readmit-ed-006"},
+        "recordedDate": "2025-09-11"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-007",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA007"}],
+        "name": [{"family": "Zheng", "given": ["Ming", "Zhe"]}],
+        "gender": "male",
+        "birthDate": "1988-04-07"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-007",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-007"},
+        "period": {"start": "2025-11-10T15:00:00+08:00", "end": "2025-11-14T12:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-007",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-007"},
+        "period": {"start": "2025-11-16T10:00:00+08:00", "end": "2025-11-16T13:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-007",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "R10.9", "display": "Unspecified abdominal pain"}
+          ],
+          "text": "Abdominal pain"
+        },
+        "subject": {"reference": "Patient/readmit-patient-007"},
+        "encounter": {"reference": "Encounter/readmit-ed-007"},
+        "recordedDate": "2025-11-16"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-008",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA008"}],
+        "name": [{"family": "Wu", "given": ["Li", "Hua"]}],
+        "gender": "female",
+        "birthDate": "1993-07-18"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-008",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-008"},
+        "period": {"start": "2025-08-25T08:00:00+08:00", "end": "2025-08-28T11:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-008",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-008"},
+        "period": {"start": "2025-08-30T15:30:00+08:00", "end": "2025-08-30T18:00:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-008",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "R42", "display": "Dizziness and giddiness"}
+          ],
+          "text": "Dizziness"
+        },
+        "subject": {"reference": "Patient/readmit-patient-008"},
+        "encounter": {"reference": "Encounter/readmit-ed-008"},
+        "recordedDate": "2025-08-30"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-009",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA009"}],
+        "name": [{"family": "Xu", "given": ["Jia", "Hao"]}],
+        "gender": "male",
+        "birthDate": "1970-02-28"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-009",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-009"},
+        "period": {"start": "2025-09-12T13:00:00+08:00", "end": "2025-09-16T10:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-009",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-009"},
+        "period": {"start": "2025-09-18T07:00:00+08:00", "end": "2025-09-18T10:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-009",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "J44.1", "display": "Chronic obstructive pulmonary disease with acute exacerbation"}
+          ],
+          "text": "COPD exacerbation"
+        },
+        "subject": {"reference": "Patient/readmit-patient-009"},
+        "encounter": {"reference": "Encounter/readmit-ed-009"},
+        "recordedDate": "2025-09-18"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-010",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA010"}],
+        "name": [{"family": "Cai", "given": ["Wen", "Jing"]}],
+        "gender": "female",
+        "birthDate": "1985-10-11"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-010",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-010"},
+        "period": {"start": "2025-10-28T09:00:00+08:00", "end": "2025-11-01T11:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-010",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-010"},
+        "period": {"start": "2025-11-03T12:00:00+08:00", "end": "2025-11-03T15:30:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-010",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "K59.0", "display": "Constipation"}
+          ],
+          "text": "Constipation"
+        },
+        "subject": {"reference": "Patient/readmit-patient-010"},
+        "encounter": {"reference": "Encounter/readmit-ed-010"},
+        "recordedDate": "2025-11-03"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-011",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA011"}],
+        "name": [{"family": "Guo", "given": ["Zhi", "Qiang"]}],
+        "gender": "male",
+        "birthDate": "1960-08-05"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-011",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-011"},
+        "period": {"start": "2025-11-15T10:00:00+08:00", "end": "2025-11-19T12:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-011",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-011"},
+        "period": {"start": "2025-11-21T09:00:00+08:00", "end": "2025-11-21T12:00:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-011",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "I48.91", "display": "Unspecified atrial fibrillation"}
+          ],
+          "text": "Atrial fibrillation"
+        },
+        "subject": {"reference": "Patient/readmit-patient-011"},
+        "encounter": {"reference": "Encounter/readmit-ed-011"},
+        "recordedDate": "2025-11-21"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "readmit-patient-012",
+        "active": true,
+        "identifier": [{"system": "http://www.cgmh.org.tw/patient-id", "value": "RA012"}],
+        "name": [{"family": "Yang", "given": ["Hui", "Zhen"]}],
+        "gender": "female",
+        "birthDate": "1995-01-20"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-inp-012",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "IMP", "display": "inpatient encounter"},
+        "subject": {"reference": "Patient/readmit-patient-012"},
+        "period": {"start": "2025-08-08T07:00:00+08:00", "end": "2025-08-11T10:00:00+08:00"},
+        "hospitalization": {"dischargeDisposition": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/discharge-disposition", "code": "home", "display": "Home"}]}}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "readmit-ed-012",
+        "status": "finished",
+        "class": {"system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "EMER", "display": "emergency"},
+        "subject": {"reference": "Patient/readmit-patient-012"},
+        "period": {"start": "2025-08-13T18:00:00+08:00", "end": "2025-08-13T21:00:00+08:00"}
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "readmit-cond-012",
+        "clinicalStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-clinical", "code": "active"}]},
+        "verificationStatus": {"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-ver-status", "code": "confirmed"}]},
+        "category": [{"coding": [{"system": "http://terminology.hl7.org/CodeSystem/condition-category", "code": "encounter-diagnosis"}]}],
+        "code": {
+          "coding": [
+            {"system": "http://hl7.org/fhir/sid/icd-10-cm", "code": "M79.3", "display": "Panniculitis, unspecified"}
+          ],
+          "text": "Wound complication"
+        },
+        "subject": {"reference": "Patient/readmit-patient-012"},
+        "encounter": {"reference": "Encounter/readmit-ed-012"},
+        "recordedDate": "2025-08-13"
+      }
+    }
+  ]
+}
+

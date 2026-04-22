@@ -1,0 +1,1362 @@
+﻿{
+    "resourceType":  "Bundle",
+    "type":  "transaction",
+    "entry":  [
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-001",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI001"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1955-03-20"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-001",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-001"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-05T08:00:00+08:00",
+                                                      "end":  "2024-10-12T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-001",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "750001",
+                                                                       "display":  "Appendectomy"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-001"
+                                                     },
+                                       "performedDateTime":  "2024-10-06T10:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "swi-infection-001",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "T81.4XXA",
+                                                                       "display":  "Infection following a procedure, initial encounter"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-001"
+                                                     },
+                                       "onsetDateTime":  "2024-10-08",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/swi-infection-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-002",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI002"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1968-07-15"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-002",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-002"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-10T09:00:00+08:00",
+                                                      "end":  "2024-10-18T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-002",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "640012",
+                                                                       "display":  "Cholecystectomy"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-002"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-002"
+                                                     },
+                                       "performedDateTime":  "2024-10-11T11:00:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "swi-infection-002",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "T81.31XA",
+                                                                       "display":  "Disruption of external operation (surgical) wound, not elsewhere classified, initial encounter"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-002"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-002"
+                                                     },
+                                       "onsetDateTime":  "2024-10-13",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/swi-infection-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-003",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI003"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1972-11-22"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-003",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-003"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-15T10:00:00+08:00",
+                                                      "end":  "2024-10-22T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-003",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "880023",
+                                                                       "display":  "Total hip replacement"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-003"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-003"
+                                                     },
+                                       "performedDateTime":  "2024-10-16T09:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "swi-infection-003",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "T84.51XA",
+                                                                       "display":  "Infection and inflammatory reaction due to internal right hip prosthesis, initial encounter"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-003"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-003"
+                                                     },
+                                       "onsetDateTime":  "2024-10-18",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/swi-infection-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-004",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI004"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1980-04-08"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-004",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-004"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-20T08:30:00+08:00",
+                                                      "end":  "2024-10-26T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-004",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "970001",
+                                                                       "display":  "Cesarean section"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-004"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-004"
+                                                     },
+                                       "performedDateTime":  "2024-10-21T10:45:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "swi-infection-004",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "T81.4XXA",
+                                                                       "display":  "Infection following a procedure, initial encounter"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-004"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-004"
+                                                     },
+                                       "onsetDateTime":  "2024-10-23",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/swi-infection-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-005",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI005"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1963-09-12"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-005",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-005"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-10-25T09:00:00+08:00",
+                                                      "end":  "2024-11-01T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-005",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "680045",
+                                                                       "display":  "Hernia repair"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-005"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-005"
+                                                     },
+                                       "performedDateTime":  "2024-10-26T11:15:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "swi-infection-005",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "T81.32XA",
+                                                                       "display":  "Disruption of internal operation (surgical) wound, not elsewhere classified, initial encounter"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-005"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-005"
+                                                     },
+                                       "onsetDateTime":  "2024-10-28",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/swi-infection-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-006",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI006"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1975-06-30"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-006",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-006"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-01T08:00:00+08:00",
+                                                      "end":  "2024-11-07T14:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-006",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "720056",
+                                                                       "display":  "Thyroidectomy"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-006"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-006"
+                                                     },
+                                       "performedDateTime":  "2024-11-02T10:00:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "swi-infection-006",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "L76.21",
+                                                                       "display":  "Postprocedural hemorrhage of skin and subcutaneous tissue following a dermatologic procedure"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-006"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-006"
+                                                     },
+                                       "onsetDateTime":  "2024-11-04",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/swi-infection-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-007",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI007"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1958-12-05"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-007",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-007"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-05T09:30:00+08:00",
+                                                      "end":  "2024-11-12T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-007",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "850067",
+                                                                       "display":  "Spinal fusion"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-007"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-007"
+                                                     },
+                                       "performedDateTime":  "2024-11-06T11:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "swi-infection-007",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "M96.830",
+                                                                       "display":  "Postprocedural hemorrhage of a musculoskeletal structure following a musculoskeletal system procedure"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-007"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-007"
+                                                     },
+                                       "onsetDateTime":  "2024-11-08",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/swi-infection-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-008",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI008"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1982-03-18"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-008",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-008"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-08T08:00:00+08:00",
+                                                      "end":  "2024-11-15T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-008",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "780078",
+                                                                       "display":  "Hysterectomy"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-008"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-008"
+                                                     },
+                                       "performedDateTime":  "2024-11-09T10:15:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Condition",
+                                       "id":  "swi-infection-008",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://hl7.org/fhir/sid/icd-10-cm",
+                                                                       "code":  "T83.6XXA",
+                                                                       "display":  "Infection and inflammatory reaction due to prosthetic device, implant and graft in genital tract, initial encounter"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-008"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-008"
+                                                     },
+                                       "onsetDateTime":  "2024-11-11",
+                                       "clinicalStatus":  {
+                                                              "coding":  [
+                                                                             {
+                                                                                 "system":  "http://terminology.hl7.org/CodeSystem/condition-clinical",
+                                                                                 "code":  "resolved"
+                                                                             }
+                                                                         ]
+                                                          },
+                                       "verificationStatus":  {
+                                                                  "coding":  [
+                                                                                 {
+                                                                                     "system":  "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+                                                                                     "code":  "confirmed"
+                                                                                 }
+                                                                             ]
+                                                              }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Condition/swi-infection-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-009",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI009"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1970-08-25"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-009",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-009"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-10T09:00:00+08:00",
+                                                      "end":  "2024-11-16T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-009",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "620089",
+                                                                       "display":  "Coronary artery bypass"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-009"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-009"
+                                                     },
+                                       "performedDateTime":  "2024-11-11T09:45:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-010",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI010"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1965-05-14"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-010",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-010"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-12T08:30:00+08:00",
+                                                      "end":  "2024-11-18T14:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-010",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "730090",
+                                                                       "display":  "Mastectomy"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-010"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-010"
+                                                     },
+                                       "performedDateTime":  "2024-11-13T11:00:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-011",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI011"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1978-10-08"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-011",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-011"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-15T09:00:00+08:00",
+                                                      "end":  "2024-11-20T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-011",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "880101",
+                                                                       "display":  "Total knee replacement"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-011"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-011"
+                                                     },
+                                       "performedDateTime":  "2024-11-16T10:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-012",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI012"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1985-02-22"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-012",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-012"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-18T08:00:00+08:00",
+                                                      "end":  "2024-11-23T14:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-012",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "640112",
+                                                                       "display":  "Liver resection"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-012"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-012"
+                                                     },
+                                       "performedDateTime":  "2024-11-19T09:30:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-013",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI013"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1960-07-17"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-013",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-013"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-20T09:00:00+08:00",
+                                                      "end":  "2024-11-25T16:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-013",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "750123",
+                                                                       "display":  "Gastrectomy"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-013"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-013"
+                                                     },
+                                       "performedDateTime":  "2024-11-21T10:45:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-014",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI014"
+                                                          }
+                                                      ],
+                                       "gender":  "female",
+                                       "birthDate":  "1973-11-30"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-014",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-014"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-22T08:30:00+08:00",
+                                                      "end":  "2024-11-27T14:30:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-014",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "970134",
+                                                                       "display":  "Craniotomy"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-014"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-014"
+                                                     },
+                                       "performedDateTime":  "2024-11-23T11:15:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "id":  "swi-patient-015",
+                                       "identifier":  [
+                                                          {
+                                                              "system":  "https://www.tph.mohw.gov.tw",
+                                                              "value":  "SWI015"
+                                                          }
+                                                      ],
+                                       "gender":  "male",
+                                       "birthDate":  "1968-04-12"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/swi-patient-015"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Encounter",
+                                       "id":  "swi-encounter-015",
+                                       "status":  "finished",
+                                       "class":  {
+                                                     "system":  "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+                                                     "code":  "IMP",
+                                                     "display":  "inpatient encounter"
+                                                 },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-015"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2024-11-25T09:00:00+08:00",
+                                                      "end":  "2024-11-30T15:00:00+08:00"
+                                                  }
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/swi-encounter-015"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Procedure",
+                                       "id":  "swi-procedure-015",
+                                       "status":  "completed",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "system":  "http://www.nhi.gov.tw/codes",
+                                                                       "code":  "820145",
+                                                                       "display":  "Nephrectomy"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/swi-patient-015"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/swi-encounter-015"
+                                                     },
+                                       "performedDateTime":  "2024-11-26T10:00:00+08:00"
+                                   },
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/swi-procedure-015"
+                                  }
+                  }
+              ]
+}

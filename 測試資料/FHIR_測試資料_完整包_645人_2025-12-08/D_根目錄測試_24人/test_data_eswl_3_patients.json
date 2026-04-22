@@ -1,0 +1,93 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "fullUrl": "urn:uuid:eswl-p1",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ESWL-P1",
+        "name": [{"family": "張", "given": ["大明"]}],
+        "gender": "male",
+        "birthDate": "1975-05-15"
+      },
+      "request": {"method": "PUT", "url": "Patient/ESWL-P1"}
+    },
+    {
+      "fullUrl": "urn:uuid:eswl-proc1",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "ESWL-PROC1",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {"system": "http://snomed.info/sct", "code": "80146002", "display": "Extracorporeal shockwave lithotripsy"},
+            {"system": "http://www.ama-assn.org/go/cpt", "code": "50590", "display": "Lithotripsy, extracorporeal shock wave"}
+          ],
+          "text": "體外震波碎石術"
+        },
+        "subject": {"reference": "Patient/ESWL-P1"},
+        "performedDateTime": "2025-10-15T09:00:00+08:00"
+      },
+      "request": {"method": "PUT", "url": "Procedure/ESWL-PROC1"}
+    },
+    {
+      "fullUrl": "urn:uuid:eswl-p2",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ESWL-P2",
+        "name": [{"family": "李", "given": ["小華"]}],
+        "gender": "male",
+        "birthDate": "1980-08-20"
+      },
+      "request": {"method": "PUT", "url": "Patient/ESWL-P2"}
+    },
+    {
+      "fullUrl": "urn:uuid:eswl-proc2",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "ESWL-PROC2",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {"system": "http://snomed.info/sct", "code": "80146002", "display": "Extracorporeal shockwave lithotripsy"},
+            {"system": "http://www.ama-assn.org/go/cpt", "code": "50590", "display": "Lithotripsy, extracorporeal shock wave"}
+          ],
+          "text": "體外震波碎石術"
+        },
+        "subject": {"reference": "Patient/ESWL-P2"},
+        "performedDateTime": "2025-11-05T10:30:00+08:00"
+      },
+      "request": {"method": "PUT", "url": "Procedure/ESWL-PROC2"}
+    },
+    {
+      "fullUrl": "urn:uuid:eswl-p3",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "ESWL-P3",
+        "name": [{"family": "王", "given": ["志強"]}],
+        "gender": "male",
+        "birthDate": "1968-12-10"
+      },
+      "request": {"method": "PUT", "url": "Patient/ESWL-P3"}
+    },
+    {
+      "fullUrl": "urn:uuid:eswl-proc3",
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "ESWL-PROC3",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {"system": "http://snomed.info/sct", "code": "80146002", "display": "Extracorporeal shockwave lithotripsy"},
+            {"system": "http://www.ama-assn.org/go/cpt", "code": "50590", "display": "Lithotripsy, extracorporeal shock wave"}
+          ],
+          "text": "體外震波碎石術"
+        },
+        "subject": {"reference": "Patient/ESWL-P3"},
+        "performedDateTime": "2025-11-20T14:15:00+08:00"
+      },
+      "request": {"method": "PUT", "url": "Procedure/ESWL-PROC3"}
+    }
+  ]
+}

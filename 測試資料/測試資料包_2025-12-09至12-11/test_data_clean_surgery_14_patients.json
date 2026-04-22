@@ -1,0 +1,1490 @@
+﻿{
+    "resourceType":  "Bundle",
+    "entry":  [
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-001",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-001",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-001",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-001"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-15T08:00:00Z",
+                                                      "end":  "2025-10-15T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-001",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-001",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-001"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-001"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-15T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-001",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-001"
+                                                   },
+                                       "id":  "med-clean-surgery-001",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-001"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  5,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-001",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-001"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-002",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-002",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-002",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-002"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-18T08:00:00Z",
+                                                      "end":  "2025-10-18T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-002",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-002",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-002"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-002"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-18T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-002",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-002"
+                                                   },
+                                       "id":  "med-clean-surgery-002",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-002"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-002",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-002"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-003",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-003",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-003",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-003"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-22T08:00:00Z",
+                                                      "end":  "2025-10-22T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-003",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-003",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-003"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-003"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-22T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-003",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-003"
+                                                   },
+                                       "id":  "med-clean-surgery-003",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-003"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-003",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-003"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-004",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-004",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-004",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-004"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-25T08:00:00Z",
+                                                      "end":  "2025-10-25T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-004",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-004",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-004"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-004"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-25T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-004",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-004"
+                                                   },
+                                       "id":  "med-clean-surgery-004",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-004"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-004",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-004"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-005",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-005",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-005",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-005"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-10-28T08:00:00Z",
+                                                      "end":  "2025-10-28T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-005",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-005",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-005"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-005"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-10-28T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-005",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-005"
+                                                   },
+                                       "id":  "med-clean-surgery-005",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-005"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-005",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-005"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-006",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-006",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-006",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-006"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-01T08:00:00Z",
+                                                      "end":  "2025-11-01T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-006",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-006",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-006"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-006"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-01T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-006",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-006"
+                                                   },
+                                       "id":  "med-clean-surgery-006",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-006"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-006",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-006"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-007",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-007",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-007",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-007"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-05T08:00:00Z",
+                                                      "end":  "2025-11-05T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-007",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-007",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-007"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-007"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-05T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-007",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-007"
+                                                   },
+                                       "id":  "med-clean-surgery-007",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-007"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-007",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-007"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-008",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-008",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-008",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-008"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-08T08:00:00Z",
+                                                      "end":  "2025-11-08T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-008",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-008",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-008"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-008"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-08T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-008",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-008"
+                                                   },
+                                       "id":  "med-clean-surgery-008",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-008"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-008",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-008"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-009",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-009",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-009",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-009"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-12T08:00:00Z",
+                                                      "end":  "2025-11-12T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-009",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-009",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-009"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-009"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-12T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-009",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-009"
+                                                   },
+                                       "id":  "med-clean-surgery-009",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-009"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-009",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-009"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-010",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-010",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-010",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-010"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-15T08:00:00Z",
+                                                      "end":  "2025-11-15T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-010",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-010",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-010"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-010"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-15T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-010",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-010"
+                                                   },
+                                       "id":  "med-clean-surgery-010",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-010"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-010",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-010"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-011",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-011",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-011",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-011"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-18T08:00:00Z",
+                                                      "end":  "2025-11-18T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-011",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-011",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-011"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-011"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-18T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-011",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-011"
+                                                   },
+                                       "id":  "med-clean-surgery-011",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-011"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-011",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-011"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-012",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-012",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-012",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-012"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-22T08:00:00Z",
+                                                      "end":  "2025-11-22T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-012",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-012",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-012"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-012"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-22T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-012",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-012"
+                                                   },
+                                       "id":  "med-clean-surgery-012",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-012"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-012",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-012"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-013",
+                                       "gender":  "male"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-013",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-013",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-013"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-25T08:00:00Z",
+                                                      "end":  "2025-11-25T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-013",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-013",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-013"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-013"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-25T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-013",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-013"
+                                                   },
+                                       "id":  "med-clean-surgery-013",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-013"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-013",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-013"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "resourceType":  "Patient",
+                                       "birthDate":  "1975-01-01",
+                                       "id":  "clean-surgery-patient-014",
+                                       "gender":  "female"
+                                   },
+                      "fullUrl":  "Patient/clean-surgery-patient-014",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Patient/clean-surgery-patient-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "enc-clean-surgery-014",
+                                       "class":  {
+                                                     "code":  "IMP",
+                                                     "display":  "住院"
+                                                 },
+                                       "resourceType":  "Encounter",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-014"
+                                                   },
+                                       "period":  {
+                                                      "start":  "2025-11-28T08:00:00Z",
+                                                      "end":  "2025-11-28T20:00:00Z"
+                                                  },
+                                       "status":  "finished"
+                                   },
+                      "fullUrl":  "Encounter/enc-clean-surgery-014",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Encounter/enc-clean-surgery-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "id":  "proc-clean-surgery-014",
+                                       "code":  {
+                                                    "coding":  [
+                                                                   {
+                                                                       "code":  "80146002",
+                                                                       "display":  "清淨手術",
+                                                                       "system":  "http://snomed.info/sct"
+                                                                   }
+                                                               ]
+                                                },
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-014"
+                                                   },
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-014"
+                                                     },
+                                       "resourceType":  "Procedure",
+                                       "performedDateTime":  "2025-11-28T10:00:00Z",
+                                       "status":  "completed"
+                                   },
+                      "fullUrl":  "Procedure/proc-clean-surgery-014",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "Procedure/proc-clean-surgery-014"
+                                  }
+                  },
+                  {
+                      "resource":  {
+                                       "intent":  "order",
+                                       "subject":  {
+                                                       "reference":  "Patient/clean-surgery-patient-014"
+                                                   },
+                                       "id":  "med-clean-surgery-014",
+                                       "medicationCodeableConcept":  {
+                                                                         "coding":  [
+                                                                                        {
+                                                                                            "code":  "J01CA04",
+                                                                                            "display":  "Amoxicillin",
+                                                                                            "system":  "http://www.whocc.no/atc"
+                                                                                        }
+                                                                                    ]
+                                                                     },
+                                       "status":  "completed",
+                                       "resourceType":  "MedicationRequest",
+                                       "encounter":  {
+                                                         "reference":  "Encounter/enc-clean-surgery-014"
+                                                     },
+                                       "dosageInstruction":  [
+                                                                 {
+                                                                     "timing":  {
+                                                                                    "repeat":  {
+                                                                                                   "boundsDuration":  {
+                                                                                                                          "unit":  "d",
+                                                                                                                          "code":  "d",
+                                                                                                                          "value":  2,
+                                                                                                                          "system":  "http://unitsofmeasure.org"
+                                                                                                                      }
+                                                                                               }
+                                                                                }
+                                                                 }
+                                                             ]
+                                   },
+                      "fullUrl":  "MedicationRequest/med-clean-surgery-014",
+                      "request":  {
+                                      "method":  "PUT",
+                                      "url":  "MedicationRequest/med-clean-surgery-014"
+                                  }
+                  }
+              ],
+    "type":  "transaction"
+}

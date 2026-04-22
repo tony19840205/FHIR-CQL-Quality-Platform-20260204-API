@@ -1,0 +1,457 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Control Dashboard - FHIR CQL Platform</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/llm-connection.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- 導航欄 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>FHIR CQL Platform</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="disease-control.html" class="active">Disease Control</a></li>
+                <li><a href="public-health.html">Public Health</a></li>
+                <li><a href="esg-indicators.html">ESG</a></li>
+                <li><a href="quality-indicators.html">Quality</a></li>
+            </ul>
+            <div class="nav-settings" onclick="openLLMSettingsModal()" style="cursor: pointer;" title="Settings">
+                <i class="fas fa-cog"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容區 -->
+    <main class="main-content">
+        <!-- 頁面標題 -->
+        <section class="page-header">
+            <div class="header-content">
+                <h1><i class="fas fa-virus"></i> Disease Control Dashboard</h1>
+                <p>Infectious Disease Surveillance & Epidemiological Analysis</p>
+            </div>
+            <div class="header-actions" style="position: relative;">
+                <div style="display: flex; flex-direction: column; align-items: center; margin-right: 10px;">
+                    <button class="btn btn-secondary" onclick="toggleDemoMode()" id="demoModeBtn">
+                        <i class="fas fa-flask"></i> <span id="demoModeText">Enable Demo Mode</span>
+                    </button>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 4px; text-align: center; line-height: 1.3;">
+                        <span style="color: #10b981; font-weight: 600;">●</span> Green: Simulated<br>
+                        <span style="color: #94a3b8; font-weight: 600;">●</span> Gray: FHIR Data
+                    </div>
+                </div>
+                <button class="btn btn-success" onclick="toggleMapMode()" id="mapModeBtn" style="margin-right: 10px; background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                    <i class="fas fa-map-marked-alt"></i> <span id="mapModeText">Google Map</span>
+                </button>
+                <button class="btn btn-primary" onclick="refreshAllData()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </section>
+
+        <!-- FHIR 連線狀態 -->
+        <section class="connection-banner" id="connectionBanner">
+            <div class="banner-content">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Please configure FHIR server connection on Home page</span>
+                <a href="index.html" class="btn btn-sm">Go to Settings</a>
+            </div>
+        </section>
+
+        <!-- 快速測試區 - 已移除 -->
+
+        <!-- 地圖模式區域 -->
+        <section class="map-section" id="mapSection" style="display: none;">
+            <!-- 疾病選擇器 -->
+            <div class="disease-selector" style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 1rem 0; color: #1e293b; font-size: 1.1rem;">
+                    <i class="fas fa-filter"></i> Select diseases to display
+                </h3>
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: center;">
+                    <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
+                        <input type="checkbox" id="mapCovid19" value="covid19" onchange="updateMapDisplay()" 
+                               style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
+                        <span style="color: #ef4444; font-weight: 600;">🦠 COVID-19</span>
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
+                        <input type="checkbox" id="mapInfluenza" value="influenza" onchange="updateMapDisplay()" 
+                               style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
+                        <span style="color: #3b82f6; font-weight: 600;">🤧 Influenza</span>
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
+                        <input type="checkbox" id="mapConjunctivitis" value="conjunctivitis" onchange="updateMapDisplay()" 
+                               style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
+                        <span style="color: #f59e0b; font-weight: 600;">👁️ Conjunctivitis</span>
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
+                        <input type="checkbox" id="mapEnterovirus" value="enterovirus" onchange="updateMapDisplay()" 
+                               style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
+                        <span style="color: #8b5cf6; font-weight: 600;">✋ Enterovirus</span>
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer; font-size: 0.95rem;">
+                        <input type="checkbox" id="mapDiarrhea" value="diarrhea" onchange="updateMapDisplay()" 
+                               style="width: 18px; height: 18px; margin-right: 0.5rem; cursor: pointer;">
+                        <span style="color: #10b981; font-weight: 600;">🦠 Diarrhea Cluster</span>
+                    </label>
+                    
+                    <!-- 全部查詢按鈕 -->
+                    <button class="btn btn-primary" onclick="executeAllCQL()" id="btnExecuteAll" 
+                            style="margin-left: auto; padding: 0.6rem 1.5rem; font-size: 0.95rem; background: linear-gradient(135deg, #10b981, #059669); border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: 600; transition: all 0.3s; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);">
+                        <i class="fas fa-rocket"></i> Run All (5 CQL)
+                    </button>
+                </div>
+                
+                <!-- 查詢進度顯示 -->
+                <div id="queryProgress" style="display: none; margin-top: 1rem; padding: 0.8rem 1rem; background: linear-gradient(135deg, #eff6ff, #dbeafe); border-left: 4px solid #3b82f6; border-radius: 8px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span style="color: #1e40af; font-weight: 600; font-size: 0.95rem;">
+                            <i class="fas fa-spinner fa-spin"></i> <span id="queryProgressText">Querying...</span>
+                        </span>
+                        <span style="color: #3b82f6; font-weight: 700; font-size: 1.1rem;" id="queryProgressCount">0/5</span>
+                    </div>
+                    <div style="margin-top: 0.5rem; height: 6px; background: #dbeafe; border-radius: 3px; overflow: hidden;">
+                        <div id="queryProgressBar" style="height: 100%; background: linear-gradient(90deg, #3b82f6, #2563eb); width: 0%; transition: width 0.3s;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 地圖容器 -->
+            <div id="diseaseMap" style="height: 600px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></div>
+            
+            <!-- Map Legend -->
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <h3 style="margin: 0 0 1rem 0; color: #1e293b; font-size: 1.1rem;">
+                    <i class="fas fa-info-circle"></i> Map Legend
+                </h3>
+                <div style="color: #64748b; font-size: 0.9rem; line-height: 1.8;">
+                    <div><strong>Circle size:</strong> Represents regional case count</div>
+                    <div><strong>Color:</strong> Different diseases use distinct colors</div>
+                    <div><strong>Click circle:</strong> View city details</div>
+                    <div><strong>Multi-disease:</strong> Select multiple diseases to compare</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 疾病監控總覽 -->
+        <section class="overview-section" id="overviewSection">
+            <div class="overview-grid">
+                <!-- COVID-19 -->
+                <div class="overview-card covid">
+                    <div class="card-icon">
+                        <i class="fas fa-virus"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>COVID-19</h3>
+                        <p class="card-code">InfectiousDisease_COVID19_Surveillance</p>
+                        <p class="card-description-text">Query COVID-19 cases, ER visits, hospitalizations<br><small style="color: #94a3b8;">(max 1000 records)</small></p>
+                        <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Patients</span><br>
+                                <span class="mini-value" id="covidPatients" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Encounters</span><br>
+                                <span class="mini-value" id="covidEncounters" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-card-mini" onclick="executeCQL('covid19')" id="btnCovid">
+                            <i class="fas fa-play"></i> Run Query
+                        </button>
+                        
+                        <div class="card-status" id="statusCovid"></div>
+                    </div>
+                </div>
+
+                <div class="overview-card influenza">
+                    <div class="card-icon">
+                        <i class="fas fa-disease"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Influenza</h3>
+                        <p class="card-code">InfectiousDisease_Influenza_Surveillance</p>
+                        <p class="card-description-text">Track influenza cases, vaccinations, severe cases<br><small style="color: #94a3b8;">(max 1000 records)</small></p>
+                        <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Patients</span><br>
+                                <span class="mini-value" id="fluPatients" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Encounters</span><br>
+                                <span class="mini-value" id="fluEncounters" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-card-mini" onclick="executeCQL('influenza')" id="btnInfluenza">
+                            <i class="fas fa-play"></i> Run Query
+                        </button>
+                        
+                        <div class="card-status" id="statusInfluenza"></div>
+                    </div>
+                </div>
+
+                <div class="overview-card conjunctivitis">
+                    <div class="card-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Acute Conjunctivitis</h3>
+                        <p class="card-code">InfectiousDisease_AcuteConjunctivitis_Surveillance</p>
+                        <p class="card-description-text">Conjunctivitis outbreak monitoring & cluster detection<br><small style="color: #94a3b8;">(max 1000 records)</small></p>
+                        <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Patients</span><br>
+                                <span class="mini-value" id="conjunctivitisPatients" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Encounters</span><br>
+                                <span class="mini-value" id="conjunctivitisEncounters" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-card-mini" onclick="executeCQL('conjunctivitis')" id="btnConjunctivitis">
+                            <i class="fas fa-play"></i> Run Query
+                        </button>
+                        
+                        <div class="card-status" id="statusConjunctivitis"></div>
+                    </div>
+                </div>
+
+                <div class="overview-card enterovirus">
+                    <div class="card-icon">
+                        <i class="fas fa-hand-dots"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Enterovirus</h3>
+                        <p class="card-code">InfectiousDisease_Enterovirus_Surveillance</p>
+                        <p class="card-description-text">Enterovirus, HFMD, herpangina surveillance<br><small style="color: #94a3b8;">(max 1000 records)</small></p>
+                        <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Patients</span><br>
+                                <span class="mini-value" id="enteroPatients" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Encounters</span><br>
+                                <span class="mini-value" id="enteroEncounters" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-card-mini" onclick="executeCQL('enterovirus')" id="btnEnterovirus">
+                            <i class="fas fa-play"></i> Run Query
+                        </button>
+                        
+                        <div class="card-status" id="statusEnterovirus"></div>
+                    </div>
+                </div>
+
+                <div class="overview-card diarrhea">
+                    <div class="card-icon">
+                        <i class="fas fa-bacteria"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Diarrhea Cluster</h3>
+                        <p class="card-code">InfectiousDisease_AcuteDiarrhea_Surveillance</p>
+                        <p class="card-description-text">Diarrhea, norovirus, rotavirus monitoring<br><small style="color: #94a3b8;">(max 1000 records)</small></p>
+                        <div class="card-mini-stats" style="display:flex; gap:24px; margin:10px 0;">
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Patients</span><br>
+                                <span class="mini-value" id="diarrheaPatients" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                            <div class="mini-stat">
+                                <span class="mini-label" style="font-size:12px; color:#94a3b8;">Encounters</span><br>
+                                <span class="mini-value" id="diarrheaEncounters" style="font-size:24px; font-weight:700;">--</span>
+                            </div>
+                        </div>
+                        
+                        <button class="btn-card-mini" onclick="executeCQL('diarrhea')" id="btnDiarrhea">
+                            <i class="fas fa-play"></i> Run Query
+                        </button>
+                        
+                        <div class="card-status" id="statusDiarrhea"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2026 FHIR CQL Platform. All rights reserved.</p>
+            <p>Disease Control Dashboard v1.0 - Powered by FHIR 4.0.1 & CQL Engine</p>
+        </div>
+    </footer>
+
+    <!-- 詳細數據模態框 -->
+    <div class="detail-modal" id="detailModal">
+        <div class="detail-modal-content">
+            <div class="detail-modal-header">
+                <h2 id="modalTitle"><i class="fas fa-virus"></i> COVID-19 Details</h2>
+                <button class="modal-close-btn" onclick="closeDetailModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="detail-modal-body">
+                <div class="detail-distribution">
+                    <h3><i class="fas fa-calendar-alt"></i> Patient Annual Distribution</h3>
+                    <div id="yearPatientDistributionChart" class="year-distribution-chart"></div>
+                </div>
+                
+                <div class="detail-distribution">
+                    <h3><i class="fas fa-chart-bar"></i> Age Distribution (5-year groups)</h3>
+                    <div class="age-distribution-container">
+                        <div class="age-chart-wrapper">
+                            <div class="age-chart-section">
+                                <h4 class="year-chart-title">2024</h4>
+                                <div id="ageChart2024" class="age-chart-bars"></div>
+                            </div>
+                            <div class="age-chart-section">
+                                <h4 class="year-chart-title">2025</h4>
+                                <div id="ageChart2025" class="age-chart-bars"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-actions">
+                    <button class="btn btn-primary" onclick="executeCQLFromModal()">
+                        <i class="fas fa-sync-alt"></i> Re-query
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CQL 查看模態框 -->
+    <div id="cqlModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-code"></i> CQL Query Language</h3>
+                <span class="modal-close" onclick="closeCQLModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <pre id="cqlCode"></pre>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCQLModal()">Close</button>
+                <button class="btn btn-primary" onclick="copyCQL()">
+                    <i class="fas fa-copy"></i> Copy Code
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LLM 設定模態框 -->
+    <div id="llmSettingsModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;">
+                <h3><i class="fas fa-tachometer-alt"></i> Public Health Dashboard - Disease Control</h3>
+                <span class="modal-close" onclick="closeLLMSettingsModal()" style="color: white;">&times;</span>
+            </div>
+            <div class="modal-body" style="padding: 2rem;">
+                <!-- LLM Service Control -->
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin: 0; color: #1e293b;">
+                            <i class="fas fa-power-off"></i> Service Control
+                        </h4>
+                        <div style="display: flex; gap: 0.75rem;">
+                            <button id="uiConnectBtn" onclick="toggleUIConnection()" class="btn-external-service inactive">
+                                <i class="fas fa-window-restore"></i> <span>Connect Public Page</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 四節點連接狀態圖 -->
+                    <div class="llm-connection-flow">
+                        <div class="connection-flow-header">
+                            <h5>Connection Status</h5>
+                        </div>
+                        
+                        <div class="connection-nodes-container">
+                            <!-- FHIR 伺服器 -->
+                            <div class="connection-node node-fhir">
+                                <div class="node-circle">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                                <div class="node-label">
+                                    <div class="node-title">FHIR</div>
+                                    <div class="node-subtitle">Server</div>
+                                </div>
+                            </div>
+                            
+                            <!-- 連接線 1: FHIR → 控制網頁 -->
+                            <div class="connection-line-wrapper">
+                                <div class="connection-line line-fhir-control connected"></div>
+                            </div>
+                            
+                            <!-- 控制網頁 -->
+                            <div class="connection-node node-control">
+                                <div class="node-circle">
+                                    <i class="fas fa-desktop"></i>
+                                </div>
+                                <div class="node-label">
+                                    <div class="node-title">Control</div>
+                                    <div class="node-subtitle">Staff</div>
+                                </div>
+                            </div>
+                            
+                            <!-- 連接線 2: 控制網頁 → 民眾網頁 -->
+                            <div class="connection-line-wrapper">
+                                <div class="connection-line line-control-public disconnected"></div>
+                            </div>
+                            
+                            <!-- 民眾網頁 -->
+                            <a href="https://tony19840205.github.io/public-health-dashboard/" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="Open Public Page">
+                                <div class="node-circle">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="node-label">
+                                    <div class="node-title">Public Page</div>
+                                    <div class="node-subtitle">Public</div>
+                                </div>
+                            </a>
+                            
+                            <!-- 連接線 3: 民眾網頁 → LLM -->
+                            <div class="connection-line-wrapper">
+                                <div class="connection-line line-public-llm disconnected"></div>
+                            </div>
+                            
+                            <!-- 公共健康即時看板 -->
+                            <a href="https://tony19840205.github.io/public-health-dashboard/dashboard/" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="Open Dashboard">
+                                <div class="node-circle">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                                <div class="node-label">
+                                    <div class="node-title">Dashboard</div>
+                                    <div class="node-subtitle">Public Health</div>
+                                </div>
+                            </a>
+                        </div>
+                        
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/fhir-connection.js"></script>
+    <script src="js/dashboard-simple.js"></script>
+    <script src="js/llm-service.js"></script>
+    <script src="js/data-exporter.js"></script>
+    <script src="js/llm-connection-manager.js"></script>
+</body>
+</html>

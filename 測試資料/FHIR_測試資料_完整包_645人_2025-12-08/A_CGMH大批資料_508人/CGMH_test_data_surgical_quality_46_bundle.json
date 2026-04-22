@@ -1,0 +1,5498 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10001",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10001"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10001"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1983-04-16"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000101",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10001"
+        },
+        "period": {
+          "start": "2025-10-20T08:00:00Z",
+          "end": "2025-10-26T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000101",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10001"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000101"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000101",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10001"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000101"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000101",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10001"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000101"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 5,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10002",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10002"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10002"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1996-06-06"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10002"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000201",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10002"
+        },
+        "period": {
+          "start": "2025-10-06T08:00:00Z",
+          "end": "2025-10-09T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000201",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10002"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000201"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000201",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10002"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000201"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000201",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10002"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000201"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 5,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10003",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10003"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10003"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1973-08-25"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10003"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000301",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10003"
+        },
+        "period": {
+          "start": "2025-10-05T08:00:00Z",
+          "end": "2025-10-08T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000301",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10003"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000301"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000301",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10003"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000301"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000301",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10003"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000301"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 5,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10004",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10004"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10004"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1945-02-02"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10004"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000401",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10004"
+        },
+        "period": {
+          "start": "2025-10-03T08:00:00Z",
+          "end": "2025-10-07T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000401",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10004"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000401"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000401",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10004"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000401"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000401",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10004"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000401"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 5,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10005",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10005"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10005"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1997-03-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10005"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000501",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10005"
+        },
+        "period": {
+          "start": "2025-10-07T08:00:00Z",
+          "end": "2025-10-17T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000501",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F40Z",
+              "display": "Surgical Procedure 0W9F40Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10005"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000501"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000501",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10005"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000501"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000501",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10005"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000501"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 2,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10006",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10006"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10006"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1944-08-21"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10006"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000601",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10006"
+        },
+        "period": {
+          "start": "2025-10-06T08:00:00Z",
+          "end": "2025-10-15T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000601",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10006"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000601"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000601",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10006"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000601"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000601",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10006"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000601"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 2,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10007",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10007"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10007"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1943-11-12"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10007"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000701",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10007"
+        },
+        "period": {
+          "start": "2025-10-18T08:00:00Z",
+          "end": "2025-10-23T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000701",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F40Z",
+              "display": "Surgical Procedure 0W9F40Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10007"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000701"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000701",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10007"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000701"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000701",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10007"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000701"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 2,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10008",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10008"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10008"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1990-04-17"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10008"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000801",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10008"
+        },
+        "period": {
+          "start": "2025-10-10T08:00:00Z",
+          "end": "2025-10-13T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000801",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F40Z",
+              "display": "Surgical Procedure 0W9F40Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10008"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000801"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000801",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10008"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000801"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000801",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10008"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000801"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 2,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10009",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10009"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10009"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1989-08-09"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10009"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1000901",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10009"
+        },
+        "period": {
+          "start": "2025-10-19T08:00:00Z",
+          "end": "2025-10-22T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1000901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1000901",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10009"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000901"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1000901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1000901",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10009"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000901"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1000901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1000901",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10009"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1000901"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 2,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1000901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10010",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10010"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10010"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1988-02-25"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10010"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10010"
+        },
+        "period": {
+          "start": "2025-10-01T08:00:00Z",
+          "end": "2025-10-06T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10010"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001001"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001001",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10010"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "MedicationRequest",
+        "id": "MED1001001",
+        "status": "completed",
+        "intent": "order",
+        "medicationCodeableConcept": {
+          "coding": [
+            {
+              "system": "http://www.whocc.no/atc",
+              "code": "J01",
+              "display": "Antibiotic"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10010"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001001"
+        },
+        "authoredOn": "2025-10-15T10:00:00Z",
+        "dosageInstruction": [
+          {
+            "timing": {
+              "repeat": {
+                "frequency": 1,
+                "period": 1,
+                "periodUnit": "d",
+                "boundsDuration": {
+                  "value": 2,
+                  "unit": "days",
+                  "system": "http://unitsofmeasure.org",
+                  "code": "d"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "request": {
+        "method": "PUT",
+        "url": "MedicationRequest/MED1001001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10011",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10011"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10011"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1999-12-26"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10011"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001101",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10011"
+        },
+        "period": {
+          "start": "2025-10-10T08:00:00Z",
+          "end": "2025-10-13T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001101",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0UT90ZZ",
+              "display": "Surgical Procedure 0UT90ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10011"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001101"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001101",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "D25.0",
+              "display": "Diagnosis D25.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10011"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001101"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001102",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10011"
+        },
+        "period": {
+          "start": "2025-10-17T08:00:00Z",
+          "end": "2025-10-19T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001102"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10012",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10012"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10012"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1984-07-28"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10012"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001201",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10012"
+        },
+        "period": {
+          "start": "2025-10-01T08:00:00Z",
+          "end": "2025-10-04T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001201",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0UT90ZZ",
+              "display": "Surgical Procedure 0UT90ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10012"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001201"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001201",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "D25.0",
+              "display": "Diagnosis D25.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10012"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001201"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001202",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10012"
+        },
+        "period": {
+          "start": "2025-10-07T08:00:00Z",
+          "end": "2025-10-09T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001202"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10013",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10013"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10013"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1948-06-02"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10013"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001301",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10013"
+        },
+        "period": {
+          "start": "2025-10-03T08:00:00Z",
+          "end": "2025-10-06T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001301",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0UTB4ZZ",
+              "display": "Surgical Procedure 0UTB4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10013"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001301"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001301",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "D25.2",
+              "display": "Diagnosis D25.2"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10013"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001301"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10014",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10014"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10014"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1985-11-28"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10014"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001401",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10014"
+        },
+        "period": {
+          "start": "2025-10-07T08:00:00Z",
+          "end": "2025-10-10T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001401",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0UT90ZZ",
+              "display": "Surgical Procedure 0UT90ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10014"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001401"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001401",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "D25.1",
+              "display": "Diagnosis D25.1"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10014"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001401"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10015",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10015"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10015"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1989-10-13"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10015"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001501",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10015"
+        },
+        "period": {
+          "start": "2025-10-01T08:00:00Z",
+          "end": "2025-10-04T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001501",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0UT90ZZ",
+              "display": "Surgical Procedure 0UT90ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10015"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001501"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001501",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "D25.2",
+              "display": "Diagnosis D25.2"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10015"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001501"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10016",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10016"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10016"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1940-01-13"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10016"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001601",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10016"
+        },
+        "period": {
+          "start": "2025-10-02T08:00:00Z",
+          "end": "2025-10-05T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001601",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0UTB4ZZ",
+              "display": "Surgical Procedure 0UTB4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10016"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001601"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001601",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "D25.1",
+              "display": "Diagnosis D25.1"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10016"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001601"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10017",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10017"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10017"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1953-12-05"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10017"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001701",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10017"
+        },
+        "period": {
+          "start": "2025-10-03T08:00:00Z",
+          "end": "2025-10-06T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001701",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0UTB4ZZ",
+              "display": "Surgical Procedure 0UTB4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10017"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001701"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001701",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "D25.0",
+              "display": "Diagnosis D25.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10017"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001701"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10018",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10018"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10018"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1967-05-25"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10018"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001801",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10018"
+        },
+        "period": {
+          "start": "2025-10-08T08:00:00Z",
+          "end": "2025-10-11T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001801",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0UTB4ZZ",
+              "display": "Surgical Procedure 0UTB4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10018"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001801"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001801",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "D25.2",
+              "display": "Diagnosis D25.2"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10018"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001801"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10019",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10019"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10019"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1949-05-16"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10019"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1001901",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10019"
+        },
+        "period": {
+          "start": "2025-10-16T08:00:00Z",
+          "end": "2025-10-24T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1001901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1001901",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "Surgical Procedure 0SRC0JZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10019"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001901"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1001901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001901",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.0",
+              "display": "Diagnosis M17.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10019"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001901"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1001902",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "T84.54XA",
+              "display": "Diagnosis T84.54XA"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10019"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1001901"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1001902"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10020",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10020"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10020"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1986-05-16"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10020"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10020"
+        },
+        "period": {
+          "start": "2025-10-01T08:00:00Z",
+          "end": "2025-10-07T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRD0JZ",
+              "display": "Surgical Procedure 0SRD0JZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10020"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002001"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002001",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.0",
+              "display": "Diagnosis M17.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10020"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10021",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10021"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10021"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1950-04-09"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10021"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002101",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10021"
+        },
+        "period": {
+          "start": "2025-10-17T08:00:00Z",
+          "end": "2025-10-27T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002101",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "Surgical Procedure 0SRC0JZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10021"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002101"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002101",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.0",
+              "display": "Diagnosis M17.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10021"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002101"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10022",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10022"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10022"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1966-05-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10022"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002201",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10022"
+        },
+        "period": {
+          "start": "2025-10-11T08:00:00Z",
+          "end": "2025-10-19T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002201",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC0JZ",
+              "display": "Surgical Procedure 0SRC0JZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10022"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002201"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002201",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.9",
+              "display": "Diagnosis M17.9"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10022"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002201"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10023",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10023"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10023"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1985-05-17"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10023"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002301",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10023"
+        },
+        "period": {
+          "start": "2025-10-13T08:00:00Z",
+          "end": "2025-10-18T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002301",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRD0JZ",
+              "display": "Surgical Procedure 0SRD0JZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10023"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002301"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002301",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.0",
+              "display": "Diagnosis M17.0"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10023"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002301"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10024",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10024"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10024"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1987-10-13"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10024"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002401",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10024"
+        },
+        "period": {
+          "start": "2025-10-03T08:00:00Z",
+          "end": "2025-10-07T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002401",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRD0JZ",
+              "display": "Surgical Procedure 0SRD0JZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10024"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002401"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002401",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.1",
+              "display": "Diagnosis M17.1"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10024"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002401"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10025",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10025"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10025"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1981-06-22"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10025"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002501",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10025"
+        },
+        "period": {
+          "start": "2025-10-06T08:00:00Z",
+          "end": "2025-10-16T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002501",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC069",
+              "display": "Surgical Procedure 0SRC069"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10025"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002501"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002501",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.1",
+              "display": "Diagnosis M17.1"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10025"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002501"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002502",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "T84.54XA",
+              "display": "Diagnosis T84.54XA"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10025"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002501"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002502"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10026",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10026"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10026"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1953-03-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10026"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002601",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10026"
+        },
+        "period": {
+          "start": "2025-10-10T08:00:00Z",
+          "end": "2025-10-20T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002601",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRD069",
+              "display": "Surgical Procedure 0SRD069"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10026"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002601"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002601",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.9",
+              "display": "Diagnosis M17.9"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10026"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002601"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10027",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10027"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10027"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1980-02-25"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10027"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002701",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10027"
+        },
+        "period": {
+          "start": "2025-10-16T08:00:00Z",
+          "end": "2025-10-25T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002701",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRD069",
+              "display": "Surgical Procedure 0SRD069"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10027"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002701"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002701",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.1",
+              "display": "Diagnosis M17.1"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10027"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002701"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10028",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10028"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10028"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1995-10-28"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10028"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002801",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10028"
+        },
+        "period": {
+          "start": "2025-10-16T08:00:00Z",
+          "end": "2025-10-22T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002801",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRD069",
+              "display": "Surgical Procedure 0SRD069"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10028"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002801"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002801",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.1",
+              "display": "Diagnosis M17.1"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10028"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002801"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10029",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10029"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10029"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1952-01-22"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10029"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1002901",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10029"
+        },
+        "period": {
+          "start": "2025-10-19T08:00:00Z",
+          "end": "2025-10-25T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1002901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1002901",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRD069",
+              "display": "Surgical Procedure 0SRD069"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10029"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002901"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1002901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1002901",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.1",
+              "display": "Diagnosis M17.1"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10029"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1002901"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1002901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10030",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10030"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10030"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1970-05-02"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10030"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10030"
+        },
+        "period": {
+          "start": "2025-10-14T08:00:00Z",
+          "end": "2025-10-19T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0SRC069",
+              "display": "Surgical Procedure 0SRC069"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10030"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003001"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1003001",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "M17.9",
+              "display": "Diagnosis M17.9"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10030"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1003001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10031",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10031"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10031"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1963-03-14"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10031"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003101",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10031"
+        },
+        "period": {
+          "start": "2025-10-04T08:00:00Z",
+          "end": "2025-10-12T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003101",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0DBJ4ZZ",
+              "display": "Surgical Procedure 0DBJ4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10031"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003101"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1003101",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "T81.40XA",
+              "display": "Diagnosis T81.40XA"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10031"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003101"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1003101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "OBS1003101",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "72170-4"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10031"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003101"
+        },
+        "effectiveDateTime": "2025-10-16T10:00:00Z",
+        "valueString": "Wound infection present"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/OBS1003101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10032",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10032"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10032"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1981-07-06"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10032"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003201",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10032"
+        },
+        "period": {
+          "start": "2025-10-18T08:00:00Z",
+          "end": "2025-10-22T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003201",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0FBG4ZZ",
+              "display": "Surgical Procedure 0FBG4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10032"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003201"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1003201",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "T81.41XA",
+              "display": "Diagnosis T81.41XA"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10032"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003201"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1003201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "OBS1003201",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "72170-4"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10032"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003201"
+        },
+        "effectiveDateTime": "2025-10-16T10:00:00Z",
+        "valueString": "Wound infection present"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/OBS1003201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10033",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10033"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10033"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1985-09-04"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10033"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003301",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10033"
+        },
+        "period": {
+          "start": "2025-10-06T08:00:00Z",
+          "end": "2025-10-15T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003301",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0DBJ4ZZ",
+              "display": "Surgical Procedure 0DBJ4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10033"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003301"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10034",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10034"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10034"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1952-06-11"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10034"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003401",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10034"
+        },
+        "period": {
+          "start": "2025-10-13T08:00:00Z",
+          "end": "2025-10-19T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003401",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0DBJ4ZZ",
+              "display": "Surgical Procedure 0DBJ4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10034"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003401"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10035",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10035"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10035"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1999-02-19"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10035"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003501",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10035"
+        },
+        "period": {
+          "start": "2025-10-07T08:00:00Z",
+          "end": "2025-10-12T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003501",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0DBJ4ZZ",
+              "display": "Surgical Procedure 0DBJ4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10035"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003501"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10036",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10036"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10036"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1984-12-02"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10036"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003601",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10036"
+        },
+        "period": {
+          "start": "2025-10-17T08:00:00Z",
+          "end": "2025-10-25T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003601",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0FBG4ZZ",
+              "display": "Surgical Procedure 0FBG4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10036"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003601"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10037",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10037"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10037"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1944-11-10"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10037"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003701",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10037"
+        },
+        "period": {
+          "start": "2025-10-02T08:00:00Z",
+          "end": "2025-10-11T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003701",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0DBJ4ZZ",
+              "display": "Surgical Procedure 0DBJ4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10037"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003701"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003701"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10038",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10038"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10038"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1989-04-08"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10038"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003801",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10038"
+        },
+        "period": {
+          "start": "2025-10-09T08:00:00Z",
+          "end": "2025-10-15T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003801",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0FBG4ZZ",
+              "display": "Surgical Procedure 0FBG4ZZ"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10038"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003801"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003801"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10039",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10039"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10039"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1975-02-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10039"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1003901",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10039"
+        },
+        "period": {
+          "start": "2025-10-19T08:00:00Z",
+          "end": "2025-10-23T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1003901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1003901",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10039"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003901"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1003901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1003901",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10039"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003901"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1003901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1003902",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "T81.40XA",
+              "display": "Diagnosis T81.40XA"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10039"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003901"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1003902"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "OBS1003901",
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "72170-4"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10039"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1003901"
+        },
+        "effectiveDateTime": "2025-10-16T10:00:00Z",
+        "valueString": "Wound infection present"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Observation/OBS1003901"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10040",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10040"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10040"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1977-11-15"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10040"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1004001",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10040"
+        },
+        "period": {
+          "start": "2025-10-16T08:00:00Z",
+          "end": "2025-10-22T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1004001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1004001",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10040"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004001"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1004001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1004001",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10040"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004001"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1004001"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10041",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10041"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10041"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1955-08-06"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10041"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1004101",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10041"
+        },
+        "period": {
+          "start": "2025-10-06T08:00:00Z",
+          "end": "2025-10-15T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1004101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1004101",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10041"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004101"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1004101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1004101",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10041"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004101"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1004101"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10042",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10042"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10042"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1959-09-12"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10042"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1004201",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10042"
+        },
+        "period": {
+          "start": "2025-10-06T08:00:00Z",
+          "end": "2025-10-12T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1004201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1004201",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10042"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004201"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1004201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1004201",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10042"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004201"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1004201"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10043",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10043"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10043"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1942-02-02"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10043"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1004301",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10043"
+        },
+        "period": {
+          "start": "2025-10-19T08:00:00Z",
+          "end": "2025-10-27T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1004301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1004301",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10043"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004301"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1004301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1004301",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10043"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004301"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1004301"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10044",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10044"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10044"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1953-04-06"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10044"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1004401",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10044"
+        },
+        "period": {
+          "start": "2025-10-17T08:00:00Z",
+          "end": "2025-10-21T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1004401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1004401",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F40Z",
+              "display": "Surgical Procedure 0W9F40Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10044"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004401"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1004401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1004401",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10044"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004401"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1004401"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10045",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10045"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10045"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1941-08-21"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10045"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1004501",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10045"
+        },
+        "period": {
+          "start": "2025-10-15T08:00:00Z",
+          "end": "2025-10-22T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1004501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1004501",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10045"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004501"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1004501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1004501",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z98.890",
+              "display": "Diagnosis Z98.890"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10045"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004501"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1004501"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "TW10046",
+        "identifier": [
+          {
+            "system": "http://www.moi.gov.tw/",
+            "value": "TW10046"
+          }
+        ],
+        "name": [
+          {
+            "family": "測試",
+            "given": [
+              "病人10046"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1947-03-05"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Patient/TW10046"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Encounter",
+        "id": "ENC1004601",
+        "status": "finished",
+        "class": {
+          "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+          "code": "IMP",
+          "display": "inpatient encounter"
+        },
+        "subject": {
+          "reference": "Patient/TW10046"
+        },
+        "period": {
+          "start": "2025-10-06T08:00:00Z",
+          "end": "2025-10-15T10:00:00Z"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Encounter/ENC1004601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Procedure",
+        "id": "PROC1004601",
+        "status": "completed",
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10-pcs",
+              "code": "0W9F30Z",
+              "display": "Surgical Procedure 0W9F30Z"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10046"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004601"
+        },
+        "performedDateTime": "2025-10-15T10:00:00Z"
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Procedure/PROC1004601"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "COND1004601",
+        "clinicalStatus": {
+          "coding": [
+            {
+              "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://hl7.org/fhir/sid/icd-10",
+              "code": "Z48.815",
+              "display": "Diagnosis Z48.815"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/TW10046"
+        },
+        "encounter": {
+          "reference": "Encounter/ENC1004601"
+        }
+      },
+      "request": {
+        "method": "PUT",
+        "url": "Condition/COND1004601"
+      }
+    }
+  ]
+}
