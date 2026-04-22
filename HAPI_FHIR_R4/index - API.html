@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FHIR CQL 整合平台 - 醫療數據分析系統 (API)</title>
+    <!-- FHIR-SERVER-LOCK -->
+    <script>
+    /* HAPI FHIR R4 deployment - force server */
+    (function(){
+        var URL = 'https://hapi.fhir.org/baseR4';
+        try { localStorage.setItem('fhirServer', URL); localStorage.removeItem('authToken'); } catch(e){}
+        window.__FHIR_DEPLOY_SERVER__ = URL;
+        console.log('[HAPI deployment] FHIR server locked to:', URL);
+    })();
+    </script>
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="../js/fhir-connection.js"></script>
@@ -16,7 +26,7 @@
                 <i class="fas fa-heartbeat"></i>
                 <span>FHIR CQL Platform</span>
                 <span style="font-size: 0.55em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 6px; letter-spacing: 1px; font-weight: 700; vertical-align: middle;">API</span>
-                <span class="server-label" style="font-size: 0.5em; background: #f1f5f9; color: #475569; padding: 3px 10px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.5px; font-weight: 600; vertical-align: middle; border: 1px solid #cbd5e1;" title="本部署連接之 FHIR 伺服器"><i class="fas fa-server" style="margin-right:4px;"></i>伺服器：HAPI FHIR R4<span style="opacity:.7;font-weight:400;margin-left:4px;">(hapi.fhir.org)</span></span>
+                <span class="server-label" style="font-size: 0.5em; background: #f1f5f9; color: #475569; padding: 3px 10px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.5px; font-weight: 600; vertical-align: middle; border: 1px solid #cbd5e1;" title="本部署連接之 FHIR 伺服器"><i class="fas fa-server" style="margin-right:4px;"></i>伺服器：HAPI FHIR R4</span>
             </div>
             <ul class="nav-menu">
                 <li><a href="index - API.html" class="active">首頁</a></li>
@@ -233,7 +243,7 @@
     <!-- 頁尾 -->
     <footer class="footer">
         <div class="footer-content">
-            <p>&copy; 2025 FHIR CQL Platform. All rights reserved.</p>
+            <p>&copy; 2026 FHIR CQL Platform. All rights reserved.</p>
             <p>Powered by FHIR 4.0.1 & CQL Engine</p>
         </div>
     </footer>

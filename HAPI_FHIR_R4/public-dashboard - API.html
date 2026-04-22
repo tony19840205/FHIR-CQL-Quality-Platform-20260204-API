@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>公共健康數據透明開放平台 (API)</title>
+    <!-- FHIR-SERVER-LOCK -->
+    <script>
+    /* HAPI FHIR R4 deployment - force server */
+    (function(){
+        var URL = 'https://hapi.fhir.org/baseR4';
+        try { localStorage.setItem('fhirServer', URL); localStorage.removeItem('authToken'); } catch(e){}
+        window.__FHIR_DEPLOY_SERVER__ = URL;
+        console.log('[HAPI deployment] FHIR server locked to:', URL);
+    })();
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
