@@ -278,12 +278,12 @@ function updateVaccinationCard(cardId, results) {
     }
 
     if (countElement) {
-        const label = results.isRealData ? ' 🔗' : (results.demoMode ? ' 📊' : '');
-        countElement.textContent = formatNumber(results.uniquePatients) + label;
+        const label = results.isRealData ? '<span style="font-size:.6em;color:#64748b;margin-left:4px;" title="FHIR 實際資料">🔗</span>' : (results.demoMode ? '<span style="font-size:.6em;margin-left:4px;">📊</span>' : '');
+        countElement.innerHTML = formatNumber(results.uniquePatients) + label;
         countElement.classList.add('animated');
     }
     if (rateElement) {
-        rateElement.textContent = `${results.averageDoses} 劑/人`;
+        rateElement.innerHTML = `${results.averageDoses}<span style="font-size:.55em;color:#64748b;margin-left:4px;font-weight:500;">劑/人</span>`;
         rateElement.classList.add('animated');
     }
 }
@@ -300,12 +300,12 @@ function updateChronicCard(cardId, results) {
     }
 
     if (countElement) {
-        const label = results.isRealData ? ' 🔗' : (results.demoMode ? ' 📊' : '');
-        countElement.textContent = formatNumber(results.totalCases) + label;
+        const label = results.isRealData ? '<span style="font-size:.6em;color:#64748b;margin-left:4px;" title="FHIR 實際資料">🔗</span>' : (results.demoMode ? '<span style="font-size:.6em;margin-left:4px;">📊</span>' : '');
+        countElement.innerHTML = formatNumber(results.totalCases) + label;
         countElement.classList.add('animated');
     }
     if (rateElement) {
-        rateElement.textContent = `${results.controlRate}%`;
+        rateElement.innerHTML = `${results.controlRate}<span style="font-size:.55em;color:#64748b;margin-left:2px;font-weight:500;">%</span>`;
         rateElement.classList.add('animated');
     }
 }
