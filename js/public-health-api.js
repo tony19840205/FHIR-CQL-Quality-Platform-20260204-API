@@ -170,19 +170,47 @@ async function queryViaCQLEngine(cqlFile, indicatorType, options = {}) {
     if (startDate) requestBody.startDate = startDate;
     if (endDate) requestBody.endDate = endDate;
 
-    const response = await fetch(`${backendUrl}/api/execute-cql`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody)
-    });
-
-    if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API 錯誤 ${response.status}: ${errorText}`);
+    // 內部小工具：呼叫一次後端
+    async function _callBackend() {
+        const r = await fetch(`${backendUrl}/api/execute-cql`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        });
+        if (!r.ok) {
+            const t = await r.text();
+            throw new Error(`API 錯誤 ${r.status}: ${t}`);
+        }
+        return r.json();
     }
 
-    const data = await response.json();
+    // 判斷回傳是否為「空資料」（CQL Engine 冷啟動 / FHIR 第一頁尚未就緒）
+    function _isEmpty(d) {
+        if (!d || d.success === false) return false; // 真正錯誤交給上層處理
+        const rows = d.results || [];
+        const md = d.executionMetadata || d.metadata || {};
+        if (md.patientCount > 0) return false;
+        if (rows.length === 0) return true;
+        const r0 = rows[0] || {};
+        const hasCount = (r0.uniquePatients > 0) || (r0.totalCases > 0) || (r0.totalVaccinations > 0);
+        return !hasCount;
+    }
+
+    let data = await _callBackend();
     console.log('✅ CQL Engine 回傳:', data);
+
+    // 第一次拿到空資料時，自動重試一次（解決 Render 冷啟動 / FHIR 首呼空頁）
+    if (_isEmpty(data)) {
+        console.warn('⚠️ 首次查詢無資料，1.2 秒後自動重試一次...');
+        await new Promise(res => setTimeout(res, 1200));
+        try {
+            const retry = await _callBackend();
+            console.log('🔁 重試回傳:', retry);
+            if (!_isEmpty(retry)) data = retry;
+        } catch (e) {
+            console.warn('重試失敗，沿用第一次結果:', e.message);
+        }
+    }
 
     if (data.success === false) {
         throw new Error(data.error || 'CQL Engine 執行失敗');

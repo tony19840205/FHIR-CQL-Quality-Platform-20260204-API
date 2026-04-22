@@ -247,13 +247,97 @@ app.post('/api/export-public-data', async (req, res) => {
             return res.status(400).json({ error: '無效的數據格式' });
         }
 
-        // 寫入記憶體快取，供即時看板 GET /api/export-dashboard 立即取用
-        _dashboardCache = data;
+        // ── 累加合併：讀現有遠端資料，把本次數據加到歷史總和上 ──
+        async function _fetchExistingRemote(githubToken) {
+            // 優先用 GitHub API（同 token），失敗再用 raw（免 token、有快取延遲）
+            try {
+                const apiUrl = 'https://api.github.com/repos/tony19840205/public-health-dashboard/contents/public/data/dashboard-data.json';
+                const r = await axios.get(apiUrl, {
+                    headers: { 'Authorization': `token ${githubToken}`, 'Accept': 'application/vnd.github.v3+json' },
+                    timeout: 8000,
+                });
+                const sha = r.data.sha;
+                const json = JSON.parse(Buffer.from(r.data.content, 'base64').toString('utf-8'));
+                return { sha, json };
+            } catch (_) {
+                try {
+                    const raw = await axios.get('https://raw.githubusercontent.com/tony19840205/public-health-dashboard/main/public/data/dashboard-data.json', { timeout: 8000 });
+                    return { sha: null, json: raw.data };
+                } catch (_e) {
+                    return { sha: null, json: null };
+                }
+            }
+        }
 
-        const jsonContent = JSON.stringify(data, null, 2);
+        function _num(v) { const n = Number(v); return Number.isFinite(n) ? n : 0; }
+        function _mergeArrayById(curArr, prevArr, sumFields, latestFields, recomputeRate) {
+            if (!Array.isArray(prevArr) || prevArr.length === 0) return curArr;
+            if (!Array.isArray(curArr)) return prevArr;
+            const prevMap = {};
+            for (const p of prevArr) if (p && p.id) prevMap[p.id] = p;
+            return curArr.map(item => {
+                const old = prevMap[item.id];
+                if (!old) return item;
+                const merged = { ...item };
+                // 數字欄位：累加
+                for (const f of sumFields) {
+                    const a = _num(old[f]);
+                    const b = _num(merged[f]);
+                    if (a || b) merged[f] = a + b;
+                }
+                // 非數字 / 比率：本次有就用本次，沒有就保留舊值
+                for (const f of latestFields) {
+                    if (merged[f] == null && old[f] != null) merged[f] = old[f];
+                }
+                // cityData：逐縣市累加
+                if (old.cityData && typeof old.cityData === 'object') {
+                    const cd = { ...(merged.cityData || {}) };
+                    for (const k of Object.keys(old.cityData)) {
+                        cd[k] = _num(cd[k]) + _num(old.cityData[k]);
+                    }
+                    merged.cityData = cd;
+                }
+                // 重算比率（numerator/denominator）
+                if (recomputeRate && _num(merged.denominator) > 0) {
+                    merged.rate = parseFloat((_num(merged.numerator) / _num(merged.denominator) * 100).toFixed(2));
+                }
+                return merged;
+            });
+        }
+        function _accumulate(current, prev) {
+            if (!prev || typeof prev !== 'object') return current;
+            const out = { ...current };
+            out.diseaseItems      = _mergeArrayById(current.diseaseItems,      prev.diseaseItems,      ['patients', 'encounters'], [], false);
+            out.healthIndicators  = _mergeArrayById(current.healthIndicators,  prev.healthIndicators,  ['count'], ['rate'], false);
+            out.esgIndicators     = _mergeArrayById(current.esgIndicators,     prev.esgIndicators,     ['count'], ['rate'], false);
+            out.qualityIndicators = _mergeArrayById(current.qualityIndicators, prev.qualityIndicators, ['numerator', 'denominator'], [], true);
+            out.uploadCount       = _num(prev.uploadCount) + 1;
+            out.firstUploadedAt   = prev.firstUploadedAt || prev.exportedAt || current.exportedAt;
+            return out;
+        }
+
+        const githubToken = process.env.GITHUB_TOKEN;
+
+        // 取出歷史資料 → 累加
+        let mergedData = data;
+        let existingSha = null;
+        if (githubToken) {
+            const existing = await _fetchExistingRemote(githubToken);
+            existingSha = existing.sha;
+            if (existing.json) {
+                mergedData = _accumulate(data, existing.json);
+                console.log('🧮 已累加歷史數據（uploadCount=' + (mergedData.uploadCount || 1) + '）');
+            } else {
+                mergedData = { ..._accumulate(data, {}), uploadCount: 1, firstUploadedAt: data.exportedAt };
+            }
+        }
+
+        // 寫入記憶體快取，供即時看板 GET /api/export-dashboard 立即取用
+        _dashboardCache = mergedData;
+
+        const jsonContent = JSON.stringify(mergedData, null, 2);
 
         // 策略一：透過 GitHub API 推送（Render 或任何有 GITHUB_TOKEN 的環境）
-        const githubToken = process.env.GITHUB_TOKEN;
         if (githubToken) {
             const owner = 'tony19840205';
             const repo = 'public-health-dashboard';
@@ -261,21 +345,12 @@ app.post('/api/export-public-data', async (req, res) => {
             const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
             const content = Buffer.from(jsonContent).toString('base64');
 
-            // 取得目前檔案 SHA
-            let sha = null;
-            try {
-                const getRes = await axios.get(apiUrl, {
-                    headers: { 'Authorization': `token ${githubToken}`, 'Accept': 'application/vnd.github.v3+json' },
-                });
-                sha = getRes.data.sha;
-            } catch (_) { /* 檔案不存在 */ }
-
             const body = {
-                message: `data: 控制台匯出去識別化數據 ${new Date().toISOString().slice(0, 16)}`,
+                message: `data: 控制台累加匯出（第 ${mergedData.uploadCount || 1} 次） ${new Date().toISOString().slice(0, 16)}`,
                 content,
                 branch: 'main',
             };
-            if (sha) body.sha = sha;
+            if (existingSha) body.sha = existingSha;
 
             await axios.put(apiUrl, body, {
                 headers: {
@@ -285,13 +360,14 @@ app.post('/api/export-public-data', async (req, res) => {
                 },
             });
 
-            console.log('✅ 已透過 GitHub API 推送至民眾網頁 repo');
-            console.log(`   匯出時間: ${data.exportedAt}`);
+            console.log('✅ 已透過 GitHub API 推送累加後的民眾網頁資料');
+            console.log(`   匯出時間: ${mergedData.exportedAt}  累計次數: ${mergedData.uploadCount || 1}`);
             return res.json({
                 success: true,
                 method: 'github-api',
-                message: '數據已推送至 GitHub，民眾網頁將自動更新',
-                exportedAt: data.exportedAt,
+                message: '數據已累加推送至 GitHub，民眾網頁將自動更新',
+                exportedAt: mergedData.exportedAt,
+                uploadCount: mergedData.uploadCount || 1,
             });
         }
 
