@@ -210,9 +210,9 @@ class DataExporter {
             { name: '嘉義縣',  weight:  2 },
             { name: '花蓮縣',  weight:  3 },
             { name: '台東縣',  weight:  2 },
-            { name: '澎湖縣',  weight:  2 },
-            { name: '金門縣',  weight:  1 },
-            { name: '連江縣',  weight:  1 },
+            { name: '澎湖縣',  weight:  3 },
+            { name: '金門縣',  weight:  2 },
+            { name: '連江縣',  weight:  2 },
         ];
         if (!total || total <= 0) {
             const result = {};
@@ -228,15 +228,26 @@ class DataExporter {
             result[c.name] = share;
             assigned += share;
         });
-        // Distribute remaining patients one-by-one to cities with highest fractional parts
+        // Distribute remaining patients one-by-one.
+        // Priority: (1) cities currently allocated 0 with positive weight, sorted by fractional part desc,
+        //           (2) then remaining cities sorted by fractional part desc.
+        // This ensures small-weight regions (外島) actually appear instead of always losing the tie-break.
         let remainder = total - assigned;
         if (remainder > 0) {
             const fractions = cities.map(c => ({
                 name: c.name,
+                weight: c.weight,
                 frac: (total * c.weight / totalWeight) - Math.floor(total * c.weight / totalWeight)
-            })).sort((a, b) => b.frac - a.frac);
-            for (let i = 0; i < remainder && i < fractions.length; i++) {
-                result[fractions[i].name]++;
+            }));
+            const zeros = fractions
+                .filter(f => result[f.name] === 0 && f.weight > 0)
+                .sort((a, b) => b.frac - a.frac);
+            const others = fractions
+                .filter(f => !(result[f.name] === 0 && f.weight > 0))
+                .sort((a, b) => b.frac - a.frac);
+            const order = zeros.concat(others);
+            for (let i = 0; i < remainder && i < order.length; i++) {
+                result[order[i].name]++;
             }
         }
         return result;
