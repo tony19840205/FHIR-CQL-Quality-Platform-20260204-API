@@ -385,6 +385,12 @@
                     <div class="ms-st-row"><span>加總總病人數</span><b>${(agg.diseaseItems||[]).reduce((a,b)=>a+(b.patients||0),0).toLocaleString()}</b></div>
                 </div>
             ` : ''}
+
+            <div class="ms-section-t" style="color:#dc2626;">⚠ 民眾網頁維護</div>
+            <div style="font-size:11px;color:#94a3b8;margin:4px 0 6px;">清除民眾網頁上累積的歷史數據（GitHub repo 內容歸零），下一次上傳會從 0 開始算。</div>
+            <button class="ms-btn" id="msResetRemote" style="background:#dc2626;width:100%;">
+                <i class="fas fa-trash"></i> 清空民眾網頁累計資料
+            </button>
         `;
 
         // Wire events
@@ -402,6 +408,40 @@
             try { await addFile(f); body.querySelector('#msFile').value=''; }
             catch (e) { alert('上傳失敗：' + e.message); }
         };
+        const resetBtn = body.querySelector('#msResetRemote');
+        if (resetBtn) {
+            resetBtn.onclick = async () => {
+                if (!confirm('確定要清空民眾網頁上的所有累計資料？\n\n此操作會把 GitHub 上的 dashboard-data.json 歸零，無法復原。\n（你本機的查詢結果不會被清掉）')) return;
+                resetBtn.disabled = true;
+                resetBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 清空中...';
+                try {
+                    const backendUrl = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+                        ? 'http://localhost:3000'
+                        : (window.location.origin.includes('onrender.com') ? window.location.origin : 'https://fhir-cql-quality-platform-20260204.onrender.com');
+                    const r = await fetch(backendUrl + '/api/export-public-data?reset=1', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            exportedAt: new Date().toISOString(),
+                            reset: true,
+                            diseaseItems: [], qualityIndicators: [], healthIndicators: [], esgIndicators: [],
+                            stats: { lastUpdated: new Date().toISOString() }
+                        })
+                    });
+                    const j = await r.json();
+                    if (r.ok && j.success) {
+                        alert('✅ 已清空民眾網頁累計資料\n（GitHub Pages 1-2 分鐘後自動更新）');
+                    } else {
+                        alert('❌ 清空失敗：' + (j.error || r.status));
+                    }
+                } catch (e) {
+                    alert('❌ 清空失敗：' + e.message);
+                } finally {
+                    resetBtn.disabled = false;
+                    resetBtn.innerHTML = '<i class="fas fa-trash"></i> 清空民眾網頁累計資料';
+                }
+            };
+        }
     }
 
     function init(opts) {
