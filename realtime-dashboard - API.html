@@ -677,7 +677,36 @@ function buildTabs() {
     }).join('');
 }
 
+/* 重新分配 cityData：確保外島/小縣不會被舊快取卡住為 0 */
+const _CITY_WEIGHTS = [['台北市',15],['新北市',14],['桃園市',8],['新竹市',3],['新竹縣',3],['基隆市',2],['宜蘭縣',2],['台中市',11],['彰化縣',4],['南投縣',2],['苗栗縣',2],['雲林縣',2],['台南市',7],['高雄市',9],['屏東縣',3],['嘉義市',1],['嘉義縣',2],['花蓮縣',3],['台東縣',2],['澎湖縣',3],['金門縣',2],['連江縣',2]];
+function _redistributeCity(total) {
+    const out = {}; if (!total || total <= 0) { _CITY_WEIGHTS.forEach(([n])=>out[n]=0); return out; }
+    const tw = _CITY_WEIGHTS.reduce((s,[,w])=>s+w,0);
+    const fr = []; let assigned = 0;
+    _CITY_WEIGHTS.forEach(([n,w])=>{ const s = total*w/tw; out[n] = Math.floor(s); assigned += out[n]; fr.push({n,w,frac:s-Math.floor(s)}); });
+    let rem = total - assigned;
+    if (rem > 0) {
+        const zeros = fr.filter(f=>out[f.n]===0 && f.w>0).sort((a,b)=>b.frac-a.frac);
+        const others = fr.filter(f=>!(out[f.n]===0 && f.w>0)).sort((a,b)=>b.frac-a.frac);
+        const order = zeros.concat(others);
+        for (let i=0; i<rem && i<order.length; i++) out[order[i].n]++;
+    }
+    return out;
+}
+function _ensureOuterIslands() {
+    if (!DATA.diseaseItems) return;
+    const OUTER = ['澎湖縣','金門縣','連江縣'];
+    DATA.diseaseItems.forEach(d => {
+        const p = Number(d.patients) || 0;
+        if (!p) return;
+        const cd = d.cityData || {};
+        const outerSum = OUTER.reduce((s,c)=>s+(Number(cd[c])||0),0);
+        if (outerSum === 0) d.cityData = _redistributeCity(p);
+    });
+}
+
 function showPanel(idx) {
+    _ensureOuterIslands();
     currentPanel = idx;
     const main = document.getElementById('mainContent');
     main.innerHTML = `<div class="panel active" id="panelContent">${getPanelContent(PANELS[idx].id)}</div>`;
