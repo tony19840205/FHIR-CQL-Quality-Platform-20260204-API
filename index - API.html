@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FHIR CQL 整合平台 - 醫療數據分析系統 (API)</title>
+    <!-- FHIR-SERVER-LOCK -->
+    <script>
+    /* THAS deployment - force server */
+    (function(){
+        var URL = 'https://thas.mohw.gov.tw/v/r4/fhir';
+        try { localStorage.setItem('fhirServer', URL); } catch(e){}
+        window.__FHIR_DEPLOY_SERVER__ = URL;
+        console.log('[THAS deployment] FHIR server locked to:', URL);
+    })();
+    </script>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="js/fhir-connection.js"></script>
