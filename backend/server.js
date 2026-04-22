@@ -247,6 +247,12 @@ app.post('/api/export-public-data', async (req, res) => {
             return res.status(400).json({ error: '無效的數據格式' });
         }
 
+        // 是否要重置歷史累加（用 ?reset=1 或 body.reset === true）
+        const resetMode = req.query.reset === '1' || req.query.reset === 'true' || data.reset === true;
+        if (resetMode) {
+            console.log('🔄 收到重置指令：跳過歷史累加，直接覆蓋');
+        }
+
         // ── 累加合併：讀現有遠端資料，把本次數據加到歷史總和上 ──
         async function _fetchExistingRemote(githubToken) {
             // 優先用 GitHub API（同 token），失敗再用 raw（免 token、有快取延遲）
@@ -318,13 +324,15 @@ app.post('/api/export-public-data', async (req, res) => {
 
         const githubToken = process.env.GITHUB_TOKEN;
 
-        // 取出歷史資料 → 累加
+        // 取出歷史資料 → 累加（reset 模式下直接覆蓋）
         let mergedData = data;
         let existingSha = null;
         if (githubToken) {
             const existing = await _fetchExistingRemote(githubToken);
             existingSha = existing.sha;
-            if (existing.json) {
+            if (resetMode) {
+                mergedData = { ...data, uploadCount: 1, firstUploadedAt: data.exportedAt };
+            } else if (existing.json) {
                 mergedData = _accumulate(data, existing.json);
                 console.log('🧮 已累加歷史數據（uploadCount=' + (mergedData.uploadCount || 1) + '）');
             } else {

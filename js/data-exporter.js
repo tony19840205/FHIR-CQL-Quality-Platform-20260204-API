@@ -115,6 +115,32 @@ class DataExporter {
         cached.lastExport = data;
         try { localStorage.setItem(this.CACHE_KEY, JSON.stringify(cached)); } catch (_) {}
 
+        // ── 多伺服器整合：若 MultiSource 已啟用，改用「本機資料 + 其他來源」加總後的結果 ──
+        try {
+            if (window.MultiSource && typeof window.MultiSource.isEnabled === 'function' && window.MultiSource.isEnabled()) {
+                window.MultiSource.setBaseData({
+                    exportedAt: data.exportedAt,
+                    diseaseItems: data.diseaseItems,
+                    qualityIndicators: data.qualityIndicators,
+                    healthIndicators: data.healthIndicators,
+                    esgIndicators: data.esgIndicators,
+                });
+                const agg = window.MultiSource.getAggregated();
+                if (agg) {
+                    if (Array.isArray(agg.diseaseItems))      data.diseaseItems      = agg.diseaseItems;
+                    if (Array.isArray(agg.qualityIndicators)) data.qualityIndicators = agg.qualityIndicators;
+                    if (Array.isArray(agg.healthIndicators))  data.healthIndicators  = agg.healthIndicators;
+                    if (Array.isArray(agg.esgIndicators))     data.esgIndicators     = agg.esgIndicators;
+                    data.aggregated = true;
+                    data.sourceCount = agg.sourceCount || (Array.isArray(agg.sourceNames) ? agg.sourceNames.length : undefined);
+                    data.sourceNames = agg.sourceNames || null;
+                    console.log('🔀 已套用 MultiSource 聚合結果（' + (data.sourceCount || '?') + ' 個來源）');
+                }
+            }
+        } catch (e) {
+            console.warn('⚠️ MultiSource 聚合失敗，沿用單機資料:', e.message);
+        }
+
         console.log('📦 已收集匯出數據（含跨頁快取）:', data);
         return data;
     }
