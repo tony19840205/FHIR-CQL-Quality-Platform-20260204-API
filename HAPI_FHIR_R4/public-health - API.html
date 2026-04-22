@@ -1,33 +1,14 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESG 指標儀表板 - FHIR CQL Platform (API)</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/llm-connection.css">
+    <title>國民健康儀表板 - FHIR CQL Platform (API)</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/llm-connection.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        /* ESG 專用: 3 欄等寬 + 按鈕置中統一大小 */
-        .overview-grid {
-            grid-template-columns: repeat(3, 1fr) !important;
-        }
-        .card-actions {
-            text-align: center;
-            padding: 0 1rem;
-        }
-        .btn-card-execute {
-            max-width: 280px;
-            margin: 0 auto;
-        }
-        @media (max-width: 960px) {
-            .overview-grid {
-                grid-template-columns: 1fr !important;
-            }
-        }
-    </style>
 </head>
 <body>
     <!-- 導航欄 -->
@@ -37,13 +18,13 @@
                 <i class="fas fa-heartbeat"></i>
                 <span>FHIR CQL Platform</span>
                 <span style="font-size: 0.55em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 6px; letter-spacing: 1px; font-weight: 700; vertical-align: middle;">API</span>
-                <span class="server-label" style="font-size: 0.5em; background: #f1f5f9; color: #475569; padding: 3px 10px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.5px; font-weight: 600; vertical-align: middle; border: 1px solid #cbd5e1;" title="本部署連接之 FHIR 伺服器"><i class="fas fa-server" style="margin-right:4px;"></i>伺服器：台灣衛福部 THAS<span style="opacity:.7;font-weight:400;margin-left:4px;">(thas.mohw.gov.tw)</span></span>
+                <span class="server-label" style="font-size: 0.5em; background: #f1f5f9; color: #475569; padding: 3px 10px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.5px; font-weight: 600; vertical-align: middle; border: 1px solid #cbd5e1;" title="本部署連接之 FHIR 伺服器"><i class="fas fa-server" style="margin-right:4px;"></i>伺服器：HAPI FHIR R4<span style="opacity:.7;font-weight:400;margin-left:4px;">(hapi.fhir.org)</span></span>
             </div>
             <ul class="nav-menu">
                 <li><a href="index - API.html">首頁</a></li>
                 <li><a href="disease-control - API.html">傳染病管制</a></li>
-                <li><a href="public-health - API.html">國民健康</a></li>
-                <li><a href="esg-indicators - API.html" class="active">ESG指標</a></li>
+                <li><a href="public-health - API.html" class="active">國民健康</a></li>
+                <li><a href="esg-indicators - API.html">ESG指標</a></li>
                 <li><a href="quality-indicators - API.html">醫療品質</a></li>
             </ul>
             <div class="nav-settings" onclick="openLLMSettingsModal()" style="cursor: pointer;" title="LLM設定">
@@ -57,8 +38,8 @@
         <!-- 頁面標題 -->
         <section class="page-header">
             <div class="header-content">
-                <h1><i class="fas fa-leaf"></i> ESG 指標儀表板 <span style="font-size: 0.4em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 3px 10px; border-radius: 12px; vertical-align: middle; letter-spacing: 1px; font-weight: 600;">API</span></h1>
-                <p>環境、社會與治理永續發展監測系統</p>
+                <h1><i class="fas fa-heart-pulse"></i> 國民健康儀表板 <span style="font-size: 0.4em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 3px 10px; border-radius: 12px; vertical-align: middle; letter-spacing: 1px; font-weight: 600;">API</span></h1>
+                <p>疫苗接種與慢性病管理監測系統</p>
             </div>
             <div class="header-actions" style="position: relative;">
                 <div style="display: flex; flex-direction: column; align-items: center; margin-right: 10px;">
@@ -76,57 +57,56 @@
             </div>
         </section>
 
-        <!-- ESG 指標總覽 -->
+        <!-- 健康指標總覽 -->
         <section class="overview-section">
             <div class="section-header">
-                <h2><i class="fas fa-globe"></i> ESG 永續指標</h2>
-                <p>環境保護、社會責任與治理透明度</p>
+                <h2><i class="fas fa-chart-line"></i> 健康指標總覽</h2>
+                <p>疫苗接種率與慢性病管理成效 <span style="font-size: 0.8em; color: #64748b;">（透過後端 CQL Engine 執行）</span></p>
             </div>
             
             <div class="overview-grid">
-                <!-- 抗生素使用率 -->
-                <div class="overview-card esg-social" onclick="showDetailModal('antibiotic')">
+                <!-- COVID-19疫苗接種率 -->
+                <div class="overview-card health-vaccine" onclick="showDetailModal('covid19-vaccine')">
                     <div class="card-icon">
-                        <i class="fas fa-pills"></i>
+                        <i class="fas fa-syringe"></i>
                     </div>
                     <div class="card-content">
-                        <h3>抗生素使用率 <span class="cql-badge-mini">Antibiotic_Utilization</span></h3>
+                        <h3>COVID-19 疫苗接種率 <span class="cql-badge-mini">COVID19VaccinationCoverage</span></h3>
                         <div class="card-description">
-                            <p>監測抗生素合理使用與抗藥性管理 <small style="color: #6366f1; font-weight: 600;">(國際算法)</small></p>
+                            <p>監測 COVID-19 疫苗接種涵蓋率與劑次完成度</p>
                             <ul class="card-features">
-                                <li>✓ WHO ATC/DDD 標準</li>
-                                <li>✓ Access/Watch/Reserve 分類</li>
-                                <li>✓ 符合指引比例</li>
+                                <li>✓ 第一劑接種率</li>
+                                <li>✓ 完整接種率</li>
+                                <li>✓ 追加劑接種率</li>
                             </ul>
                         </div>
                         <div class="card-stats">
                             <div class="stat-row">
                                 <div class="stat-item-inline">
-                                    <span class="stat-label">病人數</span>
-                                    <span class="stat-value" id="antibioticCount">--</span>
+                                    <span class="stat-label">接種人數</span>
+                                    <span class="stat-value" id="covidVaccineCount">--</span>
                                 </div>
                                 <div class="stat-item-inline">
-                                    <span class="stat-label">使用率</span>
-                                    <span class="stat-value" id="antibioticRate">--%</span>
+                                    <span class="stat-label">接種率</span>
+                                    <span class="stat-value" id="covidVaccineRate">--%</span>
                                 </div>
                             </div>
-
                         </div>
                         <div class="card-actions">
-                            <button class="btn-card-execute" id="btnAntibiotic" onclick="event.stopPropagation(); executeQuery('antibiotic')">
+                            <button class="btn-card-execute" onclick="event.stopPropagation(); executeQuery('covid19-vaccine')" id="btnCovidVaccine">
                                 <i class="fas fa-play"></i> 執行查詢
                             </button>
                         </div>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px; padding:0 4px;" onclick="event.stopPropagation()">
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
-                                <input type="date" id="startDateAntibiotic" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <input type="date" id="startDateCovidVaccine" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                                 <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
-                                <input type="date" id="endDateAntibiotic" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <input type="date" id="endDateCovidVaccine" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
-                                <select id="maxRecordsAntibiotic" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
+                                <select id="maxRecordsCovidVaccine" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
                                     <option value="0">不設限</option>
                                     <option value="100">100筆</option>
                                     <option value="200" selected>200筆</option>
@@ -135,56 +115,55 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="card-status" id="statusAntibiotic"></div>
+                        <div class="card-status" id="statusCovidVaccine"></div>
                     </div>
                     <div class="card-hover-hint">
                         <i class="fas fa-expand"></i> 點擊查看詳情
                     </div>
                 </div>
 
-                <!-- 電子病歷採用率 -->
-                <div class="overview-card esg-governance" onclick="showDetailModal('ehr-adoption')">
+                <!-- 流感疫苗接種率 -->
+                <div class="overview-card health-vaccine" onclick="showDetailModal('influenza-vaccine')">
                     <div class="card-icon">
-                        <i class="fas fa-laptop-medical"></i>
+                        <i class="fas fa-shield-virus"></i>
                     </div>
                     <div class="card-content">
-                        <h3>電子病歷採用率 <span class="cql-badge-mini">EHR_Adoption_Rate</span></h3>
+                        <h3>流感疫苗接種率 <span class="cql-badge-mini">InfluenzaVaccinationCoverage</span></h3>
                         <div class="card-description">
-                            <p>追蹤病歷資料是否以結構化電子格式完整記錄 <small style="color: #6366f1;">(非紙本或掃描檔)</small></p>
+                            <p>追蹤季節性流感疫苗接種涵蓋率</p>
                             <ul class="card-features">
-                                <li>✓ 結構化資料完整度</li>
-                                <li>✓ FHIR 標準互操作性</li>
-                                <li>✓ 可機讀性比率</li>
+                                <li>✓ 65歲以上長者</li>
+                                <li>✓ 高風險族群</li>
+                                <li>✓ 醫護人員</li>
                             </ul>
                         </div>
                         <div class="card-stats">
                             <div class="stat-row">
                                 <div class="stat-item-inline">
-                                    <span class="stat-label">病人數</span>
-                                    <span class="stat-value" id="ehrCount">--</span>
+                                    <span class="stat-label">接種人數</span>
+                                    <span class="stat-value" id="fluVaccineCount">--</span>
                                 </div>
                                 <div class="stat-item-inline">
-                                    <span class="stat-label">採用率</span>
-                                    <span class="stat-value" id="ehrRate">--%</span>
+                                    <span class="stat-label">接種率</span>
+                                    <span class="stat-value" id="fluVaccineRate">--%</span>
                                 </div>
                             </div>
-
                         </div>
                         <div class="card-actions">
-                            <button class="btn-card-execute" id="btnEhr" onclick="event.stopPropagation(); executeQuery('ehr-adoption')">
+                            <button class="btn-card-execute" onclick="event.stopPropagation(); executeQuery('influenza-vaccine')" id="btnFluVaccine">
                                 <i class="fas fa-play"></i> 執行查詢
                             </button>
                         </div>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px; padding:0 4px;" onclick="event.stopPropagation()">
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
-                                <input type="date" id="startDateEhr" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <input type="date" id="startDateFluVaccine" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                                 <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
-                                <input type="date" id="endDateEhr" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <input type="date" id="endDateFluVaccine" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
-                                <select id="maxRecordsEhr" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
+                                <select id="maxRecordsFluVaccine" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
                                     <option value="0">不設限</option>
                                     <option value="100">100筆</option>
                                     <option value="200" selected>200筆</option>
@@ -193,56 +172,55 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="card-status" id="statusEhr"></div>
+                        <div class="card-status" id="statusFluVaccine"></div>
                     </div>
                     <div class="card-hover-hint">
                         <i class="fas fa-expand"></i> 點擊查看詳情
                     </div>
                 </div>
 
-                <!-- 廢棄物管理 -->
-                <div class="overview-card esg-environment" onclick="showDetailModal('waste')">
+                <!-- 高血壓管理 -->
+                <div class="overview-card health-chronic" onclick="showDetailModal('hypertension')">
                     <div class="card-icon">
-                        <i class="fas fa-recycle"></i>
+                        <i class="fas fa-heart"></i>
                     </div>
                     <div class="card-content">
-                        <h3>醫療廢棄物管理 <span class="cql-badge-mini">Waste</span></h3>
+                        <h3>高血壓活動個案數 <span class="cql-badge-mini">HypertensionActiveCases</span></h3>
                         <div class="card-description">
-                            <p>監測醫療廢棄物產生與處理情況</p>
+                            <p>監測高血壓患者的管理與控制情況</p>
                             <ul class="card-features">
-                                <li>✓ 廢棄物產生量</li>
-                                <li>✓ 感染性廢棄物</li>
-                                <li>✓ 回收再利用率</li>
+                                <li>✓ 活動個案數</li>
+                                <li>✓ 血壓控制率</li>
+                                <li>✓ 用藥遵從性</li>
                             </ul>
                         </div>
                         <div class="card-stats">
                             <div class="stat-row">
                                 <div class="stat-item-inline">
-                                    <span class="stat-label">廢棄物量</span>
-                                    <span class="stat-value" id="wasteCount">--</span>
+                                    <span class="stat-label">活動個案</span>
+                                    <span class="stat-value" id="hypertensionCount">--</span>
                                 </div>
                                 <div class="stat-item-inline">
-                                    <span class="stat-label">回收率</span>
-                                    <span class="stat-value" id="wasteRate">--%</span>
+                                    <span class="stat-label">控制率</span>
+                                    <span class="stat-value" id="hypertensionRate">--%</span>
                                 </div>
                             </div>
-
                         </div>
                         <div class="card-actions">
-                            <button class="btn-card-execute" id="btnWaste" onclick="event.stopPropagation(); executeQuery('waste')">
+                            <button class="btn-card-execute" onclick="event.stopPropagation(); executeQuery('hypertension')" id="btnHypertension">
                                 <i class="fas fa-play"></i> 執行查詢
                             </button>
                         </div>
                         <div class="card-query-options" style="margin-top:8px; display:flex; flex-direction:column; gap:6px; font-size:12px; padding:0 4px;" onclick="event.stopPropagation()">
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">開始日期</label>
-                                <input type="date" id="startDateWaste" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <input type="date" id="startDateHypertension" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                                 <label style="color:#94a3b8; white-space:nowrap;">結束日期</label>
-                                <input type="date" id="endDateWaste" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
+                                <input type="date" id="endDateHypertension" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px; flex:1;">
                             </div>
                             <div style="display:flex; gap:6px; align-items:center;">
                                 <label style="color:#94a3b8; white-space:nowrap;">筆數</label>
-                                <select id="maxRecordsWaste" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
+                                <select id="maxRecordsHypertension" style="padding:2px 6px; border:1px solid #cbd5e1; border-radius:4px; font-size:12px;">
                                     <option value="0">不設限</option>
                                     <option value="100">100筆</option>
                                     <option value="200" selected>200筆</option>
@@ -251,12 +229,25 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="card-status" id="statusWaste"></div>
+                        <div class="card-status" id="statusHypertension"></div>
                     </div>
                     <div class="card-hover-hint">
                         <i class="fas fa-expand"></i> 點擊查看詳情
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- 詳細統計區 -->
+        <section class="details-section" style="display: none;" id="detailsSection">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> 詳細數據分析</h2>
+                <button class="btn btn-secondary" onclick="closeDetails()">
+                    <i class="fas fa-times"></i> 關閉
+                </button>
+            </div>
+            <div class="details-content" id="detailsContent">
+                <!-- 動態載入詳細資訊 -->
             </div>
         </section>
     </main>
@@ -278,10 +269,11 @@
     <div id="llmSettingsModal" class="modal" style="display: none;">
         <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white;">
-                <h3><i class="fas fa-tachometer-alt"></i> 公共健康即時看板 - ESG指標儀表板</h3>
+                <h3><i class="fas fa-tachometer-alt"></i> 公共健康即時看板 - 國民健康儀表板</h3>
                 <span class="modal-close" onclick="closeLLMSettingsModal()" style="color: white;">&times;</span>
             </div>
             <div class="modal-body" style="padding: 2rem;">
+                <!-- LLM 服務控制 -->
                 <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                         <h4 style="margin: 0; color: #1e293b;">
@@ -307,38 +299,59 @@
                         </div>
                         
                         <div class="connection-nodes-container">
+                            <!-- FHIR 伺服器 -->
                             <div class="connection-node node-fhir">
-                                <div class="node-circle"><i class="fas fa-database"></i></div>
+                                <div class="node-circle">
+                                    <i class="fas fa-database"></i>
+                                </div>
                                 <div class="node-label">
                                     <div class="node-title">FHIR</div>
                                     <div class="node-subtitle">伺服器</div>
                                 </div>
                             </div>
+                            
+                            <!-- 連接線 1: FHIR → 控制網頁 -->
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-fhir-control connected"></div>
                             </div>
+                            
+                            <!-- 控制網頁 -->
                             <div class="connection-node node-control">
-                                <div class="node-circle"><i class="fas fa-desktop"></i></div>
+                                <div class="node-circle">
+                                    <i class="fas fa-desktop"></i>
+                                </div>
                                 <div class="node-label">
                                     <div class="node-title">控制網頁</div>
                                     <div class="node-subtitle">醫護人員</div>
                                 </div>
                             </div>
+                            
+                            <!-- 連接線 2: 控制網頁 → 民眾網頁 -->
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-control-public connected"></div>
                             </div>
+                            
+                            <!-- 民眾網頁 -->
                             <a href="public-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-public" style="text-decoration: none; cursor: pointer;" title="開啟民眾版網頁">
-                                <div class="node-circle"><i class="fas fa-users"></i></div>
+                                <div class="node-circle">
+                                    <i class="fas fa-users"></i>
+                                </div>
                                 <div class="node-label">
                                     <div class="node-title">民眾網頁</div>
                                     <div class="node-subtitle">公開版</div>
                                 </div>
                             </a>
+                            
+                            <!-- 連接線 3: 民眾網頁 → LLM -->
                             <div class="connection-line-wrapper">
                                 <div class="connection-line line-public-llm connected"></div>
                             </div>
+                            
+                            <!-- 公共健康即時看板 -->
                             <a href="realtime-dashboard - API.html" target="_blank" rel="noopener noreferrer" class="connection-node node-llm" style="text-decoration: none; cursor: pointer;" title="開啟公共健康即時看板">
-                                <div class="node-circle"><i class="fas fa-tachometer-alt"></i></div>
+                                <div class="node-circle">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
                                 <div class="node-label">
                                     <div class="node-title">即時看板</div>
                                     <div class="node-subtitle">公共健康</div>
@@ -359,32 +372,14 @@
         </div>
     </div>
 
-    <script src="js/esg-indicators-api.js"></script>
-    <script src="js/llm-service.js"></script>
-    <script src="js/data-exporter.js"></script>
-    <script src="js/llm-connection-manager.js"></script>
+    <!-- JavaScript -->
+    <script src="../js/fhir-connection.js"></script>
+    <script src="../js/cql-engine.js"></script>
+    <script src="../js/public-health-api.js"></script>
+    <script src="../js/llm-service.js"></script>
+    <script src="../js/data-exporter.js"></script>
+    <script src="../js/llm-connection-manager.js"></script>
     <script>
-    // ========== 共用函數 ==========
-    function toggleDemoMode() {
-        const current = localStorage.getItem('demoMode') === 'true';
-        localStorage.setItem('demoMode', !current);
-        updateDemoModeButton();
-    }
-    function updateDemoModeButton() {
-        const demoMode = localStorage.getItem('demoMode') === 'true';
-        const btn = document.getElementById('demoModeBtn');
-        const text = document.getElementById('demoModeText');
-        if (demoMode) {
-            btn.classList.add('active');
-            text.textContent = '關閉示範模式';
-        } else {
-            btn.classList.remove('active');
-            text.textContent = '啟用示範模式';
-        }
-    }
-    function refreshData() { location.reload(); }
-    document.addEventListener('DOMContentLoaded', updateDemoModeButton);
-
     /* ─── 連線民眾網頁：收集數據 → 呼叫後端 API 推送至 GitHub → 顯示過程紀錄 ─── */
     var _isSending = false;
     function _logTransfer(msg, type) {
@@ -402,22 +397,15 @@
         logContent.appendChild(line);
         logWrap.scrollTop = logWrap.scrollHeight;
     }
-
     function sendToPublicDashboard() {
         if (_isSending) return;
         _isSending = true;
-
-        // 清空上一次的紀錄
         var logContent = document.getElementById('transferLogContent');
         if (logContent) logContent.innerHTML = '';
-
         var btn = document.getElementById('uiConnectBtn');
         if (btn) { btn.classList.remove('inactive','active'); btn.classList.add('loading'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>傳送中...</span>'; }
-
         _logTransfer('開始傳送流程', 'step');
-
-        /* Step 1: 收集數據 */
-        _logTransfer('收集頁面 ESG 指標數據...', 'step');
+        _logTransfer('收集頁面指標數據...', 'step');
         var data;
         if (window.dataExporter && typeof window.dataExporter.collectData === 'function') {
             data = window.dataExporter.collectData();
@@ -425,115 +413,33 @@
             try { data = JSON.parse(localStorage.getItem('fhir_export_cache') || '{}'); } catch(e) { data = {}; }
             data.exportedAt = data.exportedAt || new Date().toISOString();
         }
-
-        // 顯示收集到的 ESG 摘要
-        var esgSummary = (data.esgIndicators || []).map(function(e) {
-            return e.name + ': ' + (e.count != null ? e.count : '-') + ' / ' + (e.rate != null ? e.rate + '%' : '-');
-        }).join('、');
-        _logTransfer('ESG 數據: ' + (esgSummary || '無'), 'data');
-        _logTransfer('匯出時間: ' + data.exportedAt, 'data');
-
-        /* Step 2: 寫入 localStorage + BroadcastChannel（本地備份） */
+        _logTransfer('匹出時間: ' + data.exportedAt, 'data');
         _logTransfer('寫入 localStorage 備份...', 'step');
         try { localStorage.setItem('fhir-dashboard-api-data', JSON.stringify(data)); } catch(e) {}
         try { var ch = new BroadcastChannel('fhir-api-channel'); ch.postMessage({ type: 'update-public', data: data }); ch.postMessage({ type: 'update-realtime', data: data }); ch.close(); } catch(e) {}
         _logTransfer('本地備份完成', 'success');
-
-        /* Step 3: 動畫 */
         _animateLine('.line-control-public');
-
-        /* Step 4: 呼叫後端 API 推送至 GitHub */
         _logTransfer('呼叫後端 API /api/export-public-data ...', 'step');
-
         var exportPromise;
         if (window.dataExporter && typeof window.dataExporter.exportToPublicSite === 'function') {
             exportPromise = window.dataExporter.exportToPublicSite();
         } else {
-            // 直接呼叫後端 API
-            var backendUrl = (window.location.hostname.includes('onrender.com'))
-                ? window.location.origin
-                : (window.location.hostname.includes('github.io'))
-                    ? 'https://fhir-cql-quality-platform-20260204.onrender.com'
-                    : 'http://localhost:3000';
-            exportPromise = fetch(backendUrl + '/api/export-public-data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            }).then(function(r) { return r.json(); });
+            var backendUrl = (window.location.hostname.includes('onrender.com')) ? window.location.origin : (window.location.hostname.includes('github.io')) ? 'https://fhir-cql-quality-platform-20260204.onrender.com' : 'http://localhost:3000';
+            exportPromise = fetch(backendUrl + '/api/export-public-data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) }).then(function(r) { return r.json(); });
         }
-
         exportPromise.then(function(result) {
             _logTransfer('後端回應: ' + JSON.stringify(result.method || result.message || 'ok'), 'success');
-
-            if (result.method === 'github-api') {
-                _logTransfer('已透過 GitHub API 推送至 public-health-dashboard repo', 'success');
-                _logTransfer('GitHub Pages 將在 1-2 分鐘內自動部署更新', 'info');
-            } else if (result.method === 'local-file') {
-                _logTransfer('已寫入本地民眾網頁資料夾: ' + (result.path || ''), 'success');
-            } else if (result.success) {
-                _logTransfer('數據推送成功: ' + (result.message || ''), 'success');
-            }
-
+            if (result.method === 'github-api') { _logTransfer('已透過 GitHub API 推送至 public-health-dashboard repo', 'success'); _logTransfer('GitHub Pages 將在 1-2 分鐘內自動部署更新', 'info'); }
+            else if (result.method === 'local-file') { _logTransfer('已寫入本地民眾網頁資料夾: ' + (result.path || ''), 'success'); }
+            else if (result.success) { _logTransfer('數據推送成功: ' + (result.message || ''), 'success'); }
             _animateLine('.line-public-llm');
-
-            setTimeout(function() {
-                _clearLine('.line-control-public');
-                _clearLine('.line-public-llm');
-                if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網頁 &amp; 即時看板</span>'; }
-                _logTransfer('傳送流程完成 ✔', 'success');
-                _showSentToast();
-                _isSending = false;
-            }, 2000);
-
+            setTimeout(function() { _clearLine('.line-control-public'); _clearLine('.line-public-llm'); if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網頁 &amp; 即時看板</span>'; } _logTransfer('傳送流程完成 ✔', 'success'); _showSentToast(); _isSending = false; }, 2000);
         }).catch(function(err) {
             _logTransfer('後端 API 錯誤: ' + err.message, 'error');
-            _logTransfer('嘗試瀏覽器端 GitHub API 推送...', 'step');
-
-            // 降級：用 dataExporter 的 GitHub API 直推
-            _tryClientSideGitHubPush(data).then(function() {
-                _animateLine('.line-public-llm');
-                setTimeout(function() {
-                    _clearLine('.line-control-public');
-                    _clearLine('.line-public-llm');
-                    if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網頁 &amp; 即時看板</span>'; }
-                    _logTransfer('傳送流程完成 ✔', 'success');
-                    _showSentToast();
-                    _isSending = false;
-                }, 2000);
-            }).catch(function(e2) {
-                _logTransfer('所有推送方式均失敗: ' + e2.message, 'error');
-                _clearLine('.line-control-public');
-                if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網頁 &amp; 即時看板</span>'; }
-                _isSending = false;
-            });
+            _clearLine('.line-control-public');
+            if (btn) { btn.classList.remove('loading'); btn.classList.add('inactive'); btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> <span>上傳 民眾網頁 &amp; 即時看板</span>'; }
+            _isSending = false;
         });
-    }
-
-    function _tryClientSideGitHubPush(data) {
-        var token = localStorage.getItem('github_token');
-        if (!token) return Promise.reject(new Error('無 GitHub Token'));
-        var owner = 'tony19840205', repo = 'public-health-dashboard', filePath = 'public/data/dashboard-data.json';
-        var apiUrl = 'https://api.github.com/repos/' + owner + '/' + repo + '/contents/' + filePath;
-        _logTransfer('瀏覽器端推送至 GitHub: ' + owner + '/' + repo, 'step');
-        return fetch(apiUrl, { headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' } })
-            .then(function(r) { return r.ok ? r.json() : { sha: null }; })
-            .then(function(existing) {
-                var body = {
-                    message: 'data: ESG 控制台匯出 ' + new Date().toISOString().slice(0, 16),
-                    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-                    branch: 'main'
-                };
-                if (existing.sha) body.sha = existing.sha;
-                return fetch(apiUrl, {
-                    method: 'PUT',
-                    headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-            })
-            .then(function(r) {
-                if (!r.ok) throw new Error('GitHub API 回應 ' + r.status);
-                _logTransfer('瀏覽器端 GitHub 推送成功', 'success');
-            });
     }
     function _animateLine(sel) {
         var line = document.querySelector(sel);

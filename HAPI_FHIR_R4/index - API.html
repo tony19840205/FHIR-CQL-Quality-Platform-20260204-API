@@ -1,12 +1,12 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FHIR CQL 整合平台 - 醫療數據分析系統 (API)</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="js/fhir-connection.js"></script>
+    <script src="../js/fhir-connection.js"></script>
 </head>
 <body>
     <!-- 導航欄 -->
@@ -16,7 +16,7 @@
                 <i class="fas fa-heartbeat"></i>
                 <span>FHIR CQL Platform</span>
                 <span style="font-size: 0.55em; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2px 8px; border-radius: 10px; margin-left: 6px; letter-spacing: 1px; font-weight: 700; vertical-align: middle;">API</span>
-                <span class="server-label" style="font-size: 0.5em; background: #f1f5f9; color: #475569; padding: 3px 10px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.5px; font-weight: 600; vertical-align: middle; border: 1px solid #cbd5e1;" title="本部署連接之 FHIR 伺服器"><i class="fas fa-server" style="margin-right:4px;"></i>伺服器：台灣衛福部 THAS<span style="opacity:.7;font-weight:400;margin-left:4px;">(thas.mohw.gov.tw)</span></span>
+                <span class="server-label" style="font-size: 0.5em; background: #f1f5f9; color: #475569; padding: 3px 10px; border-radius: 10px; margin-left: 8px; letter-spacing: 0.5px; font-weight: 600; vertical-align: middle; border: 1px solid #cbd5e1;" title="本部署連接之 FHIR 伺服器"><i class="fas fa-server" style="margin-right:4px;"></i>伺服器：HAPI FHIR R4<span style="opacity:.7;font-weight:400;margin-left:4px;">(hapi.fhir.org)</span></span>
             </div>
             <ul class="nav-menu">
                 <li><a href="index - API.html" class="active">首頁</a></li>
@@ -64,8 +64,8 @@
                     <div class="form-group">
                         <label for="fhirServer">選擇 FHIR 伺服器</label>
                         <select id="fhirServer" class="form-control">
-                            <option value="https://thas.mohw.gov.tw/v/r4/fhir">台灣衛福部 FHIR Server (官方測試環境) ⭐ 推薦</option>
-                            <option value="https://hapi.fhir.org/baseR4">HAPI FHIR R4 (國際測試伺服器)</option>
+                            <option value="https://hapi.fhir.org/baseR4" selected>HAPI FHIR R4 (大量資料伺服器) ⭐ 本部署預設</option>
+                            <option value="https://thas.mohw.gov.tw/v/r4/fhir">台灣衛福部 FHIR Server (官方測試環境)</option>
                             <option value="https://r4.smarthealthit.org">SMART Health IT R4</option>
                             <option value="https://server.fire.ly/r4">Firely Server (國際測試環境)</option>
                             <option value="custom">自訂伺服器...</option>
@@ -238,8 +238,8 @@
         </div>
     </footer>
 
-    <script src="js/smart-launch.js"></script>
-    <script src="js/main.js"></script>
+    <script src="../js/smart-launch.js"></script>
+    <script src="../js/main.js"></script>
 
     <script>
     // 頁面載入後自動連線衛福部 FHIR Server，並更新徽章狀態
