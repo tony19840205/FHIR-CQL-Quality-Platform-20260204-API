@@ -375,6 +375,26 @@ class DataExporter {
             { id: 'indicator-tcm-6', number: '中醫6', name: '中醫小兒氣喘院所名單', code: '中醫-7', category: 'outcome' },
             { id: 'indicator-tcm-7', number: '中醫7', name: '中醫小兒腦麻院所名單', code: '中醫-8', category: 'outcome' },
             { id: 'indicator-tcm-8', number: '中醫8', name: '中醫偏鄉醫療院所名單', code: '中醫-9', category: 'outcome' },
+            { id: 'indicator-dental-1',  number: '牙1',  name: '12歲以上全口洗牙率', code: '牙-1',  category: 'outpatient' },
+            { id: 'indicator-dental-2',  number: '牙2',  name: '口腔癌篩檢人次', code: '牙-2',  category: 'outpatient' },
+            { id: 'indicator-dental-3',  number: '牙3',  name: '6歲以下口腔預防保健利用率', code: '牙-3',  category: 'outpatient' },
+            { id: 'indicator-dental-4',  number: '牙4',  name: '牙周病基本治療人次', code: '牙-4',  category: 'outpatient' },
+            { id: 'indicator-dental-5',  number: '牙5',  name: '牙周病案件率', code: '牙-5',  category: 'outpatient' },
+            { id: 'indicator-dental-6',  number: '牙6',  name: '牙周病控制基本治療率', code: '牙-6',  category: 'outpatient' },
+            { id: 'indicator-dental-7',  number: '牙7',  name: '單純拔牙數量', code: '牙-7',  category: 'surgery' },
+            { id: 'indicator-dental-8',  number: '牙8',  name: '複雜拔牙數量', code: '牙-8',  category: 'surgery' },
+            { id: 'indicator-dental-9',  number: '牙9',  name: '單純拔牙後無特殊處置率', code: '牙-9',  category: 'surgery' },
+            { id: 'indicator-dental-10', number: '牙10', name: '根管疑難特殊處置數', code: '牙-10', category: 'surgery' },
+            { id: 'indicator-dental-11', number: '牙11', name: '恒牙填補2年內重補率', code: '牙-11', category: 'outcome' },
+            { id: 'indicator-dental-12', number: '牙12', name: '齒齒填補2年保存率', code: '牙-12', category: 'outcome' },
+            { id: 'indicator-dental-13', number: '牙13', name: '乳牙填補18月保存率', code: '牙-13', category: 'outcome' },
+            { id: 'indicator-dental-14', number: '牙14', name: '牙周病統合照護完成率', code: '牙-14', category: 'outcome' },
+            { id: 'indicator-dental-15', number: '牙15', name: '牙周病統合照護院所名單', code: '牙-15', category: 'outcome' },
+            { id: 'indicator-dental-16', number: '牙16', name: '根管治療完成率', code: '牙-16', category: 'outcome' },
+            { id: 'indicator-dental-17', number: '牙17', name: '恒牙根管治療6月保存率', code: '牙-17', category: 'outcome' },
+            { id: 'indicator-dental-18', number: '牙18', name: '乳牙根管治療3月保存率', code: '牙-18', category: 'outcome' },
+            { id: 'indicator-dental-19', number: '牙19', name: '根管治療6月保存率', code: '牙-19', category: 'outcome' },
+            { id: 'indicator-dental-20', number: '牙20', name: '身心障礙者牙科門診院所名單', code: '牙-20', category: 'outcome' },
         ];
 
         // DOM rate ID 對照（對應控制台 HTML 中的元素 ID）
@@ -403,6 +423,16 @@ class DataExporter {
             'indicator-tcm-3': 'indTcm3Rate', 'indicator-tcm-4': 'indTcm4Rate',
             'indicator-tcm-5': 'indTcm5Rate', 'indicator-tcm-6': 'indTcm6Rate',
             'indicator-tcm-7': 'indTcm7Rate', 'indicator-tcm-8': 'indTcm8Rate',
+            'indicator-dental-1':  'indDental1Rate',  'indicator-dental-2':  'indDental2Rate',
+            'indicator-dental-3':  'indDental3Rate',  'indicator-dental-4':  'indDental4Rate',
+            'indicator-dental-5':  'indDental5Rate',  'indicator-dental-6':  'indDental6Rate',
+            'indicator-dental-7':  'indDental7Rate',  'indicator-dental-8':  'indDental8Rate',
+            'indicator-dental-9':  'indDental9Rate',  'indicator-dental-10': 'indDental10Rate',
+            'indicator-dental-11': 'indDental11Rate', 'indicator-dental-12': 'indDental12Rate',
+            'indicator-dental-13': 'indDental13Rate', 'indicator-dental-14': 'indDental14Rate',
+            'indicator-dental-15': 'indDental15Rate', 'indicator-dental-16': 'indDental16Rate',
+            'indicator-dental-17': 'indDental17Rate', 'indicator-dental-18': 'indDental18Rate',
+            'indicator-dental-19': 'indDental19Rate', 'indicator-dental-20': 'indDental20Rate',
         };
         const domNumMap = {
             'indicator-01': 'ind01Num', 'indicator-02': 'ind02Num',
@@ -415,7 +445,10 @@ class DataExporter {
             let numerator = null, denominator = null, rate = null;
             let unit = '%';
             if (def.id === 'indicator-13') unit = '次';
-            else if (['indicator-tcm-5','indicator-tcm-6','indicator-tcm-7','indicator-tcm-8'].includes(def.id)) unit = '家';
+            else if (['indicator-tcm-5','indicator-tcm-6','indicator-tcm-7','indicator-tcm-8','indicator-dental-15','indicator-dental-20'].includes(def.id)) unit = '家';
+            else if (def.id === 'indicator-dental-2') unit = '人次';
+            else if (def.id === 'indicator-dental-4') unit = '人';
+            else if (['indicator-dental-7','indicator-dental-8','indicator-dental-10'].includes(def.id)) unit = '次';
 
             // 優先從 window.qualityResults 讀取
             const result = qr[def.id];

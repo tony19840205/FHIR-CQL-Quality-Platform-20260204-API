@@ -1,0 +1,47 @@
+/**
+ * ???迂: ?寧恣瘝餌?靽??????剖?隞亙
+ * ??憿: ???扯風?釭??
+ * 閮??餌?: 瘥迤
+ * 閮??砍?: [1 - (??/??)] x 100%
+ * 
+ * ??: ?思?璈?瘥迤撠梢?犖???寧恣瘝餌?敺?80憭拙?銵蝞⊥祥???豢???憿
+ * ??: ?思?璈?瘥迤???寧恣瘝餌?憿嚗??0015C???蝞⊥祥?遙銝?思誘??
+ * 
+ * ??璇辣:
+ * 1. ???寧恣瘝餌??格憿: ?乩?隞?Ⅳ90001C
+ * 2. ???寧恣瘝餌??憿: ?乩?隞?Ⅳ90002C
+ * 3. ???寧恣瘝餌?銝憿: ?乩?隞?Ⅳ90003C
+ * 4. ???寧恣瘝餌??憿: ?乩?隞?Ⅳ90019C
+ * 5. ???寧恣瘝餌?鈭憿: ?乩?隞?Ⅳ90020C
+ * 6. ??憿: ?乩?隞?Ⅳ92013C??2014C??2015C??2016C
+ * 
+ * ??璇辣: ?喳90015C???蝞⊥祥?遙銝?思誘??
+ * 
+ * 閮?撟游漲: 2026撟?瘞?115撟?
+ */
+
+library Indicator_Root_Canal_Treatment_Retention_Rate_Permanent_Tooth_6Months version '1.0.0'
+
+using FHIR version '4.0.1'
+
+include FHIRHelpers version '4.0.1' called FHIRHelpers
+
+parameter MeasurementPeriodStart DateTime default @2026-01-01T00:00:00.0+08:00
+parameter MeasurementPeriodEnd DateTime default @2026-03-31T23:59:59.0+08:00
+
+define "Measurement Period":
+  Interval[MeasurementPeriodStart, MeasurementPeriodEnd]
+
+define "All Procedures":
+  [Procedure] P
+  where P.performed during "Measurement Period"
+
+define "All Encounters":
+  [Encounter] E
+  where E.period during "Measurement Period"
+
+define "Total Procedure Count":
+  Count("All Procedures")
+
+define "Total Encounter Count":
+  Count("All Encounters")

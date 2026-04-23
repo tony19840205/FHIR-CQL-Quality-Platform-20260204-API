@@ -241,7 +241,7 @@
             </div>
             <h1>公共健康數據<br>透明開放平台</h1>
             <p>
-                整合 FHIR 醫療標準與 CQL 臨床查詢語言，涵蓋傳染病監控、47 項醫療品質指標與 ESG 永續報告。<br>
+                整合 FHIR 醫療標準與 CQL 臨床查詢語言，涵蓋傳染病監控、67 項醫療品質指標與 ESG 永續報告。<br>
                 所有資料皆經去識別化處理，保護病患隱私。
             </p>
             <div class="hero-btns">
@@ -262,7 +262,7 @@
             </div>
             <div class="stat-card sc-emerald">
                 <div class="stat-top">
-                    <div><div class="stat-label">品質指標</div><div class="stat-val">47</div><div class="stat-sub">醫療品質量測</div></div>
+                    <div><div class="stat-label">品質指標</div><div class="stat-val">67</div><div class="stat-sub">醫療品質量測</div></div>
                     <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
                 </div>
             </div>
@@ -317,7 +317,7 @@
                     <div class="sec-icon" style="background:#dbeafe;color:#2563eb;"><i class="fas fa-chart-bar"></i></div>
                     <div>
                         <div class="sec-title">醫療品質指標</div>
-                        <div class="sec-sub" id="qualitySub">47 項指標 · 5 大類別</div>
+                        <div class="sec-sub" id="qualitySub">67 項指標 · 5 大類別</div>
                     </div>
                 </div>
                 <a href="#quality" onclick="toggleAllQuality(event)" style="font-size:14px;color:#2563eb;font-weight:500;cursor:pointer;">查看完整指標 <i class="fas fa-chevron-down" id="qualityExpandIcon" style="font-size:12px;"></i></a>
@@ -438,7 +438,27 @@ const EMBEDDED_DATA = {
     { id:"indicator-tcm-5", number:"中醫5", name:"中醫總額計畫院所名單", code:"中醫-6", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
     { id:"indicator-tcm-6", number:"中醫6", name:"中醫小兒氣喘院所名單", code:"中醫-7", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
     { id:"indicator-tcm-7", number:"中醫7", name:"中醫小兒腦麻院所名單", code:"中醫-8", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
-    { id:"indicator-tcm-8", number:"中醫8", name:"中醫偏鄉醫療院所名單", code:"中醫-9", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" }
+    { id:"indicator-tcm-8", number:"中醫8", name:"中醫偏鄉醫療院所名單", code:"中醫-9", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
+    { id:"indicator-dental-1",  number:"牙1",  name:"12歲以上全口洗牙率", code:"牙-1",  category:"outpatient", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-2",  number:"牙2",  name:"口腔癌篩檢人次", code:"牙-2",  category:"outpatient", numerator:null, denominator:null, rate:null, unit:"人次" },
+    { id:"indicator-dental-3",  number:"牙3",  name:"6歲以下口腔預防保健利用率", code:"牙-3",  category:"outpatient", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-4",  number:"牙4",  name:"牙周病基本治療人次", code:"牙-4",  category:"outpatient", numerator:null, denominator:null, rate:null, unit:"人" },
+    { id:"indicator-dental-5",  number:"牙5",  name:"牙周病案件率", code:"牙-5",  category:"outpatient", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-6",  number:"牙6",  name:"牙周病控制基本治療率", code:"牙-6",  category:"outpatient", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-7",  number:"牙7",  name:"單純拔牙數量", code:"牙-7",  category:"surgery", numerator:null, denominator:null, rate:null, unit:"次" },
+    { id:"indicator-dental-8",  number:"牙8",  name:"複雜拔牙數量", code:"牙-8",  category:"surgery", numerator:null, denominator:null, rate:null, unit:"次" },
+    { id:"indicator-dental-9",  number:"牙9",  name:"單純拔牙後無特殊處置率", code:"牙-9",  category:"surgery", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-10", number:"牙10", name:"根管疑難特殊處置數", code:"牙-10", category:"surgery", numerator:null, denominator:null, rate:null, unit:"次" },
+    { id:"indicator-dental-11", number:"牙11", name:"恒牙填補2年內重補率", code:"牙-11", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-12", number:"牙12", name:"齒齒填補2年保存率", code:"牙-12", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-13", number:"牙13", name:"乳牙填補18月保存率", code:"牙-13", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-14", number:"牙14", name:"牙周病統合照護完成率", code:"牙-14", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-15", number:"牙15", name:"牙周病統合照護院所名單", code:"牙-15", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
+    { id:"indicator-dental-16", number:"牙16", name:"根管治療完成率", code:"牙-16", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-17", number:"牙17", name:"恒牙根管治療6月保存率", code:"牙-17", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-18", number:"牙18", name:"乳牙根管治療3月保存率", code:"牙-18", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-19", number:"牙19", name:"根管治療6月保存率", code:"牙-19", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-dental-20", number:"牙20", name:"身心障礙者牙科門診院所名單", code:"牙-20", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" }
   ],
   healthIndicators: [
     { id:"covid19-vaccine", name:"COVID-19 疫苗接種率", cql:"COVID19VaccinationCoverage", description:"監測 COVID-19 疫苗接種涵蓋率與劑次完成度", count:null, rate:null, countLabel:"接種人數", rateLabel:"接種率", rateUnit:"%" },
@@ -530,7 +550,7 @@ function renderQuality(indicators) {
     _qualityData = indicators;
     const container = document.getElementById('qualityContainer');
     const queried = indicators.filter(i => i.rate !== null).length;
-    if (queried > 0) document.getElementById('qualitySub').textContent = `47 項指標 · 5 大類別 · ${queried} 項已查詢`;
+    if (queried > 0) document.getElementById('qualitySub').textContent = `67 項指標 · 5 大類別 · ${queried} 項已查詢`;
 
     const grouped = {};
     indicators.forEach(ind => {

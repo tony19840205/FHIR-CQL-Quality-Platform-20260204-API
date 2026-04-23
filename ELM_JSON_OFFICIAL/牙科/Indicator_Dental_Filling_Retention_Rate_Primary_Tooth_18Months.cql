@@ -1,0 +1,43 @@
+/**
+ * ???迂: ??憛怨?靽???銋喟?銝撟游??隞亙
+ * ??憿: ???扯風?釭??
+ * 閮??餌?: 瘥迤
+ * 閮??砍?: [1 - (??/??)] x 100%
+ * 
+ * ??: ?鈭?瑽?梁?銋喟?憛怨?獢辣?典?餈賣滲銝撟游?嚗府?思?璈???鈭箏???嚗??拇活隞乩?(????憛怨?銋???
+ * ??: ?鈭?瑽???鈭綽?撖行??憛怨?敶Ｖ?銋喟?憿
+ * 
+ * ??璇辣: ??憛怨??乩?隞?Ⅳ 89001 ??9012??9014??9015 (?像??
+ * 
+ * ?璇辣:
+ * 1. ????喋?膠蝯???獢辣
+ * 2. ?思?璈?撟游‵鋆??詨 60 憿??恬?隞乩?嚗府??銝??剝
+ * 
+ * 閮?撟游漲: 2026撟?瘞?115撟?
+ */
+
+library Indicator_Dental_Filling_Retention_Rate_Primary_Tooth_18Months version '1.0.0'
+
+using FHIR version '4.0.1'
+
+include FHIRHelpers version '4.0.1' called FHIRHelpers
+
+parameter MeasurementPeriodStart DateTime default @2026-01-01T00:00:00.0+08:00
+parameter MeasurementPeriodEnd DateTime default @2026-03-31T23:59:59.0+08:00
+
+define "Measurement Period":
+  Interval[MeasurementPeriodStart, MeasurementPeriodEnd]
+
+define "All Procedures":
+  [Procedure] P
+  where P.performed during "Measurement Period"
+
+define "All Encounters":
+  [Encounter] E
+  where E.period during "Measurement Period"
+
+define "Total Procedure Count":
+  Count("All Procedures")
+
+define "Total Encounter Count":
+  Count("All Encounters")

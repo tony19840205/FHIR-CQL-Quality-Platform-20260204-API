@@ -54,16 +54,37 @@ const INDICATORS = {
     'indicator-tcm-5': { cql: 'Indicator_TCM_Global_Budget_Program_Organization_List', title: '中醫總額計畫參與院所名單', code: '中醫-6', metric: '院所數', category: 'outcome', rateId: 'indTcm5Rate', suffix: '_tcm_5' },
     'indicator-tcm-6': { cql: 'Indicator_TCM_Pediatric_Asthma_Program_Organization_List', title: '中醫小兒氣喘照護計畫院所名單', code: '中醫-7', metric: '院所數', category: 'outcome', rateId: 'indTcm6Rate', suffix: '_tcm_6' },
     'indicator-tcm-7': { cql: 'Indicator_TCM_Pediatric_Cerebral_Palsy_Program_Organization_List', title: '中醫小兒腦麻照護計畫院所名單', code: '中醫-8', metric: '院所數', category: 'outcome', rateId: 'indTcm7Rate', suffix: '_tcm_7' },
-    'indicator-tcm-8': { cql: 'Indicator_TCM_Underserved_Area_Program_Organization_List', title: '中醫偏鄉醫療計畫院所名單', code: '中醫-9', metric: '院所數', category: 'outcome', rateId: 'indTcm8Rate', suffix: '_tcm_8' }
+    'indicator-tcm-8': { cql: 'Indicator_TCM_Underserved_Area_Program_Organization_List', title: '中醫偏鄉醫療計畫院所名單', code: '中醫-9', metric: '院所數', category: 'outcome', rateId: 'indTcm8Rate', suffix: '_tcm_8' },
+    // ========== 牙科指標 (Official ELM 3.10.0) ==========
+    'indicator-dental-1':  { cql: 'Indicator_Full_Mouth_Calculus_Removal_Rate_Age_12_Plus', title: '12歲以上全口洗牙率', code: '牙-1', metric: '使用率', category: 'outpatient', rateId: 'indDental1Rate', suffix: '_dental_1' },
+    'indicator-dental-2':  { cql: 'Indicator_Oral_Cancer_Screening_Case_Count', title: '口腔癌篩檢人次', code: '牙-2', metric: '人次', category: 'outpatient', rateId: 'indDental2Rate', suffix: '_dental_2' },
+    'indicator-dental-3':  { cql: 'Indicator_Pediatric_Under_6_Oral_Preventive_Health_Service_Rate', title: '6歲以下口腔預防保健利用率', code: '牙-3', metric: '利用率', category: 'outpatient', rateId: 'indDental3Rate', suffix: '_dental_3' },
+    'indicator-dental-4':  { cql: 'Indicator_Periodontal_Basic_Treatment_Patient_Count', title: '牙周病基本治療人次', code: '牙-4', metric: '人次', category: 'outpatient', rateId: 'indDental4Rate', suffix: '_dental_4' },
+    'indicator-dental-5':  { cql: 'Indicator_Periodontal_Disease_Case_Rate', title: '牙周病案件率', code: '牙-5', metric: '案件率', category: 'outpatient', rateId: 'indDental5Rate', suffix: '_dental_5' },
+    'indicator-dental-6':  { cql: 'Indicator_Periodontal_Disease_Control_Basic_Treatment_Rate', title: '牙周病控制基本治療率', code: '牙-6', metric: '治療率', category: 'outpatient', rateId: 'indDental6Rate', suffix: '_dental_6' },
+    'indicator-dental-7':  { cql: 'Indicator_Simple_Tooth_Extraction_Count', title: '單純齒切除數量', code: '牙-7', metric: '數量', category: 'surgery', rateId: 'indDental7Rate', suffix: '_dental_7' },
+    'indicator-dental-8':  { cql: 'Indicator_Complex_Tooth_Extraction_Count', title: '複雜齒切除數量', code: '牙-8', metric: '數量', category: 'surgery', rateId: 'indDental8Rate', suffix: '_dental_8' },
+    'indicator-dental-9':  { cql: 'Indicator_Simple_Tooth_Extraction_No_Postop_Special_Treatment_Rate', title: '單純拔牙後無特殊處置率', code: '牙-9', metric: '無處置率', category: 'surgery', rateId: 'indDental9Rate', suffix: '_dental_9' },
+    'indicator-dental-10': { cql: 'Indicator_Root_Canal_Difficult_Case_Special_Treatment_Count', title: '根管疑難案件特殊處置數', code: '牙-10', metric: '處置數', category: 'surgery', rateId: 'indDental10Rate', suffix: '_dental_10' },
+    'indicator-dental-11': { cql: 'Indicator_Dental_Filling_Permanent_Tooth_Refill_Rate_Within_2Years', title: '恒牙填補2年內重補率', code: '牙-11', metric: '重補率', category: 'outcome', rateId: 'indDental11Rate', suffix: '_dental_11' },
+    'indicator-dental-12': { cql: 'Indicator_Dental_Filling_Retention_Rate_Within_2Years', title: '齒齒填補2年保存率', code: '牙-12', metric: '保存率', category: 'outcome', rateId: 'indDental12Rate', suffix: '_dental_12' },
+    'indicator-dental-13': { cql: 'Indicator_Dental_Filling_Retention_Rate_Primary_Tooth_18Months', title: '乳牙填補18月保存率', code: '牙-13', metric: '保存率', category: 'outcome', rateId: 'indDental13Rate', suffix: '_dental_13' },
+    'indicator-dental-14': { cql: 'Indicator_Periodontal_Integrated_Treatment_Completion_Rate', title: '牙周病統合照護計畫完成率', code: '牙-14', metric: '完成率', category: 'outcome', rateId: 'indDental14Rate', suffix: '_dental_14' },
+    'indicator-dental-15': { cql: 'Indicator_Periodontal_Integrated_Treatment_Organization_List', title: '牙周病統合照護計畫院所名單', code: '牙-15', metric: '院所數', category: 'outcome', rateId: 'indDental15Rate', suffix: '_dental_15' },
+    'indicator-dental-16': { cql: 'Indicator_Root_Canal_Treatment_Completion_Rate', title: '根管治療完成率', code: '牙-16', metric: '完成率', category: 'outcome', rateId: 'indDental16Rate', suffix: '_dental_16' },
+    'indicator-dental-17': { cql: 'Indicator_Root_Canal_Treatment_Retention_Rate_Permanent_Tooth_6Months', title: '恒牙根管治療後6個月保存率', code: '牙-17', metric: '保存率', category: 'outcome', rateId: 'indDental17Rate', suffix: '_dental_17' },
+    'indicator-dental-18': { cql: 'Indicator_Root_Canal_Treatment_Retention_Rate_Primary_Tooth_3Months', title: '乳牙根管治療後3個月保存率', code: '牙-18', metric: '保存率', category: 'outcome', rateId: 'indDental18Rate', suffix: '_dental_18' },
+    'indicator-dental-19': { cql: 'Indicator_Root_Canal_Treatment_Retention_Rate_Within_6Months', title: '根管治療後6個月保存率', code: '牙-19', metric: '保存率', category: 'outcome', rateId: 'indDental19Rate', suffix: '_dental_19' },
+    'indicator-dental-20': { cql: 'Indicator_Disabled_Patient_Dental_Service_Organization_List', title: '身心障礙者牙科門診服務院所名單', code: '牙-20', metric: '院所數', category: 'outcome', rateId: 'indDental20Rate', suffix: '_dental_20' }
 };
 
 // 分類資訊
 const CATEGORIES = {
     medication: { ids: ['indicator-01','indicator-02','indicator-03-1','indicator-03-2','indicator-03-3','indicator-03-4','indicator-03-5','indicator-03-6','indicator-03-7','indicator-03-8','indicator-03-9','indicator-03-10','indicator-03-11','indicator-03-12','indicator-03-13','indicator-03-14','indicator-03-15','indicator-03-16','indicator-tcm-1'], label: '用藥安全' },
-    outpatient: { ids: ['indicator-04','indicator-05','indicator-06','indicator-07','indicator-08','indicator-tcm-2','indicator-tcm-3'], label: '門診品質' },
+    outpatient: { ids: ['indicator-04','indicator-05','indicator-06','indicator-07','indicator-08','indicator-tcm-2','indicator-tcm-3','indicator-dental-1','indicator-dental-2','indicator-dental-3','indicator-dental-4','indicator-dental-5','indicator-dental-6'], label: '門診品質' },
     inpatient:  { ids: ['indicator-09','indicator-10','indicator-11-1','indicator-11-2','indicator-11-3','indicator-11-4'], label: '住院品質' },
-    surgery:    { ids: ['indicator-12','indicator-13','indicator-14','indicator-15-1','indicator-15-2','indicator-15-3','indicator-16','indicator-19','indicator-tcm-4'], label: '手術品質' },
-    outcome:    { ids: ['indicator-17','indicator-18','indicator-tcm-5','indicator-tcm-6','indicator-tcm-7','indicator-tcm-8'], label: '結果品質' }
+    surgery:    { ids: ['indicator-12','indicator-13','indicator-14','indicator-15-1','indicator-15-2','indicator-15-3','indicator-16','indicator-19','indicator-tcm-4','indicator-dental-7','indicator-dental-8','indicator-dental-9','indicator-dental-10'], label: '手術品質' },
+    outcome:    { ids: ['indicator-17','indicator-18','indicator-tcm-5','indicator-tcm-6','indicator-tcm-7','indicator-tcm-8','indicator-dental-11','indicator-dental-12','indicator-dental-13','indicator-dental-14','indicator-dental-15','indicator-dental-16','indicator-dental-17','indicator-dental-18','indicator-dental-19','indicator-dental-20'], label: '結果品質' }
 };
 
 // ========== 輔助函數 ==========

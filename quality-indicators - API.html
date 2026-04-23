@@ -73,12 +73,12 @@
         <!-- 指標分類標籤 -->
         <section class="filter-section">
             <div class="filter-tabs">
-                <button class="filter-tab active" onclick="filterCategory('all')">全部 (97)</button>
+                <button class="filter-tab active" onclick="filterCategory('all')">全部 (103)</button>
                 <button class="filter-tab" onclick="filterCategory('medication')">用藥安全 (37)</button>
-                <button class="filter-tab" onclick="filterCategory('outpatient')">門診品質 (20)</button>
+                <button class="filter-tab" onclick="filterCategory('outpatient')">門診品質 (22)</button>
                 <button class="filter-tab" onclick="filterCategory('inpatient')">住院品質 (5)</button>
-                <button class="filter-tab" onclick="filterCategory('surgery')">手術品質 (16)</button>
-                <button class="filter-tab" onclick="filterCategory('outcome')">結果品質 (19)</button>
+                <button class="filter-tab" onclick="filterCategory('surgery')">手術品質 (19)</button>
+                <button class="filter-tab" onclick="filterCategory('outcome')">結果品質 (20)</button>
             </div>
         </section>
 
@@ -1206,40 +1206,376 @@
             </div>
         </section>
 
-        <!-- ===================== 門診品質指標(牙醫) ===================== -->
+        <!-- ===================== 門診品質指標(牙醫) - 官方 ELM 3.10.0 ===================== -->
         <section class="overview-section" data-category="outpatient">
-            <div class="section-header"><div><h2><i class="fas fa-hospital-user"></i> 門診品質指標(牙醫)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-hospital-user"></i> 門診品質指標(牙醫)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('outpatient')" style="margin-left:auto;"><i class="fas fa-play-circle"></i> 全部啟動</button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-out"><div class="card-badge">9</div><div class="card-content"><h3>12歲以上牙醫就醫病人全口牙結石清除率</h3><p class="card-cql-file">牙醫-9</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">10</div><div class="card-content"><h3>6歲以下牙醫就醫兒童牙齒預防保健服務人數比率</h3><p class="card-cql-file">牙醫-10</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">11</div><div class="card-content"><h3>院所牙醫門診加強感染管制實施方案診察費申報率</h3><p class="card-cql-file">牙醫-11</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">12</div><div class="card-content"><h3>牙醫門診50歲以上(含)就醫人數</h3><p class="card-cql-file">牙醫-12</p></div></div>
+                <!-- 牙-1 -->
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-dental-1')">
+                    <div class="card-badge">牙1</div>
+                    <div class="card-content">
+                        <h3>12歲以上全口洗牙率</h3>
+                        <p class="card-code">牙-1</p>
+                        <p class="card-cql-file">Indicator_Full_Mouth_Calculus_Removal_Rate_Age_12_Plus</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">使用率</span><span class="mini-value" id="indDental1Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-1')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-2 -->
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-dental-2')">
+                    <div class="card-badge">牙2</div>
+                    <div class="card-content">
+                        <h3>口腔癌篩檢人次</h3>
+                        <p class="card-code">牙-2</p>
+                        <p class="card-cql-file">Indicator_Oral_Cancer_Screening_Case_Count</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">人次</span><span class="mini-value" id="indDental2Rate">--</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-2')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-3 -->
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-dental-3')">
+                    <div class="card-badge">牙3</div>
+                    <div class="card-content">
+                        <h3>6歲以下口腔預防保健利用率</h3>
+                        <p class="card-code">牙-3</p>
+                        <p class="card-cql-file">Indicator_Pediatric_Under_6_Oral_Preventive_Health_Service_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">利用率</span><span class="mini-value" id="indDental3Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-3')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-4 -->
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-dental-4')">
+                    <div class="card-badge">牙4</div>
+                    <div class="card-content">
+                        <h3>牙周病基本治療人次</h3>
+                        <p class="card-code">牙-4</p>
+                        <p class="card-cql-file">Indicator_Periodontal_Basic_Treatment_Patient_Count</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">人次</span><span class="mini-value" id="indDental4Rate">--</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-4')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_4" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-5 -->
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-dental-5')">
+                    <div class="card-badge">牙5</div>
+                    <div class="card-content">
+                        <h3>牙周病案件率</h3>
+                        <p class="card-code">牙-5</p>
+                        <p class="card-cql-file">Indicator_Periodontal_Disease_Case_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">案件率</span><span class="mini-value" id="indDental5Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-5')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_5" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-6 -->
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-dental-6')">
+                    <div class="card-badge">牙6</div>
+                    <div class="card-content">
+                        <h3>牙周病控制基本治療率</h3>
+                        <p class="card-code">牙-6</p>
+                        <p class="card-cql-file">Indicator_Periodontal_Disease_Control_Basic_Treatment_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">治療率</span><span class="mini-value" id="indDental6Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-6')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_6" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- ===================== 手術品質指標(牙醫) ===================== -->
+        <!-- ===================== 手術品質指標(牙醫) - 官方 ELM 3.10.0 ===================== -->
         <section class="overview-section" data-category="surgery">
-            <div class="section-header"><div><h2><i class="fas fa-procedures"></i> 手術品質指標(牙醫)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-procedures"></i> 手術品質指標(牙醫)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('surgery')" style="margin-left:auto;"><i class="fas fa-play-circle"></i> 全部啟動</button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-surg"><div class="card-badge">7</div><div class="card-content"><h3>同院所90日以內根管治療完成率</h3><p class="card-cql-file">牙醫-7</p></div></div>
+                <!-- 牙-7 -->
+                <div class="overview-card quality-surg" onclick="showDetailModal('indicator-dental-7')">
+                    <div class="card-badge">牙7</div>
+                    <div class="card-content">
+                        <h3>單純拔牙數量</h3>
+                        <p class="card-code">牙-7</p>
+                        <p class="card-cql-file">Indicator_Simple_Tooth_Extraction_Count</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">次數</span><span class="mini-value" id="indDental7Rate">--</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-7')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_7" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-8 -->
+                <div class="overview-card quality-surg" onclick="showDetailModal('indicator-dental-8')">
+                    <div class="card-badge">牙8</div>
+                    <div class="card-content">
+                        <h3>複雜拔牙數量</h3>
+                        <p class="card-code">牙-8</p>
+                        <p class="card-cql-file">Indicator_Complex_Tooth_Extraction_Count</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">次數</span><span class="mini-value" id="indDental8Rate">--</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-8')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_8" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-9 -->
+                <div class="overview-card quality-surg" onclick="showDetailModal('indicator-dental-9')">
+                    <div class="card-badge">牙9</div>
+                    <div class="card-content">
+                        <h3>單純拔牙後無特殊處置率</h3>
+                        <p class="card-code">牙-9</p>
+                        <p class="card-cql-file">Indicator_Simple_Tooth_Extraction_No_Postop_Special_Treatment_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">無處置率</span><span class="mini-value" id="indDental9Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-9')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_9" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-10 -->
+                <div class="overview-card quality-surg" onclick="showDetailModal('indicator-dental-10')">
+                    <div class="card-badge">牙10</div>
+                    <div class="card-content">
+                        <h3>根管疑難案件特殊處置數</h3>
+                        <p class="card-code">牙-10</p>
+                        <p class="card-cql-file">Indicator_Root_Canal_Difficult_Case_Special_Treatment_Count</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">處置數</span><span class="mini-value" id="indDental10Rate">--</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-10')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_10" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- ===================== 結果品質指標(牙醫) ===================== -->
+        <!-- ===================== 結果品質指標(牙醫) - 官方 ELM 3.10.0 ===================== -->
         <section class="overview-section" data-category="outcome">
-            <div class="section-header"><div><h2><i class="fas fa-chart-line"></i> 結果品質指標(牙醫)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-chart-line"></i> 結果品質指標(牙醫)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('outcome')" style="margin-left:auto;"><i class="fas fa-play-circle"></i> 全部啟動</button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-outcome"><div class="card-badge">1</div><div class="card-content"><h3>牙體復形同牙位再補率-1年以內</h3><p class="card-cql-file">牙醫-1</p></div></div>
-                <div class="overview-card quality-outcome"><div class="card-badge">2</div><div class="card-content"><h3>牙體復形同牙位再補率-2年以內</h3><p class="card-cql-file">牙醫-2</p></div></div>
-                <div class="overview-card quality-outcome"><div class="card-badge">3</div><div class="card-content"><h3>牙齒填補保存率-1年以內</h3><p class="card-cql-file">牙醫-3</p></div></div>
-                <div class="overview-card quality-outcome"><div class="card-badge">4</div><div class="card-content"><h3>牙齒填補保存率-2年以內</h3><p class="card-cql-file">牙醫-4</p></div></div>
-                <div class="overview-card quality-outcome"><div class="card-badge">5</div><div class="card-content"><h3>牙齒填補保存率-恆牙2年以內</h3><p class="card-cql-file">牙醫-5</p></div></div>
-                <div class="overview-card quality-outcome"><div class="card-badge">6</div><div class="card-content"><h3>牙齒填補保存率-乳牙1年6個月以內</h3><p class="card-cql-file">牙醫-6</p></div></div>
-                <div class="overview-card quality-outcome"><div class="card-badge">8</div><div class="card-content"><h3>恆牙根管治療6個月以內保存率</h3><p class="card-cql-file">牙醫-8</p></div></div>
-                <div class="overview-card quality-outcome"><div class="card-badge">13</div><div class="card-content"><h3>牙周病統合治療方案後之追蹤治療率</h3><p class="card-cql-file">牙醫-13</p></div></div>
-                <div class="overview-card quality-outcome"><div class="card-badge">14</div><div class="card-content"><h3>醫療費用核減率</h3><p class="card-cql-file">牙醫-14</p></div></div>
+                <!-- 牙-11 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-11')">
+                    <div class="card-badge">牙11</div>
+                    <div class="card-content">
+                        <h3>恆牙填補2年內重補率</h3>
+                        <p class="card-code">牙-11</p>
+                        <p class="card-cql-file">Indicator_Dental_Filling_Permanent_Tooth_Refill_Rate_Within_2Years</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重補率</span><span class="mini-value" id="indDental11Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-11')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_11" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-12 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-12')">
+                    <div class="card-badge">牙12</div>
+                    <div class="card-content">
+                        <h3>牙齒填補2年保存率</h3>
+                        <p class="card-code">牙-12</p>
+                        <p class="card-cql-file">Indicator_Dental_Filling_Retention_Rate_Within_2Years</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">保存率</span><span class="mini-value" id="indDental12Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-12')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_12" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-13 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-13')">
+                    <div class="card-badge">牙13</div>
+                    <div class="card-content">
+                        <h3>乳牙填補18月保存率</h3>
+                        <p class="card-code">牙-13</p>
+                        <p class="card-cql-file">Indicator_Dental_Filling_Retention_Rate_Primary_Tooth_18Months</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">保存率</span><span class="mini-value" id="indDental13Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-13')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_13" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-14 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-14')">
+                    <div class="card-badge">牙14</div>
+                    <div class="card-content">
+                        <h3>牙周病統合照護計畫完成率</h3>
+                        <p class="card-code">牙-14</p>
+                        <p class="card-cql-file">Indicator_Periodontal_Integrated_Treatment_Completion_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">完成率</span><span class="mini-value" id="indDental14Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-14')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_14" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-15 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-15')">
+                    <div class="card-badge">牙15</div>
+                    <div class="card-content">
+                        <h3>牙周病統合照護計畫院所名單</h3>
+                        <p class="card-code">牙-15</p>
+                        <p class="card-cql-file">Indicator_Periodontal_Integrated_Treatment_Organization_List</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">院所數</span><span class="mini-value" id="indDental15Rate">--</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-15')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_15" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-16 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-16')">
+                    <div class="card-badge">牙16</div>
+                    <div class="card-content">
+                        <h3>根管治療完成率</h3>
+                        <p class="card-code">牙-16</p>
+                        <p class="card-cql-file">Indicator_Root_Canal_Treatment_Completion_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">完成率</span><span class="mini-value" id="indDental16Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-16')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_16" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-17 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-17')">
+                    <div class="card-badge">牙17</div>
+                    <div class="card-content">
+                        <h3>恆牙根管治療後6個月保存率</h3>
+                        <p class="card-code">牙-17</p>
+                        <p class="card-cql-file">Indicator_Root_Canal_Treatment_Retention_Rate_Permanent_Tooth_6Months</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">保存率</span><span class="mini-value" id="indDental17Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_17" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-17')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_17" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-18 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-18')">
+                    <div class="card-badge">牙18</div>
+                    <div class="card-content">
+                        <h3>乳牙根管治療後3個月保存率</h3>
+                        <p class="card-code">牙-18</p>
+                        <p class="card-cql-file">Indicator_Root_Canal_Treatment_Retention_Rate_Primary_Tooth_3Months</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">保存率</span><span class="mini-value" id="indDental18Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_18" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-18')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_18" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-19 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-19')">
+                    <div class="card-badge">牙19</div>
+                    <div class="card-content">
+                        <h3>根管治療6個月保存率</h3>
+                        <p class="card-code">牙-19</p>
+                        <p class="card-cql-file">Indicator_Root_Canal_Treatment_Retention_Rate_Within_6Months</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">保存率</span><span class="mini-value" id="indDental19Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_19" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-19')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_19" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <!-- 牙-20 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-dental-20')">
+                    <div class="card-badge">牙20</div>
+                    <div class="card-content">
+                        <h3>身心障礙者牙科門診服務院所名單</h3>
+                        <p class="card-code">牙-20</p>
+                        <p class="card-cql-file">Indicator_Disabled_Patient_Dental_Service_Organization_List</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">院所數</span><span class="mini-value" id="indDental20Rate">--</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_dental_20" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_dental_20" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_dental_20" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-dental-20')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_dental_20" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
+
 
         <!-- ===================== 用藥安全指標(中醫) ===================== -->
         <section class="overview-section" data-category="medication">
@@ -1587,7 +1923,7 @@
     <!-- JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="js/fhir-connection.js"></script>
-    <script src="js/quality-indicators-api.js?v=20260423tcm2"></script>
+    <script src="js/quality-indicators-api.js?v=20260424dental"></script>
     <script src="js/llm-service.js"></script>
     <script src="js/data-exporter.js"></script>
     <script src="js/llm-connection-manager.js"></script>
