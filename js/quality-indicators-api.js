@@ -45,16 +45,25 @@ const INDICATORS = {
     'indicator-16':  { cql: 'Indicator_16_Inpatient_Surgical_Wound_Infection_Rate_1658Q_1666Y', title: '住院手術傷口感染率', code: '1658Q/1666Y', metric: '感染率', category: 'surgery', rateId: 'ind16Rate', suffix: '_16' },
     'indicator-17':  { cql: 'Indicator_17_Acute_Myocardial_Infarction_Mortality_Rate_1662Q_1668Y', title: '急性心肌梗塞死亡率', code: '1662Q/1668Y', metric: '死亡率', category: 'outcome', rateId: 'ind17Rate', suffix: '_17' },
     'indicator-18':  { cql: 'Indicator_18_Dementia_Hospice_Care_Utilization_Rate_2795Q_2796Y', title: '失智症安寧療護利用率', code: '2795Q/2796Y', metric: '利用率', category: 'outcome', rateId: 'ind18Rate', suffix: '_18' },
-    'indicator-19':  { cql: 'Indicator_19_Clean_Surgery_Wound_Infection_Rate_2524Q_2526Y', title: '清淨手術傷口感染率', code: '2524Q/2526Y', metric: '感染率', category: 'surgery', rateId: 'ind19Rate', suffix: '_19' }
+    'indicator-19':  { cql: 'Indicator_19_Clean_Surgery_Wound_Infection_Rate_2524Q_2526Y', title: '清淨手術傷口感染率', code: '2524Q/2526Y', metric: '感染率', category: 'surgery', rateId: 'ind19Rate', suffix: '_19' },
+    // ========== 中醫指標 (Official ELM 3.10.0) ==========
+    'indicator-tcm-1': { cql: 'Indicator_TCM_Medication_Overlap_2_Days_Or_More_Rate', title: '中醫處方用藥日數重疊2日以上比率', code: '中醫-4', metric: '重疊率', category: 'medication', rateId: 'indTcm1Rate', suffix: '_tcm_1' },
+    'indicator-tcm-2': { cql: 'Indicator_TCM_Monthly_Visit_8_Or_More_Times_Rate', title: '中醫每月就診8次以上比率', code: '中醫-1', metric: '就診率', category: 'outpatient', rateId: 'indTcm2Rate', suffix: '_tcm_2' },
+    'indicator-tcm-3': { cql: 'Indicator_TCM_Same_Day_Revisit_Rate', title: '中醫同日再就診率', code: '中醫-2', metric: '再就診率', category: 'outpatient', rateId: 'indTcm3Rate', suffix: '_tcm_3' },
+    'indicator-tcm-4': { cql: 'Indicator_TCM_Traumatology_Rate', title: '中醫針傷科處置比率', code: '中醫-5', metric: '處置率', category: 'surgery', rateId: 'indTcm4Rate', suffix: '_tcm_4' },
+    'indicator-tcm-5': { cql: 'Indicator_TCM_Global_Budget_Program_Organization_List', title: '中醫總額計畫參與院所名單', code: '中醫-6', metric: '院所數', category: 'outcome', rateId: 'indTcm5Rate', suffix: '_tcm_5' },
+    'indicator-tcm-6': { cql: 'Indicator_TCM_Pediatric_Asthma_Program_Organization_List', title: '中醫小兒氣喘照護計畫院所名單', code: '中醫-7', metric: '院所數', category: 'outcome', rateId: 'indTcm6Rate', suffix: '_tcm_6' },
+    'indicator-tcm-7': { cql: 'Indicator_TCM_Pediatric_Cerebral_Palsy_Program_Organization_List', title: '中醫小兒腦麻照護計畫院所名單', code: '中醫-8', metric: '院所數', category: 'outcome', rateId: 'indTcm7Rate', suffix: '_tcm_7' },
+    'indicator-tcm-8': { cql: 'Indicator_TCM_Underserved_Area_Program_Organization_List', title: '中醫偏鄉醫療計畫院所名單', code: '中醫-9', metric: '院所數', category: 'outcome', rateId: 'indTcm8Rate', suffix: '_tcm_8' }
 };
 
 // 分類資訊
 const CATEGORIES = {
-    medication: { ids: ['indicator-01','indicator-02','indicator-03-1','indicator-03-2','indicator-03-3','indicator-03-4','indicator-03-5','indicator-03-6','indicator-03-7','indicator-03-8','indicator-03-9','indicator-03-10','indicator-03-11','indicator-03-12','indicator-03-13','indicator-03-14','indicator-03-15','indicator-03-16'], label: '用藥安全' },
-    outpatient: { ids: ['indicator-04','indicator-05','indicator-06','indicator-07','indicator-08'], label: '門診品質' },
+    medication: { ids: ['indicator-01','indicator-02','indicator-03-1','indicator-03-2','indicator-03-3','indicator-03-4','indicator-03-5','indicator-03-6','indicator-03-7','indicator-03-8','indicator-03-9','indicator-03-10','indicator-03-11','indicator-03-12','indicator-03-13','indicator-03-14','indicator-03-15','indicator-03-16','indicator-tcm-1'], label: '用藥安全' },
+    outpatient: { ids: ['indicator-04','indicator-05','indicator-06','indicator-07','indicator-08','indicator-tcm-2','indicator-tcm-3'], label: '門診品質' },
     inpatient:  { ids: ['indicator-09','indicator-10','indicator-11-1','indicator-11-2','indicator-11-3','indicator-11-4'], label: '住院品質' },
-    surgery:    { ids: ['indicator-12','indicator-13','indicator-14','indicator-15-1','indicator-15-2','indicator-15-3','indicator-16','indicator-19'], label: '手術品質' },
-    outcome:    { ids: ['indicator-17','indicator-18'], label: '結果品質' }
+    surgery:    { ids: ['indicator-12','indicator-13','indicator-14','indicator-15-1','indicator-15-2','indicator-15-3','indicator-16','indicator-19','indicator-tcm-4'], label: '手術品質' },
+    outcome:    { ids: ['indicator-17','indicator-18','indicator-tcm-5','indicator-tcm-6','indicator-tcm-7','indicator-tcm-8'], label: '結果品質' }
 };
 
 // ========== 輔助函數 ==========
@@ -207,6 +216,21 @@ function parseIndicatorResults(data, indicatorId) {
     const ind = INDICATORS[indicatorId];
     const results = data.results || [];
     const metadata = data.executionMetadata || {};
+
+    // 後端對 unknown / 未對應類別會直接回傳單一物件 (非陣列)
+    if (results && !Array.isArray(results) && typeof results === 'object' && results.totalPatients !== undefined) {
+        return {
+            cqlEngine: true, isRealData: results.isRealData !== false,
+            totalPatients: results.totalPatients || 0,
+            numerator: results.numerator || 0,
+            denominator: results.denominator || results.totalPatients || 0,
+            rate: results.rate || '0.00',
+            noData: results.noData || false,
+            metric: ind.metric,
+            rawResults: [results],
+            fhirServerUrl: getFHIRServerUrl()
+        };
+    }
 
     // 直接計算結果 (bypass CQL Engine): 後端回傳聚合數據
     if (results.length === 1 && results[0].totalPatients !== undefined) {

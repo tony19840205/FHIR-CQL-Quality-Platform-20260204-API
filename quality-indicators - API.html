@@ -73,12 +73,12 @@
         <!-- 指標分類標籤 -->
         <section class="filter-section">
             <div class="filter-tabs">
-                <button class="filter-tab active" onclick="filterCategory('all')">全部 (89)</button>
-                <button class="filter-tab" onclick="filterCategory('medication')">用藥安全 (36)</button>
-                <button class="filter-tab" onclick="filterCategory('outpatient')">門診品質 (18)</button>
+                <button class="filter-tab active" onclick="filterCategory('all')">全部 (97)</button>
+                <button class="filter-tab" onclick="filterCategory('medication')">用藥安全 (37)</button>
+                <button class="filter-tab" onclick="filterCategory('outpatient')">門診品質 (20)</button>
                 <button class="filter-tab" onclick="filterCategory('inpatient')">住院品質 (5)</button>
-                <button class="filter-tab" onclick="filterCategory('surgery')">手術品質 (15)</button>
-                <button class="filter-tab" onclick="filterCategory('outcome')">結果品質 (15)</button>
+                <button class="filter-tab" onclick="filterCategory('surgery')">手術品質 (16)</button>
+                <button class="filter-tab" onclick="filterCategory('outcome')">結果品質 (19)</button>
             </div>
         </section>
 
@@ -1243,36 +1243,245 @@
 
         <!-- ===================== 用藥安全指標(中醫) ===================== -->
         <section class="overview-section" data-category="medication">
-            <div class="section-header"><div><h2><i class="fas fa-pills"></i> 用藥安全指標(中醫)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-pills"></i> 用藥安全指標(中醫)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('medication')" style="margin-left: auto;">
+                    <i class="fas fa-play-circle"></i> 全部啟動
+                </button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-med"><div class="card-badge">4</div><div class="card-content"><h3>使用中醫門診者處方用藥日數重疊二日以上之比率</h3><p class="card-cql-file">中醫-4</p></div></div>
+                <!-- 中醫-1: 處方用藥重疊2日以上 -->
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-tcm-1')">
+                    <div class="card-badge">中醫1</div>
+                    <div class="card-content">
+                        <h3>中醫處方用藥日數重疊2日以上比率</h3>
+                        <p class="card-code">中醫-4</p>
+                        <p class="card-cql-file">Indicator_TCM_Medication_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat">
+                            <span class="mini-label">重疊率</span>
+                            <span class="mini-value" id="indTcm1Rate">--%</span>
+                        </div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_tcm_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_tcm_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_tcm_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
+                            </select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-tcm-1')">
+                            <i class="fas fa-play"></i> 查詢
+                        </button>
+                        <div class="card-status" id="status_tcm_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- ===================== 門診品質指標(中醫) ===================== -->
         <section class="overview-section" data-category="outpatient">
-            <div class="section-header"><div><h2><i class="fas fa-hospital-user"></i> 門診品質指標(中醫)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-hospital-user"></i> 門診品質指標(中醫)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('outpatient')" style="margin-left: auto;">
+                    <i class="fas fa-play-circle"></i> 全部啟動
+                </button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-out"><div class="card-badge">1</div><div class="card-content"><h3>使用中醫門診者之平均中醫就診次數</h3><p class="card-cql-file">中醫-1</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">2</div><div class="card-content"><h3>就診中醫門診後同日再次就診中醫之比率</h3><p class="card-cql-file">中醫-2</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">3</div><div class="card-content"><h3>就診中醫門診後隔日再次就診中醫之比率</h3><p class="card-cql-file">中醫-3</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">6</div><div class="card-content"><h3>健保醫療資訊雲端查詢系統查詢率</h3><p class="card-cql-file">中醫-6</p></div></div>
+                <!-- 中醫-2: 每月就診8次以上 -->
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-tcm-2')">
+                    <div class="card-badge">中醫2</div>
+                    <div class="card-content">
+                        <h3>中醫每月就診8次以上比率</h3>
+                        <p class="card-code">中醫-1</p>
+                        <p class="card-cql-file">Indicator_TCM_Monthly_Visit_8Plus</p>
+                        <div class="card-mini-stats"><div class="mini-stat">
+                            <span class="mini-label">就診率</span>
+                            <span class="mini-value" id="indTcm2Rate">--%</span>
+                        </div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_tcm_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_tcm_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_tcm_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
+                            </select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-tcm-2')">
+                            <i class="fas fa-play"></i> 查詢
+                        </button>
+                        <div class="card-status" id="status_tcm_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+
+                <!-- 中醫-3: 同日再就診率 -->
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-tcm-3')">
+                    <div class="card-badge">中醫3</div>
+                    <div class="card-content">
+                        <h3>中醫同日再就診率</h3>
+                        <p class="card-code">中醫-2</p>
+                        <p class="card-cql-file">Indicator_TCM_Same_Day_Revisit</p>
+                        <div class="card-mini-stats"><div class="mini-stat">
+                            <span class="mini-label">再就診率</span>
+                            <span class="mini-value" id="indTcm3Rate">--%</span>
+                        </div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_tcm_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_tcm_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_tcm_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
+                            </select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-tcm-3')">
+                            <i class="fas fa-play"></i> 查詢
+                        </button>
+                        <div class="card-status" id="status_tcm_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- ===================== 手術品質指標(中醫) ===================== -->
         <section class="overview-section" data-category="surgery">
-            <div class="section-header"><div><h2><i class="fas fa-procedures"></i> 手術品質指標(中醫)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-procedures"></i> 手術品質指標(中醫)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('surgery')" style="margin-left: auto;">
+                    <i class="fas fa-play-circle"></i> 全部啟動
+                </button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-surg"><div class="card-badge">5</div><div class="card-content"><h3>於同院所針傷科處置次數每月大於二十次之比率</h3><p class="card-cql-file">中醫-5</p></div></div>
+                <!-- 中醫-4: 針傷科處置比率 -->
+                <div class="overview-card quality-surg" onclick="showDetailModal('indicator-tcm-4')">
+                    <div class="card-badge">中醫4</div>
+                    <div class="card-content">
+                        <h3>中醫針傷科處置比率</h3>
+                        <p class="card-code">中醫-5</p>
+                        <p class="card-cql-file">Indicator_TCM_Traumatology</p>
+                        <div class="card-mini-stats"><div class="mini-stat">
+                            <span class="mini-label">處置率</span>
+                            <span class="mini-value" id="indTcm4Rate">--%</span>
+                        </div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_tcm_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_tcm_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_tcm_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
+                            </select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-tcm-4')">
+                            <i class="fas fa-play"></i> 查詢
+                        </button>
+                        <div class="card-status" id="status_tcm_4" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- ===================== 結果品質指標(中醫) ===================== -->
+        <!-- ===================== 結果品質指標(中醫) - 計畫參與院所名單 ===================== -->
         <section class="overview-section" data-category="outcome">
-            <div class="section-header"><div><h2><i class="fas fa-chart-line"></i> 結果品質指標(中醫)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-chart-line"></i> 結果品質指標(中醫) - 計畫參與院所名單</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('outcome')" style="margin-left: auto;">
+                    <i class="fas fa-play-circle"></i> 全部啟動
+                </button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-outcome"><div class="card-badge">7</div><div class="card-content"><h3>兩年內初診患者人數比率</h3><p class="card-cql-file">中醫-7</p></div></div>
+                <!-- 中醫-5: 總額計畫院所 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-tcm-5')">
+                    <div class="card-badge">中醫5</div>
+                    <div class="card-content">
+                        <h3>中醫總額計畫參與院所名單</h3>
+                        <p class="card-code">中醫-6</p>
+                        <p class="card-cql-file">Indicator_TCM_Global_Budget_List</p>
+                        <div class="card-mini-stats"><div class="mini-stat">
+                            <span class="mini-label">院所數</span>
+                            <span class="mini-value" id="indTcm5Rate">--</span>
+                        </div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_tcm_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_tcm_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_tcm_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
+                            </select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-tcm-5')">
+                            <i class="fas fa-play"></i> 查詢
+                        </button>
+                        <div class="card-status" id="status_tcm_5" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+
+                <!-- 中醫-6: 小兒氣喘院所 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-tcm-6')">
+                    <div class="card-badge">中醫6</div>
+                    <div class="card-content">
+                        <h3>中醫小兒氣喘照護計畫院所名單</h3>
+                        <p class="card-code">中醫-7</p>
+                        <p class="card-cql-file">Indicator_TCM_Pediatric_Asthma_List</p>
+                        <div class="card-mini-stats"><div class="mini-stat">
+                            <span class="mini-label">院所數</span>
+                            <span class="mini-value" id="indTcm6Rate">--</span>
+                        </div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_tcm_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_tcm_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_tcm_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
+                            </select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-tcm-6')">
+                            <i class="fas fa-play"></i> 查詢
+                        </button>
+                        <div class="card-status" id="status_tcm_6" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+
+                <!-- 中醫-7: 小兒腦麻院所 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-tcm-7')">
+                    <div class="card-badge">中醫7</div>
+                    <div class="card-content">
+                        <h3>中醫小兒腦麻照護計畫院所名單</h3>
+                        <p class="card-code">中醫-8</p>
+                        <p class="card-cql-file">Indicator_TCM_Pediatric_Cerebral_Palsy</p>
+                        <div class="card-mini-stats"><div class="mini-stat">
+                            <span class="mini-label">院所數</span>
+                            <span class="mini-value" id="indTcm7Rate">--</span>
+                        </div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_tcm_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_tcm_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_tcm_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
+                            </select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-tcm-7')">
+                            <i class="fas fa-play"></i> 查詢
+                        </button>
+                        <div class="card-status" id="status_tcm_7" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+
+                <!-- 中醫-8: 偏鄉醫療院所 -->
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-tcm-8')">
+                    <div class="card-badge">中醫8</div>
+                    <div class="card-content">
+                        <h3>中醫偏鄉醫療計畫院所名單</h3>
+                        <p class="card-code">中醫-9</p>
+                        <p class="card-cql-file">Indicator_TCM_Underserved_Area</p>
+                        <div class="card-mini-stats"><div class="mini-stat">
+                            <span class="mini-label">院所數</span>
+                            <span class="mini-value" id="indTcm8Rate">--</span>
+                        </div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_tcm_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="開始日期">
+                            <input type="date" id="endDate_tcm_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;" title="結束日期">
+                            <select id="maxRecords_tcm_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;" title="最大筆數">
+                                <option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option>
+                            </select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-tcm-8')">
+                            <i class="fas fa-play"></i> 查詢
+                        </button>
+                        <div class="card-status" id="status_tcm_8" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -1378,7 +1587,7 @@
     <!-- JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="js/fhir-connection.js"></script>
-    <script src="js/quality-indicators-api.js?v=20260408b"></script>
+    <script src="js/quality-indicators-api.js?v=20260423tcm2"></script>
     <script src="js/llm-service.js"></script>
     <script src="js/data-exporter.js"></script>
     <script src="js/llm-connection-manager.js"></script>

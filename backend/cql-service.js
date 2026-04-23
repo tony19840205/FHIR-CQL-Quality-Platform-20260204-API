@@ -390,6 +390,7 @@ async function fetchPublicHealthFHIRData(fhirServerUrl, cqlFile, options = {}) {
 // ==================== 品質指標 通用 FHIR 資料抓取（非剖腹產） ====================
 function getIndicatorCategory(cqlFile) {
     if (!cqlFile) return 'unknown';
+    if (cqlFile.includes('_TCM_') || cqlFile.includes('Indicator_TCM_')) return 'tcm';
     if (cqlFile.includes('_01_') || cqlFile.includes('_02_') || cqlFile.includes('_03_')) return 'medication';
     if (cqlFile.includes('_04_') || cqlFile.includes('_05_') || cqlFile.includes('_06_') || cqlFile.includes('_07_') || cqlFile.includes('_08_')) return 'outpatient';
     if (cqlFile.includes('_09_') || cqlFile.includes('_10_') || cqlFile.includes('_11_')) return 'inpatient';
@@ -643,6 +644,46 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 console.log(`   Encounter(IMP): ${resources.Encounter.length}, Condition: ${resources.Condition.length}, Patient: ${resources.Patient.length}`);
             }
 
+        } else if (category === 'tcm') {
+            // 中醫照護指標：依檔案類型抓取對應資源
+            const isOrgList = cqlFile.includes('_Organization_List');
+            const isMedOverlap = cqlFile.includes('_Medication_Overlap_');
+            const isTraumatology = cqlFile.includes('_Traumatology_');
+
+            if (isOrgList) {
+                // 中醫5~8: Organization 列表
+                const orgResp = await axios.get(`${fhirServerUrl}/Organization?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }));
+                resources.Organization = (orgResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   [TCM-OrgList] Organization: ${resources.Organization.length}`);
+            } else if (isMedOverlap) {
+                // 中醫1: 處方用藥重疊 - MedicationRequest + Encounter(AMB)
+                const [medResult, encResp] = await Promise.all([
+                    fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=500${dateParam.replace(/date=/g, 'authoredon=')}`, 3),
+                    axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.MedicationRequest = Array.isArray(medResult) ? medResult : [];
+                resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   [TCM-MedOverlap] MedicationRequest: ${resources.MedicationRequest.length}, Encounter: ${resources.Encounter.length}`);
+            } else if (isTraumatology) {
+                // 中醫4: 針傷科處置 - Procedure + Encounter(AMB)
+                const [procResult, encResp] = await Promise.all([
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500${dateParam}`, 3),
+                    axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                ]);
+                resources.Procedure = Array.isArray(procResult) ? procResult : [];
+                resources.Encounter = (encResp.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   [TCM-Traumatology] Procedure: ${resources.Procedure.length}, Encounter: ${resources.Encounter.length}`);
+            } else {
+                // 中醫2/3: 同日再就診 / 每月8次 - Encounter(AMB)
+                const usePaging = count > 500;
+                const tcmMaxPages = usePaging ? Math.min(Math.ceil(count / 500), 10) : 1;
+                const encResult = usePaging
+                    ? await fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=500${dateParam}`, tcmMaxPages)
+                    : await axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }));
+                resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
+                console.log(`   [TCM-Encounter] Encounter(AMB): ${resources.Encounter.length}`);
+            }
+
         } else {
             // 未知類別: 抓基本資源
             const [encResp, patResp] = await Promise.all([
@@ -674,6 +715,7 @@ function computeQualityIndicatorResults(data, cqlFile) {
         else if (category === 'inpatient') result = computeInpatientIndicator(data, cqlFile);
         else if (category === 'surgery') result = computeSurgeryIndicator(data, cqlFile);
         else if (category === 'outcome') result = computeOutcomeIndicator(data, cqlFile);
+        else if (category === 'tcm') result = computeTCMIndicator(data, cqlFile);
         else result = { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
     } catch (err) {
         console.error(`❌ [QualityIndicator] 計算錯誤:`, err.message);
@@ -1448,6 +1490,156 @@ async function fetchIndicatorFHIRData(fhirServerUrl, options = {}) {
     } catch (error) {
         throw new Error(`指標 FHIR 資料查詢失敗: ${error.message}`);
     }
+}
+
+// ==================== 中醫品質指標計算 ====================
+function computeTCMIndicator(data, cqlFile) {
+    const encounters = data.Encounter || [];
+    const meds = data.MedicationRequest || [];
+    const procedures = data.Procedure || [];
+    const orgs = data.Organization || [];
+
+    // ----- 中醫5/6/7/8: Organization 列表 -----
+    if (cqlFile.includes('_Organization_List')) {
+        const orgCount = orgs.length;
+        return {
+            totalPatients: orgCount,
+            numerator: orgCount,
+            denominator: orgCount,
+            rate: orgCount.toString(),
+            unit: '家',
+            isOrgList: true,
+            noData: orgCount === 0
+        };
+    }
+
+    const getPatientId = (e) => (e?.subject?.reference || '').replace('Patient/', '');
+    const getOrgId = (e) => (e?.serviceProvider?.reference || e?.requester?.reference || '').replace(/^(Organization|Practitioner)\//, '');
+    const getEncounterDate = (e) => {
+        const s = e?.period?.start || e?.period?.end;
+        return s ? s.substring(0, 10) : null;
+    };
+
+    // ----- 中醫1: 處方用藥重疊2日以上 -----
+    if (cqlFile.includes('_Medication_Overlap_')) {
+        // 依病人歸戶, 計算每個病人各處方期間的重疊天數加總(排除重疊1日)
+        const byPatient = {};
+        let totalDays = 0;
+        meds.forEach(m => {
+            const pid = (m?.subject?.reference || '').replace('Patient/', '');
+            if (!pid) return;
+            const days = m?.dispenseRequest?.expectedSupplyDuration?.value || 0;
+            const start = m?.authoredOn ? new Date(m.authoredOn) : null;
+            if (!start || days <= 0) return;
+            const end = new Date(start.getTime() + (days - 1) * 86400000);
+            totalDays += days;
+            if (!byPatient[pid]) byPatient[pid] = [];
+            byPatient[pid].push({ start, end, days });
+        });
+
+        let overlapDays = 0;
+        Object.values(byPatient).forEach(rxs => {
+            for (let i = 0; i < rxs.length; i++) {
+                for (let j = i + 1; j < rxs.length; j++) {
+                    const a = rxs[i], b = rxs[j];
+                    const oStart = a.start > b.start ? a.start : b.start;
+                    const oEnd = a.end < b.end ? a.end : b.end;
+                    if (oEnd >= oStart) {
+                        const d = Math.floor((oEnd - oStart) / 86400000) + 1;
+                        if (d >= 2) overlapDays += d;
+                    }
+                }
+            }
+        });
+
+        const rate = totalDays > 0 ? (overlapDays / totalDays * 100).toFixed(2) : '0.00';
+        return {
+            totalPatients: Object.keys(byPatient).length,
+            numerator: overlapDays,
+            denominator: totalDays,
+            rate,
+            unit: '%',
+            noData: meds.length === 0
+        };
+    }
+
+    // ----- 中醫4: 針傷科處置比率 -----
+    if (cqlFile.includes('_Traumatology_')) {
+        const traumaCodes = new Set();
+        for (let i = 1; i <= 12; i++) traumaCodes.add('E' + String(i).padStart(2, '0'));
+        for (let i = 1; i <= 68; i++) traumaCodes.add('F' + String(i).padStart(2, '0'));
+
+        let traumaCount = 0;
+        procedures.forEach(p => {
+            const codings = p?.code?.coding || [];
+            for (const c of codings) {
+                const code = (c.code || '').toUpperCase();
+                if (traumaCodes.has(code)) { traumaCount++; break; }
+            }
+        });
+
+        const denomEncounters = encounters.length;
+        const rate = denomEncounters > 0 ? (traumaCount / denomEncounters * 100).toFixed(2) : '0.00';
+        return {
+            totalPatients: denomEncounters,
+            numerator: traumaCount,
+            denominator: denomEncounters,
+            rate,
+            unit: '%',
+            noData: denomEncounters === 0
+        };
+    }
+
+    // ----- 中醫3: 同日再就診率 -----
+    if (cqlFile.includes('_Same_Day_Revisit_')) {
+        const groups = {};
+        encounters.forEach(e => {
+            const pid = getPatientId(e);
+            const oid = getOrgId(e) || 'UNK';
+            const date = getEncounterDate(e);
+            if (!pid || !date) return;
+            const key = `${oid}|${pid}|${date}`;
+            groups[key] = (groups[key] || 0) + 1;
+        });
+        const denominator = Object.keys(groups).length;
+        const numerator = Object.values(groups).filter(c => c >= 2).length;
+        const rate = denominator > 0 ? (numerator / denominator * 100).toFixed(2) : '0.00';
+        return {
+            totalPatients: denominator,
+            numerator,
+            denominator,
+            rate,
+            unit: '%',
+            noData: denominator === 0
+        };
+    }
+
+    // ----- 中醫2: 每月就診8次以上 -----
+    if (cqlFile.includes('_Monthly_Visit_')) {
+        const groups = {};
+        encounters.forEach(e => {
+            const pid = getPatientId(e);
+            const oid = getOrgId(e) || 'UNK';
+            const date = getEncounterDate(e);
+            if (!pid || !date) return;
+            const ym = date.substring(0, 7);
+            const key = `${oid}|${pid}|${ym}`;
+            groups[key] = (groups[key] || 0) + 1;
+        });
+        const denominator = Object.keys(groups).length;
+        const numerator = Object.values(groups).filter(c => c >= 8).length;
+        const rate = denominator > 0 ? (numerator / denominator * 100).toFixed(2) : '0.00';
+        return {
+            totalPatients: denominator,
+            numerator,
+            denominator,
+            rate,
+            unit: '%',
+            noData: denominator === 0
+        };
+    }
+
+    return { totalPatients: 0, numerator: 0, denominator: 0, rate: '0.00', noData: true };
 }
 
 // ==================== 一般 FHIR 資料抓取（傳染病監測用） ====================

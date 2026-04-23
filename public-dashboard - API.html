@@ -241,7 +241,7 @@
             </div>
             <h1>公共健康數據<br>透明開放平台</h1>
             <p>
-                整合 FHIR 醫療標準與 CQL 臨床查詢語言，涵蓋傳染病監控、39 項醫療品質指標與 ESG 永續報告。<br>
+                整合 FHIR 醫療標準與 CQL 臨床查詢語言，涵蓋傳染病監控、47 項醫療品質指標與 ESG 永續報告。<br>
                 所有資料皆經去識別化處理，保護病患隱私。
             </p>
             <div class="hero-btns">
@@ -262,7 +262,7 @@
             </div>
             <div class="stat-card sc-emerald">
                 <div class="stat-top">
-                    <div><div class="stat-label">品質指標</div><div class="stat-val">20+</div><div class="stat-sub">醫療品質量測</div></div>
+                    <div><div class="stat-label">品質指標</div><div class="stat-val">47</div><div class="stat-sub">醫療品質量測</div></div>
                     <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
                 </div>
             </div>
@@ -317,7 +317,7 @@
                     <div class="sec-icon" style="background:#dbeafe;color:#2563eb;"><i class="fas fa-chart-bar"></i></div>
                     <div>
                         <div class="sec-title">醫療品質指標</div>
-                        <div class="sec-sub" id="qualitySub">39 項指標 · 5 大類別</div>
+                        <div class="sec-sub" id="qualitySub">47 項指標 · 5 大類別</div>
                     </div>
                 </div>
                 <a href="#quality" onclick="toggleAllQuality(event)" style="font-size:14px;color:#2563eb;font-weight:500;cursor:pointer;">查看完整指標 <i class="fas fa-chevron-down" id="qualityExpandIcon" style="font-size:12px;"></i></a>
@@ -430,7 +430,15 @@ const EMBEDDED_DATA = {
     { id:"indicator-16", number:"16", name:"住院手術傷口感染率", code:"1658Q", category:"surgery", numerator:null, denominator:null, rate:null, unit:"%" },
     { id:"indicator-19", number:"19", name:"清淨手術傷口感染率", code:"2524Q", category:"surgery", numerator:null, denominator:null, rate:null, unit:"%" },
     { id:"indicator-17", number:"17", name:"急性心肌梗塞死亡率", code:"1662Q", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
-    { id:"indicator-18", number:"18", name:"失智症安寧療護利用率", code:"2795Q", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" }
+    { id:"indicator-18", number:"18", name:"失智症安寧療護利用率", code:"2795Q", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-tcm-1", number:"中醫1", name:"中醫處方用藥重疊2日以上", code:"中醫-4", category:"medication", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-tcm-2", number:"中醫2", name:"中醫每月就診8次以上", code:"中醫-1", category:"outpatient", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-tcm-3", number:"中醫3", name:"中醫同日再就診率", code:"中醫-2", category:"outpatient", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-tcm-4", number:"中醫4", name:"中醫針傷科處置比率", code:"中醫-5", category:"surgery", numerator:null, denominator:null, rate:null, unit:"%" },
+    { id:"indicator-tcm-5", number:"中醫5", name:"中醫總額計畫院所名單", code:"中醫-6", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
+    { id:"indicator-tcm-6", number:"中醫6", name:"中醫小兒氣喘院所名單", code:"中醫-7", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
+    { id:"indicator-tcm-7", number:"中醫7", name:"中醫小兒腦麻院所名單", code:"中醫-8", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
+    { id:"indicator-tcm-8", number:"中醫8", name:"中醫偏鄉醫療院所名單", code:"中醫-9", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" }
   ],
   healthIndicators: [
     { id:"covid19-vaccine", name:"COVID-19 疫苗接種率", cql:"COVID19VaccinationCoverage", description:"監測 COVID-19 疫苗接種涵蓋率與劑次完成度", count:null, rate:null, countLabel:"接種人數", rateLabel:"接種率", rateUnit:"%" },
@@ -522,7 +530,7 @@ function renderQuality(indicators) {
     _qualityData = indicators;
     const container = document.getElementById('qualityContainer');
     const queried = indicators.filter(i => i.rate !== null).length;
-    if (queried > 0) document.getElementById('qualitySub').textContent = `39 項指標 · 5 大類別 · ${queried} 項已查詢`;
+    if (queried > 0) document.getElementById('qualitySub').textContent = `47 項指標 · 5 大類別 · ${queried} 項已查詢`;
 
     const grouped = {};
     indicators.forEach(ind => {

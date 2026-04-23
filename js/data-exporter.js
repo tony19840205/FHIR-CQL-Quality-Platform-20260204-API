@@ -367,6 +367,14 @@ class DataExporter {
             { id: 'indicator-19', number: '19', name: '清淨手術傷口感染率', code: '2524Q', category: 'surgery' },
             { id: 'indicator-17', number: '17', name: '急性心肌梗塞死亡率', code: '1662Q', category: 'outcome' },
             { id: 'indicator-18', number: '18', name: '失智症安寧療護利用率', code: '2795Q', category: 'outcome' },
+            { id: 'indicator-tcm-1', number: '中醫1', name: '中醫處方用藥重疊2日以上', code: '中醫-4', category: 'medication' },
+            { id: 'indicator-tcm-2', number: '中醫2', name: '中醫每月就診8次以上', code: '中醫-1', category: 'outpatient' },
+            { id: 'indicator-tcm-3', number: '中醫3', name: '中醫同日再就診率', code: '中醫-2', category: 'outpatient' },
+            { id: 'indicator-tcm-4', number: '中醫4', name: '中醫針傷科處置比率', code: '中醫-5', category: 'surgery' },
+            { id: 'indicator-tcm-5', number: '中醫5', name: '中醫總額計畫院所名單', code: '中醫-6', category: 'outcome' },
+            { id: 'indicator-tcm-6', number: '中醫6', name: '中醫小兒氣喘院所名單', code: '中醫-7', category: 'outcome' },
+            { id: 'indicator-tcm-7', number: '中醫7', name: '中醫小兒腦麻院所名單', code: '中醫-8', category: 'outcome' },
+            { id: 'indicator-tcm-8', number: '中醫8', name: '中醫偏鄉醫療院所名單', code: '中醫-9', category: 'outcome' },
         ];
 
         // DOM rate ID 對照（對應控制台 HTML 中的元素 ID）
@@ -391,6 +399,10 @@ class DataExporter {
             'indicator-15-3': 'ind15_3Rate', 'indicator-16': 'ind16Rate',
             'indicator-19': 'ind19Rate', 'indicator-17': 'ind17Rate',
             'indicator-18': 'ind18Rate',
+            'indicator-tcm-1': 'indTcm1Rate', 'indicator-tcm-2': 'indTcm2Rate',
+            'indicator-tcm-3': 'indTcm3Rate', 'indicator-tcm-4': 'indTcm4Rate',
+            'indicator-tcm-5': 'indTcm5Rate', 'indicator-tcm-6': 'indTcm6Rate',
+            'indicator-tcm-7': 'indTcm7Rate', 'indicator-tcm-8': 'indTcm8Rate',
         };
         const domNumMap = {
             'indicator-01': 'ind01Num', 'indicator-02': 'ind02Num',
@@ -401,7 +413,9 @@ class DataExporter {
 
         return defs.map(def => {
             let numerator = null, denominator = null, rate = null;
-            const unit = def.id === 'indicator-13' ? '次' : '%';
+            let unit = '%';
+            if (def.id === 'indicator-13') unit = '次';
+            else if (['indicator-tcm-5','indicator-tcm-6','indicator-tcm-7','indicator-tcm-8'].includes(def.id)) unit = '家';
 
             // 優先從 window.qualityResults 讀取
             const result = qr[def.id];
