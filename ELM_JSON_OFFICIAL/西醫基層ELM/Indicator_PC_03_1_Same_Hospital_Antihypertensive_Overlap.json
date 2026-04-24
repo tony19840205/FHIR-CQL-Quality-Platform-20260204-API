@@ -149,6 +149,85 @@
             }
          } ]
       },
+      "codeSystems" : {
+         "def" : [ {
+            "name" : "ATC",
+            "id" : "http://www.whocc.no/atc",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "NHIOrder",
+            "id" : "https://www.nhi.gov.tw/cs/medOrder",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         } ]
+      },
+      "codes" : {
+         "def" : [ {
+            "name" : "C07 Beta Blockers Prefix",
+            "id" : "C07",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "C07AA05 Excluded",
+            "id" : "C07AA05",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "C02CA Prefix",
+            "id" : "C02CA",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "C03AA Prefix",
+            "id" : "C03AA",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "C08CA Prefix",
+            "id" : "C08CA",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "C09AA Prefix",
+            "id" : "C09AA",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "C09CA Prefix",
+            "id" : "C09CA",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         } ]
+      },
       "contexts" : {
          "def" : [ {
             "name" : "Patient",
@@ -197,58 +276,7 @@
                }
             }
          }, {
-            "name" : "All Encounters",
-            "context" : "Patient",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "expression" : {
-               "type" : "Query",
-               "annotation" : [ ],
-               "source" : [ {
-                  "alias" : "E",
-                  "annotation" : [ ],
-                  "expression" : {
-                     "dataType" : "{http://hl7.org/fhir}Encounter",
-                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Encounter",
-                     "type" : "Retrieve",
-                     "annotation" : [ ],
-                     "include" : [ ],
-                     "codeFilter" : [ ],
-                     "dateFilter" : [ ],
-                     "otherFilter" : [ ]
-                  }
-               } ],
-               "let" : [ ],
-               "relationship" : [ ],
-               "where" : {
-                  "type" : "IncludedIn",
-                  "annotation" : [ ],
-                  "signature" : [ ],
-                  "operand" : [ {
-                     "name" : "ToInterval",
-                     "libraryName" : "FHIRHelpers",
-                     "type" : "FunctionRef",
-                     "annotation" : [ ],
-                     "signature" : [ {
-                        "name" : "{http://hl7.org/fhir}Period",
-                        "type" : "NamedTypeSpecifier",
-                        "annotation" : [ ]
-                     } ],
-                     "operand" : [ {
-                        "path" : "period",
-                        "scope" : "E",
-                        "type" : "Property",
-                        "annotation" : [ ]
-                     } ]
-                  }, {
-                     "name" : "Measurement Period",
-                     "type" : "ExpressionRef",
-                     "annotation" : [ ]
-                  } ]
-               }
-            }
-         }, {
-            "name" : "All Medication Requests",
+            "name" : "Drug Class Medication Requests",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ ],
@@ -299,7 +327,7 @@
                }
             }
          }, {
-            "name" : "All Procedures",
+            "name" : "Overlapping Drug Class Medication Requests",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ ],
@@ -307,11 +335,11 @@
                "type" : "Query",
                "annotation" : [ ],
                "source" : [ {
-                  "alias" : "P",
+                  "alias" : "M",
                   "annotation" : [ ],
                   "expression" : {
-                     "dataType" : "{http://hl7.org/fhir}Procedure",
-                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Procedure",
+                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
                      "type" : "Retrieve",
                      "annotation" : [ ],
                      "include" : [ ],
@@ -323,30 +351,24 @@
                "let" : [ ],
                "relationship" : [ ],
                "where" : {
-                  "type" : "IncludedIn",
+                  "type" : "In",
                   "annotation" : [ ],
                   "signature" : [ ],
                   "operand" : [ {
-                     "name" : "ToInterval",
+                     "name" : "ToDateTime",
                      "libraryName" : "FHIRHelpers",
                      "type" : "FunctionRef",
                      "annotation" : [ ],
                      "signature" : [ {
-                        "name" : "{http://hl7.org/fhir}Period",
+                        "name" : "{http://hl7.org/fhir}dateTime",
                         "type" : "NamedTypeSpecifier",
                         "annotation" : [ ]
                      } ],
                      "operand" : [ {
-                        "asType" : "{http://hl7.org/fhir}Period",
-                        "type" : "As",
-                        "annotation" : [ ],
-                        "signature" : [ ],
-                        "operand" : {
-                           "path" : "performed",
-                           "scope" : "P",
-                           "type" : "Property",
-                           "annotation" : [ ]
-                        }
+                        "path" : "authoredOn",
+                        "scope" : "M",
+                        "type" : "Property",
+                        "annotation" : [ ]
                      } ]
                   }, {
                      "name" : "Measurement Period",
@@ -356,7 +378,7 @@
                }
             }
          }, {
-            "name" : "Total Encounter Count",
+            "name" : "Denominator",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ ],
@@ -365,54 +387,119 @@
                "annotation" : [ ],
                "signature" : [ ],
                "source" : {
-                  "name" : "All Encounters",
+                  "name" : "Drug Class Medication Requests",
                   "type" : "ExpressionRef",
                   "annotation" : [ ]
                }
             }
          }, {
-            "name" : "Total Medication Count",
+            "name" : "Numerator",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "expression" : {
                "type" : "Count",
                "annotation" : [ ],
-               "signature" : [ {
-                  "type" : "ListTypeSpecifier",
-                  "annotation" : [ ],
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}MedicationRequest",
-                     "type" : "NamedTypeSpecifier",
-                     "annotation" : [ ]
-                  }
-               } ],
+               "signature" : [ ],
                "source" : {
-                  "name" : "All Medication Requests",
+                  "name" : "Overlapping Drug Class Medication Requests",
                   "type" : "ExpressionRef",
                   "annotation" : [ ]
                }
             }
          }, {
-            "name" : "Total Procedure Count",
+            "name" : "Measure Score",
             "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "expression" : {
-               "type" : "Count",
+               "type" : "If",
                "annotation" : [ ],
-               "signature" : [ {
-                  "type" : "ListTypeSpecifier",
+               "condition" : {
+                  "type" : "Greater",
                   "annotation" : [ ],
-                  "elementType" : {
-                     "name" : "{http://hl7.org/fhir}Procedure",
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}Integer",
                      "type" : "NamedTypeSpecifier",
                      "annotation" : [ ]
-                  }
-               } ],
-               "source" : {
-                  "name" : "All Procedures",
-                  "type" : "ExpressionRef",
+                  }, {
+                     "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : [ {
+                     "name" : "Denominator",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }, {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  } ]
+               },
+               "then" : {
+                  "type" : "Divide",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : [ {
+                     "type" : "Multiply",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "type" : "ToDecimal",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        } ],
+                        "operand" : {
+                           "name" : "Numerator",
+                           "type" : "ExpressionRef",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "value" : "100.0",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "type" : "ToDecimal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : {
+                        "name" : "Denominator",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ]
+               },
+               "else" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Decimal",
+                  "value" : "0.0",
+                  "type" : "Literal",
                   "annotation" : [ ]
                }
             }

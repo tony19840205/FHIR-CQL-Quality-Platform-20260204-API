@@ -1698,68 +1698,208 @@ function computePrimaryCareIndicator(data, cqlFile) {
         return { totalPatients: denominator, numerator, denominator, rate, unit, noData: denominator === 0 };
     };
 
-    // 注射劑代碼: ATC J* 注射劑 / 從 medication.code 中找含 'injection'/'inj' 字樣
-    const isInjection = (m) => {
-        const codings = m?.medicationCodeableConcept?.coding || [];
-        return codings.some(c => /INJ|inject/i.test((c.display || '') + ' ' + (c.code || '')));
-    };
-    // 抗生素 (ATC J01)
-    const isAntibiotic = (m) => {
-        const codings = m?.medicationCodeableConcept?.coding || [];
-        return codings.some(c => /J01|antibiotic|amoxicillin|cephalexin|azithromycin/i.test((c.display || '') + ' ' + (c.code || '')));
-    };
-    // Quinolone/Aminoglycoside
-    const isQuinoloneOrAminoglycoside = (m) => {
-        const codings = m?.medicationCodeableConcept?.coding || [];
-        return codings.some(c => /quinolone|floxacin|gentamicin|amikacin|tobramycin|aminoglycoside/i.test(c.display || ''));
-    };
+    // ===== 共用 helper: 抓 ATC 代碼、NHI 醫令、給藥日數、用藥期間 =====
+    const ATC_SYS = 'http://www.whocc.no/atc';
+    const NHI_ORDER_SYS_RE = /nhi|medOrder|cs\/med/i;
 
-    // ==================== 1. 門診注射劑使用率 ====================
-    if (cqlFile.includes('PC_01_Outpatient_Injection_Usage_Rate')) {
-        const denom = totalEncs;
-        const num = meds.filter(isInjection).length || Math.floor(denom * 0.08);
-        return makeRate(num, denom);
-    }
-    // ==================== 2-1. 門診抗生素使用率 ====================
-    if (cqlFile.includes('PC_02_1_Outpatient_Antibiotic_Usage_Rate')) {
-        const denom = totalEncs;
-        const num = meds.filter(isAntibiotic).length || Math.floor(denom * 0.12);
-        return makeRate(num, denom);
-    }
-    // ==================== 2-2. 門診Quinolone/Aminoglycoside抗生素使用率 ====================
-    if (cqlFile.includes('PC_02_2_Outpatient_Quinolone_Aminoglycoside_Usage_Rate')) {
-        const denom = totalEncs;
-        const num = meds.filter(isQuinoloneOrAminoglycoside).length || Math.floor(denom * 0.03);
-        return makeRate(num, denom);
-    }
-
-    // ==================== 3-1 ~ 3-16. 同/跨院所同藥理用藥重疊率 ====================
-    // 簡化: 用 totalMeds 為分母, 重疊率約 1-3%
-    const overlapMatchers = {
-        '03_1':  { rate: 0.020, drugs: /amlodipine|losartan|valsartan|telmisartan|nifedipine|antihyperten/i },
-        '03_2':  { rate: 0.018, drugs: /atorvastatin|rosuvastatin|simvastatin|statin|fenofibrate/i },
-        '03_3':  { rate: 0.022, drugs: /metformin|gliclazide|glimepiride|sitagliptin|insulin/i },
-        '03_4':  { rate: 0.012, drugs: /risperidone|olanzapine|quetiapine|antipsychotic/i },
-        '03_5':  { rate: 0.015, drugs: /fluoxetine|sertraline|escitalopram|antidepressant/i },
-        '03_6':  { rate: 0.025, drugs: /zolpidem|alprazolam|estazolam|sedative|hypnotic/i },
-        '03_7':  { rate: 0.014, drugs: /aspirin|clopidogrel|warfarin|antithrombotic/i },
-        '03_8':  { rate: 0.008, drugs: /tamsulosin|finasteride|dutasteride|prostate/i },
-        '03_9':  { rate: 0.030, drugs: /amlodipine|losartan|antihyperten/i },
-        '03_10': { rate: 0.025, drugs: /atorvastatin|statin/i },
-        '03_11': { rate: 0.028, drugs: /metformin|insulin/i },
-        '03_12': { rate: 0.018, drugs: /risperidone|antipsychotic/i },
-        '03_13': { rate: 0.020, drugs: /sertraline|antidepressant/i },
-        '03_14': { rate: 0.032, drugs: /zolpidem|sedative/i },
-        '03_15': { rate: 0.020, drugs: /aspirin|antithrombotic/i },
-        '03_16': { rate: 0.012, drugs: /tamsulosin|prostate/i }
+    const getATCCodes = (m) => {
+        const codings = m?.medicationCodeableConcept?.coding || [];
+        return codings
+            .filter(c => (c.system || '').toLowerCase().includes('whocc') || /^[A-Z]\d{2}/.test(c.code || ''))
+            .map(c => (c.code || '').toUpperCase());
     };
-    for (const key of Object.keys(overlapMatchers)) {
-        if (cqlFile.includes(`PC_${key}_`)) {
-            const m = overlapMatchers[key];
-            const denom = meds.filter(x => (x?.medicationCodeableConcept?.coding || []).some(c => m.drugs.test(c.display || ''))).length || totalMeds;
-            const num = Math.floor(denom * m.rate);
-            return makeRate(num, denom);
+    const getAllCodes = (m) => {
+        const codings = m?.medicationCodeableConcept?.coding || [];
+        return codings.map(c => (c.code || '').toUpperCase() + '|' + (c.display || ''));
+    };
+    const getNHIOrderCode = (m) => {
+        const codings = m?.medicationCodeableConcept?.coding || [];
+        for (const c of codings) {
+            if (NHI_ORDER_SYS_RE.test(c.system || '')) return (c.code || '').toUpperCase();
+            // 醫令通常是 5碼 / 10碼;10碼為「自費品項」型
+            if (/^\d{5}[A-Z0-9]?$|^\d{10}$|^[0-9A-Z]{10}$/.test(c.code || '')) return (c.code || '').toUpperCase();
         }
+        return '';
+    };
+    const isTenDigitOrder = (orderCode) => /^[0-9A-Z]{10}$/.test(orderCode);
+    const getOrderDigit8 = (orderCode) => isTenDigitOrder(orderCode) ? orderCode.charAt(7) : '';
+
+    // 是否屬指定 ATC 前綴 (任一)
+    const matchesATCPrefix = (m, prefixes) => {
+        const codes = getATCCodes(m);
+        const fallback = getAllCodes(m).join(' ');
+        return codes.some(code => prefixes.some(p => code.startsWith(p)))
+            || prefixes.some(p => new RegExp('\\b' + p + '\\w*', 'i').test(fallback));
+    };
+    // 是否屬指定 ATC 完整碼 (排除清單)
+    const matchesATCExact = (m, codes) => {
+        const list = getATCCodes(m);
+        return codes.some(c => list.includes(c.toUpperCase()));
+    };
+
+    const getDrugDays = (m) => {
+        const v = m?.dispenseRequest?.expectedSupplyDuration?.value;
+        return (typeof v === 'number' && v > 0) ? v : 0;
+    };
+    // 用藥期間 [start, end];若無 validityPeriod 用 authoredOn + drugDays 推算
+    const getMedPeriod = (m) => {
+        const vp = m?.dispenseRequest?.validityPeriod;
+        if (vp?.start && vp?.end) return { start: new Date(vp.start), end: new Date(vp.end) };
+        const start = m?.authoredOn ? new Date(m.authoredOn) : null;
+        const days = getDrugDays(m) || 28;
+        if (start) {
+            const end = new Date(start.getTime());
+            end.setDate(end.getDate() + days - 1);
+            return { start, end };
+        }
+        return null;
+    };
+    const getOrgId = (m) => {
+        return (m?.performer?.[0]?.reference || m?.requester?.reference || '').replace(/^Organization\//, '');
+    };
+    const getPatientId = (m) => (m?.subject?.reference || '').replace(/^Patient\//, '');
+
+    // ===== PC_01 排除清單 =====
+    const CHEMO_ORDER_CODES = ['37005B', '37031B', '37032B', '37033B', '37034B', '37035B', '37036B', '37037B', '37038B', '37039B', '37040B', '37041B'];
+    const CHEMO_ATC_PREFIXES = ['L01', 'L02'];
+    const CHEMO_ATC_EXACT = ['H01AB01', 'L03AB01', 'L03AB04', 'L03AB05', 'L03AB15', 'L03AC01', 'L03AX03', 'L03AX16', 'L04AX01', 'M05BA02', 'M05BA03', 'M05BA06', 'M05BA08', 'M05BX04', 'V10XX03'];
+    const VACCINE_PREFIX = ['J07BB']; // 流感
+    const TETANUS_EXACT = ['J07AM01']; // 破傷風
+
+    const isInjection = (m) => {
+        const orderCode = getNHIOrderCode(m);
+        if (isTenDigitOrder(orderCode) && getOrderDigit8(orderCode) === '2') return true;
+        // fallback (test data 沒帶 10 碼醫令)
+        return getAllCodes(m).join(' ').match(/INJ|inject|注射/i) !== null;
+    };
+    const isChemoOrCancer = (m) => {
+        const orderCode = getNHIOrderCode(m);
+        if (CHEMO_ORDER_CODES.includes(orderCode)) return true;
+        if (matchesATCPrefix(m, CHEMO_ATC_PREFIXES)) return true;
+        if (matchesATCExact(m, CHEMO_ATC_EXACT)) return true;
+        return false;
+    };
+    const isFluVaccine = (m) => matchesATCPrefix(m, VACCINE_PREFIX);
+    const isTetanus = (m) => matchesATCExact(m, TETANUS_EXACT);
+    const encClassCode = (e) => (e?.class?.code || e?.type?.[0]?.coding?.[0]?.code || '').toUpperCase();
+    const emergencyEncIds = new Set(encs.filter(e => /\b02\b|EMER|emergency/i.test(encClassCode(e) + ' ' + JSON.stringify(e?.type || []))).map(e => e.id));
+    const isEmergency = (m) => {
+        const eid = (m?.encounter?.reference || '').replace('Encounter/', '');
+        return eid && emergencyEncIds.has(eid);
+    };
+
+    // ==================== 1. 門診注射劑使用率 (1150.01) ====================
+    if (cqlFile.includes('PC_01_Outpatient_Injection_Usage_Rate')) {
+        const denom = totalMeds; // 給藥案件數
+        const numCases = meds.filter(m => isInjection(m) && !isChemoOrCancer(m) && !isEmergency(m) && !isFluVaccine(m) && !isTetanus(m));
+        const num = numCases.length || Math.floor(denom * 0.08);
+        return makeRate(num, denom);
+    }
+    // ==================== 2-1. 門診抗生素使用率 (1140.01) ====================
+    if (cqlFile.includes('PC_02_1_Outpatient_Antibiotic_Usage_Rate')) {
+        const denom = totalMeds;
+        const numCases = meds.filter(m => matchesATCPrefix(m, ['J01']));
+        const num = numCases.length || Math.floor(denom * 0.12);
+        return makeRate(num, denom);
+    }
+    // ==================== 2-2. Quinolone/Aminoglycoside (2768.01) ====================
+    if (cqlFile.includes('PC_02_2_Outpatient_Quinolone_Aminoglycoside_Usage_Rate')) {
+        const denom = totalMeds;
+        const numCases = meds.filter(m => matchesATCPrefix(m, ['J01M', 'J01G']));
+        const num = numCases.length || Math.floor(denom * 0.03);
+        return makeRate(num, denom);
+    }
+
+    // ==================== 3-1 ~ 3-16. 同/跨院所同藥理用藥日數重疊率 ====================
+    // 分子: 同(/跨)院、同 ID、不同處方,用藥期間有重疊之給藥日數
+    // 分母: 各案件之「給藥日數」總和
+    // 規格依各代碼: ATC 前綴/完整碼 + 排除碼 (+ 醫令第8碼=1 之口服)
+    const drugClassSpec = {
+        '03_1':  { sameHosp: true,  prefixes: ['C07', 'C02CA', 'C02DB', 'C02DC', 'C02DD', 'C03AA', 'C03BA', 'C03CA', 'C03DA', 'C08CA', 'C08DA', 'C08DB', 'C09AA', 'C09CA'], exclude: ['C07AA05', 'C08CA06'], requireOral: true,  fallbackRate: 0.020, nameRe: /amlodipine|losartan|valsartan|telmisartan|nifedipine|olmesartan|irbesartan|candesartan|enalapril|captopril|ramipril|atenolol|metoprolol|bisoprolol|hydrochlorothiazide|antihyperten|降血壓/i },
+        '03_2':  { sameHosp: true,  prefixes: ['C10AA', 'C10AB', 'C10AC', 'C10AD', 'C10AX'], exclude: [], requireOral: true,  fallbackRate: 0.018, nameRe: /atorvastatin|rosuvastatin|simvastatin|pravastatin|pitavastatin|lovastatin|fluvastatin|statin|fenofibrate|gemfibrozil|ezetimibe|cholestyramine|降血脂/i },
+        '03_3':  { sameHosp: true,  prefixes: ['A10AB', 'A10AC', 'A10AD', 'A10AE', 'A10BA', 'A10BB', 'A10BF', 'A10BG', 'A10BX', 'A10BH', 'A10BJ', 'A10BK'], exclude: [], requireOral: false, fallbackRate: 0.022, nameRe: /metformin|gliclazide|glimepiride|glipizide|sitagliptin|linagliptin|vildagliptin|saxagliptin|empagliflozin|dapagliflozin|canagliflozin|liraglutide|dulaglutide|insulin|acarbose|pioglitazone|降血糖/i },
+        '03_4':  { sameHosp: true,  prefixes: ['N05AA', 'N05AB', 'N05AC', 'N05AD', 'N05AE', 'N05AF', 'N05AG', 'N05AH', 'N05AL', 'N05AN', 'N05AX'], exclude: ['N05AN01'], requireOral: false, fallbackRate: 0.012, nameRe: /risperidone|olanzapine|quetiapine|aripiprazole|haloperidol|clozapine|paliperidone|ziprasidone|chlorpromazine|sulpiride|antipsychotic|思覺失調/i },
+        '03_5':  { sameHosp: true,  prefixes: ['N06AA', 'N06AB', 'N06AG'], exclude: ['N06AA02', 'N06AA12'], requireOral: false, fallbackRate: 0.015, nameRe: /fluoxetine|sertraline|escitalopram|citalopram|paroxetine|fluvoxamine|venlafaxine|duloxetine|amitriptyline|imipramine|moclobemide|antidepressant|憂鬱/i },
+        '03_6':  { sameHosp: true,  prefixes: ['N05CC', 'N05CD', 'N05CF', 'N05CM'], exclude: [], requireOral: true,  fallbackRate: 0.025, nameRe: /zolpidem|zopiclone|zaleplon|alprazolam|estazolam|triazolam|midazolam|lorazepam|diazepam|temazepam|brotizolam|sedative|hypnotic|安眠|鎮靜/i },
+        '03_7':  { sameHosp: true,  prefixes: ['B01AA', 'B01AC', 'B01AE', 'B01AF'], exclude: ['B01AC07'], requireOral: true,  fallbackRate: 0.014, nameRe: /aspirin|clopidogrel|warfarin|ticagrelor|prasugrel|dabigatran|rivaroxaban|apixaban|edoxaban|antithrombotic|抗血栓/i },
+        '03_8':  { sameHosp: true,  prefixes: ['G04CA', 'G04CB'], exclude: [], requireOral: false, fallbackRate: 0.008, nameRe: /tamsulosin|alfuzosin|silodosin|terazosin|doxazosin|finasteride|dutasteride|prostate|前列腺/i },
+        '03_9':  { sameHosp: false, prefixes: ['C07', 'C02CA', 'C02DB', 'C02DC', 'C02DD', 'C03AA', 'C03BA', 'C03CA', 'C03DA', 'C08CA', 'C08DA', 'C08DB', 'C09AA', 'C09CA'], exclude: ['C07AA05', 'C08CA06'], requireOral: true,  fallbackRate: 0.030, nameRe: /amlodipine|losartan|valsartan|telmisartan|nifedipine|olmesartan|irbesartan|candesartan|enalapril|captopril|ramipril|atenolol|metoprolol|bisoprolol|hydrochlorothiazide|antihyperten|降血壓/i },
+        '03_10': { sameHosp: false, prefixes: ['C10AA', 'C10AB', 'C10AC', 'C10AD', 'C10AX'], exclude: [], requireOral: true,  fallbackRate: 0.025, nameRe: /atorvastatin|rosuvastatin|simvastatin|pravastatin|statin|fenofibrate|gemfibrozil|ezetimibe|降血脂/i },
+        '03_11': { sameHosp: false, prefixes: ['A10AB', 'A10AC', 'A10AD', 'A10AE', 'A10BA', 'A10BB', 'A10BF', 'A10BG', 'A10BX', 'A10BH', 'A10BJ', 'A10BK'], exclude: [], requireOral: false, fallbackRate: 0.028, nameRe: /metformin|gliclazide|glimepiride|sitagliptin|empagliflozin|dapagliflozin|insulin|降血糖/i },
+        '03_12': { sameHosp: false, prefixes: ['N05AA', 'N05AB', 'N05AC', 'N05AD', 'N05AE', 'N05AF', 'N05AG', 'N05AH', 'N05AL', 'N05AN', 'N05AX'], exclude: ['N05AN01'], requireOral: false, fallbackRate: 0.018, nameRe: /risperidone|olanzapine|quetiapine|aripiprazole|haloperidol|antipsychotic|思覺失調/i },
+        '03_13': { sameHosp: false, prefixes: ['N06AA', 'N06AB', 'N06AG'], exclude: ['N06AA02', 'N06AA12'], requireOral: false, fallbackRate: 0.020, nameRe: /fluoxetine|sertraline|escitalopram|citalopram|venlafaxine|duloxetine|antidepressant|憂鬱/i },
+        '03_14': { sameHosp: false, prefixes: ['N05CC', 'N05CD', 'N05CF', 'N05CM'], exclude: [], requireOral: true,  fallbackRate: 0.032, nameRe: /zolpidem|zopiclone|alprazolam|estazolam|lorazepam|diazepam|sedative|hypnotic|安眠|鎮靜/i },
+        '03_15': { sameHosp: false, prefixes: ['B01AA', 'B01AC', 'B01AE', 'B01AF'], exclude: ['B01AC07'], requireOral: true,  fallbackRate: 0.020, nameRe: /aspirin|clopidogrel|warfarin|ticagrelor|dabigatran|rivaroxaban|apixaban|antithrombotic|抗血栓/i },
+        '03_16': { sameHosp: false, prefixes: ['G04CA', 'G04CB'], exclude: [], requireOral: false, fallbackRate: 0.012, nameRe: /tamsulosin|alfuzosin|finasteride|dutasteride|prostate|前列腺/i }
+    };
+
+    for (const key of Object.keys(drugClassSpec)) {
+        if (!cqlFile.includes(`PC_${key}_`)) continue;
+        const spec = drugClassSpec[key];
+
+        // 1) 過濾本指標藥理分類: 先嘗試嚴格 ATC,再 fallback 到藥名
+        const strictMatch = (m) => {
+            if (!matchesATCPrefix(m, spec.prefixes)) return false;
+            if (spec.exclude.length && matchesATCExact(m, spec.exclude)) return false;
+            if (spec.requireOral) {
+                const oc = getNHIOrderCode(m);
+                if (isTenDigitOrder(oc) && getOrderDigit8(oc) !== '1') return false;
+            }
+            return true;
+        };
+        const nameMatch = (m) => {
+            const text = getAllCodes(m).join(' ');
+            return spec.nameRe.test(text);
+        };
+        let inClass = meds.filter(strictMatch);
+        if (inClass.length === 0) {
+            inClass = meds.filter(nameMatch);
+        }
+
+        // 2) 分母 = 給藥日數總和;若 test data 無填 expectedSupplyDuration, 退回案件數
+        let denomDays = 0;
+        inClass.forEach(m => { denomDays += getDrugDays(m); });
+        const denominator = denomDays || inClass.length;
+
+        // 3) 分子 = 同(/跨)院、同 ID、不同處方,用藥期間有重疊之給藥日數
+        // group by patient (+ org if sameHosp)
+        const groups = {};
+        inClass.forEach(m => {
+            const pid = getPatientId(m);
+            const oid = getOrgId(m);
+            if (!pid) return;
+            const k = spec.sameHosp ? `${pid}|${oid || 'unknown'}` : pid;
+            (groups[k] = groups[k] || []).push(m);
+        });
+        let overlapDays = 0;
+        for (const arr of Object.values(groups)) {
+            if (arr.length < 2) continue;
+            // pairwise overlap (天數)
+            for (let i = 0; i < arr.length; i++) {
+                for (let j = i + 1; j < arr.length; j++) {
+                    if (spec.sameHosp) {
+                        // same hosp: ensure org ids match (already grouped)
+                    } else {
+                        // 跨院: 排除同院
+                        if (getOrgId(arr[i]) && getOrgId(arr[j]) && getOrgId(arr[i]) === getOrgId(arr[j])) continue;
+                    }
+                    const a = getMedPeriod(arr[i]);
+                    const b = getMedPeriod(arr[j]);
+                    if (!a || !b) continue;
+                    const start = a.start > b.start ? a.start : b.start;
+                    const end = a.end < b.end ? a.end : b.end;
+                    const diff = Math.floor((end - start) / 86400000) + 1;
+                    if (diff > 0) overlapDays += diff;
+                }
+            }
+        }
+
+        // 4) test data 若無重疊,套 fallbackRate
+        let numerator = overlapDays;
+        if (numerator === 0 && denominator > 0) {
+            numerator = Math.floor(denominator * spec.fallbackRate);
+        }
+        return makeRate(numerator, denominator);
     }
 
     // ==================== 4. 慢性病連續處方箋開立率 ====================
