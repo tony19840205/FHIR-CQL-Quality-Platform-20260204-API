@@ -73,12 +73,12 @@
         <!-- 指標分類標籤 -->
         <section class="filter-section">
             <div class="filter-tabs">
-                <button class="filter-tab active" onclick="filterCategory('all')">全部 (103)</button>
-                <button class="filter-tab" onclick="filterCategory('medication')">用藥安全 (37)</button>
-                <button class="filter-tab" onclick="filterCategory('outpatient')">門診品質 (22)</button>
+                <button class="filter-tab active" onclick="filterCategory('all')">全部 (132)</button>
+                <button class="filter-tab" onclick="filterCategory('medication')">用藥安全 (56)</button>
+                <button class="filter-tab" onclick="filterCategory('outpatient')">門診品質 (28)</button>
                 <button class="filter-tab" onclick="filterCategory('inpatient')">住院品質 (5)</button>
-                <button class="filter-tab" onclick="filterCategory('surgery')">手術品質 (19)</button>
-                <button class="filter-tab" onclick="filterCategory('outcome')">結果品質 (20)</button>
+                <button class="filter-tab" onclick="filterCategory('surgery')">手術品質 (22)</button>
+                <button class="filter-tab" onclick="filterCategory('outcome')">結果品質 (21)</button>
             </div>
         </section>
 
@@ -1149,60 +1149,507 @@
             </div>
         </section>
 
-        <!-- ===================== 用藥安全指標(西醫基層) ===================== -->
+        <!-- ===================== 用藥安全指標(西醫基層) - 官方 ELM 3.10.0 ===================== -->
         <section class="overview-section" data-category="medication">
-            <div class="section-header"><div><h2><i class="fas fa-pills"></i> 用藥安全指標(西醫基層)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-pills"></i> 用藥安全指標(西醫基層)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('medication')" style="margin-left:auto;"><i class="fas fa-play-circle"></i> 全部啟動</button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-med"><div class="card-badge">1</div><div class="card-content"><h3>門診注射劑使用率</h3><p class="card-cql-file">西基-1</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">2-1</div><div class="card-content"><h3>門診抗生素使用率</h3><p class="card-cql-file">西基-2-1</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">2-2</div><div class="card-content"><h3>門診Quinolone、Aminoglycoside類抗生素藥品使用率</h3><p class="card-cql-file">西基-2-2</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-1</div><div class="card-content"><h3>同院所門診同藥理用藥日數重疊率-降血壓(口服)</h3><p class="card-cql-file">西基-3-1</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-2</div><div class="card-content"><h3>同院所門診同藥理用藥日數重疊率-降血脂(口服)</h3><p class="card-cql-file">西基-3-2</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-3</div><div class="card-content"><h3>同院所門診同藥理用藥日數重疊率-降血糖</h3><p class="card-cql-file">西基-3-3</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-4</div><div class="card-content"><h3>同院所門診同藥理用藥日數重疊率-抗思覺失調症</h3><p class="card-cql-file">西基-3-4</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-5</div><div class="card-content"><h3>同院所門診同藥理用藥日數重疊率-抗憂鬱症</h3><p class="card-cql-file">西基-3-5</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-6</div><div class="card-content"><h3>同院所門診同藥理用藥日數重疊率-安眠鎮靜(口服)</h3><p class="card-cql-file">西基-3-6</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-7</div><div class="card-content"><h3>同院所門診同藥理用藥日數重疊率-抗血栓(口服)</h3><p class="card-cql-file">西基-3-7</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-8</div><div class="card-content"><h3>同院所門診同藥理用藥日數重疊率-前列腺肥大(口服)</h3><p class="card-cql-file">西基-3-8</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-9</div><div class="card-content"><h3>跨院所門診同藥理用藥日數重疊率-降血壓(口服)</h3><p class="card-cql-file">西基-3-9</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-10</div><div class="card-content"><h3>跨院所門診同藥理用藥日數重疊率-降血脂(口服)</h3><p class="card-cql-file">西基-3-10</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-11</div><div class="card-content"><h3>跨院所門診同藥理用藥日數重疊率-降血糖</h3><p class="card-cql-file">西基-3-11</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-12</div><div class="card-content"><h3>跨院所門診同藥理用藥日數重疊率-抗思覺失調症</h3><p class="card-cql-file">西基-3-12</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-13</div><div class="card-content"><h3>跨院所門診同藥理用藥日數重疊率-抗憂鬱症</h3><p class="card-cql-file">西基-3-13</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-14</div><div class="card-content"><h3>跨院所門診同藥理用藥日數重疊率-安眠鎮靜(口服)</h3><p class="card-cql-file">西基-3-14</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-15</div><div class="card-content"><h3>跨院所門診同藥理用藥日數重疊率-抗血栓(口服)</h3><p class="card-cql-file">西基-3-15</p></div></div>
-                <div class="overview-card quality-med"><div class="card-badge">3-16</div><div class="card-content"><h3>跨院所門診同藥理用藥日數重疊率-前列腺肥大(口服)</h3><p class="card-cql-file">西基-3-16</p></div></div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-1')">
+                    <div class="card-badge">基1</div>
+                    <div class="card-content">
+                        <h3>門診注射劑使用率</h3>
+                        <p class="card-code">基-1</p>
+                        <p class="card-cql-file">Indicator_PC_01_Outpatient_Injection_Usage_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">使用率</span><span class="mini-value" id="indPc1Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-1')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-2-1')">
+                    <div class="card-badge">基2-1</div>
+                    <div class="card-content">
+                        <h3>門診抗生素使用率</h3>
+                        <p class="card-code">基-2-1</p>
+                        <p class="card-cql-file">Indicator_PC_02_1_Outpatient_Antibiotic_Usage_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">使用率</span><span class="mini-value" id="indPc2_1Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_2_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_2_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_2_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-2-1')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_2_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-2-2')">
+                    <div class="card-badge">基2-2</div>
+                    <div class="card-content">
+                        <h3>門診Quinolone、Aminoglycoside類抗生素藥品使用率</h3>
+                        <p class="card-code">基-2-2</p>
+                        <p class="card-cql-file">Indicator_PC_02_2_Outpatient_Quinolone_Aminoglycoside_Usage_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">使用率</span><span class="mini-value" id="indPc2_2Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_2_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_2_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_2_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-2-2')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_2_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-1')">
+                    <div class="card-badge">基3-1</div>
+                    <div class="card-content">
+                        <h3>同院所門診同藥理用藥日數重疊率-降血壓(口服)</h3>
+                        <p class="card-code">基-3-1</p>
+                        <p class="card-cql-file">Indicator_PC_03_1_Same_Hospital_Antihypertensive_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_1Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-1')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-2')">
+                    <div class="card-badge">基3-2</div>
+                    <div class="card-content">
+                        <h3>同院所門診同藥理用藥日數重疊率-降血脂(口服)</h3>
+                        <p class="card-code">基-3-2</p>
+                        <p class="card-cql-file">Indicator_PC_03_2_Same_Hospital_Lipid_Lowering_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_2Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-2')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-3')">
+                    <div class="card-badge">基3-3</div>
+                    <div class="card-content">
+                        <h3>同院所門診同藥理用藥日數重疊率-降血糖</h3>
+                        <p class="card-code">基-3-3</p>
+                        <p class="card-cql-file">Indicator_PC_03_3_Same_Hospital_Antidiabetic_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_3Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-3')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-4')">
+                    <div class="card-badge">基3-4</div>
+                    <div class="card-content">
+                        <h3>同院所門診同藥理用藥日數重疊率-抗思覺失調症</h3>
+                        <p class="card-code">基-3-4</p>
+                        <p class="card-cql-file">Indicator_PC_03_4_Same_Hospital_Antipsychotic_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_4Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-4')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_4" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-5')">
+                    <div class="card-badge">基3-5</div>
+                    <div class="card-content">
+                        <h3>同院所門診同藥理用藥日數重疊率-抗憂鬱症</h3>
+                        <p class="card-code">基-3-5</p>
+                        <p class="card-cql-file">Indicator_PC_03_5_Same_Hospital_Antidepressant_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_5Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-5')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_5" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-6')">
+                    <div class="card-badge">基3-6</div>
+                    <div class="card-content">
+                        <h3>同院所門診同藥理用藥日數重疊率-安眠鎮靜(口服)</h3>
+                        <p class="card-code">基-3-6</p>
+                        <p class="card-cql-file">Indicator_PC_03_6_Same_Hospital_Sedative_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_6Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_6" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-6')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_6" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-7')">
+                    <div class="card-badge">基3-7</div>
+                    <div class="card-content">
+                        <h3>同院所門診同藥理用藥日數重疊率-抗血栓(口服)</h3>
+                        <p class="card-code">基-3-7</p>
+                        <p class="card-cql-file">Indicator_PC_03_7_Same_Hospital_Antithrombotic_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_7Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-7')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_7" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-8')">
+                    <div class="card-badge">基3-8</div>
+                    <div class="card-content">
+                        <h3>同院所門診同藥理用藥日數重疊率-前列腺肥大(口服)</h3>
+                        <p class="card-code">基-3-8</p>
+                        <p class="card-cql-file">Indicator_PC_03_8_Same_Hospital_Prostate_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_8Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-8')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_8" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-9')">
+                    <div class="card-badge">基3-9</div>
+                    <div class="card-content">
+                        <h3>跨院所門診同藥理用藥日數重疊率-降血壓(口服)</h3>
+                        <p class="card-code">基-3-9</p>
+                        <p class="card-cql-file">Indicator_PC_03_9_Cross_Hospital_Antihypertensive_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_9Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_9" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-9')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_9" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-10')">
+                    <div class="card-badge">基3-10</div>
+                    <div class="card-content">
+                        <h3>跨院所門診同藥理用藥日數重疊率-降血脂(口服)</h3>
+                        <p class="card-code">基-3-10</p>
+                        <p class="card-cql-file">Indicator_PC_03_10_Cross_Hospital_Lipid_Lowering_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_10Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_10" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-10')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_10" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-11')">
+                    <div class="card-badge">基3-11</div>
+                    <div class="card-content">
+                        <h3>跨院所門診同藥理用藥日數重疊率-降血糖</h3>
+                        <p class="card-code">基-3-11</p>
+                        <p class="card-cql-file">Indicator_PC_03_11_Cross_Hospital_Antidiabetic_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_11Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_11" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-11')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_11" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-12')">
+                    <div class="card-badge">基3-12</div>
+                    <div class="card-content">
+                        <h3>跨院所門診同藥理用藥日數重疊率-抗思覺失調症</h3>
+                        <p class="card-code">基-3-12</p>
+                        <p class="card-cql-file">Indicator_PC_03_12_Cross_Hospital_Antipsychotic_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_12Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_12" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-12')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_12" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-13')">
+                    <div class="card-badge">基3-13</div>
+                    <div class="card-content">
+                        <h3>跨院所門診同藥理用藥日數重疊率-抗憂鬱症</h3>
+                        <p class="card-code">基-3-13</p>
+                        <p class="card-cql-file">Indicator_PC_03_13_Cross_Hospital_Antidepressant_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_13Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_13" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-13')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_13" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-14')">
+                    <div class="card-badge">基3-14</div>
+                    <div class="card-content">
+                        <h3>跨院所門診同藥理用藥日數重疊率-安眠鎮靜(口服)</h3>
+                        <p class="card-code">基-3-14</p>
+                        <p class="card-cql-file">Indicator_PC_03_14_Cross_Hospital_Sedative_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_14Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_14" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-14')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_14" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-15')">
+                    <div class="card-badge">基3-15</div>
+                    <div class="card-content">
+                        <h3>跨院所門診同藥理用藥日數重疊率-抗血栓(口服)</h3>
+                        <p class="card-code">基-3-15</p>
+                        <p class="card-cql-file">Indicator_PC_03_15_Cross_Hospital_Antithrombotic_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_15Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_15" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-15')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_15" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-med" onclick="showDetailModal('indicator-pc-3-16')">
+                    <div class="card-badge">基3-16</div>
+                    <div class="card-content">
+                        <h3>跨院所門診同藥理用藥日數重疊率-前列腺肥大(口服)</h3>
+                        <p class="card-code">基-3-16</p>
+                        <p class="card-cql-file">Indicator_PC_03_16_Cross_Hospital_Prostate_Overlap</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">重疊率</span><span class="mini-value" id="indPc3_16Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_3_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_3_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_3_16" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-3-16')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_3_16" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- ===================== 門診品質指標(西醫基層) ===================== -->
+        <!-- ===================== 門診品質指標(西醫基層) - 官方 ELM 3.10.0 ===================== -->
         <section class="overview-section" data-category="outpatient">
-            <div class="section-header"><div><h2><i class="fas fa-hospital-user"></i> 門診品質指標(西醫基層)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-hospital-user"></i> 門診品質指標(西醫基層)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('outpatient')" style="margin-left:auto;"><i class="fas fa-play-circle"></i> 全部啟動</button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-out"><div class="card-badge">4</div><div class="card-content"><h3>慢性病連續處方箋開立率</h3><p class="card-cql-file">西基-4</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">5</div><div class="card-content"><h3>門診多張處方箋開藥品項數大於等於十項之案件比率</h3><p class="card-cql-file">西基-5</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">6-1</div><div class="card-content"><h3>門診平均每張慢性病處方箋開藥日數-糖尿病</h3><p class="card-cql-file">西基-6-1</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">6-2</div><div class="card-content"><h3>門診平均每張慢性病處方箋開藥日數-高血壓</h3><p class="card-cql-file">西基-6-2</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">6-3</div><div class="card-content"><h3>門診平均每張慢性病處方箋開藥日數-高血脂</h3><p class="card-cql-file">西基-6-3</p></div></div>
-                <div class="overview-card quality-out"><div class="card-badge">8</div><div class="card-content"><h3>就診後同日於同院所再次就診率</h3><p class="card-cql-file">西基-8</p></div></div>
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-pc-4')">
+                    <div class="card-badge">基4</div>
+                    <div class="card-content">
+                        <h3>慢性病連續處方箋開立率</h3>
+                        <p class="card-code">基-4</p>
+                        <p class="card-cql-file">Indicator_PC_04_Chronic_Continuous_Prescription_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">開立率</span><span class="mini-value" id="indPc4Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_4" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-4')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_4" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-pc-5')">
+                    <div class="card-badge">基5</div>
+                    <div class="card-content">
+                        <h3>門診多張處方箋開藥品項數大於等於十項之案件比率</h3>
+                        <p class="card-code">基-5</p>
+                        <p class="card-cql-file">Indicator_PC_05_Prescription_10_Plus_Drugs_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">比率</span><span class="mini-value" id="indPc5Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_5" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-5')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_5" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-pc-6-1')">
+                    <div class="card-badge">基6-1</div>
+                    <div class="card-content">
+                        <h3>門診平均每張慢性病處方箋開藥日數-糖尿病</h3>
+                        <p class="card-code">基-6-1</p>
+                        <p class="card-cql-file">Indicator_PC_06_1_Chronic_Prescription_Days_Diabetes</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">平均日數</span><span class="mini-value" id="indPc6_1Rate">--日</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_6_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_6_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_6_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-6-1')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_6_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-pc-6-2')">
+                    <div class="card-badge">基6-2</div>
+                    <div class="card-content">
+                        <h3>門診平均每張慢性病處方箋開藥日數-高血壓</h3>
+                        <p class="card-code">基-6-2</p>
+                        <p class="card-cql-file">Indicator_PC_06_2_Chronic_Prescription_Days_Hypertension</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">平均日數</span><span class="mini-value" id="indPc6_2Rate">--日</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_6_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_6_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_6_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-6-2')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_6_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-pc-6-3')">
+                    <div class="card-badge">基6-3</div>
+                    <div class="card-content">
+                        <h3>門診平均每張慢性病處方箋開藥日數-高血脂</h3>
+                        <p class="card-code">基-6-3</p>
+                        <p class="card-cql-file">Indicator_PC_06_3_Chronic_Prescription_Days_Hyperlipidemia</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">平均日數</span><span class="mini-value" id="indPc6_3Rate">--日</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_6_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_6_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_6_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-6-3')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_6_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-out" onclick="showDetailModal('indicator-pc-8')">
+                    <div class="card-badge">基8</div>
+                    <div class="card-content">
+                        <h3>就診後同日於同院所再次就診率</h3>
+                        <p class="card-code">基-8</p>
+                        <p class="card-cql-file">Indicator_PC_08_Same_Day_Same_Hospital_Revisit_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">再就診率</span><span class="mini-value" id="indPc8Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_8" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-8')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_8" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- ===================== 手術品質指標(西醫基層) ===================== -->
+        <!-- ===================== 手術品質指標(西醫基層) - 官方 ELM 3.10.0 ===================== -->
         <section class="overview-section" data-category="surgery">
-            <div class="section-header"><div><h2><i class="fas fa-procedures"></i> 手術品質指標(西醫基層)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-procedures"></i> 手術品質指標(西醫基層)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('surgery')" style="margin-left:auto;"><i class="fas fa-play-circle"></i> 全部啟動</button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-surg"><div class="card-badge">9-1</div><div class="card-content"><h3>剖腹產率-整體</h3><p class="card-cql-file">西基-9-1</p></div></div>
-                <div class="overview-card quality-surg"><div class="card-badge">9-2</div><div class="card-content"><h3>剖腹產率-自行要求</h3><p class="card-cql-file">西基-9-2</p></div></div>
-                <div class="overview-card quality-surg"><div class="card-badge">9-3</div><div class="card-content"><h3>剖腹產率-具適應症</h3><p class="card-cql-file">西基-9-3</p></div></div>
+                <div class="overview-card quality-surg" onclick="showDetailModal('indicator-pc-9-1')">
+                    <div class="card-badge">基9-1</div>
+                    <div class="card-content">
+                        <h3>剖腹產率-整體</h3>
+                        <p class="card-code">基-9-1</p>
+                        <p class="card-cql-file">Indicator_PC_09_1_Cesarean_Section_Rate_Overall</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">剖腹產率</span><span class="mini-value" id="indPc9_1Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_9_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_9_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_9_1" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-9-1')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_9_1" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-surg" onclick="showDetailModal('indicator-pc-9-2')">
+                    <div class="card-badge">基9-2</div>
+                    <div class="card-content">
+                        <h3>剖腹產率-自行要求</h3>
+                        <p class="card-code">基-9-2</p>
+                        <p class="card-cql-file">Indicator_PC_09_2_Cesarean_Section_Rate_Patient_Requested</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">剖腹產率</span><span class="mini-value" id="indPc9_2Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_9_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_9_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_9_2" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-9-2')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_9_2" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
+                <div class="overview-card quality-surg" onclick="showDetailModal('indicator-pc-9-3')">
+                    <div class="card-badge">基9-3</div>
+                    <div class="card-content">
+                        <h3>剖腹產率-具適應症</h3>
+                        <p class="card-code">基-9-3</p>
+                        <p class="card-cql-file">Indicator_PC_09_3_Cesarean_Section_Rate_With_Indication</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">剖腹產率</span><span class="mini-value" id="indPc9_3Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_9_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_9_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_9_3" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-9-3')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_9_3" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- ===================== 結果品質指標(西醫基層) ===================== -->
+        <!-- ===================== 結果品質指標(西醫基層) - 官方 ELM 3.10.0 ===================== -->
         <section class="overview-section" data-category="outcome">
-            <div class="section-header"><div><h2><i class="fas fa-chart-line"></i> 結果品質指標(西醫基層)</h2></div></div>
+            <div class="section-header">
+                <div><h2><i class="fas fa-chart-line"></i> 結果品質指標(西醫基層)</h2></div>
+                <button class="btn btn-primary" onclick="executeAllCategory('outcome')" style="margin-left:auto;"><i class="fas fa-play-circle"></i> 全部啟動</button>
+            </div>
             <div class="overview-grid quality-grid">
-                <div class="overview-card quality-outcome"><div class="card-badge">7</div><div class="card-content"><h3>糖尿病病人HbA1c執行率</h3><p class="card-cql-file">西基-7</p></div></div>
+                <div class="overview-card quality-outcome" onclick="showDetailModal('indicator-pc-7')">
+                    <div class="card-badge">基7</div>
+                    <div class="card-content">
+                        <h3>糖尿病病人HbA1c執行率</h3>
+                        <p class="card-code">基-7</p>
+                        <p class="card-cql-file">Indicator_PC_07_Diabetes_HbA1c_Glycated_Albumin_Rate</p>
+                        <div class="card-mini-stats"><div class="mini-stat"><span class="mini-label">執行率</span><span class="mini-value" id="indPc7Rate">--%</span></div></div>
+                        <div class="card-query-options" onclick="event.stopPropagation()" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; font-size:11px;">
+                            <input type="date" id="startDate_pc_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <input type="date" id="endDate_pc_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px; width:120px;">
+                            <select id="maxRecords_pc_7" style="padding:2px 4px; border:1px solid #e2e8f0; border-radius:4px; font-size:11px;"><option value="50">50筆</option><option value="100">100筆</option><option value="200" selected>200筆</option><option value="500">500筆</option><option value="1000">1000筆</option><option value="99999">不限制</option></select>
+                        </div>
+                        <button class="btn-card-mini" onclick="event.stopPropagation(); executeQuery('indicator-pc-7')"><i class="fas fa-play"></i> 查詢</button>
+                        <div class="card-status" id="status_pc_7" style="font-size:11px; margin-top:4px; min-height:16px;"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -1923,7 +2370,7 @@
     <!-- JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="js/fhir-connection.js"></script>
-    <script src="js/quality-indicators-api.js?v=20260424dental"></script>
+    <script src="js/quality-indicators-api.js?v=20260424pc"></script>
     <script src="js/llm-service.js"></script>
     <script src="js/data-exporter.js"></script>
     <script src="js/llm-connection-manager.js"></script>

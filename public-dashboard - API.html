@@ -241,7 +241,7 @@
             </div>
             <h1>公共健康數據<br>透明開放平台</h1>
             <p>
-                整合 FHIR 醫療標準與 CQL 臨床查詢語言，涵蓋傳染病監控、67 項醫療品質指標與 ESG 永續報告。<br>
+                整合 FHIR 醫療標準與 CQL 臨床查詢語言，涵蓋傳染病監控、96 項醫療品質指標與 ESG 永續報告。<br>
                 所有資料皆經去識別化處理，保護病患隱私。
             </p>
             <div class="hero-btns">
@@ -317,7 +317,7 @@
                     <div class="sec-icon" style="background:#dbeafe;color:#2563eb;"><i class="fas fa-chart-bar"></i></div>
                     <div>
                         <div class="sec-title">醫療品質指標</div>
-                        <div class="sec-sub" id="qualitySub">67 項指標 · 5 大類別</div>
+                        <div class="sec-sub" id="qualitySub">96 項指標 · 5 大類別</div>
                     </div>
                 </div>
                 <a href="#quality" onclick="toggleAllQuality(event)" style="font-size:14px;color:#2563eb;font-weight:500;cursor:pointer;">查看完整指標 <i class="fas fa-chevron-down" id="qualityExpandIcon" style="font-size:12px;"></i></a>
@@ -458,7 +458,37 @@ const EMBEDDED_DATA = {
     { id:"indicator-dental-17", number:"牙17", name:"恒牙根管治療6月保存率", code:"牙-17", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
     { id:"indicator-dental-18", number:"牙18", name:"乳牙根管治療3月保存率", code:"牙-18", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
     { id:"indicator-dental-19", number:"牙19", name:"根管治療6月保存率", code:"牙-19", category:"outcome", numerator:null, denominator:null, rate:null, unit:"%" },
-    { id:"indicator-dental-20", number:"牙20", name:"身心障礙者牙科門診院所名單", code:"牙-20", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" }
+    { id:"indicator-dental-20", number:"牙20", name:"身心障礙者牙科門診院所名單", code:"牙-20", category:"outcome", numerator:null, denominator:null, rate:null, unit:"家" },
+    // ===== PC Indicators =====
+    { id:"indicator-pc-1", rateKey:"indPc1Rate" },
+    { id:"indicator-pc-2-1", rateKey:"indPc2_1Rate" },
+    { id:"indicator-pc-2-2", rateKey:"indPc2_2Rate" },
+    { id:"indicator-pc-3-1", rateKey:"indPc3_1Rate" },
+    { id:"indicator-pc-3-2", rateKey:"indPc3_2Rate" },
+    { id:"indicator-pc-3-3", rateKey:"indPc3_3Rate" },
+    { id:"indicator-pc-3-4", rateKey:"indPc3_4Rate" },
+    { id:"indicator-pc-3-5", rateKey:"indPc3_5Rate" },
+    { id:"indicator-pc-3-6", rateKey:"indPc3_6Rate" },
+    { id:"indicator-pc-3-7", rateKey:"indPc3_7Rate" },
+    { id:"indicator-pc-3-8", rateKey:"indPc3_8Rate" },
+    { id:"indicator-pc-3-9", rateKey:"indPc3_9Rate" },
+    { id:"indicator-pc-3-10", rateKey:"indPc3_10Rate" },
+    { id:"indicator-pc-3-11", rateKey:"indPc3_11Rate" },
+    { id:"indicator-pc-3-12", rateKey:"indPc3_12Rate" },
+    { id:"indicator-pc-3-13", rateKey:"indPc3_13Rate" },
+    { id:"indicator-pc-3-14", rateKey:"indPc3_14Rate" },
+    { id:"indicator-pc-3-15", rateKey:"indPc3_15Rate" },
+    { id:"indicator-pc-3-16", rateKey:"indPc3_16Rate" },
+    { id:"indicator-pc-4", rateKey:"indPc4Rate" },
+    { id:"indicator-pc-5", rateKey:"indPc5Rate" },
+    { id:"indicator-pc-6-1", rateKey:"indPc6_1Rate" },
+    { id:"indicator-pc-6-2", rateKey:"indPc6_2Rate" },
+    { id:"indicator-pc-6-3", rateKey:"indPc6_3Rate" },
+    { id:"indicator-pc-7", rateKey:"indPc7Rate" },
+    { id:"indicator-pc-8", rateKey:"indPc8Rate" },
+    { id:"indicator-pc-9-1", rateKey:"indPc9_1Rate" },
+    { id:"indicator-pc-9-2", rateKey:"indPc9_2Rate" },
+    { id:"indicator-pc-9-3", rateKey:"indPc9_3Rate" }
   ],
   healthIndicators: [
     { id:"covid19-vaccine", name:"COVID-19 疫苗接種率", cql:"COVID19VaccinationCoverage", description:"監測 COVID-19 疫苗接種涵蓋率與劑次完成度", count:null, rate:null, countLabel:"接種人數", rateLabel:"接種率", rateUnit:"%" },
@@ -550,7 +580,7 @@ function renderQuality(indicators) {
     _qualityData = indicators;
     const container = document.getElementById('qualityContainer');
     const queried = indicators.filter(i => i.rate !== null).length;
-    if (queried > 0) document.getElementById('qualitySub').textContent = `67 項指標 · 5 大類別 · ${queried} 項已查詢`;
+    if (queried > 0) document.getElementById('qualitySub').textContent = `96 項指標 · 5 大類別 · ${queried} 項已查詢`;
 
     const grouped = {};
     indicators.forEach(ind => {
@@ -757,3 +787,4 @@ function _applyDashboardData(d) {
 <script src="js/multi-source-aggregator.js"></script>
 </body>
 </html>
+

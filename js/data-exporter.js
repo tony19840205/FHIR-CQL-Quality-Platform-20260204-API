@@ -395,6 +395,36 @@ class DataExporter {
             { id: 'indicator-dental-18', number: '牙18', name: '乳牙根管治療3月保存率', code: '牙-18', category: 'outcome' },
             { id: 'indicator-dental-19', number: '牙19', name: '根管治療6月保存率', code: '牙-19', category: 'outcome' },
             { id: 'indicator-dental-20', number: '牙20', name: '身心障礙者牙科門診院所名單', code: '牙-20', category: 'outcome' },
+            // ===== 西醫基層 (29) =====
+            { id: 'indicator-pc-1', number: '基1', name: '門診注射劑使用率', code: '基-1', category: 'medication' },
+            { id: 'indicator-pc-2-1', number: '基2-1', name: '門診抗生素使用率', code: '基-2-1', category: 'medication' },
+            { id: 'indicator-pc-2-2', number: '基2-2', name: '門診Quinolone/Aminoglycoside抗生素使用率', code: '基-2-2', category: 'medication' },
+            { id: 'indicator-pc-3-1', number: '基3-1', name: '同院降血壓藥重疊率', code: '基-3-1', category: 'medication' },
+            { id: 'indicator-pc-3-2', number: '基3-2', name: '同院降血脂藥重疊率', code: '基-3-2', category: 'medication' },
+            { id: 'indicator-pc-3-3', number: '基3-3', name: '同院降血糖藥重疊率', code: '基-3-3', category: 'medication' },
+            { id: 'indicator-pc-3-4', number: '基3-4', name: '同院抗思覺失調藥重疊率', code: '基-3-4', category: 'medication' },
+            { id: 'indicator-pc-3-5', number: '基3-5', name: '同院抗憂鬱藥重疊率', code: '基-3-5', category: 'medication' },
+            { id: 'indicator-pc-3-6', number: '基3-6', name: '同院安眠鎮靜藥重疊率', code: '基-3-6', category: 'medication' },
+            { id: 'indicator-pc-3-7', number: '基3-7', name: '同院抗血栓藥重疊率', code: '基-3-7', category: 'medication' },
+            { id: 'indicator-pc-3-8', number: '基3-8', name: '同院前列腺藥重疊率', code: '基-3-8', category: 'medication' },
+            { id: 'indicator-pc-3-9', number: '基3-9', name: '跨院降血壓藥重疊率', code: '基-3-9', category: 'medication' },
+            { id: 'indicator-pc-3-10', number: '基3-10', name: '跨院降血脂藥重疊率', code: '基-3-10', category: 'medication' },
+            { id: 'indicator-pc-3-11', number: '基3-11', name: '跨院降血糖藥重疊率', code: '基-3-11', category: 'medication' },
+            { id: 'indicator-pc-3-12', number: '基3-12', name: '跨院抗思覺失調藥重疊率', code: '基-3-12', category: 'medication' },
+            { id: 'indicator-pc-3-13', number: '基3-13', name: '跨院抗憂鬱藥重疊率', code: '基-3-13', category: 'medication' },
+            { id: 'indicator-pc-3-14', number: '基3-14', name: '跨院安眠鎮靜藥重疊率', code: '基-3-14', category: 'medication' },
+            { id: 'indicator-pc-3-15', number: '基3-15', name: '跨院抗血栓藥重疊率', code: '基-3-15', category: 'medication' },
+            { id: 'indicator-pc-3-16', number: '基3-16', name: '跨院前列腺藥重疊率', code: '基-3-16', category: 'medication' },
+            { id: 'indicator-pc-4', number: '基4', name: '慢性病連續處方箋開立率', code: '基-4', category: 'outpatient' },
+            { id: 'indicator-pc-5', number: '基5', name: '門診10種以上藥品比率', code: '基-5', category: 'outpatient' },
+            { id: 'indicator-pc-6-1', number: '基6-1', name: '糖尿病每張處方藥品日數', code: '基-6-1', category: 'outpatient' },
+            { id: 'indicator-pc-6-2', number: '基6-2', name: '高血壓每張處方藥品日數', code: '基-6-2', category: 'outpatient' },
+            { id: 'indicator-pc-6-3', number: '基6-3', name: '高血脂每張處方藥品日數', code: '基-6-3', category: 'outpatient' },
+            { id: 'indicator-pc-7', number: '基7', name: '糖尿病HbA1c執行率', code: '基-7', category: 'outcome' },
+            { id: 'indicator-pc-8', number: '基8', name: '同日同院再就診率', code: '基-8', category: 'outpatient' },
+            { id: 'indicator-pc-9-1', number: '基9-1', name: '剖腹產率-整體', code: '基-9-1', category: 'surgery' },
+            { id: 'indicator-pc-9-2', number: '基9-2', name: '剖腹產率-自行要求', code: '基-9-2', category: 'surgery' },
+            { id: 'indicator-pc-9-3', number: '基9-3', name: '剖腹產率-具適應症', code: '基-9-3', category: 'surgery' },
         ];
 
         // DOM rate ID 對照（對應控制台 HTML 中的元素 ID）
@@ -433,6 +463,36 @@ class DataExporter {
             'indicator-dental-15': 'indDental15Rate', 'indicator-dental-16': 'indDental16Rate',
             'indicator-dental-17': 'indDental17Rate', 'indicator-dental-18': 'indDental18Rate',
             'indicator-dental-19': 'indDental19Rate', 'indicator-dental-20': 'indDental20Rate',
+            // ===== 西醫基層 =====
+            'indicator-pc-1': 'indPc1Rate',
+            'indicator-pc-2-1': 'indPc2_1Rate',
+            'indicator-pc-2-2': 'indPc2_2Rate',
+            'indicator-pc-3-1': 'indPc3_1Rate',
+            'indicator-pc-3-2': 'indPc3_2Rate',
+            'indicator-pc-3-3': 'indPc3_3Rate',
+            'indicator-pc-3-4': 'indPc3_4Rate',
+            'indicator-pc-3-5': 'indPc3_5Rate',
+            'indicator-pc-3-6': 'indPc3_6Rate',
+            'indicator-pc-3-7': 'indPc3_7Rate',
+            'indicator-pc-3-8': 'indPc3_8Rate',
+            'indicator-pc-3-9': 'indPc3_9Rate',
+            'indicator-pc-3-10': 'indPc3_10Rate',
+            'indicator-pc-3-11': 'indPc3_11Rate',
+            'indicator-pc-3-12': 'indPc3_12Rate',
+            'indicator-pc-3-13': 'indPc3_13Rate',
+            'indicator-pc-3-14': 'indPc3_14Rate',
+            'indicator-pc-3-15': 'indPc3_15Rate',
+            'indicator-pc-3-16': 'indPc3_16Rate',
+            'indicator-pc-4': 'indPc4Rate',
+            'indicator-pc-5': 'indPc5Rate',
+            'indicator-pc-6-1': 'indPc6_1Rate',
+            'indicator-pc-6-2': 'indPc6_2Rate',
+            'indicator-pc-6-3': 'indPc6_3Rate',
+            'indicator-pc-7': 'indPc7Rate',
+            'indicator-pc-8': 'indPc8Rate',
+            'indicator-pc-9-1': 'indPc9_1Rate',
+            'indicator-pc-9-2': 'indPc9_2Rate',
+            'indicator-pc-9-3': 'indPc9_3Rate',
         };
         const domNumMap = {
             'indicator-01': 'ind01Num', 'indicator-02': 'ind02Num',
@@ -449,6 +509,8 @@ class DataExporter {
             else if (def.id === 'indicator-dental-2') unit = '人次';
             else if (def.id === 'indicator-dental-4') unit = '人';
             else if (['indicator-dental-7','indicator-dental-8','indicator-dental-10'].includes(def.id)) unit = '次';
+            else if (['indicator-pc-6-1','indicator-pc-6-2','indicator-pc-6-3'].includes(def.id)) unit = '日';
+            else if (['indicator-pc-6-1','indicator-pc-6-2','indicator-pc-6-3'].includes(def.id)) unit = '日';
 
             // 優先從 window.qualityResults 讀取
             const result = qr[def.id];
