@@ -123,6 +123,37 @@ function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
+// 非比率型指標 (不應顯示 % 或符合/不符合分布)
+const NON_RATE_METRICS = ['平均次數', '平均日數', '院所數', '人次', '人', '家'];
+
+function isRateMetric(ind, results) {
+    if (results && (results.isAverage === true || results.isCount === true)) return false;
+    if (results && results.unit && results.unit !== '%') return false;
+    if (NON_RATE_METRICS.includes(ind.metric)) return false;
+    return true;
+}
+
+function formatRateDisplay(ind, results, plainText) {
+    const val = results.rate;
+    // 推導單位:後端 results.unit 優先,其次依 metric 推斷
+    let unit = results.unit;
+    if (!unit) {
+        if (NON_RATE_METRICS.includes(ind.metric)) {
+            unit = (ind.metric === '平均日數') ? '日'
+                 : (ind.metric === '平均次數') ? '次'
+                 : (ind.metric === '院所數' || ind.metric === '家') ? '家'
+                 : (ind.metric === '人次') ? '人次'
+                 : (ind.metric === '人') ? '人'
+                 : '';
+        } else {
+            unit = '%';
+        }
+    }
+    if (plainText) return val + (unit || '');
+    if (!unit) return String(val);
+    return val + '<span style="font-size:16px;">' + unit + '</span>';
+}
+
 function getBackendUrl() {
     const protocol = window.location.protocol;
     const hostname = window.location.hostname;
@@ -348,11 +379,8 @@ function updateCard(indicatorId, results) {
         return;
     }
 
-    if (ind.metric === '平均次數') {
-        rateEl.textContent = results.rate || '--';
-    } else {
-        rateEl.textContent = `${results.rate}%`;
-    }
+    // 使用統一的 formatRateDisplay (處理「%/日/次/人」等不同單位)
+    rateEl.innerHTML = formatRateDisplay(ind, results);
 }
 
 // ========== 批次執行 ==========
@@ -427,39 +455,48 @@ function generateDetailContent(indicatorId, results) {
         <h3 style="margin:0; color:#1e293b; font-size:18px;">${ind.title}</h3>
     </div>`;
 
-    // 主要指標卡片
+    // 主要指標卡片 (平均類指標使用不同標題)
     const categoryColors = getCategoryGradient(ind.category);
+    const isAvgMetric = !isRateMetric(ind, results);
+    const middleLabel = isAvgMetric ? '給藥案件數' : '符合條件人數';
+    const middleValue = isAvgMetric ? formatNumber(results.denominator) : formatNumber(results.numerator);
     html += `<div class="qi-stat-grid-3">
         <div class="qi-stat-card" style="border-top:4px solid ${categoryColors.primary};">
             <div class="qi-stat-icon" style="background:${categoryColors.light}; color:${categoryColors.primary};"><i class="fas fa-users"></i></div>
-            <div class="qi-stat-label">總病人數</div>
-            <div class="qi-stat-value">${formatNumber(results.totalPatients)}</div>
+            <div class="qi-stat-label">總案件數</div>
+            <div class="qi-stat-value">${formatNumber(results.totalPatients || results.denominator || 0)}</div>
         </div>
         <div class="qi-stat-card" style="border-top:4px solid #f59e0b;">
             <div class="qi-stat-icon" style="background:#fef3c7; color:#f59e0b;"><i class="fas fa-user-check"></i></div>
-            <div class="qi-stat-label">符合條件人數</div>
-            <div class="qi-stat-value">${formatNumber(results.numerator)}</div>
+            <div class="qi-stat-label">${middleLabel}</div>
+            <div class="qi-stat-value">${middleValue}</div>
         </div>
         <div class="qi-stat-card" style="border-top:4px solid #ef4444;">
             <div class="qi-stat-icon" style="background:#fee2e2; color:#ef4444;"><i class="fas fa-chart-pie"></i></div>
             <div class="qi-stat-label">${ind.metric}</div>
-            <div class="qi-stat-value">${ind.metric === '平均次數' ? results.rate : results.rate + '<span style="font-size:16px;">%</span>'}</div>
+            <div class="qi-stat-value">${formatRateDisplay(ind, results)}</div>
         </div>
     </div>`;
 
-    // 比率進度條
-    const pct = parseFloat(results.rate) || 0;
-    const notPct = (100 - pct).toFixed(1);
-    html += `<h4 style="margin:24px 0 12px; color:#334155;"><i class="fas fa-chart-bar"></i> ${ind.metric}分布</h4>`;
-    html += `<div class="qi-bar-container">
-        <div class="qi-bar-track">
-            <div class="qi-bar-fill" style="width:${Math.min(pct, 100)}%; background:linear-gradient(90deg,${categoryColors.primary},${categoryColors.secondary});"></div>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:13px;">
-            <span><span style="display:inline-block; width:12px; height:12px; background:${categoryColors.primary}; border-radius:2px; margin-right:4px;"></span> 符合 ${pct}% (${formatNumber(results.numerator)} 人)</span>
-            <span><span style="display:inline-block; width:12px; height:12px; background:#e2e8f0; border-radius:2px; margin-right:4px;"></span> 不符合 ${notPct}% (${formatNumber(results.denominator - results.numerator)} 人)</span>
-        </div>
-    </div>`;
+    // 比率進度條 — 僅對「比率/百分比」型指標顯示;平均日數/平均次數/院所數等不顯示假分布
+    if (isRateMetric(ind, results)) {
+        const pct = parseFloat(results.rate) || 0;
+        const pctClamped = Math.max(0, Math.min(100, pct));
+        const notPct = (100 - pctClamped).toFixed(1);
+        const numCount = Math.max(0, results.numerator || 0);
+        const denomCount = Math.max(0, results.denominator || 0);
+        const notCount = Math.max(0, denomCount - numCount);
+        html += `<h4 style="margin:24px 0 12px; color:#334155;"><i class="fas fa-chart-bar"></i> ${ind.metric}分布</h4>`;
+        html += `<div class="qi-bar-container">
+            <div class="qi-bar-track">
+                <div class="qi-bar-fill" style="width:${pctClamped}%; background:linear-gradient(90deg,${categoryColors.primary},${categoryColors.secondary});"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; margin-top:8px; font-size:13px;">
+                <span><span style="display:inline-block; width:12px; height:12px; background:${categoryColors.primary}; border-radius:2px; margin-right:4px;"></span> 符合 ${pctClamped.toFixed(1)}% (${formatNumber(numCount)} 人)</span>
+                <span><span style="display:inline-block; width:12px; height:12px; background:#e2e8f0; border-radius:2px; margin-right:4px;"></span> 不符合 ${notPct}% (${formatNumber(notCount)} 人)</span>
+            </div>
+        </div>`;
+    }
 
     // 品質評級
     html += generateQualityRating(ind, results);
@@ -516,7 +553,7 @@ function generateQualityRating(ind, results) {
                 <i class="fas fa-${ratingIcon}" style="color:${ratingColor}; margin-right:6px;"></i> ${ratingText}
             </div>
             <div style="font-size:13px; color:#64748b;">
-                ${ind.metric}: ${ind.metric === '平均次數' ? results.rate : results.rate + '%'} | 
+                ${ind.metric}: ${formatRateDisplay(ind, results, true)} | 
                 樣本數: ${formatNumber(results.totalPatients)} | 
                 健保局編號: ${ind.code}
             </div>
