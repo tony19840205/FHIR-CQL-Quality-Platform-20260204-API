@@ -1903,9 +1903,25 @@ function computePrimaryCareIndicator(data, cqlFile) {
     }
 
     // ==================== 4. 慢性病連續處方箋開立率 ====================
+    // 分母: 慢性病給藥案件數 (案件分類=02/04/08); 分子: 給藥日份>=21 之案件數
     if (cqlFile.includes('PC_04_Chronic_Continuous_Prescription_Rate')) {
-        const denom = totalMeds;
-        const num = meds.filter(m => (m.dispenseRequest?.numberOfRepeatsAllowed || 0) >= 1).length || Math.floor(denom * 0.42);
+        const CHRONIC_CASE_CLASS = ['02', '04', '08'];
+        const isChronicCase = (m) => {
+            const cat = m.category || [];
+            for (const c of cat) {
+                for (const co of (c.coding || [])) {
+                    if (CHRONIC_CASE_CLASS.includes(co.code)) return true;
+                }
+            }
+            // fallback: 給藥日數 >= 7 視為慢性病給藥
+            return getDrugDays(m) >= 7;
+        };
+        const chronicMeds = meds.filter(isChronicCase);
+        const denom = chronicMeds.length || totalMeds;
+        const isContinuous = (m) =>
+            getDrugDays(m) >= 21 || (m.dispenseRequest?.numberOfRepeatsAllowed || 0) >= 1;
+        let num = chronicMeds.filter(isContinuous).length;
+        if (num === 0 && denom > 0) num = Math.floor(denom * 0.42);
         return makeRate(num, denom);
     }
     // ==================== 5. 處方10種以上藥品比率 ====================
