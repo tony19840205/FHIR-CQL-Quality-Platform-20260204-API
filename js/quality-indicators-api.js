@@ -1,6 +1,6 @@
 // ========== 醫療品質指標儀表板邏輯 - API版 ==========
 // 透過後端 CQL Engine 執行查詢 (39項指標)
-console.log('📌 quality-indicators-api.js BUILD_VERSION: 20260401a');
+console.log('📌 quality-indicators-api.js BUILD_VERSION: 20260426hosp');
 
 let currentResults = {};
 window.qualityResults = currentResults;

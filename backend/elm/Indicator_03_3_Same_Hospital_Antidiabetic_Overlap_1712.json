@@ -34,581 +34,302 @@
             "annotation" : [ ]
          } ]
       },
+      "parameters" : {
+         "def" : [ {
+            "name" : "MeasurementPeriodStart",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "default" : {
+               "type" : "DateTime",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2026",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "hour" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "0",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "minute" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "0",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "second" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "0",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "millisecond" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "0",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            },
+            "parameterTypeSpecifier" : {
+               "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+               "type" : "NamedTypeSpecifier",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "MeasurementPeriodEnd",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "default" : {
+               "type" : "DateTime",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2026",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "3",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "31",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "hour" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "23",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "minute" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "59",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "second" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "59",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "millisecond" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "0",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            },
+            "parameterTypeSpecifier" : {
+               "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+               "type" : "NamedTypeSpecifier",
+               "annotation" : [ ]
+            }
+         } ]
+      },
       "codeSystems" : {
          "def" : [ {
-            "name" : "ICD10CM",
-            "id" : "http://hl7.org/fhir/sid/icd-10-cm",
-            "accessLevel" : "Public",
-            "annotation" : [ ]
-         }, {
-            "name" : "SNOMEDCT",
-            "id" : "http://snomed.info/sct",
-            "accessLevel" : "Public",
-            "annotation" : [ ]
-         }, {
             "name" : "ATC",
             "id" : "http://www.whocc.no/atc",
             "accessLevel" : "Public",
             "annotation" : [ ]
          }, {
-            "name" : "ActCode",
-            "id" : "http://terminology.hl7.org/CodeSystem/v3-ActCode",
-            "accessLevel" : "Public",
-            "annotation" : [ ]
-         }, {
-            "name" : "NHI_PROCEDURE",
-            "id" : "http://www.nhi.gov.tw/codes",
+            "name" : "NHIOrder",
+            "id" : "https://www.nhi.gov.tw/cs/medOrder",
             "accessLevel" : "Public",
             "annotation" : [ ]
          } ]
       },
       "codes" : {
          "def" : [ {
-            "name" : "Ambulatory",
-            "id" : "AMB",
-            "display" : "Ambulatory - 門診",
+            "name" : "A10AB Insulin Fast Prefix",
+            "id" : "A10AB",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "codeSystem" : {
-               "name" : "ActCode",
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10AC Insulin Intermediate Prefix",
+            "id" : "A10AC",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10AD Insulin Mix Prefix",
+            "id" : "A10AD",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10AE Insulin Long Prefix",
+            "id" : "A10AE",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10BA Biguanides Prefix",
+            "id" : "A10BA",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10BB Sulfonylureas Prefix",
+            "id" : "A10BB",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10BF Alpha Glucosidase Prefix",
+            "id" : "A10BF",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10BG Thiazolidinediones Prefix",
+            "id" : "A10BG",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10BX Other Oral Antidiabetics Prefix",
+            "id" : "A10BX",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10BH DPP4 Prefix",
+            "id" : "A10BH",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10BJ GLP1 Prefix",
+            "id" : "A10BJ",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "A10BK SGLT2 Prefix",
+            "id" : "A10BK",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ATC",
                "annotation" : [ ]
             }
          } ]
       },
+      "contexts" : {
+         "def" : [ {
+            "name" : "Patient",
+            "annotation" : [ ]
+         } ]
+      },
       "statements" : {
          "def" : [ {
-            "name" : "IsAntidiabeticDrug",
-            "context" : "Unfiltered",
-            "accessLevel" : "Public",
-            "type" : "FunctionDef",
+            "name" : "Patient",
+            "context" : "Patient",
             "annotation" : [ ],
             "expression" : {
-               "type" : "In",
+               "type" : "SingletonFrom",
                "annotation" : [ ],
                "signature" : [ ],
-               "operand" : [ {
-                  "type" : "Substring",
+               "operand" : {
+                  "dataType" : "{http://hl7.org/fhir}Patient",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
+                  "type" : "Retrieve",
                   "annotation" : [ ],
-                  "signature" : [ ],
-                  "stringToSub" : {
-                     "name" : "atcCode",
-                     "type" : "OperandRef",
-                     "annotation" : [ ]
-                  },
-                  "startIndex" : {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                     "value" : "0",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  },
-                  "length" : {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                     "value" : "5",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }
-               }, {
-                  "type" : "List",
-                  "annotation" : [ ],
-                  "element" : [ {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10AB",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10AC",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10AD",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10AE",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10BA",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10BB",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10BF",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10BG",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10BX",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10BH",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10BJ",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }, {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                     "value" : "A10BK",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  } ]
-               } ]
-            },
-            "operand" : [ {
-               "name" : "atcCode",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}String",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
                }
-            } ]
+            }
          }, {
-            "name" : "MaxDateTime",
-            "context" : "Unfiltered",
+            "name" : "Measurement Period",
+            "context" : "Patient",
             "accessLevel" : "Public",
-            "type" : "FunctionDef",
             "annotation" : [ ],
             "expression" : {
-               "type" : "If",
+               "lowClosed" : true,
+               "highClosed" : true,
+               "type" : "Interval",
                "annotation" : [ ],
-               "condition" : {
-                  "type" : "IsNull",
-                  "annotation" : [ ],
-                  "signature" : [ ],
-                  "operand" : {
-                     "name" : "d1",
-                     "type" : "OperandRef",
-                     "annotation" : [ ]
-                  }
-               },
-               "then" : {
-                  "name" : "d2",
-                  "type" : "OperandRef",
+               "low" : {
+                  "name" : "MeasurementPeriodStart",
+                  "type" : "ParameterRef",
                   "annotation" : [ ]
                },
-               "else" : {
-                  "type" : "If",
-                  "annotation" : [ ],
-                  "condition" : {
-                     "type" : "IsNull",
-                     "annotation" : [ ],
-                     "signature" : [ ],
-                     "operand" : {
-                        "name" : "d2",
-                        "type" : "OperandRef",
-                        "annotation" : [ ]
-                     }
-                  },
-                  "then" : {
-                     "name" : "d1",
-                     "type" : "OperandRef",
-                     "annotation" : [ ]
-                  },
-                  "else" : {
-                     "type" : "If",
-                     "annotation" : [ ],
-                     "condition" : {
-                        "type" : "Greater",
-                        "annotation" : [ ],
-                        "signature" : [ {
-                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        } ],
-                        "operand" : [ {
-                           "name" : "d1",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "d2",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        } ]
-                     },
-                     "then" : {
-                        "name" : "d1",
-                        "type" : "OperandRef",
-                        "annotation" : [ ]
-                     },
-                     "else" : {
-                        "name" : "d2",
-                        "type" : "OperandRef",
-                        "annotation" : [ ]
-                     }
-                  }
-               }
-            },
-            "operand" : [ {
-               "name" : "d1",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                  "type" : "NamedTypeSpecifier",
+               "high" : {
+                  "name" : "MeasurementPeriodEnd",
+                  "type" : "ParameterRef",
                   "annotation" : [ ]
                }
-            }, {
-               "name" : "d2",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               }
-            } ]
+            }
          }, {
-            "name" : "MinDateTime",
-            "context" : "Unfiltered",
-            "accessLevel" : "Public",
-            "type" : "FunctionDef",
-            "annotation" : [ ],
-            "expression" : {
-               "type" : "If",
-               "annotation" : [ ],
-               "condition" : {
-                  "type" : "IsNull",
-                  "annotation" : [ ],
-                  "signature" : [ ],
-                  "operand" : {
-                     "name" : "d1",
-                     "type" : "OperandRef",
-                     "annotation" : [ ]
-                  }
-               },
-               "then" : {
-                  "name" : "d2",
-                  "type" : "OperandRef",
-                  "annotation" : [ ]
-               },
-               "else" : {
-                  "type" : "If",
-                  "annotation" : [ ],
-                  "condition" : {
-                     "type" : "IsNull",
-                     "annotation" : [ ],
-                     "signature" : [ ],
-                     "operand" : {
-                        "name" : "d2",
-                        "type" : "OperandRef",
-                        "annotation" : [ ]
-                     }
-                  },
-                  "then" : {
-                     "name" : "d1",
-                     "type" : "OperandRef",
-                     "annotation" : [ ]
-                  },
-                  "else" : {
-                     "type" : "If",
-                     "annotation" : [ ],
-                     "condition" : {
-                        "type" : "Less",
-                        "annotation" : [ ],
-                        "signature" : [ {
-                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        } ],
-                        "operand" : [ {
-                           "name" : "d1",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "d2",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        } ]
-                     },
-                     "then" : {
-                        "name" : "d1",
-                        "type" : "OperandRef",
-                        "annotation" : [ ]
-                     },
-                     "else" : {
-                        "name" : "d2",
-                        "type" : "OperandRef",
-                        "annotation" : [ ]
-                     }
-                  }
-               }
-            },
-            "operand" : [ {
-               "name" : "d1",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               }
-            }, {
-               "name" : "d2",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               }
-            } ]
-         }, {
-            "name" : "CalculateOverlapDays",
-            "context" : "Unfiltered",
-            "accessLevel" : "Public",
-            "type" : "FunctionDef",
-            "annotation" : [ ],
-            "expression" : {
-               "type" : "If",
-               "annotation" : [ ],
-               "condition" : {
-                  "type" : "Or",
-                  "annotation" : [ ],
-                  "signature" : [ ],
-                  "operand" : [ {
-                     "type" : "Or",
-                     "annotation" : [ ],
-                     "signature" : [ ],
-                     "operand" : [ {
-                        "type" : "Or",
-                        "annotation" : [ ],
-                        "signature" : [ ],
-                        "operand" : [ {
-                           "type" : "IsNull",
-                           "annotation" : [ ],
-                           "signature" : [ ],
-                           "operand" : {
-                              "name" : "start1",
-                              "type" : "OperandRef",
-                              "annotation" : [ ]
-                           }
-                        }, {
-                           "type" : "IsNull",
-                           "annotation" : [ ],
-                           "signature" : [ ],
-                           "operand" : {
-                              "name" : "end1",
-                              "type" : "OperandRef",
-                              "annotation" : [ ]
-                           }
-                        } ]
-                     }, {
-                        "type" : "IsNull",
-                        "annotation" : [ ],
-                        "signature" : [ ],
-                        "operand" : {
-                           "name" : "start2",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        }
-                     } ]
-                  }, {
-                     "type" : "IsNull",
-                     "annotation" : [ ],
-                     "signature" : [ ],
-                     "operand" : {
-                        "name" : "end2",
-                        "type" : "OperandRef",
-                        "annotation" : [ ]
-                     }
-                  } ]
-               },
-               "then" : {
-                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "0",
-                  "type" : "Literal",
-                  "annotation" : [ ]
-               },
-               "else" : {
-                  "type" : "If",
-                  "annotation" : [ ],
-                  "condition" : {
-                     "type" : "LessOrEqual",
-                     "annotation" : [ ],
-                     "signature" : [ {
-                        "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                        "type" : "NamedTypeSpecifier",
-                        "annotation" : [ ]
-                     }, {
-                        "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                        "type" : "NamedTypeSpecifier",
-                        "annotation" : [ ]
-                     } ],
-                     "operand" : [ {
-                        "name" : "MaxDateTime",
-                        "type" : "FunctionRef",
-                        "annotation" : [ ],
-                        "signature" : [ ],
-                        "operand" : [ {
-                           "name" : "start1",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "start2",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        } ]
-                     }, {
-                        "name" : "MinDateTime",
-                        "type" : "FunctionRef",
-                        "annotation" : [ ],
-                        "signature" : [ ],
-                        "operand" : [ {
-                           "name" : "end1",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "end2",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        } ]
-                     } ]
-                  },
-                  "then" : {
-                     "precision" : "Day",
-                     "type" : "DurationBetween",
-                     "annotation" : [ ],
-                     "signature" : [ {
-                        "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                        "type" : "NamedTypeSpecifier",
-                        "annotation" : [ ]
-                     }, {
-                        "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                        "type" : "NamedTypeSpecifier",
-                        "annotation" : [ ]
-                     } ],
-                     "operand" : [ {
-                        "name" : "MaxDateTime",
-                        "type" : "FunctionRef",
-                        "annotation" : [ ],
-                        "signature" : [ ],
-                        "operand" : [ {
-                           "name" : "start1",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "start2",
-                           "type" : "OperandRef",
-                           "annotation" : [ ]
-                        } ]
-                     }, {
-                        "type" : "Add",
-                        "annotation" : [ ],
-                        "signature" : [ {
-                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "{urn:hl7-org:elm-types:r1}Quantity",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        } ],
-                        "operand" : [ {
-                           "name" : "MinDateTime",
-                           "type" : "FunctionRef",
-                           "annotation" : [ ],
-                           "signature" : [ ],
-                           "operand" : [ {
-                              "name" : "end1",
-                              "type" : "OperandRef",
-                              "annotation" : [ ]
-                           }, {
-                              "name" : "end2",
-                              "type" : "OperandRef",
-                              "annotation" : [ ]
-                           } ]
-                        }, {
-                           "type" : "ToQuantity",
-                           "annotation" : [ ],
-                           "signature" : [ {
-                              "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                              "type" : "NamedTypeSpecifier",
-                              "annotation" : [ ]
-                           } ],
-                           "operand" : {
-                              "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                              "value" : "1",
-                              "type" : "Literal",
-                              "annotation" : [ ]
-                           }
-                        } ]
-                     } ]
-                  },
-                  "else" : {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                     "value" : "0",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }
-               }
-            },
-            "operand" : [ {
-               "name" : "start1",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               }
-            }, {
-               "name" : "end1",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               }
-            }, {
-               "name" : "start2",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               }
-            }, {
-               "name" : "end2",
-               "annotation" : [ ],
-               "operandTypeSpecifier" : {
-                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               }
-            } ]
-         }, {
-            "name" : "Antidiabetic Prescriptions",
-            "context" : "Unfiltered",
+            "name" : "Drug Class Medication Requests",
+            "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "expression" : {
                "type" : "Query",
                "annotation" : [ ],
                "source" : [ {
-                  "alias" : "MR",
+                  "alias" : "M",
                   "annotation" : [ ],
                   "expression" : {
                      "dataType" : "{http://hl7.org/fhir}MedicationRequest",
@@ -621,997 +342,119 @@
                      "otherFilter" : [ ]
                   }
                } ],
-               "let" : [ {
-                  "identifier" : "medCodings",
-                  "annotation" : [ ],
-                  "expression" : {
-                     "path" : "coding",
-                     "type" : "Property",
-                     "annotation" : [ ],
-                     "source" : {
-                        "strict" : false,
-                        "type" : "As",
-                        "annotation" : [ ],
-                        "signature" : [ ],
-                        "operand" : {
-                           "path" : "medication",
-                           "scope" : "MR",
-                           "type" : "Property",
-                           "annotation" : [ ]
-                        },
-                        "asTypeSpecifier" : {
-                           "name" : "{http://hl7.org/fhir}CodeableConcept",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        }
-                     }
-                  }
-               } ],
+               "let" : [ ],
                "relationship" : [ ],
                "where" : {
-                  "type" : "And",
+                  "type" : "In",
                   "annotation" : [ ],
                   "signature" : [ ],
                   "operand" : [ {
-                     "type" : "And",
-                     "annotation" : [ ],
-                     "signature" : [ ],
-                     "operand" : [ {
-                        "type" : "Equal",
-                        "annotation" : [ ],
-                        "signature" : [ {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "{urn:hl7-org:elm-types:r1}String",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        } ],
-                        "operand" : [ {
-                           "path" : "value",
-                           "type" : "Property",
-                           "annotation" : [ ],
-                           "source" : {
-                              "path" : "status",
-                              "scope" : "MR",
-                              "type" : "Property",
-                              "annotation" : [ ]
-                           }
-                        }, {
-                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                           "value" : "completed",
-                           "type" : "Literal",
-                           "annotation" : [ ]
-                        } ]
-                     }, {
-                        "type" : "Exists",
-                        "annotation" : [ ],
-                        "signature" : [ ],
-                        "operand" : {
-                           "type" : "Query",
-                           "annotation" : [ ],
-                           "source" : [ {
-                              "alias" : "MC",
-                              "annotation" : [ ],
-                              "expression" : {
-                                 "name" : "medCodings",
-                                 "type" : "QueryLetRef",
-                                 "annotation" : [ ]
-                              }
-                           } ],
-                           "let" : [ ],
-                           "relationship" : [ ],
-                           "where" : {
-                              "type" : "And",
-                              "annotation" : [ ],
-                              "signature" : [ ],
-                              "operand" : [ {
-                                 "type" : "Equal",
-                                 "annotation" : [ ],
-                                 "signature" : [ {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier",
-                                    "annotation" : [ ]
-                                 }, {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier",
-                                    "annotation" : [ ]
-                                 } ],
-                                 "operand" : [ {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "system",
-                                       "scope" : "MC",
-                                       "type" : "Property",
-                                       "annotation" : [ ]
-                                    }
-                                 }, {
-                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                                    "value" : "http://www.whocc.no/atc",
-                                    "type" : "Literal",
-                                    "annotation" : [ ]
-                                 } ]
-                              }, {
-                                 "name" : "IsAntidiabeticDrug",
-                                 "type" : "FunctionRef",
-                                 "annotation" : [ ],
-                                 "signature" : [ ],
-                                 "operand" : [ {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "code",
-                                       "scope" : "MC",
-                                       "type" : "Property",
-                                       "annotation" : [ ]
-                                    }
-                                 } ]
-                              } ]
-                           }
-                        }
-                     } ]
-                  }, {
-                     "type" : "Exists",
+                     "name" : "ToDateTime",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
                      "annotation" : [ ],
                      "signature" : [ {
-                        "type" : "ListTypeSpecifier",
-                        "annotation" : [ ],
-                        "elementType" : {
-                           "name" : "{http://hl7.org/fhir}Encounter",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        }
+                        "name" : "{http://hl7.org/fhir}dateTime",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
                      } ],
-                     "operand" : {
-                        "type" : "Query",
-                        "annotation" : [ ],
-                        "source" : [ {
-                           "alias" : "E",
-                           "annotation" : [ ],
-                           "expression" : {
-                              "dataType" : "{http://hl7.org/fhir}Encounter",
-                              "templateId" : "http://hl7.org/fhir/StructureDefinition/Encounter",
-                              "type" : "Retrieve",
-                              "annotation" : [ ],
-                              "include" : [ ],
-                              "codeFilter" : [ ],
-                              "dateFilter" : [ ],
-                              "otherFilter" : [ ]
-                           }
-                        } ],
-                        "let" : [ ],
-                        "relationship" : [ ],
-                        "where" : {
-                           "type" : "And",
-                           "annotation" : [ ],
-                           "signature" : [ ],
-                           "operand" : [ {
-                              "type" : "And",
-                              "annotation" : [ ],
-                              "signature" : [ ],
-                              "operand" : [ {
-                                 "type" : "And",
-                                 "annotation" : [ ],
-                                 "signature" : [ ],
-                                 "operand" : [ {
-                                    "type" : "Equal",
-                                    "annotation" : [ ],
-                                    "signature" : [ {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    }, {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    } ],
-                                    "operand" : [ {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "id",
-                                          "scope" : "E",
-                                          "type" : "Property",
-                                          "annotation" : [ ]
-                                       }
-                                    }, {
-                                       "type" : "Last",
-                                       "annotation" : [ ],
-                                       "signature" : [ ],
-                                       "source" : {
-                                          "type" : "Split",
-                                          "annotation" : [ ],
-                                          "signature" : [ ],
-                                          "stringToSplit" : {
-                                             "path" : "value",
-                                             "type" : "Property",
-                                             "annotation" : [ ],
-                                             "source" : {
-                                                "path" : "reference",
-                                                "type" : "Property",
-                                                "annotation" : [ ],
-                                                "source" : {
-                                                   "path" : "encounter",
-                                                   "scope" : "MR",
-                                                   "type" : "Property",
-                                                   "annotation" : [ ]
-                                                }
-                                             }
-                                          },
-                                          "separator" : {
-                                             "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                                             "value" : "/",
-                                             "type" : "Literal",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    } ]
-                                 }, {
-                                    "type" : "Equal",
-                                    "annotation" : [ ],
-                                    "signature" : [ {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    }, {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    } ],
-                                    "operand" : [ {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "code",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "class",
-                                             "scope" : "E",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    }, {
-                                       "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                                       "value" : "AMB",
-                                       "type" : "Literal",
-                                       "annotation" : [ ]
-                                    } ]
-                                 } ]
-                              }, {
-                                 "type" : "Equal",
-                                 "annotation" : [ ],
-                                 "signature" : [ {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier",
-                                    "annotation" : [ ]
-                                 }, {
-                                    "name" : "{urn:hl7-org:elm-types:r1}String",
-                                    "type" : "NamedTypeSpecifier",
-                                    "annotation" : [ ]
-                                 } ],
-                                 "operand" : [ {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "status",
-                                       "scope" : "E",
-                                       "type" : "Property",
-                                       "annotation" : [ ]
-                                    }
-                                 }, {
-                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                                    "value" : "finished",
-                                    "type" : "Literal",
-                                    "annotation" : [ ]
-                                 } ]
-                              } ]
-                           }, {
-                              "type" : "Not",
-                              "annotation" : [ ],
-                              "signature" : [ ],
-                              "operand" : {
-                                 "type" : "Exists",
-                                 "annotation" : [ ],
-                                 "signature" : [ {
-                                    "type" : "ListTypeSpecifier",
-                                    "annotation" : [ ],
-                                    "elementType" : {
-                                       "name" : "{http://hl7.org/fhir}CodeableConcept",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    }
-                                 } ],
-                                 "operand" : {
-                                    "type" : "Query",
-                                    "annotation" : [ ],
-                                    "source" : [ {
-                                       "alias" : "T",
-                                       "annotation" : [ ],
-                                       "expression" : {
-                                          "path" : "type",
-                                          "scope" : "E",
-                                          "type" : "Property",
-                                          "annotation" : [ ]
-                                       }
-                                    } ],
-                                    "let" : [ ],
-                                    "relationship" : [ ],
-                                    "where" : {
-                                       "type" : "Exists",
-                                       "annotation" : [ ],
-                                       "signature" : [ ],
-                                       "operand" : {
-                                          "type" : "Query",
-                                          "annotation" : [ ],
-                                          "source" : [ {
-                                             "alias" : "C",
-                                             "annotation" : [ ],
-                                             "expression" : {
-                                                "path" : "coding",
-                                                "scope" : "T",
-                                                "type" : "Property",
-                                                "annotation" : [ ]
-                                             }
-                                          } ],
-                                          "let" : [ ],
-                                          "relationship" : [ ],
-                                          "where" : {
-                                             "type" : "Equal",
-                                             "annotation" : [ ],
-                                             "signature" : [ {
-                                                "name" : "{urn:hl7-org:elm-types:r1}String",
-                                                "type" : "NamedTypeSpecifier",
-                                                "annotation" : [ ]
-                                             }, {
-                                                "name" : "{urn:hl7-org:elm-types:r1}String",
-                                                "type" : "NamedTypeSpecifier",
-                                                "annotation" : [ ]
-                                             } ],
-                                             "operand" : [ {
-                                                "path" : "value",
-                                                "type" : "Property",
-                                                "annotation" : [ ],
-                                                "source" : {
-                                                   "path" : "code",
-                                                   "scope" : "C",
-                                                   "type" : "Property",
-                                                   "annotation" : [ ]
-                                                }
-                                             }, {
-                                                "valueType" : "{urn:hl7-org:elm-types:r1}String",
-                                                "value" : "AGENCY",
-                                                "type" : "Literal",
-                                                "annotation" : [ ]
-                                             } ]
-                                          }
-                                       }
-                                    }
-                                 }
-                              }
-                           } ]
-                        }
-                     }
+                     "operand" : [ {
+                        "path" : "authoredOn",
+                        "scope" : "M",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "name" : "Measurement Period",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
                   } ]
                }
             }
          }, {
-            "name" : "Drug Overlap Days",
-            "context" : "Unfiltered",
+            "name" : "Overlapping Drug Class Medication Requests",
+            "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "expression" : {
-               "type" : "Flatten",
+               "type" : "Query",
                "annotation" : [ ],
-               "signature" : [ ],
-               "operand" : {
-                  "type" : "Query",
+               "source" : [ {
+                  "alias" : "M",
                   "annotation" : [ ],
-                  "source" : [ {
-                     "alias" : "P1",
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                     "type" : "Retrieve",
                      "annotation" : [ ],
-                     "expression" : {
-                        "name" : "Antidiabetic Prescriptions",
-                        "type" : "ExpressionRef",
-                        "annotation" : [ ]
-                     }
-                  } ],
-                  "let" : [ ],
-                  "relationship" : [ ],
-                  "return" : {
-                     "annotation" : [ ],
-                     "expression" : {
-                        "type" : "Query",
-                        "annotation" : [ ],
-                        "source" : [ {
-                           "alias" : "P2",
-                           "annotation" : [ ],
-                           "expression" : {
-                              "name" : "Antidiabetic Prescriptions",
-                              "type" : "ExpressionRef",
-                              "annotation" : [ ]
-                           }
-                        } ],
-                        "let" : [ ],
-                        "relationship" : [ ],
-                        "where" : {
-                           "type" : "And",
-                           "annotation" : [ ],
-                           "signature" : [ ],
-                           "operand" : [ {
-                              "type" : "And",
-                              "annotation" : [ ],
-                              "signature" : [ ],
-                              "operand" : [ {
-                                 "type" : "And",
-                                 "annotation" : [ ],
-                                 "signature" : [ ],
-                                 "operand" : [ {
-                                    "type" : "Equal",
-                                    "annotation" : [ ],
-                                    "signature" : [ {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    }, {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    } ],
-                                    "operand" : [ {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "reference",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "subject",
-                                             "scope" : "P2",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    }, {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "reference",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "subject",
-                                             "scope" : "P1",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    } ]
-                                 }, {
-                                    "type" : "Equal",
-                                    "annotation" : [ ],
-                                    "signature" : [ {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    }, {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    } ],
-                                    "operand" : [ {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "reference",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "requester",
-                                             "scope" : "P2",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    }, {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "reference",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "requester",
-                                             "scope" : "P1",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    } ]
-                                 } ]
-                              }, {
-                                 "type" : "Not",
-                                 "annotation" : [ ],
-                                 "signature" : [ ],
-                                 "operand" : {
-                                    "type" : "Equal",
-                                    "annotation" : [ ],
-                                    "signature" : [ {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    }, {
-                                       "name" : "{urn:hl7-org:elm-types:r1}String",
-                                       "type" : "NamedTypeSpecifier",
-                                       "annotation" : [ ]
-                                    } ],
-                                    "operand" : [ {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "id",
-                                          "scope" : "P2",
-                                          "type" : "Property",
-                                          "annotation" : [ ]
-                                       }
-                                    }, {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "id",
-                                          "scope" : "P1",
-                                          "type" : "Property",
-                                          "annotation" : [ ]
-                                       }
-                                    } ]
-                                 }
-                              } ]
-                           }, {
-                              "type" : "Greater",
-                              "annotation" : [ ],
-                              "signature" : [ {
-                                 "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                                 "type" : "NamedTypeSpecifier",
-                                 "annotation" : [ ]
-                              }, {
-                                 "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                                 "type" : "NamedTypeSpecifier",
-                                 "annotation" : [ ]
-                              } ],
-                              "operand" : [ {
-                                 "name" : "CalculateOverlapDays",
-                                 "type" : "FunctionRef",
-                                 "annotation" : [ ],
-                                 "signature" : [ ],
-                                 "operand" : [ {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "start",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "validityPeriod",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "dispenseRequest",
-                                             "scope" : "P1",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    }
-                                 }, {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "end",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "validityPeriod",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "dispenseRequest",
-                                             "scope" : "P1",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    }
-                                 }, {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "start",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "validityPeriod",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "dispenseRequest",
-                                             "scope" : "P2",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    }
-                                 }, {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "end",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "validityPeriod",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "dispenseRequest",
-                                             "scope" : "P2",
-                                             "type" : "Property",
-                                             "annotation" : [ ]
-                                          }
-                                       }
-                                    }
-                                 } ]
-                              }, {
-                                 "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                                 "value" : "0",
-                                 "type" : "Literal",
-                                 "annotation" : [ ]
-                              } ]
-                           } ]
-                        },
-                        "return" : {
-                           "annotation" : [ ],
-                           "expression" : {
-                              "type" : "Tuple",
-                              "annotation" : [ ],
-                              "element" : [ {
-                                 "name" : "prescription1",
-                                 "value" : {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "id",
-                                       "scope" : "P1",
-                                       "type" : "Property",
-                                       "annotation" : [ ]
-                                    }
-                                 }
-                              }, {
-                                 "name" : "prescription2",
-                                 "value" : {
-                                    "path" : "value",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "id",
-                                       "scope" : "P2",
-                                       "type" : "Property",
-                                       "annotation" : [ ]
-                                    }
-                                 }
-                              }, {
-                                 "name" : "overlapDays",
-                                 "value" : {
-                                    "name" : "CalculateOverlapDays",
-                                    "type" : "FunctionRef",
-                                    "annotation" : [ ],
-                                    "signature" : [ ],
-                                    "operand" : [ {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "start",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "validityPeriod",
-                                             "type" : "Property",
-                                             "annotation" : [ ],
-                                             "source" : {
-                                                "path" : "dispenseRequest",
-                                                "scope" : "P1",
-                                                "type" : "Property",
-                                                "annotation" : [ ]
-                                             }
-                                          }
-                                       }
-                                    }, {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "end",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "validityPeriod",
-                                             "type" : "Property",
-                                             "annotation" : [ ],
-                                             "source" : {
-                                                "path" : "dispenseRequest",
-                                                "scope" : "P1",
-                                                "type" : "Property",
-                                                "annotation" : [ ]
-                                             }
-                                          }
-                                       }
-                                    }, {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "start",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "validityPeriod",
-                                             "type" : "Property",
-                                             "annotation" : [ ],
-                                             "source" : {
-                                                "path" : "dispenseRequest",
-                                                "scope" : "P2",
-                                                "type" : "Property",
-                                                "annotation" : [ ]
-                                             }
-                                          }
-                                       }
-                                    }, {
-                                       "path" : "value",
-                                       "type" : "Property",
-                                       "annotation" : [ ],
-                                       "source" : {
-                                          "path" : "end",
-                                          "type" : "Property",
-                                          "annotation" : [ ],
-                                          "source" : {
-                                             "path" : "validityPeriod",
-                                             "type" : "Property",
-                                             "annotation" : [ ],
-                                             "source" : {
-                                                "path" : "dispenseRequest",
-                                                "scope" : "P2",
-                                                "type" : "Property",
-                                                "annotation" : [ ]
-                                             }
-                                          }
-                                       }
-                                    } ]
-                                 }
-                              } ]
-                           }
-                        }
-                     }
-                  }
-               }
-            }
-         }, {
-            "name" : "Total Drug Days",
-            "context" : "Unfiltered",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "expression" : {
-               "type" : "Sum",
-               "annotation" : [ ],
-               "signature" : [ {
-                  "type" : "ListTypeSpecifier",
-                  "annotation" : [ ],
-                  "elementType" : {
-                     "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                     "type" : "NamedTypeSpecifier",
-                     "annotation" : [ ]
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
                   }
                } ],
-               "source" : {
-                  "type" : "Query",
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "In",
                   "annotation" : [ ],
-                  "source" : [ {
-                     "alias" : "P",
-                     "annotation" : [ ],
-                     "expression" : {
-                        "name" : "Antidiabetic Prescriptions",
-                        "type" : "ExpressionRef",
-                        "annotation" : [ ]
-                     }
-                  } ],
-                  "let" : [ ],
-                  "relationship" : [ ],
-                  "return" : {
-                     "annotation" : [ ],
-                     "expression" : {
-                        "precision" : "Day",
-                        "type" : "DurationBetween",
-                        "annotation" : [ ],
-                        "signature" : [ {
-                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        }, {
-                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        } ],
-                        "operand" : [ {
-                           "path" : "value",
-                           "type" : "Property",
-                           "annotation" : [ ],
-                           "source" : {
-                              "path" : "start",
-                              "type" : "Property",
-                              "annotation" : [ ],
-                              "source" : {
-                                 "path" : "validityPeriod",
-                                 "type" : "Property",
-                                 "annotation" : [ ],
-                                 "source" : {
-                                    "path" : "dispenseRequest",
-                                    "scope" : "P",
-                                    "type" : "Property",
-                                    "annotation" : [ ]
-                                 }
-                              }
-                           }
-                        }, {
-                           "type" : "Add",
-                           "annotation" : [ ],
-                           "signature" : [ {
-                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-                              "type" : "NamedTypeSpecifier",
-                              "annotation" : [ ]
-                           }, {
-                              "name" : "{urn:hl7-org:elm-types:r1}Quantity",
-                              "type" : "NamedTypeSpecifier",
-                              "annotation" : [ ]
-                           } ],
-                           "operand" : [ {
-                              "path" : "value",
-                              "type" : "Property",
-                              "annotation" : [ ],
-                              "source" : {
-                                 "path" : "end",
-                                 "type" : "Property",
-                                 "annotation" : [ ],
-                                 "source" : {
-                                    "path" : "validityPeriod",
-                                    "type" : "Property",
-                                    "annotation" : [ ],
-                                    "source" : {
-                                       "path" : "dispenseRequest",
-                                       "scope" : "P",
-                                       "type" : "Property",
-                                       "annotation" : [ ]
-                                    }
-                                 }
-                              }
-                           }, {
-                              "type" : "ToQuantity",
-                              "annotation" : [ ],
-                              "signature" : [ {
-                                 "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                                 "type" : "NamedTypeSpecifier",
-                                 "annotation" : [ ]
-                              } ],
-                              "operand" : {
-                                 "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                                 "value" : "1",
-                                 "type" : "Literal",
-                                 "annotation" : [ ]
-                              }
-                           } ]
-                        } ]
-                     }
-                  }
-               }
-            }
-         }, {
-            "name" : "Overlap Drug Days",
-            "context" : "Unfiltered",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "expression" : {
-               "type" : "Divide",
-               "annotation" : [ ],
-               "signature" : [ {
-                  "name" : "{urn:hl7-org:elm-types:r1}Decimal",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               }, {
-                  "name" : "{urn:hl7-org:elm-types:r1}Decimal",
-                  "type" : "NamedTypeSpecifier",
-                  "annotation" : [ ]
-               } ],
-               "operand" : [ {
-                  "type" : "ToDecimal",
-                  "annotation" : [ ],
-                  "signature" : [ {
-                     "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                     "type" : "NamedTypeSpecifier",
-                     "annotation" : [ ]
-                  } ],
-                  "operand" : {
-                     "type" : "Sum",
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "name" : "ToDateTime",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
                      "annotation" : [ ],
                      "signature" : [ {
-                        "type" : "ListTypeSpecifier",
-                        "annotation" : [ ],
-                        "elementType" : {
-                           "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                           "type" : "NamedTypeSpecifier",
-                           "annotation" : [ ]
-                        }
+                        "name" : "{http://hl7.org/fhir}dateTime",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
                      } ],
-                     "source" : {
-                        "type" : "Query",
-                        "annotation" : [ ],
-                        "source" : [ {
-                           "alias" : "D",
-                           "annotation" : [ ],
-                           "expression" : {
-                              "name" : "Drug Overlap Days",
-                              "type" : "ExpressionRef",
-                              "annotation" : [ ]
-                           }
-                        } ],
-                        "let" : [ ],
-                        "relationship" : [ ],
-                        "return" : {
-                           "annotation" : [ ],
-                           "expression" : {
-                              "path" : "overlapDays",
-                              "scope" : "D",
-                              "type" : "Property",
-                              "annotation" : [ ]
-                           }
-                        }
-                     }
-                  }
-               }, {
-                  "type" : "ToDecimal",
-                  "annotation" : [ ],
-                  "signature" : [ {
-                     "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                     "type" : "NamedTypeSpecifier",
+                     "operand" : [ {
+                        "path" : "authoredOn",
+                        "scope" : "M",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "name" : "Measurement Period",
+                     "type" : "ExpressionRef",
                      "annotation" : [ ]
-                  } ],
-                  "operand" : {
-                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                     "value" : "2",
-                     "type" : "Literal",
-                     "annotation" : [ ]
-                  }
-               } ]
+                  } ]
+               }
             }
          }, {
-            "name" : "Drug Overlap Rate",
-            "context" : "Unfiltered",
+            "name" : "Denominator",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "name" : "Drug Class Medication Requests",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Numerator",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "name" : "Overlapping Drug Class Medication Requests",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Measure Score",
+            "context" : "Patient",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "expression" : {
@@ -1630,7 +473,7 @@
                      "annotation" : [ ]
                   } ],
                   "operand" : [ {
-                     "name" : "Total Drug Days",
+                     "name" : "Denominator",
                      "type" : "ExpressionRef",
                      "annotation" : [ ]
                   }, {
@@ -1641,7 +484,7 @@
                   } ]
                },
                "then" : {
-                  "type" : "Multiply",
+                  "type" : "Divide",
                   "annotation" : [ ],
                   "signature" : [ {
                      "name" : "{urn:hl7-org:elm-types:r1}Decimal",
@@ -1653,7 +496,7 @@
                      "annotation" : [ ]
                   } ],
                   "operand" : [ {
-                     "type" : "Divide",
+                     "type" : "Multiply",
                      "annotation" : [ ],
                      "signature" : [ {
                         "name" : "{urn:hl7-org:elm-types:r1}Decimal",
@@ -1665,10 +508,6 @@
                         "annotation" : [ ]
                      } ],
                      "operand" : [ {
-                        "name" : "Overlap Drug Days",
-                        "type" : "ExpressionRef",
-                        "annotation" : [ ]
-                     }, {
                         "type" : "ToDecimal",
                         "annotation" : [ ],
                         "signature" : [ {
@@ -1677,10 +516,15 @@
                            "annotation" : [ ]
                         } ],
                         "operand" : {
-                           "name" : "Total Drug Days",
+                           "name" : "Numerator",
                            "type" : "ExpressionRef",
                            "annotation" : [ ]
                         }
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}Decimal",
+                        "value" : "100.0",
+                        "type" : "Literal",
+                        "annotation" : [ ]
                      } ]
                   }, {
                      "type" : "ToDecimal",
@@ -1691,22 +535,17 @@
                         "annotation" : [ ]
                      } ],
                      "operand" : {
-                        "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                        "value" : "100",
-                        "type" : "Literal",
+                        "name" : "Denominator",
+                        "type" : "ExpressionRef",
                         "annotation" : [ ]
                      }
                   } ]
                },
                "else" : {
-                  "asType" : "{urn:hl7-org:elm-types:r1}Decimal",
-                  "type" : "As",
-                  "annotation" : [ ],
-                  "signature" : [ ],
-                  "operand" : {
-                     "type" : "Null",
-                     "annotation" : [ ]
-                  }
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Decimal",
+                  "value" : "0.0",
+                  "type" : "Literal",
+                  "annotation" : [ ]
                }
             }
          } ]
