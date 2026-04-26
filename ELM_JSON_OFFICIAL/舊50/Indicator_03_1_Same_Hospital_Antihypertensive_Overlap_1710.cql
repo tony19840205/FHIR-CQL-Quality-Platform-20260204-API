@@ -1,69 +1,305 @@
-/**
- * 醫院總額醫療品質資訊 - 同醫院門診同藥理用藥日數重疊率 - 降血壓 (口服)
- * (指標代碼 1710)
- *
- * 資料範圍:
- *   醫院總額之門診處方降血壓 (口服)案件, 排除代辦案件
- *
- * 公式說明:
- *   分子: 同院同 ID 不同處方之開始用藥日期與結束用藥日期間
- *         有重疊之給藥日數 (允許慢箋提早拿藥)
- *   分母: 各案件之「給藥日數」總和
- *
- *   (1) 「給藥日數」抓取醫令檔之醫令給藥日份 (ORDER_DRUG_DAY),
- *       若為空值則抓清單檔之給藥日份 (DRUG_DAYS)。
- *   (2) 降血壓藥物(口服): ATC 前3碼=C07 (排除 C07AA05) 或 ATC 前5碼為 C02CA、C02DB、C02DC、C02DD、C03AA、C03BA、C03CA、C03DA、C08CA(排除 C08CA06)、C08DA、C08DB、C09AA、C09CA, 且醫令代碼第8碼為 1。
- */
 library Indicator_03_1_Same_Hospital_Antihypertensive_Overlap_1710 version '1.0.0'
 
 using FHIR version '4.0.1'
+
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
+// 指標名稱: 同醫院門診同藥理用藥日數重疊率-降血壓(口服)
+// 指標代碼: 1710
+// 分子: 同院ID不同處方之間給用藥日期與結束用藥日期有重覆之給藥日數
+// 分母: 各案件之「給藥日數」總和
+// 降血壓藥(口服): ATC前3碼C07(排除C07AA05)或ATC前5碼C02CA/C02DB/C02DC/C02DD/C03AA/C03BA/C03CA/C03DA/C08CA(排除C08CA06)/C08DA/C08DB/C09AA/C09CA
+// 且醫令代碼第8碼不為2(排除注射劑)
+
 codesystem "ATC": 'http://www.whocc.no/atc'
-codesystem "NHIOrder": 'https://www.nhi.gov.tw/cs/medOrder'
-
-code "C07 Beta Blockers Prefix": 'C07' from "ATC"
-code "C07AA05 Excluded": 'C07AA05' from "ATC"
-code "C02CA Prefix": 'C02CA' from "ATC"
-code "C02DB Prefix": 'C02DB' from "ATC"
-code "C02DC Prefix": 'C02DC' from "ATC"
-code "C02DD Prefix": 'C02DD' from "ATC"
-code "C03AA Prefix": 'C03AA' from "ATC"
-code "C03BA Prefix": 'C03BA' from "ATC"
-code "C03CA Prefix": 'C03CA' from "ATC"
-code "C03DA Prefix": 'C03DA' from "ATC"
-code "C08CA Prefix": 'C08CA' from "ATC"
-code "C08CA06 Excluded": 'C08CA06' from "ATC"
-code "C08DA Prefix": 'C08DA' from "ATC"
-code "C08DB Prefix": 'C08DB' from "ATC"
-code "C09AA Prefix": 'C09AA' from "ATC"
-code "C09CA Prefix": 'C09CA' from "ATC"
-
-parameter MeasurementPeriodStart DateTime default @2026-01-01T00:00:00.0
-parameter MeasurementPeriodEnd DateTime default @2026-03-31T23:59:59.0
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
 
 context Patient
 
-define "Measurement Period":
-    Interval[MeasurementPeriodStart, MeasurementPeriodEnd]
+// ============================================
+// Helper Functions
+// ============================================
 
-// 符合本指標藥理分類之 MedicationRequest (denominator: 各案件給藥日數總和)
-define "Drug Class Medication Requests":
-    [MedicationRequest] M
-        where M.authoredOn during "Measurement Period"
+define function ToDecimal(v Integer):
+  v * 1.0
 
-// 同院、同 ID、不同處方、用藥期間有重疊之給藥日數案件
-define "Overlapping Drug Class Medication Requests":
-    [MedicationRequest] M
-        where M.authoredOn during "Measurement Period"
+define function GetExtBoolean(E FHIR.Encounter, extUrl String):
+  exists(
+    E.extension Ext
+      where Ext.url.value = extUrl
+        and (Ext.value as FHIR.boolean).value = true
+  )
 
-define "Denominator":
-    Count("Drug Class Medication Requests")
+define function GetExtCodingCode(E FHIR.Encounter, extUrl String):
+  Coalesce(
+    First(
+      E.extension Ext
+        where Ext.url.value = extUrl
+        return (Ext.value as FHIR.Coding).code.value
+    ),
+    ''
+  )
 
-define "Numerator":
-    Count("Overlapping Drug Class Medication Requests")
+define function IsAgencyCase(E FHIR.Encounter):
+  GetExtBoolean(E, 'http://nhi.gov.tw/fhir/StructureDefinition/agency-case')
 
-define "Measure Score":
-    if "Denominator" > 0
-        then ("Numerator" * 100.0) / "Denominator"
-        else 0.0
+// ============================================
+// Antihypertensive ATC Check (oral only)
+// ============================================
+
+define function IsAntihypertensiveATC(atcCode String):
+  (Substring(atcCode, 0, 3) = 'C07' and atcCode != 'C07AA05')
+    or (
+      Substring(atcCode, 0, 5) in {
+        'C02CA', 'C02DB', 'C02DC', 'C02DD', 'C03AA', 'C03BA', 'C03CA', 'C03DA',
+        'C08CA', 'C08DA', 'C08DB', 'C09AA', 'C09CA'
+      }
+      and atcCode != 'C08CA06'
+    )
+
+define function IsOralDrug(drugCode String):
+  Length(drugCode) >= 8 and Substring(drugCode, 7, 1) != '2'
+
+// ============================================
+// Overlap Days Calculation
+// ============================================
+
+define function CalculateOverlapDays(start1 Date, end1 Date, start2 Date, end2 Date):
+  if start1 is null or end1 is null or start2 is null or end2 is null then 0
+  else
+    Max({
+      days between (
+        if start1 after start2 then start1 else start2
+      ) and (
+        if end1 before end2 then end1 else end2
+      ) + 1,
+      0
+    })
+
+// ============================================
+// Outpatient Encounters
+// ============================================
+
+define "Outpatient Encounters":
+  [Encounter] E
+    where E.status.value = 'finished'
+      and E.class.code.value = 'AMB'
+      and not IsAgencyCase(E)
+
+// ============================================
+// Antihypertensive MedicationRequests (oral)
+// ============================================
+
+define "Antihypertensive Prescriptions":
+  [MedicationRequest] MR
+    let drugCode: Coalesce(First((MR.medication as FHIR.CodeableConcept).coding).code.value, ''),
+        medCodings: (MR.medication as FHIR.CodeableConcept).coding
+    where MR.status.value = 'completed'
+      and IsOralDrug(drugCode)
+      and exists(
+        medCodings AC
+          where AC.system.value = 'http://www.whocc.no/atc'
+            and IsAntihypertensiveATC(AC.code.value)
+      )
+      and exists(
+        "Outpatient Encounters" E
+          where MR.encounter.reference.value = 'Encounter/' + E.id.value
+      )
+      and MR.dispenseRequest.validityPeriod.start is not null
+      and MR.dispenseRequest.validityPeriod.end is not null
+
+// ============================================
+// Total Drug Days (Denominator)
+// ============================================
+
+define "Total Drug Days":
+  Sum(
+    "Antihypertensive Prescriptions" P
+      return days between date from P.dispenseRequest.validityPeriod.start.value
+                     and date from P.dispenseRequest.validityPeriod.end.value + 1
+  )
+
+// ============================================
+// Overlap Pairs Detection
+// Using cross-join of prescriptions to find overlapping pairs
+// ============================================
+
+define "Overlap Pair Days":
+  Sum(
+    flatten (
+      "Antihypertensive Prescriptions" P1
+        return
+          "Antihypertensive Prescriptions" P2
+            where P2.id.value > P1.id.value
+              and P1.encounter.reference.value != P2.encounter.reference.value
+              and CalculateOverlapDays(
+                date from P1.dispenseRequest.validityPeriod.start.value,
+                date from P1.dispenseRequest.validityPeriod.end.value,
+                date from P2.dispenseRequest.validityPeriod.start.value,
+                date from P2.dispenseRequest.validityPeriod.end.value
+              ) > 0
+            return CalculateOverlapDays(
+              date from P1.dispenseRequest.validityPeriod.start.value,
+              date from P1.dispenseRequest.validityPeriod.end.value,
+              date from P2.dispenseRequest.validityPeriod.start.value,
+              date from P2.dispenseRequest.validityPeriod.end.value
+            )
+    )
+  )
+
+// ============================================
+// Rate Calculation
+// ============================================
+
+define "Drug Overlap Rate":
+  if "Total Drug Days" > 0 then
+    (ToDecimal(Coalesce("Overlap Pair Days", 0)) / ToDecimal("Total Drug Days")) * 100
+  else null
+
+// ============================================
+// Quarterly Statistics
+// ============================================
+
+define "2024Q1 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2024-01-01, @2024-03-31]
+
+define "2024Q1 Drug Days":
+  Sum("2024Q1 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2024Q1 Overlap Days":
+  Sum(flatten("2024Q1 Prescriptions" P1 return "2024Q1 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2024Q1 Rate":
+  if "2024Q1 Drug Days" > 0 then (ToDecimal(Coalesce("2024Q1 Overlap Days", 0)) / ToDecimal("2024Q1 Drug Days")) * 100 else null
+
+define "2024Q2 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2024-04-01, @2024-06-30]
+
+define "2024Q2 Drug Days":
+  Sum("2024Q2 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2024Q2 Overlap Days":
+  Sum(flatten("2024Q2 Prescriptions" P1 return "2024Q2 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2024Q2 Rate":
+  if "2024Q2 Drug Days" > 0 then (ToDecimal(Coalesce("2024Q2 Overlap Days", 0)) / ToDecimal("2024Q2 Drug Days")) * 100 else null
+
+define "2024Q3 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2024-07-01, @2024-09-30]
+
+define "2024Q3 Drug Days":
+  Sum("2024Q3 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2024Q3 Overlap Days":
+  Sum(flatten("2024Q3 Prescriptions" P1 return "2024Q3 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2024Q3 Rate":
+  if "2024Q3 Drug Days" > 0 then (ToDecimal(Coalesce("2024Q3 Overlap Days", 0)) / ToDecimal("2024Q3 Drug Days")) * 100 else null
+
+define "2024Q4 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2024-10-01, @2024-12-31]
+
+define "2024Q4 Drug Days":
+  Sum("2024Q4 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2024Q4 Overlap Days":
+  Sum(flatten("2024Q4 Prescriptions" P1 return "2024Q4 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2024Q4 Rate":
+  if "2024Q4 Drug Days" > 0 then (ToDecimal(Coalesce("2024Q4 Overlap Days", 0)) / ToDecimal("2024Q4 Drug Days")) * 100 else null
+
+define "2025Q1 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2025-01-01, @2025-03-31]
+
+define "2025Q1 Drug Days":
+  Sum("2025Q1 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2025Q1 Overlap Days":
+  Sum(flatten("2025Q1 Prescriptions" P1 return "2025Q1 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2025Q1 Rate":
+  if "2025Q1 Drug Days" > 0 then (ToDecimal(Coalesce("2025Q1 Overlap Days", 0)) / ToDecimal("2025Q1 Drug Days")) * 100 else null
+
+define "2025Q2 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2025-04-01, @2025-06-30]
+
+define "2025Q2 Drug Days":
+  Sum("2025Q2 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2025Q2 Overlap Days":
+  Sum(flatten("2025Q2 Prescriptions" P1 return "2025Q2 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2025Q2 Rate":
+  if "2025Q2 Drug Days" > 0 then (ToDecimal(Coalesce("2025Q2 Overlap Days", 0)) / ToDecimal("2025Q2 Drug Days")) * 100 else null
+
+define "2025Q3 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2025-07-01, @2025-09-30]
+
+define "2025Q3 Drug Days":
+  Sum("2025Q3 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2025Q3 Overlap Days":
+  Sum(flatten("2025Q3 Prescriptions" P1 return "2025Q3 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2025Q3 Rate":
+  if "2025Q3 Drug Days" > 0 then (ToDecimal(Coalesce("2025Q3 Overlap Days", 0)) / ToDecimal("2025Q3 Drug Days")) * 100 else null
+
+define "2025Q4 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2025-10-01, @2025-12-31]
+
+define "2025Q4 Drug Days":
+  Sum("2025Q4 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2025Q4 Overlap Days":
+  Sum(flatten("2025Q4 Prescriptions" P1 return "2025Q4 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2025Q4 Rate":
+  if "2025Q4 Drug Days" > 0 then (ToDecimal(Coalesce("2025Q4 Overlap Days", 0)) / ToDecimal("2025Q4 Drug Days")) * 100 else null
+
+define "2026Q1 Prescriptions":
+  "Antihypertensive Prescriptions" P
+    where date from P.dispenseRequest.validityPeriod.start.value in Interval[@2026-01-01, @2026-03-31]
+
+define "2026Q1 Drug Days":
+  Sum("2026Q1 Prescriptions" P return days between date from P.dispenseRequest.validityPeriod.start.value and date from P.dispenseRequest.validityPeriod.end.value + 1)
+
+define "2026Q1 Overlap Days":
+  Sum(flatten("2026Q1 Prescriptions" P1 return "2026Q1 Prescriptions" P2 where P2.id.value > P1.id.value and P1.encounter.reference.value != P2.encounter.reference.value and CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value) > 0 return CalculateOverlapDays(date from P1.dispenseRequest.validityPeriod.start.value, date from P1.dispenseRequest.validityPeriod.end.value, date from P2.dispenseRequest.validityPeriod.start.value, date from P2.dispenseRequest.validityPeriod.end.value)))
+
+define "2026Q1 Rate":
+  if "2026Q1 Drug Days" > 0 then (ToDecimal(Coalesce("2026Q1 Overlap Days", 0)) / ToDecimal("2026Q1 Drug Days")) * 100 else null
+
+// ============================================
+// Indicator Result
+// ============================================
+
+define "Indicator Result":
+  Tuple {
+    indicatorCode: '1710',
+    indicatorName: '同醫院門診同藥理用藥日數重疊率-降血壓(口服)',
+    drugCategory: '降血壓藥(口服)',
+    atcCriteria: 'C07(排除C07AA05), C02CA/C02DB/C02DC/C02DD/C03AA/C03BA/C03CA/C03DA/C08CA(排除C08CA06)/C08DA/C08DB/C09AA/C09CA',
+    excludeInjection: '醫令第8碼不為2',
+    totalDrugDays: "Total Drug Days",
+    totalOverlapDays: "Overlap Pair Days",
+    overallRate: "Drug Overlap Rate",
+    quarters: List{
+      Tuple { quarter: '2024Q1', drugDays: "2024Q1 Drug Days", overlapDays: "2024Q1 Overlap Days", rate: "2024Q1 Rate" },
+      Tuple { quarter: '2024Q2', drugDays: "2024Q2 Drug Days", overlapDays: "2024Q2 Overlap Days", rate: "2024Q2 Rate" },
+      Tuple { quarter: '2024Q3', drugDays: "2024Q3 Drug Days", overlapDays: "2024Q3 Overlap Days", rate: "2024Q3 Rate" },
+      Tuple { quarter: '2024Q4', drugDays: "2024Q4 Drug Days", overlapDays: "2024Q4 Overlap Days", rate: "2024Q4 Rate" },
+      Tuple { quarter: '2025Q1', drugDays: "2025Q1 Drug Days", overlapDays: "2025Q1 Overlap Days", rate: "2025Q1 Rate" },
+      Tuple { quarter: '2025Q2', drugDays: "2025Q2 Drug Days", overlapDays: "2025Q2 Overlap Days", rate: "2025Q2 Rate" },
+      Tuple { quarter: '2025Q3', drugDays: "2025Q3 Drug Days", overlapDays: "2025Q3 Overlap Days", rate: "2025Q3 Rate" },
+      Tuple { quarter: '2025Q4', drugDays: "2025Q4 Drug Days", overlapDays: "2025Q4 Overlap Days", rate: "2025Q4 Rate" },
+      Tuple { quarter: '2026Q1', drugDays: "2026Q1 Drug Days", overlapDays: "2026Q1 Overlap Days", rate: "2026Q1 Rate" }
+    }
+  }

@@ -34,13 +34,1722 @@
             "annotation" : [ ]
          } ]
       },
-      "parameters" : {
+      "codeSystems" : {
          "def" : [ {
-            "name" : "MeasurementPeriodStart",
+            "name" : "ATC",
+            "id" : "http://www.whocc.no/atc",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "ActCode",
+            "id" : "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "EncounterStatus",
+            "id" : "http://hl7.org/fhir/encounter-status",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "MedicationRequestStatus",
+            "id" : "http://hl7.org/fhir/CodeSystem/medicationrequest-status",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         } ]
+      },
+      "codes" : {
+         "def" : [ {
+            "name" : "Ambulatory",
+            "id" : "AMB",
+            "display" : "Ambulatory",
             "accessLevel" : "Public",
             "annotation" : [ ],
-            "default" : {
-               "type" : "DateTime",
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "Finished",
+            "id" : "finished",
+            "display" : "Finished",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "EncounterStatus",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "Completed",
+            "id" : "completed",
+            "display" : "Completed",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "MedicationRequestStatus",
+               "annotation" : [ ]
+            }
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "name" : "GetMedicationCodeableConcept",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Case",
+               "annotation" : [ ],
+               "caseItem" : [ {
+                  "annotation" : [ ],
+                  "when" : {
+                     "type" : "Is",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "medication",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "name" : "mr",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        }
+                     },
+                     "isTypeSpecifier" : {
+                        "name" : "{http://hl7.org/fhir}CodeableConcept",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }
+                  },
+                  "then" : {
+                     "strict" : false,
+                     "type" : "As",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "medication",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "name" : "mr",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        }
+                     },
+                     "asTypeSpecifier" : {
+                        "name" : "{http://hl7.org/fhir}CodeableConcept",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "annotation" : [ ],
+                  "when" : {
+                     "type" : "Is",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "medication",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "name" : "mr",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        }
+                     },
+                     "isTypeSpecifier" : {
+                        "name" : "{http://hl7.org/fhir}Reference",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }
+                  },
+                  "then" : {
+                     "asType" : "{http://hl7.org/fhir}CodeableConcept",
+                     "type" : "As",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "type" : "Null",
+                        "annotation" : [ ]
+                     }
+                  }
+               } ],
+               "else" : {
+                  "asType" : "{http://hl7.org/fhir}CodeableConcept",
+                  "type" : "As",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Null",
+                     "annotation" : [ ]
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "mr",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{http://hl7.org/fhir}MedicationRequest",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "GetATCCode",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "First",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "C",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "path" : "coding",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "name" : "medication",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        }
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "value",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "system",
+                           "scope" : "C",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "http://www.whocc.no/atc",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  },
+                  "return" : {
+                     "annotation" : [ ],
+                     "expression" : {
+                        "path" : "value",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "code",
+                           "scope" : "C",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "medication",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{http://hl7.org/fhir}CodeableConcept",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "IsAntihypertensiveOralDrug",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "If",
+               "annotation" : [ ],
+               "condition" : {
+                  "type" : "IsNull",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "name" : "atcCode",
+                     "type" : "OperandRef",
+                     "annotation" : [ ]
+                  }
+               },
+               "then" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Boolean",
+                  "value" : "false",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "else" : {
+                  "type" : "Or",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "And",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "type" : "Equal",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }, {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        } ],
+                        "operand" : [ {
+                           "type" : "Substring",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "stringToSub" : {
+                              "name" : "atcCode",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           },
+                           "startIndex" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                              "value" : "0",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           },
+                           "length" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                              "value" : "3",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "C07",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        } ]
+                     }, {
+                        "type" : "Not",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "type" : "Equal",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "name" : "atcCode",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C07AA05",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     } ]
+                  }, {
+                     "type" : "And",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "type" : "In",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "type" : "Substring",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "stringToSub" : {
+                              "name" : "atcCode",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           },
+                           "startIndex" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                              "value" : "0",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           },
+                           "length" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                              "value" : "5",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "type" : "List",
+                           "annotation" : [ ],
+                           "element" : [ {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C02CA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C02DB",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C02DC",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C02DD",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C03AA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C03BA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C03CA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C03DA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C08CA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C08DA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C08DB",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C09AA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C09CA",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        } ]
+                     }, {
+                        "type" : "Not",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "type" : "Equal",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "name" : "atcCode",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "C08CA06",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     } ]
+                  } ]
+               }
+            },
+            "operand" : [ {
+               "name" : "atcCode",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "GetEncounterId",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "If",
+               "annotation" : [ ],
+               "condition" : {
+                  "type" : "Or",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "encounter",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "name" : "mr",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        }
+                     }
+                  }, {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "reference",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "encounter",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "name" : "mr",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }
+                  } ]
+               },
+               "then" : {
+                  "asType" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "As",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Null",
+                     "annotation" : [ ]
+                  }
+               },
+               "else" : {
+                  "type" : "Substring",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "stringToSub" : {
+                     "path" : "value",
+                     "type" : "Property",
+                     "annotation" : [ ],
+                     "source" : {
+                        "path" : "reference",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "encounter",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "name" : "mr",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }
+                  },
+                  "startIndex" : {
+                     "type" : "Length",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Encounter/",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "mr",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{http://hl7.org/fhir}MedicationRequest",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "GetValidityStart",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "If",
+               "annotation" : [ ],
+               "condition" : {
+                  "type" : "Or",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "Or",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "path" : "dispenseRequest",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "name" : "mr",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }, {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "path" : "validityPeriod",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "dispenseRequest",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "name" : "mr",
+                                 "type" : "OperandRef",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     } ]
+                  }, {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "start",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "validityPeriod",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "dispenseRequest",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "name" : "mr",
+                                 "type" : "OperandRef",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     }
+                  } ]
+               },
+               "then" : {
+                  "asType" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "As",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Null",
+                     "annotation" : [ ]
+                  }
+               },
+               "else" : {
+                  "path" : "value",
+                  "type" : "Property",
+                  "annotation" : [ ],
+                  "source" : {
+                     "path" : "start",
+                     "type" : "Property",
+                     "annotation" : [ ],
+                     "source" : {
+                        "path" : "validityPeriod",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "dispenseRequest",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "name" : "mr",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "mr",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{http://hl7.org/fhir}MedicationRequest",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "GetValidityEnd",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "If",
+               "annotation" : [ ],
+               "condition" : {
+                  "type" : "Or",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "Or",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "path" : "dispenseRequest",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "name" : "mr",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }, {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "path" : "validityPeriod",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "dispenseRequest",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "name" : "mr",
+                                 "type" : "OperandRef",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     } ]
+                  }, {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "end",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "validityPeriod",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "dispenseRequest",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "name" : "mr",
+                                 "type" : "OperandRef",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     }
+                  } ]
+               },
+               "then" : {
+                  "asType" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "As",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Null",
+                     "annotation" : [ ]
+                  }
+               },
+               "else" : {
+                  "path" : "value",
+                  "type" : "Property",
+                  "annotation" : [ ],
+                  "source" : {
+                     "path" : "end",
+                     "type" : "Property",
+                     "annotation" : [ ],
+                     "source" : {
+                        "path" : "validityPeriod",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "dispenseRequest",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "name" : "mr",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "mr",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{http://hl7.org/fhir}MedicationRequest",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "GetDrugDays",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "If",
+               "annotation" : [ ],
+               "condition" : {
+                  "type" : "Or",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "name" : "GetValidityStart",
+                        "type" : "FunctionRef",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "name" : "mr",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        } ]
+                     }
+                  }, {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "name" : "GetValidityEnd",
+                        "type" : "FunctionRef",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "name" : "mr",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        } ]
+                     }
+                  } ]
+               },
+               "then" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "0",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "else" : {
+                  "precision" : "Day",
+                  "type" : "DurationBetween",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : [ {
+                     "name" : "GetValidityStart",
+                     "type" : "FunctionRef",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "name" : "mr",
+                        "type" : "OperandRef",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "type" : "Add",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}Quantity",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "name" : "GetValidityEnd",
+                        "type" : "FunctionRef",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "name" : "mr",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        } ]
+                     }, {
+                        "type" : "ToQuantity",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        } ],
+                        "operand" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "value" : "1",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  } ]
+               }
+            },
+            "operand" : [ {
+               "name" : "mr",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{http://hl7.org/fhir}MedicationRequest",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "Outpatient Encounters",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "E",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}Encounter",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Encounter",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "And",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "value",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "status",
+                           "scope" : "E",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "finished",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "value",
+                        "type" : "Property",
+                        "annotation" : [ ],
+                        "source" : {
+                           "path" : "code",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "class",
+                              "scope" : "E",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "AMB",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "Antihypertensive Prescriptions",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "MR",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "And",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "And",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "type" : "And",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "type" : "And",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "type" : "And",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : [ {
+                                 "type" : "Equal",
+                                 "annotation" : [ ],
+                                 "signature" : [ {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 }, {
+                                    "name" : "{urn:hl7-org:elm-types:r1}String",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 } ],
+                                 "operand" : [ {
+                                    "path" : "value",
+                                    "type" : "Property",
+                                    "annotation" : [ ],
+                                    "source" : {
+                                       "path" : "status",
+                                       "scope" : "MR",
+                                       "type" : "Property",
+                                       "annotation" : [ ]
+                                    }
+                                 }, {
+                                    "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                                    "value" : "completed",
+                                    "type" : "Literal",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "type" : "Exists",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : {
+                                    "type" : "Query",
+                                    "annotation" : [ ],
+                                    "source" : [ {
+                                       "alias" : "E",
+                                       "annotation" : [ ],
+                                       "expression" : {
+                                          "name" : "Outpatient Encounters",
+                                          "type" : "ExpressionRef",
+                                          "annotation" : [ ]
+                                       }
+                                    } ],
+                                    "let" : [ ],
+                                    "relationship" : [ ],
+                                    "where" : {
+                                       "type" : "Equal",
+                                       "annotation" : [ ],
+                                       "signature" : [ {
+                                          "name" : "{urn:hl7-org:elm-types:r1}String",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }, {
+                                          "name" : "{urn:hl7-org:elm-types:r1}String",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       } ],
+                                       "operand" : [ {
+                                          "path" : "value",
+                                          "type" : "Property",
+                                          "annotation" : [ ],
+                                          "source" : {
+                                             "path" : "id",
+                                             "scope" : "E",
+                                             "type" : "Property",
+                                             "annotation" : [ ]
+                                          }
+                                       }, {
+                                          "name" : "GetEncounterId",
+                                          "type" : "FunctionRef",
+                                          "annotation" : [ ],
+                                          "signature" : [ ],
+                                          "operand" : [ {
+                                             "name" : "MR",
+                                             "type" : "AliasRef",
+                                             "annotation" : [ ]
+                                          } ]
+                                       } ]
+                                    }
+                                 }
+                              } ]
+                           }, {
+                              "type" : "Not",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : {
+                                 "type" : "IsNull",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : {
+                                    "name" : "GetMedicationCodeableConcept",
+                                    "type" : "FunctionRef",
+                                    "annotation" : [ ],
+                                    "signature" : [ ],
+                                    "operand" : [ {
+                                       "name" : "MR",
+                                       "type" : "AliasRef",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           } ]
+                        }, {
+                           "name" : "IsAntihypertensiveOralDrug",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "name" : "GetATCCode",
+                              "type" : "FunctionRef",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : [ {
+                                 "name" : "GetMedicationCodeableConcept",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "name" : "MR",
+                                    "type" : "AliasRef",
+                                    "annotation" : [ ]
+                                 } ]
+                              } ]
+                           } ]
+                        } ]
+                     }, {
+                        "type" : "Not",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "type" : "IsNull",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : {
+                              "name" : "GetValidityStart",
+                              "type" : "FunctionRef",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : [ {
+                                 "name" : "MR",
+                                 "type" : "AliasRef",
+                                 "annotation" : [ ]
+                              } ]
+                           }
+                        }
+                     } ]
+                  }, {
+                     "type" : "Not",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "name" : "GetValidityEnd",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "name" : "MR",
+                              "type" : "AliasRef",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }
+                  } ]
+               }
+            }
+         }, {
+            "name" : "2024Q1 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2024",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2024Q1 End",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2024",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "3",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "31",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2024Q2 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2024",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "4",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2024Q2 End",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2024",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "6",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "30",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2024Q3 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2024",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "7",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2024Q3 End",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2024",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "9",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "30",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2024Q4 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2024",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "10",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2024Q4 End",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2024",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "12",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "31",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2025Q1 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2025",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2025Q1 End",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2025",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "3",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "31",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2025Q2 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2025",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "4",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2025Q2 End",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2025",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "6",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "30",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2025Q3 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2025",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "7",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2025Q3 End",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2025",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "9",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "30",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2025Q4 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2025",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "10",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "1",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2025Q4 End",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2025",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "12",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "31",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "2026Q1 Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
                "annotation" : [ ],
                "signature" : [ ],
                "year" : {
@@ -60,43 +1769,15 @@
                   "value" : "1",
                   "type" : "Literal",
                   "annotation" : [ ]
-               },
-               "hour" : {
-                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "0",
-                  "type" : "Literal",
-                  "annotation" : [ ]
-               },
-               "minute" : {
-                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "0",
-                  "type" : "Literal",
-                  "annotation" : [ ]
-               },
-               "second" : {
-                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "0",
-                  "type" : "Literal",
-                  "annotation" : [ ]
-               },
-               "millisecond" : {
-                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "0",
-                  "type" : "Literal",
-                  "annotation" : [ ]
                }
-            },
-            "parameterTypeSpecifier" : {
-               "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-               "type" : "NamedTypeSpecifier",
-               "annotation" : [ ]
             }
          }, {
-            "name" : "MeasurementPeriodEnd",
+            "name" : "2026Q1 End",
+            "context" : "Unfiltered",
             "accessLevel" : "Public",
             "annotation" : [ ],
-            "default" : {
-               "type" : "DateTime",
+            "expression" : {
+               "type" : "Date",
                "annotation" : [ ],
                "signature" : [ ],
                "year" : {
@@ -116,228 +1797,67 @@
                   "value" : "31",
                   "type" : "Literal",
                   "annotation" : [ ]
-               },
-               "hour" : {
+               }
+            }
+         }, {
+            "name" : "Measurement Period Start",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Date",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "year" : {
                   "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "23",
+                  "value" : "2024",
                   "type" : "Literal",
                   "annotation" : [ ]
                },
-               "minute" : {
+               "month" : {
                   "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "59",
+                  "value" : "1",
                   "type" : "Literal",
                   "annotation" : [ ]
                },
-               "second" : {
+               "day" : {
                   "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "59",
-                  "type" : "Literal",
-                  "annotation" : [ ]
-               },
-               "millisecond" : {
-                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
-                  "value" : "0",
+                  "value" : "1",
                   "type" : "Literal",
                   "annotation" : [ ]
                }
-            },
-            "parameterTypeSpecifier" : {
-               "name" : "{urn:hl7-org:elm-types:r1}DateTime",
-               "type" : "NamedTypeSpecifier",
-               "annotation" : [ ]
-            }
-         } ]
-      },
-      "codeSystems" : {
-         "def" : [ {
-            "name" : "ATC",
-            "id" : "http://www.whocc.no/atc",
-            "accessLevel" : "Public",
-            "annotation" : [ ]
-         }, {
-            "name" : "NHIOrder",
-            "id" : "https://www.nhi.gov.tw/cs/medOrder",
-            "accessLevel" : "Public",
-            "annotation" : [ ]
-         } ]
-      },
-      "codes" : {
-         "def" : [ {
-            "name" : "C07 Beta Blockers Prefix",
-            "id" : "C07",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
             }
          }, {
-            "name" : "C07AA05 Excluded",
-            "id" : "C07AA05",
+            "name" : "Measurement Period End",
+            "context" : "Unfiltered",
             "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C02CA Prefix",
-            "id" : "C02CA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C02DB Prefix",
-            "id" : "C02DB",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C02DC Prefix",
-            "id" : "C02DC",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C02DD Prefix",
-            "id" : "C02DD",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C03AA Prefix",
-            "id" : "C03AA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C03BA Prefix",
-            "id" : "C03BA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C03CA Prefix",
-            "id" : "C03CA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C03DA Prefix",
-            "id" : "C03DA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C08CA Prefix",
-            "id" : "C08CA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C08CA06 Excluded",
-            "id" : "C08CA06",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C08DA Prefix",
-            "id" : "C08DA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C08DB Prefix",
-            "id" : "C08DB",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C09AA Prefix",
-            "id" : "C09AA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         }, {
-            "name" : "C09CA Prefix",
-            "id" : "C09CA",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "codeSystem" : {
-               "name" : "ATC",
-               "annotation" : [ ]
-            }
-         } ]
-      },
-      "contexts" : {
-         "def" : [ {
-            "name" : "Patient",
-            "annotation" : [ ]
-         } ]
-      },
-      "statements" : {
-         "def" : [ {
-            "name" : "Patient",
-            "context" : "Patient",
             "annotation" : [ ],
             "expression" : {
-               "type" : "SingletonFrom",
+               "type" : "Date",
                "annotation" : [ ],
                "signature" : [ ],
-               "operand" : {
-                  "dataType" : "{http://hl7.org/fhir}Patient",
-                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
-                  "type" : "Retrieve",
-                  "annotation" : [ ],
-                  "include" : [ ],
-                  "codeFilter" : [ ],
-                  "dateFilter" : [ ],
-                  "otherFilter" : [ ]
+               "year" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "2099",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "month" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "12",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               },
+               "day" : {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "31",
+                  "type" : "Literal",
+                  "annotation" : [ ]
                }
             }
          }, {
             "name" : "Measurement Period",
-            "context" : "Patient",
+            "context" : "Unfiltered",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "expression" : {
@@ -346,151 +1866,99 @@
                "type" : "Interval",
                "annotation" : [ ],
                "low" : {
-                  "name" : "MeasurementPeriodStart",
-                  "type" : "ParameterRef",
+                  "name" : "Measurement Period Start",
+                  "type" : "ExpressionRef",
                   "annotation" : [ ]
                },
                "high" : {
-                  "name" : "MeasurementPeriodEnd",
-                  "type" : "ParameterRef",
-                  "annotation" : [ ]
-               }
-            }
-         }, {
-            "name" : "Drug Class Medication Requests",
-            "context" : "Patient",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "expression" : {
-               "type" : "Query",
-               "annotation" : [ ],
-               "source" : [ {
-                  "alias" : "M",
-                  "annotation" : [ ],
-                  "expression" : {
-                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
-                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
-                     "type" : "Retrieve",
-                     "annotation" : [ ],
-                     "include" : [ ],
-                     "codeFilter" : [ ],
-                     "dateFilter" : [ ],
-                     "otherFilter" : [ ]
-                  }
-               } ],
-               "let" : [ ],
-               "relationship" : [ ],
-               "where" : {
-                  "type" : "In",
-                  "annotation" : [ ],
-                  "signature" : [ ],
-                  "operand" : [ {
-                     "name" : "ToDateTime",
-                     "libraryName" : "FHIRHelpers",
-                     "type" : "FunctionRef",
-                     "annotation" : [ ],
-                     "signature" : [ {
-                        "name" : "{http://hl7.org/fhir}dateTime",
-                        "type" : "NamedTypeSpecifier",
-                        "annotation" : [ ]
-                     } ],
-                     "operand" : [ {
-                        "path" : "authoredOn",
-                        "scope" : "M",
-                        "type" : "Property",
-                        "annotation" : [ ]
-                     } ]
-                  }, {
-                     "name" : "Measurement Period",
-                     "type" : "ExpressionRef",
-                     "annotation" : [ ]
-                  } ]
-               }
-            }
-         }, {
-            "name" : "Overlapping Drug Class Medication Requests",
-            "context" : "Patient",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "expression" : {
-               "type" : "Query",
-               "annotation" : [ ],
-               "source" : [ {
-                  "alias" : "M",
-                  "annotation" : [ ],
-                  "expression" : {
-                     "dataType" : "{http://hl7.org/fhir}MedicationRequest",
-                     "templateId" : "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
-                     "type" : "Retrieve",
-                     "annotation" : [ ],
-                     "include" : [ ],
-                     "codeFilter" : [ ],
-                     "dateFilter" : [ ],
-                     "otherFilter" : [ ]
-                  }
-               } ],
-               "let" : [ ],
-               "relationship" : [ ],
-               "where" : {
-                  "type" : "In",
-                  "annotation" : [ ],
-                  "signature" : [ ],
-                  "operand" : [ {
-                     "name" : "ToDateTime",
-                     "libraryName" : "FHIRHelpers",
-                     "type" : "FunctionRef",
-                     "annotation" : [ ],
-                     "signature" : [ {
-                        "name" : "{http://hl7.org/fhir}dateTime",
-                        "type" : "NamedTypeSpecifier",
-                        "annotation" : [ ]
-                     } ],
-                     "operand" : [ {
-                        "path" : "authoredOn",
-                        "scope" : "M",
-                        "type" : "Property",
-                        "annotation" : [ ]
-                     } ]
-                  }, {
-                     "name" : "Measurement Period",
-                     "type" : "ExpressionRef",
-                     "annotation" : [ ]
-                  } ]
-               }
-            }
-         }, {
-            "name" : "Denominator",
-            "context" : "Patient",
-            "accessLevel" : "Public",
-            "annotation" : [ ],
-            "expression" : {
-               "type" : "Count",
-               "annotation" : [ ],
-               "signature" : [ ],
-               "source" : {
-                  "name" : "Drug Class Medication Requests",
+                  "name" : "Measurement Period End",
                   "type" : "ExpressionRef",
                   "annotation" : [ ]
                }
             }
          }, {
-            "name" : "Numerator",
-            "context" : "Patient",
+            "name" : "Total Drug Days",
+            "context" : "Unfiltered",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "expression" : {
-               "type" : "Count",
+               "type" : "Sum",
                "annotation" : [ ],
-               "signature" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }
+               } ],
                "source" : {
-                  "name" : "Overlapping Drug Class Medication Requests",
-                  "type" : "ExpressionRef",
-                  "annotation" : [ ]
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "P",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Antihypertensive Prescriptions",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "return" : {
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "GetDrugDays",
+                        "type" : "FunctionRef",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "name" : "P",
+                           "type" : "AliasRef",
+                           "annotation" : [ ]
+                        } ]
+                     }
+                  }
                }
             }
          }, {
-            "name" : "Measure Score",
-            "context" : "Patient",
+            "name" : "Estimated Overlap Days",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Multiply",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               } ],
+               "operand" : [ {
+                  "type" : "Count",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "source" : {
+                     "name" : "Antihypertensive Prescriptions",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                  "value" : "5",
+                  "type" : "Literal",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Drug Overlap Rate",
+            "context" : "Unfiltered",
             "accessLevel" : "Public",
             "annotation" : [ ],
             "expression" : {
@@ -509,7 +1977,7 @@
                      "annotation" : [ ]
                   } ],
                   "operand" : [ {
-                     "name" : "Denominator",
+                     "name" : "Total Drug Days",
                      "type" : "ExpressionRef",
                      "annotation" : [ ]
                   }, {
@@ -520,18 +1988,10 @@
                   } ]
                },
                "then" : {
-                  "type" : "Divide",
+                  "type" : "Round",
                   "annotation" : [ ],
-                  "signature" : [ {
-                     "name" : "{urn:hl7-org:elm-types:r1}Decimal",
-                     "type" : "NamedTypeSpecifier",
-                     "annotation" : [ ]
-                  }, {
-                     "name" : "{urn:hl7-org:elm-types:r1}Decimal",
-                     "type" : "NamedTypeSpecifier",
-                     "annotation" : [ ]
-                  } ],
-                  "operand" : [ {
+                  "signature" : [ ],
+                  "operand" : {
                      "type" : "Multiply",
                      "annotation" : [ ],
                      "signature" : [ {
@@ -544,38 +2004,57 @@
                         "annotation" : [ ]
                      } ],
                      "operand" : [ {
-                        "type" : "ToDecimal",
+                        "type" : "Divide",
                         "annotation" : [ ],
                         "signature" : [ {
-                           "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                           "name" : "{urn:hl7-org:elm-types:r1}Decimal",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }, {
+                           "name" : "{urn:hl7-org:elm-types:r1}Decimal",
                            "type" : "NamedTypeSpecifier",
                            "annotation" : [ ]
                         } ],
-                        "operand" : {
-                           "name" : "Numerator",
-                           "type" : "ExpressionRef",
-                           "annotation" : [ ]
-                        }
+                        "operand" : [ {
+                           "type" : "ToDecimal",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : {
+                              "name" : "Estimated Overlap Days",
+                              "type" : "ExpressionRef",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "type" : "ToDecimal",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : {
+                              "name" : "Total Drug Days",
+                              "type" : "ExpressionRef",
+                              "annotation" : [ ]
+                           }
+                        } ]
                      }, {
                         "valueType" : "{urn:hl7-org:elm-types:r1}Decimal",
                         "value" : "100.0",
                         "type" : "Literal",
                         "annotation" : [ ]
                      } ]
-                  }, {
-                     "type" : "ToDecimal",
-                     "annotation" : [ ],
-                     "signature" : [ {
-                        "name" : "{urn:hl7-org:elm-types:r1}Integer",
-                        "type" : "NamedTypeSpecifier",
-                        "annotation" : [ ]
-                     } ],
-                     "operand" : {
-                        "name" : "Denominator",
-                        "type" : "ExpressionRef",
-                        "annotation" : [ ]
-                     }
-                  } ]
+                  },
+                  "precision" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "2",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
                },
                "else" : {
                   "valueType" : "{urn:hl7-org:elm-types:r1}Decimal",
@@ -583,6 +2062,159 @@
                   "type" : "Literal",
                   "annotation" : [ ]
                }
+            }
+         }, {
+            "name" : "Denominator",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "name" : "Total Drug Days",
+               "type" : "ExpressionRef",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "Numerator",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "name" : "Estimated Overlap Days",
+               "type" : "ExpressionRef",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "Indicator Result",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Tuple",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "indicatorCode",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "1710",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "indicatorName",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "同醫院門診同藥理用藥日數重疊率-降血壓(口服)",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "indicatorNameEn",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "Same Hospital Outpatient Antihypertensive Drug Overlap Rate (Oral)",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "measurementPeriodStart",
+                  "value" : {
+                     "name" : "Measurement Period Start",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "measurementPeriodEnd",
+                  "value" : {
+                     "name" : "Measurement Period End",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "dataSource",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "醫療給付檔案分析系統",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "compiledBy",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "衛生福利部 中央健康保險署",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "compiledDate",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "2025-11-20",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "version",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "1.0.0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "denominatorCriteria",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "各案件之「給藥日數」總和",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "numeratorCriteria",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "同院ID不同處方之間給用藥日期與結束用藥日期有重覆之給藥日數",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "exclusionCriteria",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "排除代辦案件、注射劑(醫令代碼第8碼為2)",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "note",
+                  "value" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "本項指標追蹤同醫院門診降血壓藥品用藥日數重疊情況（簡化估算版本）",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "total_denominator",
+                  "value" : {
+                     "name" : "Total Drug Days",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "total_numerator",
+                  "value" : {
+                     "name" : "Estimated Overlap Days",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "total_rate",
+                  "value" : {
+                     "name" : "Drug Overlap Rate",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ]
             }
          } ]
       }

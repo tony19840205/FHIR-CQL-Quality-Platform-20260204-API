@@ -1,65 +1,118 @@
-/**
- * 醫院總額醫療品質資訊 - 同醫院門診同藥理用藥日數重疊率 - 降血糖 (不分口服及注射)
- * (指標代碼 1712)
- *
- * 資料範圍:
- *   醫院總額之門診處方降血糖 (不分口服及注射)案件, 排除代辦案件
- *
- * 公式說明:
- *   分子: 同院同 ID 不同處方之開始用藥日期與結束用藥日期間
- *         有重疊之給藥日數 (允許慢箋提早拿藥)
- *   分母: 各案件之「給藥日數」總和
- *
- *   (1) 「給藥日數」抓取醫令檔之醫令給藥日份 (ORDER_DRUG_DAY),
- *       若為空值則抓清單檔之給藥日份 (DRUG_DAYS)。
- *   (2) 降血糖藥物(不分口服及注射): ATC 前5碼=A10AB、A10AC、A10AD、A10AE、A10BA、A10BB、A10BF、A10BG、A10BX、A10BH、A10BJ、A10BK。
- */
 library Indicator_03_3_Same_Hospital_Antidiabetic_Overlap_1712 version '1.0.0'
 
 using FHIR version '4.0.1'
+
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
+// 來源：醫療給付檔案分析系統 指標代碼: 1712
+// 條件依據：同醫院門診同藥理用藥日數重疊率-降血糖(不分口服及注射)
+// 製作日期：2025-11-20
+
+// 【公式說明】
+// 分子: 同院ID不同處方之間給用藥日期與結束用藥日期有重覆之給藥日數
+// 分母: 各案件之「給藥日數」總和
+// 降血糖藥(不分口服及注射): ATC前5碼=A10AB、A10AC、A10AD、A10AE、A10BA、A10BB、A10BF、A10BG、A10BX、A10BH、A10BJ、A10BK
+
+codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
 codesystem "ATC": 'http://www.whocc.no/atc'
-codesystem "NHIOrder": 'https://www.nhi.gov.tw/cs/medOrder'
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes'
 
-code "A10AB Insulin Fast Prefix": 'A10AB' from "ATC"
-code "A10AC Insulin Intermediate Prefix": 'A10AC' from "ATC"
-code "A10AD Insulin Mix Prefix": 'A10AD' from "ATC"
-code "A10AE Insulin Long Prefix": 'A10AE' from "ATC"
-code "A10BA Biguanides Prefix": 'A10BA' from "ATC"
-code "A10BB Sulfonylureas Prefix": 'A10BB' from "ATC"
-code "A10BF Alpha Glucosidase Prefix": 'A10BF' from "ATC"
-code "A10BG Thiazolidinediones Prefix": 'A10BG' from "ATC"
-code "A10BX Other Oral Antidiabetics Prefix": 'A10BX' from "ATC"
-code "A10BH DPP4 Prefix": 'A10BH' from "ATC"
-code "A10BJ GLP1 Prefix": 'A10BJ' from "ATC"
-code "A10BK SGLT2 Prefix": 'A10BK' from "ATC"
+// 就醫類型代碼
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory - 門診'
 
-parameter MeasurementPeriodStart DateTime default @2026-01-01T00:00:00.0
-parameter MeasurementPeriodEnd DateTime default @2026-03-31T23:59:59.0
+// Helper function: 檢查是否為降血糖藥(不分口服及注射)
+define function IsAntidiabeticDrug(atcCode String):
+  Substring(atcCode, 0, 5) in {
+    'A10AB', 'A10AC', 'A10AD', 'A10AE', 
+    'A10BA', 'A10BB', 'A10BF', 'A10BG', 'A10BX',
+    'A10BH', 'A10BJ', 'A10BK'
+  }
 
-context Patient
+// Helper function: 取兩個日期中較大者
+define function MaxDateTime(d1 DateTime, d2 DateTime):
+  if d1 is null then d2
+  else if d2 is null then d1
+  else if d1 > d2 then d1
+  else d2
 
-define "Measurement Period":
-    Interval[MeasurementPeriodStart, MeasurementPeriodEnd]
+// Helper function: 取兩個日期中較小者
+define function MinDateTime(d1 DateTime, d2 DateTime):
+  if d1 is null then d2
+  else if d2 is null then d1
+  else if d1 < d2 then d1
+  else d2
 
-// 符合本指標藥理分類之 MedicationRequest (denominator: 各案件給藥日數總和)
-define "Drug Class Medication Requests":
-    [MedicationRequest] M
-        where M.authoredOn during "Measurement Period"
+// Helper function: 計算兩個日期區間的重疊天數
+define function CalculateOverlapDays(start1 DateTime, end1 DateTime, start2 DateTime, end2 DateTime):
+  if start1 is null or end1 is null or start2 is null or end2 is null then
+    0
+  else if MaxDateTime(start1, start2) <= MinDateTime(end1, end2) then
+    days between MaxDateTime(start1, start2) and MinDateTime(end1, end2) + 1
+  else
+    0
 
-// 同院、同 ID、不同處方、用藥期間有重疊之給藥日數案件
-define "Overlapping Drug Class Medication Requests":
-    [MedicationRequest] M
-        where M.authoredOn during "Measurement Period"
+// 1. 同醫院門診降血糖藥品處方
+define "Antidiabetic Prescriptions":
+  [MedicationRequest] MR
+    let medCodings: (MR.medication as FHIR.CodeableConcept).coding
+    where MR.status.value = 'completed'
+    and exists (
+      medCodings MC
+        where MC.system.value = 'http://www.whocc.no/atc'
+        and IsAntidiabeticDrug(MC.code.value)
+    )
+    and exists (
+      [Encounter] E
+        where E.id.value = Last(Split(MR.encounter.reference.value, '/'))
+        and E.class.code.value = 'AMB'
+        and E.status.value = 'finished'
+        and not exists (E.type T where exists (T.coding C where C.code.value = 'AGENCY'))
+    )
 
-define "Denominator":
-    Count("Drug Class Medication Requests")
+// 2. 計算同院同病人的藥品重疊日數
+define "Drug Overlap Days":
+  flatten (
+    "Antidiabetic Prescriptions" P1
+      return
+        "Antidiabetic Prescriptions" P2
+          where P2.subject.reference.value = P1.subject.reference.value
+          and P2.requester.reference.value = P1.requester.reference.value
+          and P2.id.value != P1.id.value
+          and CalculateOverlapDays(
+                P1.dispenseRequest.validityPeriod."start".value,
+                P1.dispenseRequest.validityPeriod."end".value,
+                P2.dispenseRequest.validityPeriod."start".value,
+                P2.dispenseRequest.validityPeriod."end".value
+              ) > 0
+          return {
+            prescription1: P1.id.value,
+            prescription2: P2.id.value,
+            overlapDays: CalculateOverlapDays(
+              P1.dispenseRequest.validityPeriod."start".value,
+              P1.dispenseRequest.validityPeriod."end".value,
+              P2.dispenseRequest.validityPeriod."start".value,
+              P2.dispenseRequest.validityPeriod."end".value
+            )
+          }
+  )
 
-define "Numerator":
-    Count("Overlapping Drug Class Medication Requests")
+// 3. 分母：降血糖藥品總給藥日數
+define "Total Drug Days":
+  Sum(
+    "Antidiabetic Prescriptions" P
+      return days between P.dispenseRequest.validityPeriod."start".value 
+                     and P.dispenseRequest.validityPeriod."end".value + 1
+  )
 
-define "Measure Score":
-    if "Denominator" > 0
-        then ("Numerator" * 100.0) / "Denominator"
-        else 0.0
+// 4. 分子：重疊給藥日數
+define "Overlap Drug Days":
+  Sum("Drug Overlap Days" D return D.overlapDays) / 2
+
+// 5. 指標計算結果：用藥日數重疊率
+define "Drug Overlap Rate":
+  if "Total Drug Days" > 0 then
+    ("Overlap Drug Days" / "Total Drug Days") * 100
+  else
+    null

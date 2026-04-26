@@ -1,58 +1,114 @@
-/**
- * 醫院總額醫療品質資訊 - 同醫院門診同藥理用藥日數重疊率 - 降血脂 (口服)
- * (指標代碼 1711)
- *
- * 資料範圍:
- *   醫院總額之門診處方降血脂 (口服)案件, 排除代辦案件
- *
- * 公式說明:
- *   分子: 同院同 ID 不同處方之開始用藥日期與結束用藥日期間
- *         有重疊之給藥日數 (允許慢箋提早拿藥)
- *   分母: 各案件之「給藥日數」總和
- *
- *   (1) 「給藥日數」抓取醫令檔之醫令給藥日份 (ORDER_DRUG_DAY),
- *       若為空值則抓清單檔之給藥日份 (DRUG_DAYS)。
- *   (2) 降血脂藥物(口服): ATC 前5碼=C10AA、C10AB、C10AC、C10AD、C10AX, 且醫令代碼第8碼為 1。
- */
 library Indicator_03_2_Same_Hospital_Lipid_Lowering_Overlap_1711 version '1.0.0'
 
 using FHIR version '4.0.1'
+
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
+// 來源：醫療給付檔案分析系統 指標代碼: 1711
+// 條件依據：同醫院門診同藥理用藥日數重疊率-降血脂(口服)
+// 製作日期：2025-11-20
+
+// 【公式說明】
+// 分子: 同院ID不同處方之間給用藥日期與結束用藥日期有重覆之給藥日數
+// 分母: 各案件之「給藥日數」總和
+// 降血脂藥(口服): ATC前5碼=C10AA、C10AB、C10AC、C10AD、C10AX，且醫令代碼第8碼不為1
+
+codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
 codesystem "ATC": 'http://www.whocc.no/atc'
-codesystem "NHIOrder": 'https://www.nhi.gov.tw/cs/medOrder'
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "NHI_PROCEDURE": 'http://www.nhi.gov.tw/codes'
 
-code "C10AA Statins Prefix": 'C10AA' from "ATC"
-code "C10AB Fibrates Prefix": 'C10AB' from "ATC"
-code "C10AC Bile Acid Sequestrants Prefix": 'C10AC' from "ATC"
-code "C10AD Nicotinic Acid Prefix": 'C10AD' from "ATC"
-code "C10AX Other Lipid Modifying Prefix": 'C10AX' from "ATC"
+// 就醫類型代碼
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory - 門診'
 
-parameter MeasurementPeriodStart DateTime default @2026-01-01T00:00:00.0
-parameter MeasurementPeriodEnd DateTime default @2026-03-31T23:59:59.0
+// Helper function: 檢查是否為降血脂藥(口服)
+define function IsLipidLoweringOralDrug(atcCode String, drugCode String):
+  (
+    // ATC前5碼為C10AA、C10AB、C10AC、C10AD、C10AX
+    Substring(atcCode, 0, 5) in {
+      'C10AA', 'C10AB', 'C10AC', 'C10AD', 'C10AX'
+    }
+  )
+  and
+  // 醫令代碼第8碼不為1 (排除注射劑)
+  (Length(drugCode) >= 8 and Substring(drugCode, 7, 1) != '1')
 
-context Patient
+// Helper function: 取兩日期較大者
+define function MaxDate(d1 DateTime, d2 DateTime):
+  if d1 > d2 then d1 else d2
 
-define "Measurement Period":
-    Interval[MeasurementPeriodStart, MeasurementPeriodEnd]
+// Helper function: 取兩日期較小者
+define function MinDate(d1 DateTime, d2 DateTime):
+  if d1 < d2 then d1 else d2
 
-// 符合本指標藥理分類之 MedicationRequest (denominator: 各案件給藥日數總和)
-define "Drug Class Medication Requests":
-    [MedicationRequest] M
-        where M.authoredOn during "Measurement Period"
+// Helper function: 計算兩個日期區間的重疊天數
+define function CalculateOverlapDays(start1 DateTime, end1 DateTime, start2 DateTime, end2 DateTime):
+  if start1 is null or end1 is null or start2 is null or end2 is null then
+    0
+  else if MaxDate(start1, start2) <= MinDate(end1, end2) then
+    days between MaxDate(start1, start2) and MinDate(end1, end2) + 1
+  else
+    0
 
-// 同院、同 ID、不同處方、用藥期間有重疊之給藥日數案件
-define "Overlapping Drug Class Medication Requests":
-    [MedicationRequest] M
-        where M.authoredOn during "Measurement Period"
+// 1. 同醫院門診降血脂藥品處方
+define "Lipid Lowering Prescriptions":
+  [MedicationRequest] MR
+    where MR.status.value = 'completed'
+    and IsLipidLoweringOralDrug(
+      First((MR.medication as FHIR.CodeableConcept).coding).code.value,
+      First((MR.medication as FHIR.CodeableConcept).coding).code.value
+    )
+    and exists (
+      [Encounter] E
+        where E.id.value = Last(Split(MR.encounter.reference.value, '/'))
+        and E.class.code.value = 'AMB'
+        and E.status.value = 'finished'
+        and not exists (E.type T where exists (T.coding C where C.code.value = 'AGENCY'))
+    )
 
-define "Denominator":
-    Count("Drug Class Medication Requests")
+// 2. 計算同院同病人的藥品重疊日數
+define "Drug Overlap Days":
+  flatten (
+    "Lipid Lowering Prescriptions" P1
+      return
+        "Lipid Lowering Prescriptions" P2
+          where P2.subject.reference.value = P1.subject.reference.value
+          and P2.requester.reference.value = P1.requester.reference.value
+          and P2.id.value != P1.id.value
+          and CalculateOverlapDays(
+                P1.dispenseRequest.validityPeriod.start.value,
+                P1.dispenseRequest.validityPeriod.end.value,
+                P2.dispenseRequest.validityPeriod.start.value,
+                P2.dispenseRequest.validityPeriod.end.value
+              ) > 0
+          return {
+            prescription1: P1.id.value,
+            prescription2: P2.id.value,
+            overlapDays: CalculateOverlapDays(
+              P1.dispenseRequest.validityPeriod.start.value,
+              P1.dispenseRequest.validityPeriod.end.value,
+              P2.dispenseRequest.validityPeriod.start.value,
+              P2.dispenseRequest.validityPeriod.end.value
+            )
+          }
+  )
 
-define "Numerator":
-    Count("Overlapping Drug Class Medication Requests")
+// 3. 分母：降血脂藥品總給藥日數
+define "Total Drug Days":
+  Sum(
+    "Lipid Lowering Prescriptions" P
+      return days between P.dispenseRequest.validityPeriod.start.value 
+                     and P.dispenseRequest.validityPeriod.end.value + 1
+  )
 
-define "Measure Score":
-    if "Denominator" > 0
-        then ("Numerator" * 100.0) / "Denominator"
-        else 0.0
+// 4. 分子：重疊給藥日數
+define "Overlap Drug Days":
+  Sum("Drug Overlap Days" D return D.overlapDays) / 2  // 除以2避免重複計算
+
+// 5. 指標計算結果：用藥日數重疊率
+define "Drug Overlap Rate":
+  if "Total Drug Days" > 0 then
+    ("Overlap Drug Days" / "Total Drug Days") * 100
+  else
+    null

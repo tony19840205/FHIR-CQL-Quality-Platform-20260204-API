@@ -1,57 +1,148 @@
-/**
- * 醫院總額醫療品質資訊 - 同醫院門診同藥理用藥日數重疊率 - 安眠鎮靜 (口服)
- * (指標代碼 1728)
- *
- * 資料範圍:
- *   醫院總額之門診處方安眠鎮靜 (口服)案件, 排除代辦案件
- *
- * 公式說明:
- *   分子: 同院同 ID 不同處方之開始用藥日期與結束用藥日期間
- *         有重疊之給藥日數 (允許慢箋提早拿藥)
- *   分母: 各案件之「給藥日數」總和
- *
- *   (1) 「給藥日數」抓取醫令檔之醫令給藥日份 (ORDER_DRUG_DAY),
- *       若為空值則抓清單檔之給藥日份 (DRUG_DAYS)。
- *   (2) 安眠鎮靜藥物(口服): ATC 前5碼=N05CC、N05CD、N05CF、N05CM, 且醫令代碼第8碼為 1。
- */
 library Indicator_03_6_Same_Hospital_Sedative_Overlap_1728 version '1.0.0'
 
 using FHIR version '4.0.1'
+
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
+// ============================================
+// 指標名稱: 同醫院門診同藥理用藥日數重疊率-安眠鎮靜(口服)
+// 指標代碼: 1728
+// 製作日期: 2025-11-20
+// ============================================
+// 分子: 同院同ID不同處方之間給用藥日期與結束用藥日期間有重疊之給藥日數
+// 分母: 各案件之「給藥日數」總和
+// 安眠鎮靜藥物(口服): ATC前5碼為N05CC、N05CD、N05CF、N05CM
+
 codesystem "ATC": 'http://www.whocc.no/atc'
-codesystem "NHIOrder": 'https://www.nhi.gov.tw/cs/medOrder'
+codesystem "ActCode": 'http://terminology.hl7.org/CodeSystem/v3-ActCode'
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
 
-code "N05CC Aldehydes Prefix": 'N05CC' from "ATC"
-code "N05CD Benzodiazepine Hypnotics Prefix": 'N05CD' from "ATC"
-code "N05CF Benzodiazepine Related Prefix": 'N05CF' from "ATC"
-code "N05CM Other Hypnotics Prefix": 'N05CM' from "ATC"
-
-parameter MeasurementPeriodStart DateTime default @2026-01-01T00:00:00.0
-parameter MeasurementPeriodEnd DateTime default @2026-03-31T23:59:59.0
+code "Ambulatory": 'AMB' from "ActCode" display 'Ambulatory'
 
 context Patient
 
-define "Measurement Period":
-    Interval[MeasurementPeriodStart, MeasurementPeriodEnd]
+// ============================================
+// Helper Functions
+// ============================================
 
-// 符合本指標藥理分類之 MedicationRequest (denominator: 各案件給藥日數總和)
-define "Drug Class Medication Requests":
-    [MedicationRequest] M
-        where M.authoredOn during "Measurement Period"
+// 檢查是否為安眠鎮靜藥物 ATC
+define function IsSedativeHypnoticATC(atcCode String):
+  if atcCode is null then false
+  else
+    Substring(atcCode, 0, 5) in {
+      'N05CC', 'N05CD', 'N05CF', 'N05CM'
+    }
 
-// 同院、同 ID、不同處方、用藥期間有重疊之給藥日數案件
-define "Overlapping Drug Class Medication Requests":
-    [MedicationRequest] M
-        where M.authoredOn during "Measurement Period"
+// 取兩個日期中較大者
+define function MaxDateTime(d1 DateTime, d2 DateTime):
+  if d1 is null then d2
+  else if d2 is null then d1
+  else if d1 > d2 then d1
+  else d2
 
-define "Denominator":
-    Count("Drug Class Medication Requests")
+// 取兩個日期中較小者
+define function MinDateTime(d1 DateTime, d2 DateTime):
+  if d1 is null then d2
+  else if d2 is null then d1
+  else if d1 < d2 then d1
+  else d2
 
-define "Numerator":
-    Count("Overlapping Drug Class Medication Requests")
+// 計算兩個日期區間的重疊天數
+define function CalculateOverlapDays(start1 DateTime, end1 DateTime, start2 DateTime, end2 DateTime):
+  if start1 is null or end1 is null or start2 is null or end2 is null then
+    0
+  else if MaxDateTime(start1, start2) <= MinDateTime(end1, end2) then
+    days between MaxDateTime(start1, start2) and MinDateTime(end1, end2) + 1
+  else
+    0
 
-define "Measure Score":
-    if "Denominator" > 0
-        then ("Numerator" * 100.0) / "Denominator"
-        else 0.0
+// ============================================
+// 門診安眠鎮靜藥品處方(口服)
+// ============================================
+
+define "Sedative Hypnotic Prescriptions":
+  [MedicationRequest] MR
+    let medCodings: (MR.medication as FHIR.CodeableConcept).coding
+    where MR.status.value in { 'active', 'completed' }
+    and exists (
+      medCodings MC
+        where MC.system.value = 'http://www.whocc.no/atc'
+        and IsSedativeHypnoticATC(MC.code.value)
+    )
+    and exists (
+      [Encounter] E
+        where E.id.value = Last(Split(MR.encounter.reference.value, '/'))
+        and E.class.code.value = 'AMB'
+        and E.status.value = 'finished'
+        and not exists (E.type T where exists (T.coding C where C.code.value = 'AGENCY'))
+    )
+    and MR.dispenseRequest.validityPeriod."start" is not null
+    and MR.dispenseRequest.validityPeriod."end" is not null
+
+// ============================================
+// 同院同病人不同處方重疊分析
+// ============================================
+
+define "Drug Overlap Days":
+  flatten (
+    "Sedative Hypnotic Prescriptions" P1
+      return
+        "Sedative Hypnotic Prescriptions" P2
+          where P2.subject.reference.value = P1.subject.reference.value
+          and P2.requester.reference.value = P1.requester.reference.value
+          and P2.id.value != P1.id.value
+          and CalculateOverlapDays(
+                P1.dispenseRequest.validityPeriod."start".value,
+                P1.dispenseRequest.validityPeriod."end".value,
+                P2.dispenseRequest.validityPeriod."start".value,
+                P2.dispenseRequest.validityPeriod."end".value
+              ) > 0
+          return {
+            prescription1: P1.id.value,
+            prescription2: P2.id.value,
+            overlapDays: CalculateOverlapDays(
+              P1.dispenseRequest.validityPeriod."start".value,
+              P1.dispenseRequest.validityPeriod."end".value,
+              P2.dispenseRequest.validityPeriod."start".value,
+              P2.dispenseRequest.validityPeriod."end".value
+            )
+          }
+  )
+
+// ============================================
+// 分母: 總給藥日數
+// ============================================
+
+define "Total Drug Days":
+  Sum(
+    "Sedative Hypnotic Prescriptions" P
+      return days between P.dispenseRequest.validityPeriod."start".value
+                     and P.dispenseRequest.validityPeriod."end".value + 1
+  )
+
+// ============================================
+// 分子: 重疊給藥日數
+// ============================================
+
+define "Overlap Drug Days":
+  Sum("Drug Overlap Days" D return D.overlapDays) / 2
+
+// ============================================
+// 統計數據
+// ============================================
+
+define "Total Prescriptions":
+  Count("Sedative Hypnotic Prescriptions")
+
+define "Total Overlapping Pairs":
+  Count("Drug Overlap Days")
+
+// ============================================
+// 重疊率計算
+// ============================================
+
+define "Drug Overlap Rate":
+  if "Total Drug Days" > 0 then
+    ("Overlap Drug Days" / "Total Drug Days") * 100
+  else
+    null
