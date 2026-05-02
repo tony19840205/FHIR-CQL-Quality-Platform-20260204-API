@@ -1,43 +1,98 @@
-/**
- * ???迂: ?瑁???蝷祥??鈭箸
- * ??憿: ???扯風?釭??
- * 閮??餌?: 瘥迤
- * ??憿?: 蝯梯??賊??? (????)
- * 
- * ??摰儔: ?思?璈?閰脣迤18甇脖誑銝銵??函?瘝餌??賊??思誘?犖??
- * 
- * ??祥??隞斤91006C??1007C??1008C?4001C?4002C?4003C
- * 
- * ?券?
- * - 閰摯?怎?璈???蝷祥????靘?瘜?
- * - 鈭圾?犖????祥??瘨菔???
- * - 雿????亙熒靽脰??怎???璅?
- * 
- * 閮?撟游漲: 2026撟?瘞?115撟?
- */
-
 library Indicator_Periodontal_Basic_Treatment_Patient_Count version '1.0.0'
 
 using FHIR version '4.0.1'
 
 include FHIRHelpers version '4.0.1' called FHIRHelpers
 
+// 指標名稱: 牙周基本治療病人數
+// 指標代碼: 牙科-牙周基本治療
+// 指標說明: 統計時間內接受牙周基本治療（91003C~91007C）之不重複病人數
+// 指標類型: 件數統計（isCount=true，unit='人'）
+//
+// 適用療程代碼:
+//   91003C: 牙周基本治療（第一次）
+//   91004C: 牙周基本治療（第二次）
+//   91005C: 牙周基本治療（第三次）
+//   91006C: 牙周基本治療（第四次）
+//   91007C: 牙周基本治療（第五次以上）
+//
+// 統計範圍: 2024Q1 ~ 2026Q1（9 個季度）
+
 parameter MeasurementPeriodStart DateTime default @2026-01-01T00:00:00.0+08:00
-parameter MeasurementPeriodEnd DateTime default @2026-03-31T23:59:59.0+08:00
+parameter MeasurementPeriodEnd   DateTime default @2026-03-31T23:59:59.0+08:00
 
-define "Measurement Period":
-  Interval[MeasurementPeriodStart, MeasurementPeriodEnd]
+context Patient
 
-define "All Procedures":
-  [Procedure] P
-  where P.performed during "Measurement Period"
+// =============================================================================
+// Helper Functions
+// =============================================================================
 
-define "All Encounters":
-  [Encounter] E
-  where E.period during "Measurement Period"
+define function GetProcedureDate(P FHIR.Procedure):
+  if P.performed is FHIR.dateTime
+    then date from (P.performed as FHIR.dateTime)
+    else if P.performed is FHIR.Period
+      then date from (P.performed as FHIR.Period).start
+      else null
 
-define "Total Procedure Count":
-  Count("All Procedures")
+define function IsCompletedProcedure(P FHIR.Procedure):
+  P.status.value = 'completed'
 
-define "Total Encounter Count":
-  Count("All Encounters")
+define function GetProcedureCode(P FHIR.Procedure):
+  Coalesce(First(P.code.coding C return C.code.value), '')
+
+// 牙周基本治療項目（91003C~91007C）
+define function IsPeriodontalBasicProcedure(P FHIR.Procedure):
+  GetProcedureCode(P) in { '91003C', '91004C', '91005C', '91006C', '91007C' }
+
+define function ToDecimal(v Integer):
+  v * 1.0
+
+// =============================================================================
+// Period-based Count Functions
+// =============================================================================
+
+// 期間內牙周基本治療件數
+define function CountInPeriod(periodStart Date, periodEnd Date):
+  Count(
+    [Procedure] P
+      where IsCompletedProcedure(P)
+        and IsPeriodontalBasicProcedure(P)
+        and GetProcedureDate(P) in Interval[periodStart, periodEnd]
+  )
+
+// =============================================================================
+// Quarterly Statistics: 2024Q1 ~ 2026Q1（9 個季度）
+// =============================================================================
+
+define "2024Q1 Count": CountInPeriod(@2024-01-01, @2024-03-31)
+define "2024Q2 Count": CountInPeriod(@2024-04-01, @2024-06-30)
+define "2024Q3 Count": CountInPeriod(@2024-07-01, @2024-09-30)
+define "2024Q4 Count": CountInPeriod(@2024-10-01, @2024-12-31)
+define "2025Q1 Count": CountInPeriod(@2025-01-01, @2025-03-31)
+define "2025Q2 Count": CountInPeriod(@2025-04-01, @2025-06-30)
+define "2025Q3 Count": CountInPeriod(@2025-07-01, @2025-09-30)
+define "2025Q4 Count": CountInPeriod(@2025-10-01, @2025-12-31)
+define "2026Q1 Count": CountInPeriod(@2026-01-01, @2026-03-31)
+
+define "Total Count": "2026Q1 Count"
+
+define "Indicator Result":
+  Tuple {
+    indicatorName:     '牙周基本治療病人數',
+    indicatorCode:     '牙科-牙周基本治療',
+    unit:              '人',
+    isCount:           true,
+    periodontalCodes:  '91003C~91007C',
+    totalCount:        "Total Count",
+    quarters: List{
+      Tuple { quarter: '2024Q1', count: "2024Q1 Count" },
+      Tuple { quarter: '2024Q2', count: "2024Q2 Count" },
+      Tuple { quarter: '2024Q3', count: "2024Q3 Count" },
+      Tuple { quarter: '2024Q4', count: "2024Q4 Count" },
+      Tuple { quarter: '2025Q1', count: "2025Q1 Count" },
+      Tuple { quarter: '2025Q2', count: "2025Q2 Count" },
+      Tuple { quarter: '2025Q3', count: "2025Q3 Count" },
+      Tuple { quarter: '2025Q4', count: "2025Q4 Count" },
+      Tuple { quarter: '2026Q1', count: "2026Q1 Count" }
+    }
+  }

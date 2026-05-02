@@ -1,0 +1,3062 @@
+{
+   "library" : {
+      "annotation" : [ {
+         "translatorVersion" : "3.10.0",
+         "translatorOptions" : "DisableListDemotion,DisableListPromotion",
+         "signatureLevel" : "Overloads",
+         "type" : "CqlToElmInfo"
+      } ],
+      "identifier" : {
+         "id" : "InfectiousDisease_AURI_Surveillance",
+         "version" : "1.0.0"
+      },
+      "schemaIdentifier" : {
+         "id" : "urn:hl7-org:elm",
+         "version" : "r1"
+      },
+      "usings" : {
+         "def" : [ {
+            "localIdentifier" : "System",
+            "uri" : "urn:hl7-org:elm-types:r1",
+            "annotation" : [ ]
+         }, {
+            "localIdentifier" : "FHIR",
+            "uri" : "http://hl7.org/fhir",
+            "version" : "4.0.1",
+            "annotation" : [ ]
+         } ]
+      },
+      "includes" : {
+         "def" : [ {
+            "localIdentifier" : "FHIRHelpers",
+            "path" : "FHIRHelpers",
+            "version" : "4.0.1",
+            "annotation" : [ ]
+         } ]
+      },
+      "parameters" : {
+         "def" : [ {
+            "name" : "Measurement Period",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "default" : {
+               "lowClosed" : true,
+               "highClosed" : true,
+               "type" : "Interval",
+               "annotation" : [ ],
+               "low" : {
+                  "type" : "DateTime",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "year" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1900",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "month" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "day" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "1",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "hour" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "minute" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "second" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "millisecond" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               },
+               "high" : {
+                  "type" : "DateTime",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "year" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "2100",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "month" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "12",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "day" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "31",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "hour" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "23",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "minute" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "59",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "second" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "59",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  },
+                  "millisecond" : {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                     "value" : "0",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  }
+               }
+            },
+            "parameterTypeSpecifier" : {
+               "type" : "IntervalTypeSpecifier",
+               "annotation" : [ ],
+               "pointType" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            }
+         } ]
+      },
+      "codeSystems" : {
+         "def" : [ {
+            "name" : "ICD-9-CM",
+            "id" : "http://hl7.org/fhir/sid/icd-9-cm",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "ICD-10-CM",
+            "id" : "http://hl7.org/fhir/sid/icd-10-cm",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "SNOMEDCT",
+            "id" : "http://snomed.info/sct",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "LOINC",
+            "id" : "http://loinc.org",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         }, {
+            "name" : "ActCode",
+            "id" : "http://terminology.hl7.org/CodeSystem/v3-ActCode",
+            "accessLevel" : "Public",
+            "annotation" : [ ]
+         } ]
+      },
+      "valueSets" : {
+         "def" : [ {
+            "name" : "AURI ICD9 Codes",
+            "id" : "http://example.org/fhir/ValueSet/auri-icd9",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "AURI ICD10 Codes",
+            "id" : "http://example.org/fhir/ValueSet/auri-icd10",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "AURI SNOMED Codes",
+            "id" : "http://example.org/fhir/ValueSet/auri-snomed",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         }, {
+            "name" : "AURI Lab Codes",
+            "id" : "http://example.org/fhir/ValueSet/auri-lab",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : [ ]
+         } ]
+      },
+      "codes" : {
+         "def" : [ {
+            "name" : "ICD9 Common Cold 460",
+            "id" : "460",
+            "display" : "Acute nasopharyngitis (common cold)",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Pharyngitis 462",
+            "id" : "462",
+            "display" : "Acute pharyngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Tonsillitis 463",
+            "id" : "463",
+            "display" : "Acute tonsillitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Laryngitis 464.0",
+            "id" : "464.0",
+            "display" : "Acute laryngitis without obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Laryngitis w Obs 464.01",
+            "id" : "464.01",
+            "display" : "Acute laryngitis with obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Tracheitis 464.10",
+            "id" : "464.10",
+            "display" : "Acute tracheitis without obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Tracheitis w Obs 464.11",
+            "id" : "464.11",
+            "display" : "Acute tracheitis with obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Laryngotracheitis 464.20",
+            "id" : "464.20",
+            "display" : "Acute laryngotracheitis without obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Laryngotracheitis w Obs 464.21",
+            "id" : "464.21",
+            "display" : "Acute laryngotracheitis with obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Epiglottitis 464.30",
+            "id" : "464.30",
+            "display" : "Acute epiglottitis without obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Epiglottitis w Obs 464.31",
+            "id" : "464.31",
+            "display" : "Acute epiglottitis with obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Croup 464.4",
+            "id" : "464.4",
+            "display" : "Croup",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Supraglottitis 464.50",
+            "id" : "464.50",
+            "display" : "Supraglottitis without obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Supraglottitis w Obs 464.51",
+            "id" : "464.51",
+            "display" : "Supraglottitis with obstruction",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 Acute Laryngopharyngitis 465.0",
+            "id" : "465.0",
+            "display" : "Acute laryngopharyngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 AURI Multiple Sites 465.8",
+            "id" : "465.8",
+            "display" : "Acute upper respiratory infections of multiple sites",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD9 AURI Unspecified 465.9",
+            "id" : "465.9",
+            "display" : "Acute upper respiratory infections of unspecified site",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-9-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Common Cold J00",
+            "id" : "J00",
+            "display" : "Acute nasopharyngitis (common cold)",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Streptococcal Pharyngitis J02.0",
+            "id" : "J02.0",
+            "display" : "Streptococcal pharyngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Other Acute Pharyngitis J02.8",
+            "id" : "J02.8",
+            "display" : "Acute pharyngitis due to other specified organisms",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute Pharyngitis Unspec J02.9",
+            "id" : "J02.9",
+            "display" : "Acute pharyngitis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Streptococcal Tonsillitis J03.0",
+            "id" : "J03.0",
+            "display" : "Streptococcal tonsillitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Other Acute Tonsillitis J03.8",
+            "id" : "J03.8",
+            "display" : "Acute tonsillitis due to other specified organisms",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute Tonsillitis Unspec J03.9",
+            "id" : "J03.9",
+            "display" : "Acute tonsillitis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute Laryngitis J04.0",
+            "id" : "J04.0",
+            "display" : "Acute laryngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute Tracheitis J04.1",
+            "id" : "J04.1",
+            "display" : "Acute tracheitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute Laryngotracheitis J04.2",
+            "id" : "J04.2",
+            "display" : "Acute laryngotracheitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Supraglottitis J04.3",
+            "id" : "J04.3",
+            "display" : "Supraglottitis, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute Obstructive Laryngitis J05.0",
+            "id" : "J05.0",
+            "display" : "Acute obstructive laryngitis (croup)",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute Epiglottitis J05.1",
+            "id" : "J05.1",
+            "display" : "Acute epiglottitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 Acute Laryngopharyngitis J06.0",
+            "id" : "J06.0",
+            "display" : "Acute laryngopharyngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ICD10 AURI Unspecified J06.9",
+            "id" : "J06.9",
+            "display" : "Acute upper respiratory infection, unspecified",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ICD-10-CM",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED AURI 54150009",
+            "id" : "54150009",
+            "display" : "Upper respiratory infection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Common Cold 82272006",
+            "id" : "82272006",
+            "display" : "Common cold",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Viral URI 23589007",
+            "id" : "23589007",
+            "display" : "Viral upper respiratory infection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute Pharyngitis 363746003",
+            "id" : "363746003",
+            "display" : "Acute pharyngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Streptococcal Pharyngitis 43878008",
+            "id" : "43878008",
+            "display" : "Streptococcal pharyngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute Tonsillitis 90176007",
+            "id" : "90176007",
+            "display" : "Acute tonsillitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute Laryngitis 6805009",
+            "id" : "6805009",
+            "display" : "Acute laryngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute Nasopharyngitis 275498002",
+            "id" : "275498002",
+            "display" : "Acute nasopharyngitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Croup 71186008",
+            "id" : "71186008",
+            "display" : "Croup",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute Tracheitis 195699005",
+            "id" : "195699005",
+            "display" : "Acute tracheitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Acute Epiglottitis 80384002",
+            "id" : "80384002",
+            "display" : "Acute epiglottitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Pharyngotonsillitis 195645006",
+            "id" : "195645006",
+            "display" : "Acute pharyngotonsillitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "SNOMED Laryngotracheitis 6981008",
+            "id" : "6981008",
+            "display" : "Laryngotracheobronchitis",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "SNOMEDCT",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Nasopharynx Culture 14358-6",
+            "id" : "14358-6",
+            "display" : "Bacteria identified in Nasopharynx by Culture",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Strep A Ag Rapid 60489-2",
+            "id" : "60489-2",
+            "display" : "Streptococcus pyogenes Ag [Presence] in Throat by Rapid immunoassay",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Strep A PCR 92970-3",
+            "id" : "92970-3",
+            "display" : "Streptococcus pyogenes DNA [Presence] in Throat by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Respiratory Virus Panel 92140-3",
+            "id" : "92140-3",
+            "display" : "Respiratory pathogens DNA+RNA panel - Nasopharynx by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC RSV Ag 10329-7",
+            "id" : "10329-7",
+            "display" : "Respiratory syncytial virus Ag [Presence] in Nasopharynx",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC RSV RNA 92758-2",
+            "id" : "92758-2",
+            "display" : "Respiratory syncytial virus RNA [Presence] in Respiratory specimen by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Adenovirus DNA 30059-7",
+            "id" : "30059-7",
+            "display" : "Adenovirus DNA [Presence] in Specimen by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Rhinovirus RNA 92131-2",
+            "id" : "92131-2",
+            "display" : "Rhinovirus RNA [Presence] in Respiratory specimen by NAA with probe detection",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC ASO 5036-9",
+            "id" : "5036-9",
+            "display" : "Streptococcus pyogenes Ab [Titer] in Serum",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC WBC 6690-2",
+            "id" : "6690-2",
+            "display" : "Leukocytes [#/volume] in Blood by Automated count",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC CRP 1988-5",
+            "id" : "1988-5",
+            "display" : "C reactive protein [Mass/volume] in Serum or Plasma",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "LOINC Procalcitonin 33959-8",
+            "id" : "33959-8",
+            "display" : "Procalcitonin [Mass/volume] in Serum or Plasma",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "LOINC",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Outpatient",
+            "id" : "AMB",
+            "display" : "Ambulatory/Outpatient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Emergency",
+            "id" : "EMER",
+            "display" : "Emergency",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         }, {
+            "name" : "ActCode Inpatient",
+            "id" : "IMP",
+            "display" : "Inpatient encounter",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "codeSystem" : {
+               "name" : "ActCode",
+               "annotation" : [ ]
+            }
+         } ]
+      },
+      "contexts" : {
+         "def" : [ {
+            "name" : "Patient",
+            "annotation" : [ ]
+         } ]
+      },
+      "statements" : {
+         "def" : [ {
+            "name" : "ICD9 Code List",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "List",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "ICD9 Common Cold 460",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Pharyngitis 462",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Tonsillitis 463",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Laryngitis 464.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Laryngitis w Obs 464.01",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Tracheitis 464.10",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Tracheitis w Obs 464.11",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Laryngotracheitis 464.20",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Laryngotracheitis w Obs 464.21",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Epiglottitis 464.30",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Epiglottitis w Obs 464.31",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Croup 464.4",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Supraglottitis 464.50",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Supraglottitis w Obs 464.51",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 Acute Laryngopharyngitis 465.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 AURI Multiple Sites 465.8",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD9 AURI Unspecified 465.9",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "ICD10 Code List",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "List",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "ICD10 Common Cold J00",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Streptococcal Pharyngitis J02.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Other Acute Pharyngitis J02.8",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute Pharyngitis Unspec J02.9",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Streptococcal Tonsillitis J03.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Other Acute Tonsillitis J03.8",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute Tonsillitis Unspec J03.9",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute Laryngitis J04.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute Tracheitis J04.1",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute Laryngotracheitis J04.2",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Supraglottitis J04.3",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute Obstructive Laryngitis J05.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute Epiglottitis J05.1",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 Acute Laryngopharyngitis J06.0",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "ICD10 AURI Unspecified J06.9",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "SNOMED Code List",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "List",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "SNOMED AURI 54150009",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Common Cold 82272006",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Viral URI 23589007",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute Pharyngitis 363746003",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Streptococcal Pharyngitis 43878008",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute Tonsillitis 90176007",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute Laryngitis 6805009",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute Nasopharyngitis 275498002",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Croup 71186008",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute Tracheitis 195699005",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Acute Epiglottitis 80384002",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Pharyngotonsillitis 195645006",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "SNOMED Laryngotracheitis 6981008",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Lab Code List",
+            "context" : "Unfiltered",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "List",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "LOINC Nasopharynx Culture 14358-6",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Strep A Ag Rapid 60489-2",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Strep A PCR 92970-3",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Respiratory Virus Panel 92140-3",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC RSV Ag 10329-7",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC RSV RNA 92758-2",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Adenovirus DNA 30059-7",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Rhinovirus RNA 92131-2",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC ASO 5036-9",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC WBC 6690-2",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC CRP 1988-5",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "LOINC Procalcitonin 33959-8",
+                  "type" : "CodeRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Patient",
+            "context" : "Patient",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "SingletonFrom",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : {
+                  "dataType" : "{http://hl7.org/fhir}Patient",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Patient",
+                  "type" : "Retrieve",
+                  "annotation" : [ ],
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
+               }
+            }
+         }, {
+            "name" : "AURI Diagnosis Conditions",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Union",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : [ {
+                  "type" : "Union",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "dataType" : "{http://hl7.org/fhir}Condition",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "AURI ICD9 Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }, {
+                     "dataType" : "{http://hl7.org/fhir}Condition",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "AURI ICD10 Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  } ]
+               }, {
+                  "dataType" : "{http://hl7.org/fhir}Condition",
+                  "templateId" : "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "codeProperty" : "code",
+                  "codeComparator" : "in",
+                  "type" : "Retrieve",
+                  "annotation" : [ ],
+                  "codes" : {
+                     "name" : "AURI SNOMED Codes",
+                     "preserve" : true,
+                     "type" : "ValueSetRef",
+                     "annotation" : [ ]
+                  },
+                  "include" : [ ],
+                  "codeFilter" : [ ],
+                  "dateFilter" : [ ],
+                  "otherFilter" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "AURI Lab Results",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "Lab",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}Observation",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Observation",
+                     "codeProperty" : "code",
+                     "codeComparator" : "in",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "codes" : {
+                        "name" : "AURI Lab Codes",
+                        "preserve" : true,
+                        "type" : "ValueSetRef",
+                        "annotation" : [ ]
+                     },
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "And",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "type" : "In",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : [ {
+                        "name" : "ToString",
+                        "libraryName" : "FHIRHelpers",
+                        "type" : "FunctionRef",
+                        "annotation" : [ ],
+                        "signature" : [ {
+                           "name" : "{http://hl7.org/fhir}ObservationStatus",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        } ],
+                        "operand" : [ {
+                           "path" : "status",
+                           "scope" : "Lab",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        } ]
+                     }, {
+                        "type" : "List",
+                        "annotation" : [ ],
+                        "element" : [ {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "final",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "amended",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "corrected",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        } ]
+                     } ]
+                  }, {
+                     "type" : "Not",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "type" : "IsNull",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : {
+                           "path" : "value",
+                           "scope" : "Lab",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }
+                  } ]
+               }
+            }
+         }, {
+            "name" : "All Encounters",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "E",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "dataType" : "{http://hl7.org/fhir}Encounter",
+                     "templateId" : "http://hl7.org/fhir/StructureDefinition/Encounter",
+                     "type" : "Retrieve",
+                     "annotation" : [ ],
+                     "include" : [ ],
+                     "codeFilter" : [ ],
+                     "dateFilter" : [ ],
+                     "otherFilter" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "Equal",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "{urn:hl7-org:elm-types:r1}String",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : [ {
+                     "name" : "ToString",
+                     "libraryName" : "FHIRHelpers",
+                     "type" : "FunctionRef",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{http://hl7.org/fhir}EncounterStatus",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "status",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     } ]
+                  }, {
+                     "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                     "value" : "finished",
+                     "type" : "Literal",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "Diagnosis Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "C",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "AURI Diagnosis Conditions",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "value" : {
+                           "name" : "ToDateTime",
+                           "libraryName" : "FHIRHelpers",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{http://hl7.org/fhir}dateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "type" : "Coalesce",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : [ {
+                                 "strict" : false,
+                                 "type" : "As",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : {
+                                    "path" : "onset",
+                                    "scope" : "C",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 },
+                                 "asTypeSpecifier" : {
+                                    "name" : "{http://hl7.org/fhir}dateTime",
+                                    "type" : "NamedTypeSpecifier",
+                                    "annotation" : [ ]
+                                 }
+                              }, {
+                                 "path" : "recordedDate",
+                                 "scope" : "C",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              } ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Diagnosis",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "system",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "code",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "display",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "C",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "reference",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "encounter",
+                                 "scope" : "C",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Lab Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "L",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "AURI Lab Results",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "value" : {
+                           "name" : "ToDateTime",
+                           "libraryName" : "FHIRHelpers",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{http://hl7.org/fhir}dateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "strict" : false,
+                              "type" : "As",
+                              "annotation" : [ ],
+                              "signature" : [ ],
+                              "operand" : {
+                                 "path" : "effective",
+                                 "scope" : "L",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              },
+                              "asTypeSpecifier" : {
+                                 "name" : "{http://hl7.org/fhir}dateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Laboratory",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "system",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "code",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "value" : {
+                           "type" : "Coalesce",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}String",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "value",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "display",
+                                 "type" : "Property",
+                                 "annotation" : [ ],
+                                 "source" : {
+                                    "type" : "Indexer",
+                                    "annotation" : [ ],
+                                    "signature" : [ {
+                                       "type" : "ListTypeSpecifier",
+                                       "annotation" : [ ],
+                                       "elementType" : {
+                                          "name" : "{http://hl7.org/fhir}Coding",
+                                          "type" : "NamedTypeSpecifier",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "name" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "type" : "NamedTypeSpecifier",
+                                       "annotation" : [ ]
+                                    } ],
+                                    "operand" : [ {
+                                       "path" : "coding",
+                                       "type" : "Property",
+                                       "annotation" : [ ],
+                                       "source" : {
+                                          "path" : "code",
+                                          "scope" : "L",
+                                          "type" : "Property",
+                                          "annotation" : [ ]
+                                       }
+                                    }, {
+                                       "valueType" : "{urn:hl7-org:elm-types:r1}Integer",
+                                       "value" : "0",
+                                       "type" : "Literal",
+                                       "annotation" : [ ]
+                                    } ]
+                                 }
+                              }
+                           }, {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "unknown",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "reference",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "path" : "encounter",
+                                 "scope" : "L",
+                                 "type" : "Property",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "All AURI Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Union",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }, {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               } ],
+               "operand" : [ {
+                  "name" : "Diagnosis Events",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "Lab Events",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               } ]
+            }
+         }, {
+            "name" : "Sorted AURI Events",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "E",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "All AURI Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "type" : "Not",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "IsNull",
+                     "annotation" : [ ],
+                     "signature" : [ ],
+                     "operand" : {
+                        "path" : "eventDate",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }
+                  }
+               },
+               "sort" : {
+                  "annotation" : [ ],
+                  "by" : [ {
+                     "direction" : "asc",
+                     "path" : "eventDate",
+                     "type" : "ByColumn",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "IsNewEpisode",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Not",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "operand" : {
+                  "type" : "Exists",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : {
+                     "type" : "Query",
+                     "annotation" : [ ],
+                     "source" : [ {
+                        "alias" : "PriorEvent",
+                        "annotation" : [ ],
+                        "expression" : {
+                           "name" : "allEvents",
+                           "type" : "OperandRef",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "let" : [ ],
+                     "relationship" : [ ],
+                     "where" : {
+                        "type" : "And",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "type" : "Less",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "PriorEvent",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "currentDate",
+                              "type" : "OperandRef",
+                              "annotation" : [ ]
+                           } ]
+                        }, {
+                           "type" : "GreaterOrEqual",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           }, {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "PriorEvent",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }, {
+                              "type" : "Subtract",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Quantity",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "currentDate",
+                                 "type" : "OperandRef",
+                                 "annotation" : [ ]
+                              }, {
+                                 "value" : 30,
+                                 "unit" : "days",
+                                 "type" : "Quantity",
+                                 "annotation" : [ ]
+                              } ]
+                           } ]
+                        } ]
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "currentDate",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            }, {
+               "name" : "allEvents",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "type" : "TupleTypeSpecifier",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "eventDate",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeValue",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeDisplay",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterId",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{urn:hl7-org:elm-types:r1}String",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }
+            } ]
+         }, {
+            "name" : "Unique AURI Episodes",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "CurrentEvent",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Sorted AURI Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "where" : {
+                  "name" : "IsNewEpisode",
+                  "type" : "FunctionRef",
+                  "annotation" : [ ],
+                  "signature" : [ ],
+                  "operand" : [ {
+                     "path" : "eventDate",
+                     "scope" : "CurrentEvent",
+                     "type" : "Property",
+                     "annotation" : [ ]
+                  }, {
+                     "name" : "Sorted AURI Events",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  } ]
+               }
+            }
+         }, {
+            "name" : "CalculateAgeAtEvent",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "precision" : "Year",
+               "type" : "CalculateAgeAt",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }, {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               } ],
+               "operand" : [ {
+                  "type" : "ToDateTime",
+                  "annotation" : [ ],
+                  "signature" : [ {
+                     "name" : "{urn:hl7-org:elm-types:r1}Date",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  } ],
+                  "operand" : {
+                     "path" : "birthDate.value",
+                     "type" : "Property",
+                     "annotation" : [ ],
+                     "source" : {
+                        "name" : "Patient",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "eventDate",
+                  "type" : "OperandRef",
+                  "annotation" : [ ]
+               } ]
+            },
+            "operand" : [ {
+               "name" : "eventDate",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "Patient Gender",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "path" : "value",
+               "type" : "Property",
+               "annotation" : [ ],
+               "source" : {
+                  "path" : "gender",
+                  "type" : "Property",
+                  "annotation" : [ ],
+                  "source" : {
+                     "name" : "Patient",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }
+            }
+         }, {
+            "name" : "GetEncounterTypeById",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "type" : "FunctionDef",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "First",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "All Encounters",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "type" : "Concatenate",
+                        "annotation" : [ ],
+                        "signature" : [ ],
+                        "operand" : [ {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Encounter/",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }, {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "id",
+                              "scope" : "E",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }
+                        } ]
+                     }, {
+                        "name" : "encId",
+                        "type" : "OperandRef",
+                        "annotation" : [ ]
+                     } ]
+                  },
+                  "return" : {
+                     "annotation" : [ ],
+                     "expression" : {
+                        "type" : "Case",
+                        "annotation" : [ ],
+                        "caseItem" : [ {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Inpatient",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Inpatient",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Emergency",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Emergency",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        }, {
+                           "annotation" : [ ],
+                           "when" : {
+                              "type" : "Equivalent",
+                              "annotation" : [ ],
+                              "signature" : [ {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }, {
+                                 "name" : "{urn:hl7-org:elm-types:r1}Code",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              } ],
+                              "operand" : [ {
+                                 "name" : "ToCode",
+                                 "libraryName" : "FHIRHelpers",
+                                 "type" : "FunctionRef",
+                                 "annotation" : [ ],
+                                 "signature" : [ ],
+                                 "operand" : [ {
+                                    "path" : "class",
+                                    "scope" : "E",
+                                    "type" : "Property",
+                                    "annotation" : [ ]
+                                 } ]
+                              }, {
+                                 "name" : "ActCode Outpatient",
+                                 "type" : "CodeRef",
+                                 "annotation" : [ ]
+                              } ]
+                           },
+                           "then" : {
+                              "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                              "value" : "Outpatient",
+                              "type" : "Literal",
+                              "annotation" : [ ]
+                           }
+                        } ],
+                        "else" : {
+                           "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                           "value" : "Other",
+                           "type" : "Literal",
+                           "annotation" : [ ]
+                        }
+                     }
+                  }
+               }
+            },
+            "operand" : [ {
+               "name" : "encId",
+               "annotation" : [ ],
+               "operandTypeSpecifier" : {
+                  "name" : "{urn:hl7-org:elm-types:r1}String",
+                  "type" : "NamedTypeSpecifier",
+                  "annotation" : [ ]
+               }
+            } ]
+         }, {
+            "name" : "AURI Surveillance Results",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Query",
+               "annotation" : [ ],
+               "source" : [ {
+                  "alias" : "Episode",
+                  "annotation" : [ ],
+                  "expression" : {
+                     "name" : "Unique AURI Episodes",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "let" : [ ],
+               "relationship" : [ ],
+               "return" : {
+                  "annotation" : [ ],
+                  "expression" : {
+                     "type" : "Tuple",
+                     "annotation" : [ ],
+                     "element" : [ {
+                        "name" : "patientId",
+                        "value" : {
+                           "path" : "value",
+                           "type" : "Property",
+                           "annotation" : [ ],
+                           "source" : {
+                              "path" : "id",
+                              "type" : "Property",
+                              "annotation" : [ ],
+                              "source" : {
+                                 "name" : "Patient",
+                                 "type" : "ExpressionRef",
+                                 "annotation" : [ ]
+                              }
+                           }
+                        }
+                     }, {
+                        "name" : "eventDate",
+                        "value" : {
+                           "type" : "ToString",
+                           "annotation" : [ ],
+                           "signature" : [ {
+                              "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type" : "NamedTypeSpecifier",
+                              "annotation" : [ ]
+                           } ],
+                           "operand" : {
+                              "path" : "eventDate",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           }
+                        }
+                     }, {
+                        "name" : "age",
+                        "value" : {
+                           "name" : "CalculateAgeAtEvent",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "path" : "eventDate",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "gender",
+                        "value" : {
+                           "name" : "Patient Gender",
+                           "type" : "ExpressionRef",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "encounterType",
+                        "value" : {
+                           "name" : "GetEncounterTypeById",
+                           "type" : "FunctionRef",
+                           "annotation" : [ ],
+                           "signature" : [ ],
+                           "operand" : [ {
+                              "path" : "encounterId",
+                              "scope" : "Episode",
+                              "type" : "Property",
+                              "annotation" : [ ]
+                           } ]
+                        }
+                     }, {
+                        "name" : "eventType",
+                        "value" : {
+                           "path" : "eventType",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "diagnosisCode",
+                        "value" : {
+                           "path" : "codeValue",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "diagnosisName",
+                        "value" : {
+                           "path" : "codeDisplay",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     }, {
+                        "name" : "codeSystem",
+                        "value" : {
+                           "path" : "codeSystem",
+                           "scope" : "Episode",
+                           "type" : "Property",
+                           "annotation" : [ ]
+                        }
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Total Unique Episodes",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "name" : "Unique AURI Episodes",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Male Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique AURI Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "name" : "Patient Gender",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "male",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Female Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique AURI Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "name" : "Patient Gender",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "female",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Diagnosis Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique AURI Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "eventType",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Diagnosis",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Lab Episode Count",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Count",
+               "annotation" : [ ],
+               "signature" : [ ],
+               "source" : {
+                  "type" : "Query",
+                  "annotation" : [ ],
+                  "source" : [ {
+                     "alias" : "E",
+                     "annotation" : [ ],
+                     "expression" : {
+                        "name" : "Unique AURI Episodes",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  } ],
+                  "let" : [ ],
+                  "relationship" : [ ],
+                  "where" : {
+                     "type" : "Equal",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     }, {
+                        "name" : "{urn:hl7-org:elm-types:r1}String",
+                        "type" : "NamedTypeSpecifier",
+                        "annotation" : [ ]
+                     } ],
+                     "operand" : [ {
+                        "path" : "eventType",
+                        "scope" : "E",
+                        "type" : "Property",
+                        "annotation" : [ ]
+                     }, {
+                        "valueType" : "{urn:hl7-org:elm-types:r1}String",
+                        "value" : "Laboratory",
+                        "type" : "Literal",
+                        "annotation" : [ ]
+                     } ]
+                  }
+               }
+            }
+         }, {
+            "name" : "Has Condition Data",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Exists",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Condition",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "operand" : {
+                  "name" : "AURI Diagnosis Conditions",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Has Lab Data",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Exists",
+               "annotation" : [ ],
+               "signature" : [ {
+                  "type" : "ListTypeSpecifier",
+                  "annotation" : [ ],
+                  "elementType" : {
+                     "name" : "{http://hl7.org/fhir}Observation",
+                     "type" : "NamedTypeSpecifier",
+                     "annotation" : [ ]
+                  }
+               } ],
+               "operand" : {
+                  "name" : "AURI Lab Results",
+                  "type" : "ExpressionRef",
+                  "annotation" : [ ]
+               }
+            }
+         }, {
+            "name" : "Data Availability Check",
+            "context" : "Patient",
+            "accessLevel" : "Public",
+            "annotation" : [ ],
+            "expression" : {
+               "type" : "Tuple",
+               "annotation" : [ ],
+               "element" : [ {
+                  "name" : "hasConditionData",
+                  "value" : {
+                     "name" : "Has Condition Data",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "hasLabData",
+                  "value" : {
+                     "name" : "Has Lab Data",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               }, {
+                  "name" : "totalDiagnoses",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Condition",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "AURI Diagnosis Conditions",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "totalLabResults",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "name" : "{http://hl7.org/fhir}Observation",
+                           "type" : "NamedTypeSpecifier",
+                           "annotation" : [ ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "AURI Lab Results",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "totalEvents",
+                  "value" : {
+                     "type" : "Count",
+                     "annotation" : [ ],
+                     "signature" : [ {
+                        "type" : "ListTypeSpecifier",
+                        "annotation" : [ ],
+                        "elementType" : {
+                           "type" : "TupleTypeSpecifier",
+                           "annotation" : [ ],
+                           "element" : [ {
+                              "name" : "eventDate",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}DateTime",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "eventType",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeSystem",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeValue",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "codeDisplay",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           }, {
+                              "name" : "encounterId",
+                              "annotation" : [ ],
+                              "elementType" : {
+                                 "name" : "{urn:hl7-org:elm-types:r1}String",
+                                 "type" : "NamedTypeSpecifier",
+                                 "annotation" : [ ]
+                              }
+                           } ]
+                        }
+                     } ],
+                     "source" : {
+                        "name" : "All AURI Events",
+                        "type" : "ExpressionRef",
+                        "annotation" : [ ]
+                     }
+                  }
+               }, {
+                  "name" : "uniqueEpisodes",
+                  "value" : {
+                     "name" : "Total Unique Episodes",
+                     "type" : "ExpressionRef",
+                     "annotation" : [ ]
+                  }
+               } ]
+            }
+         } ]
+      }
+   }
+}
+

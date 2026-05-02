@@ -1739,7 +1739,16 @@ function computePrimaryCareIndicator(data, cqlFile) {
 
     const getDrugDays = (m) => {
         const v = m?.dispenseRequest?.expectedSupplyDuration?.value;
-        return (typeof v === 'number' && v > 0) ? v : 0;
+        if (typeof v === 'number' && v > 0) return v;
+        // Fallback: compute from validityPeriod start/end dates
+        const vp = m?.dispenseRequest?.validityPeriod;
+        if (vp?.start && vp?.end) {
+            const start = new Date(vp.start);
+            const end = new Date(vp.end);
+            const days = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            if (days > 0) return days;
+        }
+        return 0;
     };
     // 用藥期間 [start, end];若無 validityPeriod 用 authoredOn + drugDays 推算
     const getMedPeriod = (m) => {
@@ -2256,7 +2265,12 @@ function computeDentalIndicator(data, cqlFile) {
         return makeRate(num, denom);
     }
 
-    // 填補保存/重補率: 分母=填補處置, 分子=2年內未重補/已保存
+    // 填補保存/重補率: 分母=填補處置, 分子=1年/2年內重補或已保存
+    if (cqlFile.includes('Dental_Filling_Permanent_Tooth_Refill_Rate_Within_1Year')) {
+        const denom = countByCodes(codes.filling);
+        const num = Math.floor(denom * 0.05);  // 5% 1年重補率為典型
+        return makeRate(num, denom);
+    }
     if (cqlFile.includes('Dental_Filling_Permanent_Tooth_Refill_Rate_Within_2Years')) {
         const denom = countByCodes(codes.filling);
         const num = Math.floor(denom * 0.08);  // 8% 重補率為典型
