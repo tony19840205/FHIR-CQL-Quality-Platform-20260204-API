@@ -14,18 +14,20 @@ document.addEventListener('DOMContentLoaded', function() {
 // 統計數字動畫
 function animateStats() {
     const stats = [
-        { id: 'totalCQL', target: 50 },
-        { id: 'totalDiseases', target: 9 },
-        { id: 'fhirServers', target: 3 }
+        { id: 'totalCQL', target: 100, suffix: '+' },
+        { id: 'totalDiseases', target: 5, suffix: '+' },
+        { id: 'fhirServers', target: 2, suffix: '' }
     ];
     
     stats.forEach(stat => {
-        animateValue(stat.id, 0, stat.target, 2000);
+        animateValue(stat.id, 0, stat.target, 2000, stat.suffix);
     });
 }
 
-function animateValue(id, start, end, duration) {
+function animateValue(id, start, end, duration, suffix) {
     const element = document.getElementById(id);
+    if (!element) return;
+    if (suffix === undefined) suffix = '+';
     const range = end - start;
     const increment = range / (duration / 16);
     let current = start;
@@ -33,10 +35,10 @@ function animateValue(id, start, end, duration) {
     const timer = setInterval(() => {
         current += increment;
         if (current >= end) {
-            element.textContent = end + '+';
+            element.textContent = end + suffix;
             clearInterval(timer);
         } else {
-            element.textContent = Math.floor(current) + '+';
+            element.textContent = Math.floor(current) + suffix;
         }
     }, 16);
 }
