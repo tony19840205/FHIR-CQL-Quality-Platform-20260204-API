@@ -402,16 +402,22 @@ function getIndicatorCategory(cqlFile) {
 }
 
 // --- 多頁抓取 FHIR Bundle (用於 01/02 需要全部 MedicationRequest) ---
-async function fetchAllPages(url, maxPages = 3) {
+// maxRecords: 全域上限,達到後立即停止抓取並截斷結果(讓 UI maxRecords 真正生效)
+async function fetchAllPages(url, maxPages = 3, maxRecords = Infinity) {
     const allResources = [];
     let currentUrl = url;
     let page = 0;
-    while (currentUrl && page < maxPages) {
+    while (currentUrl && page < maxPages && allResources.length < maxRecords) {
         try {
             const resp = await axios.get(currentUrl, { timeout: 25000 });
             const entries = resp.data?.entry || [];
             entries.forEach(e => { if (e.resource) allResources.push(e.resource); });
             console.log(`   📄 Page ${page + 1}: ${entries.length} entries (total: ${allResources.length})`);
+            // 達到 maxRecords 上限即停止並截斷
+            if (allResources.length >= maxRecords) {
+                allResources.length = maxRecords;
+                break;
+            }
             // 找下一頁 link
             const nextLink = (resp.data?.link || []).find(l => l.relation === 'next');
             currentUrl = nextLink ? nextLink.url : null;
@@ -456,8 +462,8 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 }
             } else {
                 // 01 注射 / 02 抗生素: 需要抓全部 MedicationRequest 再本地過濾
-                // 用多頁抓取確保能拿到所有資料
-                medPromise = fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=500${dateParam.replace(/date=/g, 'authoredon=')}`, 3);
+                // 用多頁抓取確保能拿到所有資料 (但會被 maxRecords 上限截斷)
+                medPromise = fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${singlePageCount}${dateParam.replace(/date=/g, 'authoredon=')}`, 3, maxRecords);
             }
             const [medResult, encResp] = await Promise.all([
                 medPromise,
@@ -480,7 +486,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 先取總數做分母, 再用多頁抓取盡量取得完整資料
                 const [encCountResp, medResult] = await Promise.all([
                     axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_summary=count${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { total: 0 } })),
-                    fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=500${dateParam.replace(/date=/g, 'authoredon=')}`, 10)
+                    fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${singlePageCount}${dateParam.replace(/date=/g, 'authoredon=')}`, 10, maxRecords)
                 ]);
                 resources._totalEncounters = encCountResp.data?.total || 0;
                 resources.MedicationRequest = Array.isArray(medResult) ? medResult : [];
@@ -492,7 +498,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 06 小兒氣喘急診率: 搜尋氣喘 reasonCode 的 Encounter
                 const [encCountResp, asthmaResp] = await Promise.all([
                     axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_summary=count${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { total: 0 } })),
-                    axios.get(`${fhirServerUrl}/Encounter?reason-code=J45.20,J45.21,J45.22,J45.30,J45.31,J45.40,J45.41,J45.50,J45.51,J45.901,J45.902,J45.909,J45.990,J45.998&_count=500${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                    axios.get(`${fhirServerUrl}/Encounter?reason-code=J45.20,J45.21,J45.22,J45.30,J45.31,J45.40,J45.41,J45.50,J45.51,J45.901,J45.902,J45.909,J45.990,J45.998&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources._totalEncounters = encCountResp.data?.total || 0;
                 resources.Encounter = (asthmaResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -506,9 +512,9 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 const maxPages = count > 500 ? Math.min(Math.ceil(count / 500), 10) : 1;
                 const usePaging = count > 500;
                 const [encResult, medResult, obsResult] = await Promise.all([
-                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${pageSize}${dateParam}`, maxPages) : axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                    usePaging ? fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${pageSize}${dateParam.replace(/date=/g, 'authoredon=')}`, maxPages) : axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                    usePaging ? fetchAllPages(`${fhirServerUrl}/Observation?_count=${pageSize}${dateParam}`, maxPages) : axios.get(`${fhirServerUrl}/Observation?_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${pageSize}${dateParam}`, maxPages, maxRecords) : axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${pageSize}${dateParam.replace(/date=/g, 'authoredon=')}`, maxPages, maxRecords) : axios.get(`${fhirServerUrl}/MedicationRequest?_count=${count}${dateParam.replace(/date=/g, 'authoredon=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/Observation?_count=${pageSize}${dateParam}`, maxPages, maxRecords) : axios.get(`${fhirServerUrl}/Observation?_count=${count}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
                 resources.MedicationRequest = Array.isArray(medResult) ? medResult : (medResult.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -536,8 +542,8 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 const usePaging = count > 500;
                 const inpMaxPages = usePaging ? Math.min(Math.ceil(count / 500), 10) : 1;
                 const [impResult, emerResult] = await Promise.all([
-                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=500${dateParam}`, inpMaxPages) : axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
-                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=500${dateParam}`, inpMaxPages) : axios.get(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, inpMaxPages, maxRecords) : axios.get(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
+                    usePaging ? fetchAllPages(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=${singlePageCount}${dateParam}`, inpMaxPages, maxRecords) : axios.get(`${fhirServerUrl}/Encounter?class=EMER&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.EncounterIMP = Array.isArray(impResult) ? impResult : (impResult.data?.entry || []).map(e => e.resource).filter(Boolean);
                 resources.EncounterEMER = Array.isArray(emerResult) ? emerResult : (emerResult.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -547,15 +553,15 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
         } else if (category === 'surgery') {
             // 手術品質指標: 每個指標用targeted procedure code搜尋
             const surgeryMaxPages = Math.max(1, Math.ceil(count / 500));
-            const encPromise = fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, surgeryMaxPages);
+            const encPromise = fetchAllPages(`${fhirServerUrl}/Encounter?class=IMP&status=finished&_count=${singlePageCount}${dateParam}`, surgeryMaxPages, maxRecords);
             
             if (cqlFile.includes('_12_') || cqlFile.includes('_19_')) {
                 // 指標12: 清淨手術抗生素>3天 / 指標19: 清淨手術傷口感染
                 const cleanSurgeryCodes = '75607C,75610B,75613C,75614C,75615C,88029C,64162B,64164B,64169B,64170B';
                 const [procResp, encResult, maResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${cleanSurgeryCodes}&_count=500${dateParam}`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${cleanSurgeryCodes}&_count=${singlePageCount}${dateParam}`, 3, maxRecords),
                     encPromise,
-                    fetchAllPages(`${fhirServerUrl}/MedicationAdministration?_count=500${dateParam.replace(/date=/g, 'effective-time=')}`, 3)
+                    fetchAllPages(`${fhirServerUrl}/MedicationAdministration?_count=${singlePageCount}${dateParam.replace(/date=/g, 'effective-time=')}`, 3, maxRecords)
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
                 resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -565,7 +571,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 指標13: ESWL碎石術
                 const eswlCodes = '50023A,50024A,50025A,50026A';
                 const [procResp, encResult] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${eswlCodes}&_count=500${dateParam}`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${eswlCodes}&_count=${singlePageCount}${dateParam}`, 3, maxRecords),
                     encPromise
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -575,7 +581,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 指標14: 子宮肌瘤手術14天再入院
                 const fibroidCodes = '97010K,97011A,97012B,97013B,80402C,80420C,80415B,97013C,80415C,80425C,97025K,97026A,97027B,97020K,97021A,97022B,97035K,97036A,97037B,80403B,80404B,80421B,80416B,80412B,97027C,80404C';
                 const [procResp, encResult, condResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${fibroidCodes}&_count=500${dateParam}`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${fibroidCodes}&_count=${singlePageCount}${dateParam}`, 3, maxRecords),
                     encPromise,
                     axios.get(`${fhirServerUrl}/Condition?code=D25,D25.0,D25.1,D25.2,D25.9&_count=${singlePageCount}${dateParam.replace(/date=/g, 'onset-date=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
@@ -587,7 +593,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 // 指標15: 人工關節置換術感染 (TKR/THR/Spine)
                 const arthroplastyCodes = '64164B,97805K,97806A,97807B,64169B,64162B,64170B,64053B,64198B';
                 const [procResp, encResult] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${arthroplastyCodes}&_count=500${dateParam}`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?code=${arthroplastyCodes}&_count=${singlePageCount}${dateParam}`, 3, maxRecords),
                     encPromise
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -596,7 +602,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             } else if (cqlFile.includes('_16_')) {
                 // 指標16: 住院手術傷口感染
                 const [procResp, encResult] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=${singlePageCount}${dateParam}`, surgeryMaxPages),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=${singlePageCount}${dateParam}`, surgeryMaxPages, maxRecords),
                     encPromise
                 ]);
                 resources.Procedure = Array.isArray(procResp) ? procResp : (procResp.data?.entry || []).map(e => e.resource).filter(Boolean);
@@ -605,7 +611,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             } else {
                 // 其他手術指標 fallback
                 const [procResp, encResult, maResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500${dateParam}`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=${singlePageCount}${dateParam}`, 3, maxRecords),
                     encPromise,
                     axios.get(`${fhirServerUrl}/MedicationAdministration?_count=${singlePageCount}${dateParam.replace(/date=/g, 'effective-time=')}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
@@ -660,7 +666,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             } else if (isMedOverlap) {
                 // 中醫1: 處方用藥重疊 - MedicationRequest + Encounter(AMB)
                 const [medResult, encResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=500${dateParam.replace(/date=/g, 'authoredon=')}`, 3),
+                    fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${singlePageCount}${dateParam.replace(/date=/g, 'authoredon=')}`, 3, maxRecords),
                     axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.MedicationRequest = Array.isArray(medResult) ? medResult : [];
@@ -669,7 +675,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             } else if (isTraumatology) {
                 // 中醫4: 針傷科處置 - Procedure + Encounter(AMB)
                 const [procResult, encResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500${dateParam}`, 3),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=${singlePageCount}${dateParam}`, 3, maxRecords),
                     axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
                 resources.Procedure = Array.isArray(procResult) ? procResult : [];
@@ -680,7 +686,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 const usePaging = count > 500;
                 const tcmMaxPages = usePaging ? Math.min(Math.ceil(count / 500), 10) : 1;
                 const encResult = usePaging
-                    ? await fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=500${dateParam}`, tcmMaxPages)
+                    ? await fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, tcmMaxPages, maxRecords)
                     : await axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }));
                 resources.Encounter = Array.isArray(encResult) ? encResult : (encResult.data?.entry || []).map(e => e.resource).filter(Boolean);
                 console.log(`   [TCM-Encounter] Encounter(AMB): ${resources.Encounter.length}`);
@@ -691,8 +697,8 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
             const usePaging = count > 500;
             const pcMaxPages = usePaging ? Math.min(Math.ceil(count / 500), 6) : 1;
             const [medResult, encResult, procResp, patResp] = await Promise.all([
-                fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=500${dateParam}`, pcMaxPages),
-                fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=500${dateParam}`, pcMaxPages),
+                fetchAllPages(`${fhirServerUrl}/MedicationRequest?_count=${singlePageCount}${dateParam}`, pcMaxPages, maxRecords),
+                fetchAllPages(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, pcMaxPages, maxRecords),
                 axios.get(`${fhirServerUrl}/Procedure?_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
                 axios.get(`${fhirServerUrl}/Patient?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
             ]);
@@ -713,7 +719,7 @@ async function fetchQualityIndicatorFHIRData(fhirServerUrl, cqlFile, options = {
                 const usePaging = count > 500;
                 const dentalMaxPages = usePaging ? Math.min(Math.ceil(count / 500), 6) : 1;
                 const [procResult, encResp, patResp] = await Promise.all([
-                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=500${dateParam}`, dentalMaxPages),
+                    fetchAllPages(`${fhirServerUrl}/Procedure?_count=${singlePageCount}${dateParam}`, dentalMaxPages, maxRecords),
                     axios.get(`${fhirServerUrl}/Encounter?class=AMB&status=finished&_count=${singlePageCount}${dateParam}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } })),
                     axios.get(`${fhirServerUrl}/Patient?_count=${singlePageCount}`, { timeout: 25000 }).catch(() => ({ data: { entry: [] } }))
                 ]);
@@ -1801,21 +1807,21 @@ function computePrimaryCareIndicator(data, cqlFile) {
     if (cqlFile.includes('PC_01_Outpatient_Injection_Usage_Rate')) {
         const denom = totalMeds; // 給藥案件數
         const numCases = meds.filter(m => isInjection(m) && !isChemoOrCancer(m) && !isEmergency(m) && !isFluVaccine(m) && !isTetanus(m));
-        const num = numCases.length || Math.floor(denom * 0.08);
+        const num = numCases.length;
         return makeRate(num, denom);
     }
     // ==================== 2-1. 門診抗生素使用率 (1140.01) ====================
     if (cqlFile.includes('PC_02_1_Outpatient_Antibiotic_Usage_Rate')) {
         const denom = totalMeds;
         const numCases = meds.filter(m => matchesATCPrefix(m, ['J01']));
-        const num = numCases.length || Math.floor(denom * 0.12);
+        const num = numCases.length;
         return makeRate(num, denom);
     }
     // ==================== 2-2. Quinolone/Aminoglycoside (2768.01) ====================
     if (cqlFile.includes('PC_02_2_Outpatient_Quinolone_Aminoglycoside_Usage_Rate')) {
         const denom = totalMeds;
         const numCases = meds.filter(m => matchesATCPrefix(m, ['J01M', 'J01G']));
-        const num = numCases.length || Math.floor(denom * 0.03);
+        const num = numCases.length;
         return makeRate(num, denom);
     }
 
@@ -1903,11 +1909,8 @@ function computePrimaryCareIndicator(data, cqlFile) {
             }
         }
 
-        // 4) test data 若無重疊,套 fallbackRate
-        let numerator = overlapDays;
-        if (numerator === 0 && denominator > 0) {
-            numerator = Math.floor(denominator * spec.fallbackRate);
-        }
+        // 4) 不做假數據:沒有重疊就回 0
+        const numerator = overlapDays;
         return makeRate(numerator, denominator);
     }
 
@@ -1929,8 +1932,7 @@ function computePrimaryCareIndicator(data, cqlFile) {
         const denom = chronicMeds.length || totalMeds;
         const isContinuous = (m) =>
             getDrugDays(m) >= 21 || (m.dispenseRequest?.numberOfRepeatsAllowed || 0) >= 1;
-        let num = chronicMeds.filter(isContinuous).length;
-        if (num === 0 && denom > 0) num = Math.floor(denom * 0.42);
+        const num = chronicMeds.filter(isContinuous).length;
         return makeRate(num, denom);
     }
     // ==================== 5. 處方10種以上藥品比率 (1749) ====================
@@ -1948,8 +1950,7 @@ function computePrimaryCareIndicator(data, cqlFile) {
             if (code) byEnc[eid].add(code);
         });
         const denom = Object.keys(byEnc).length || totalEncs || totalMeds;
-        let num = Object.values(byEnc).filter(s => s.size >= 10).length;
-        if (num === 0 && denom > 0) num = Math.floor(denom * 0.04);
+        const num = Object.values(byEnc).filter(s => s.size >= 10).length;
         return makeRate(num, denom);
     }
 
@@ -2038,7 +2039,6 @@ function computePrimaryCareIndicator(data, cqlFile) {
             if (pid && diabPatientSet.has(pid)) numSet.add(pid);
         });
         let num = numSet.size;
-        if (num === 0 && denom > 0) num = Math.floor(denom * 0.78);
         return makeRate(num, denom);
     }
 
@@ -2070,7 +2070,6 @@ function computePrimaryCareIndicator(data, cqlFile) {
             }
         }
         let num = numSet.size;
-        if (num === 0 && denom > 0) num = Math.floor(denom * 0.05);
         return makeRate(num, denom);
     }
 
@@ -2116,11 +2115,8 @@ function computePrimaryCareIndicator(data, cqlFile) {
         else                                   num = indicationCount;
 
         if (denom === 0) {
-            // fallback: 用 patients 數做基底
-            const base = patients.length || 100;
-            const rates = { '_1_': 0.36, '_2_': 0.16, '_3_': 0.20 };
-            const k = cqlFile.includes('_1_') ? '_1_' : cqlFile.includes('_2_') ? '_2_' : '_3_';
-            return makeRate(Math.floor(base * rates[k]), base);
+            // 不做假數據：無資料即回 0
+            return makeRate(0, 0);
         }
         return makeRate(Math.max(0, num), denom);
     }
@@ -2208,7 +2204,7 @@ function computeDentalIndicator(data, cqlFile) {
         return { totalPatients: n, numerator: n, denominator: n, rate: n.toString(), unit: '次', isCount: true, noData: procedures.length === 0 };
     }
     if (cqlFile.includes('Oral_Cancer_Screening_Case_Count')) {
-        const n = countByCodes(codes.oralCancerScreen) || Math.floor(encounters.length * 0.05);
+        const n = countByCodes(codes.oralCancerScreen);
         return { totalPatients: n, numerator: n, denominator: n, rate: n.toString(), unit: '人次', isCount: true, noData: procedures.length === 0 && encounters.length === 0 };
     }
     if (cqlFile.includes('Periodontal_Basic_Treatment_Patient_Count')) {
@@ -2230,7 +2226,7 @@ function computeDentalIndicator(data, cqlFile) {
     if (cqlFile.includes('Full_Mouth_Calculus_Removal_Rate_Age_12_Plus')) {
         // 分母: 12歲以上有牙科就診的病人; 分子: 已洗牙者
         const eligibleEncounters = encounters.length;
-        const calculusCount = countByCodes(codes.calculus) || Math.floor(eligibleEncounters * 0.3);
+        const calculusCount = countByCodes(codes.calculus);
         return makeRate(calculusCount, eligibleEncounters);
     }
     if (cqlFile.includes('Pediatric_Under_6_Oral_Preventive_Health_Service_Rate')) {
@@ -2240,8 +2236,8 @@ function computeDentalIndicator(data, cqlFile) {
             const age = (Date.now() - new Date(p.birthDate).getTime()) / 31557600000;
             return age < 6;
         }).length;
-        const denom = pediatricCount || Math.floor(patients.length * 0.1) || 0;
-        const num = countByCodes(codes.pediatricPrev) || Math.floor(denom * 0.4);
+        const denom = pediatricCount;
+        const num = countByCodes(codes.pediatricPrev);
         return makeRate(num, denom);
     }
     if (cqlFile.includes('Periodontal_Disease_Case_Rate')) {
@@ -2256,56 +2252,56 @@ function computeDentalIndicator(data, cqlFile) {
     }
     if (cqlFile.includes('Periodontal_Integrated_Treatment_Completion_Rate')) {
         const denom = countByCodes(codes.periodontalIntegrated) || distinctPatientsByCodes(codes.periodontal);
-        const num = Math.floor(denom * 0.7);
+        const num = 0;
         return makeRate(num, denom);
     }
     if (cqlFile.includes('Simple_Tooth_Extraction_No_Postop_Special_Treatment_Rate')) {
         const denom = countByCodes(codes.simpleExt) || procedures.length;
-        const num = Math.floor(denom * 0.85);
+        const num = 0;
         return makeRate(num, denom);
     }
 
-    // 填補保存/重補率: 分母=填補處置, 分子=1年/2年內重補或已保存
+    // 填補保存/重補率: 分母=填補處置, 分子=1年/2年內重補或已保存 (無真實追蹤資料時為 0)
     if (cqlFile.includes('Dental_Filling_Permanent_Tooth_Refill_Rate_Within_1Year')) {
         const denom = countByCodes(codes.filling);
-        const num = Math.floor(denom * 0.05);  // 5% 1年重補率為典型
+        const num = 0;
         return makeRate(num, denom);
     }
     if (cqlFile.includes('Dental_Filling_Permanent_Tooth_Refill_Rate_Within_2Years')) {
         const denom = countByCodes(codes.filling);
-        const num = Math.floor(denom * 0.08);  // 8% 重補率為典型
+        const num = 0;
         return makeRate(num, denom);
     }
     if (cqlFile.includes('Dental_Filling_Retention_Rate_Within_2Years')) {
         const denom = countByCodes(codes.filling);
-        const num = Math.floor(denom * 0.92);
+        const num = 0;
         return makeRate(num, denom);
     }
     if (cqlFile.includes('Dental_Filling_Retention_Rate_Primary_Tooth_18Months')) {
         const denom = countByCodes(codes.filling);
-        const num = Math.floor(denom * 0.88);
+        const num = 0;
         return makeRate(num, denom);
     }
 
-    // 根管治療相關
+    // 根管治療相關 (無真實追蹤資料時為 0)
     if (cqlFile.includes('Root_Canal_Treatment_Completion_Rate')) {
         const denom = countByCodes(codes.rootCanal);
-        const num = Math.floor(denom * 0.78);
+        const num = 0;
         return makeRate(num, denom);
     }
     if (cqlFile.includes('Root_Canal_Treatment_Retention_Rate_Permanent_Tooth_6Months')) {
         const denom = countByCodes(codes.rootCanal);
-        const num = Math.floor(denom * 0.95);
+        const num = 0;
         return makeRate(num, denom);
     }
     if (cqlFile.includes('Root_Canal_Treatment_Retention_Rate_Primary_Tooth_3Months')) {
         const denom = countByCodes(codes.rootCanal);
-        const num = Math.floor(denom * 0.93);
+        const num = 0;
         return makeRate(num, denom);
     }
     if (cqlFile.includes('Root_Canal_Treatment_Retention_Rate_Within_6Months')) {
         const denom = countByCodes(codes.rootCanal);
-        const num = Math.floor(denom * 0.94);
+        const num = 0;
         return makeRate(num, denom);
     }
 
@@ -3191,7 +3187,7 @@ function computeHypertensionResults(byType) {
             if (patientIds.has(pid)) patientsWithBP.add(pid);
         }
     });
-    const controlledCases = patientsWithBP.size > 0 ? patientsWithBP.size : Math.floor(totalCases * 0.6);
+    const controlledCases = patientsWithBP.size;
     const controlRate = totalCases > 0 ? ((controlledCases / totalCases) * 100).toFixed(2) : '0.00';
 
     console.log(`✅ [Hypertension] 活動個案: ${totalCases}, 控制中: ${controlledCases}, 控制率: ${controlRate}%`);
