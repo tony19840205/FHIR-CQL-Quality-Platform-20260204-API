@@ -489,10 +489,17 @@ function renderQualityPanel(cat) {
 function renderMedGauge() {
     const items = byCat('medication');
     const general = items.filter(q=>['01','02'].includes(q.number));
+    const pcGeneral = items.filter(q=>['基1','基2-1','基2-2'].includes(q.number));
+    const tcmMed   = items.filter(q=>q.number && q.number.startsWith('中醫'));
     const pairs = [
         {label:'降血壓',s:'03-1',c:'03-9'},{label:'降血脂',s:'03-2',c:'03-10'},{label:'降血糖',s:'03-3',c:'03-11'},
         {label:'抗思覺失調',s:'03-4',c:'03-12'},{label:'抗憂鬱',s:'03-5',c:'03-13'},{label:'安眠鎮靜',s:'03-6',c:'03-14'},
-        {label:'抗血栓',s:'03-7',c:'03-15'},{label:'前列腺',s:'03-8',c:'03-16'}
+        {label:'抗血栓',s:'03-7',c:'03-15'},{label:'前列腰',s:'03-8',c:'03-16'}
+    ];
+    const pcPairs = [
+        {label:'降血壓',s:'基3-1',c:'基3-9'},{label:'降血脂',s:'基3-2',c:'基3-10'},{label:'降血糖',s:'基3-3',c:'基3-11'},
+        {label:'抗思覺失調',s:'基3-4',c:'基3-12'},{label:'抗憂鬱',s:'基3-5',c:'基3-13'},{label:'安眠鎮靜',s:'基3-6',c:'基3-14'},
+        {label:'抗血栓',s:'基3-7',c:'基3-15'},{label:'前列腰',s:'基3-8',c:'基3-16'}
     ];
     const find = n => items.find(q=>q.number===n)?.rate??null;
     const allRates = items.map(q=>q.rate).filter(r=>r!==null);
@@ -503,7 +510,7 @@ function renderMedGauge() {
     <div class="grid-3" style="margin-bottom:1.5rem">
         ${general.map(q => `<div class="card" style="display:flex;flex-direction:column;align-items:center;padding:1.25rem">${svgHalfDonut(q.rate,5,160,q.name)}${q.numerator!==null?`<div style="font-size:10px;color:#475569;margin-top:8px">${q.numerator} / ${q.denominator}</div>`:''}</div>`).join('')}
         <div class="card" style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.25rem">
-            <h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:1rem">18 項燈號統計</h3>
+            <h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:1rem">${items.length} 項燈號統計</h3>
             <div style="display:flex;gap:1.5rem">
                 <div style="text-align:center"><div style="width:40px;height:40px;border-radius:50%;background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 4px"><span style="font-size:1.1rem;font-weight:800;color:#10b981">${gc}</span></div><span style="font-size:10px;color:#10b981">正常</span></div>
                 <div style="text-align:center"><div style="width:40px;height:40px;border-radius:50%;background:rgba(245,158,11,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 4px"><span style="font-size:1.1rem;font-weight:800;color:#f59e0b">${yc}</span></div><span style="font-size:10px;color:#f59e0b">注意</span></div>
@@ -528,7 +535,41 @@ function renderMedGauge() {
             </div>`;
         }).join('')}
     </div>
-    <div class="note-box"><div class="note-icon"><i class="fas fa-wave-square"></i></div><div><div class="note-title">圖表說明</div><div class="note-text">半圓儀表顯示門診注射劑與抗生素使用率。蝴蝶對比圖將 8 種藥品的同院(左)與跨院(右)重疊率並列，顏色依燈號標準（綠 ≤3%、黃 ≤8%、紅 &gt;8%）。</div></div></div>`;
+    ${pcGeneral.length ? `
+    <div class="panel-header" style="margin-top:1.5rem"><div class="panel-header-icon" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)"><i class="fas fa-clinic-medical"></i></div><div><h2>西醫基層藥物</h2><p>基1 / 基2-x 使用率 + 基3-x 同院 vs 跨院重疊</p></div></div>
+    <div class="grid-3" style="margin-bottom:1.5rem">
+        ${pcGeneral.map(q => `<div class="card" style="display:flex;flex-direction:column;align-items:center;padding:1.25rem">${svgHalfDonut(q.rate,5,160,q.name)}${q.numerator!==null?`<div style="font-size:10px;color:#475569;margin-top:8px">${q.numerator} / ${q.denominator}</div>`:''}</div>`).join('')}
+    </div>
+    <div class="card" style="padding:1.5rem">
+        <h3 style="font-size:13px;font-weight:600;color:#cbd5e1;margin-bottom:4px;text-align:center">基層藥品重疊率：同院 vs 跨院 對比</h3>
+        <div style="display:grid;grid-template-columns:1fr 100px 1fr;text-align:center;margin-bottom:8px"><span style="font-size:10px;color:#06b6d4;font-weight:500">← 同院</span><span style="font-size:10px;color:#475569">藥品類別</span><span style="font-size:10px;color:#8b5cf6;font-weight:500">跨院 →</span></div>
+        ${pcPairs.map(p => {
+            const lv=find(p.s), rv=find(p.c);
+            const lClr = lv===null?'#475569':lv<=3?'#10b981':lv<=8?'#f59e0b':'#ef4444';
+            const rClr = rv===null?'#475569':rv<=3?'#10b981':rv<=8?'#f59e0b':'#ef4444';
+            const lPct = lv!==null?Math.min(lv/maxV*100,100):0;
+            const rPct = rv!==null?Math.min(rv/maxV*100,100):0;
+            return `<div style="display:grid;grid-template-columns:1fr 100px 1fr;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(51,65,85,0.3)">
+                <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px"><span style="font-size:13px;font-weight:700;color:${lClr}" class="tn">${lv!==null?lv+'%':'--'}</span><div style="height:24px;border-radius:4px 0 0 4px;width:${lPct}%;min-width:${lv!==null?'4px':'0'};background:${lClr};margin-left:auto"></div></div>
+                <div style="text-align:center;font-size:12px;font-weight:500;color:#cbd5e1">${p.label}</div>
+                <div style="display:flex;align-items:center;gap:8px"><div style="height:24px;border-radius:0 4px 4px 0;width:${rPct}%;min-width:${rv!==null?'4px':'0'};background:${rClr}"></div><span style="font-size:13px;font-weight:700;color:${rClr}" class="tn">${rv!==null?rv+'%':'--'}</span></div>
+            </div>`;
+        }).join('')}
+    </div>` : ''}
+    ${tcmMed.length ? `
+    <div class="panel-header" style="margin-top:1.5rem"><div class="panel-header-icon" style="background:linear-gradient(135deg,#84cc16,#10b981)"><i class="fas fa-mortar-pestle"></i></div><div><h2>中醫用藥</h2><p>${tcmMed.length} 項中醫藥物指標</p></div></div>
+    <div class="grid-3" style="margin-bottom:1.5rem">
+        ${tcmMed.map(q => {
+            const s = q.rate===null?'gray':q.rate<=3?'green':q.rate<=8?'yellow':'red';
+            const clr = {green:'#10b981',yellow:'#f59e0b',red:'#ef4444',gray:'#475569'}[s];
+            return `<div class="card" style="padding:1.25rem">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:11px;color:#94a3b8">${q.number} · ${q.code}</span>${signalDot(s)}</div>
+                <div style="font-size:13px;color:#cbd5e1;margin-bottom:8px;min-height:36px">${q.name}</div>
+                <div style="display:flex;justify-content:space-between;align-items:flex-end"><div><span style="font-size:1.75rem;font-weight:800;color:${clr}" class="tn">${q.rate!==null?q.rate:'--'}</span><span style="font-size:12px;color:#64748b;margin-left:2px">${q.unit||'%'}</span></div>${q.numerator!==null?`<span style="font-size:10px;color:#475569">${q.numerator}/${q.denominator}</span>`:''}</div>
+            </div>`;
+        }).join('')}
+    </div>` : ''}
+    <div class="note-box"><div class="note-icon"><i class="fas fa-wave-square"></i></div><div><div class="note-title">圖表說明</div><div class="note-text">半圓儀表顯示門診注射劑與抗生素使用率（醫品 + 西醫基層）。蝴蝶對比圖將同院（左）與跨院（右）藥品重疊率並列，分為「醫品 03-x」與「基層 基3-x」兩組。中醫用藥區塊呈現中醫處方相關指標。顏色依燈號標準（綠 ≤3%、黃 ≤8%、紅 &gt;8%）。</div></div></div>`;
 }
 
 function renderGaugePanel(cat, targets) {
